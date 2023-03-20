@@ -1,0 +1,40 @@
+{
+  "name": "report-engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "module": "./dist/index.jjs",
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bgd-labs/report-engine.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bgd-labs/report-engine/issues"
+  },
+  "homepage": "https://github.com/bgd-labs/report-engine#readme",
+  "type": "module",
+  "devDependencies": {
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.2",
+    "vitest": "^0.29.3"
+  },
+  "exports": {
+    "default": "./dist/index.cjs",
+    "require": "./dist/index.cjs",
+    "node": "./dist/index.cjs",
+    "imports": "./dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "diffler": "^2.0.4",
+    "zod": "^3.21.4"
+  }
+}
