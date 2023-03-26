@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
-  "module": "./dist/index.jjs",
+  "module": "./dist/index.cjs",
+  "private": false,
+  "bin": {
+    "aave-report-engine": "dist/cli.cjs"
+  },
   "scripts": {
     "build": "tsup",
     "test": "vitest"
@@ -20,6 +24,7 @@
   "homepage": "https://github.com/bgd-labs/report-engine#readme",
   "type": "module",
   "devDependencies": {
+    "@types/yargs": "^17.0.23",
     "tsup": "^6.7.0",
     "typescript": "^5.0.2",
     "vitest": "^0.29.3"
@@ -34,6 +39,7 @@
     "access": "public"
   },
   "dependencies": {
+    "yargs": "^17.7.1",
     "zod": "^3.21.4"
   }
 }
