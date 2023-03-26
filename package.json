@@ -34,7 +34,6 @@
     "access": "public"
   },
   "dependencies": {
-    "diffler": "^2.0.4",
     "zod": "^3.21.4"
   }
 }

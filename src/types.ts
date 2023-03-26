@@ -67,3 +67,10 @@ export const aaveV3SnapshotSchema = z.object({
 });
 
 export type AaveV3Snapshot = z.infer<typeof aaveV3SnapshotSchema>;
+
+export type DiffedInput<T> = Record<
+  string,
+  { from: T | null; to: T | null } & Partial<{
+    [K in keyof T]?: { from: T[K]; to: T[K] };
+  }>
+>;
