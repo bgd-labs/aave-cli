@@ -4,18 +4,18 @@
 
 | key | value |
 | --- | --- |
-| interestRateStrategy | ~~![](./assets/0x9b34E3e183c9b0d1a08fF57a8fb59c821616295f.svg)~~![](./assets/0x27eFE5db315b71753b2a38ED3d5dd7E9362ba93F.svg) |
-| reserveFactor | ~~1 %~~1.5 % |
+| interestRateStrategy | ~~![](./assets/0x9b34E3e183c9b0d1a08fF57a8fb59c821616295f.svg)~~ ![](./assets/0x27eFE5db315b71753b2a38ED3d5dd7E9362ba93F.svg) |
+| reserveFactor | ~~1 %~~ 1.5 % |
 
 
 | key | value |
 | --- | --- |
-| interestRateStrategy | ~~![](./assets/0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4.svg)~~![](./assets/0xA9F3C3caE095527061e6d270DBE163693e6fda9D.svg) |
+| interestRateStrategy | ~~![](./assets/0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4.svg)~~ ![](./assets/0xA9F3C3caE095527061e6d270DBE163693e6fda9D.svg) |
 
 
 | key | value |
 | --- | --- |
-| interestRateStrategy | ~~![](./assets/0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4.svg)~~![](./assets/0xA9F3C3caE095527061e6d270DBE163693e6fda9D.svg) |
+| interestRateStrategy | ~~![](./assets/0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4.svg)~~ ![](./assets/0xA9F3C3caE095527061e6d270DBE163693e6fda9D.svg) |
 
 
 ### Raw diff
