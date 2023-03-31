@@ -1,6 +1,12 @@
 import { fetchRateStrategyImage } from "../fetchIRStrategy";
 import { DiffedInput, AaveV3Reserve, AaveV3Snapshot } from "../types";
 
+function renderReserveValue(key: keyof AaveV3Reserve, value) {
+  if (key === "reserveFactor") return `${value / 1000} %`;
+  if (key === "interestRateStrategy") return `![](./assets/${value}.svg)`;
+  return value;
+}
+
 export function renderReserves(
   from: AaveV3Snapshot,
   to: AaveV3Snapshot,
@@ -39,37 +45,34 @@ export function renderReserves(
   if (altered.length) {
     content += `### Reserves altered\n\n`;
     for (const reserve of altered) {
+      content += `| key | value |\n`;
+      content += `| --- | --- |\n`;
+      Object.keys(reserve).map((key) => {
+        content += `| ${key} | ~~${renderReserveValue(
+          key,
+          reserve[key].from
+        )}~~${renderReserveValue(key, reserve[key].to)} |\n`;
+      });
+      content += `\n\n`;
       // prepare assets
       if (reserve.interestRateStrategy) {
         fetchRateStrategyImage(
           from.strategies[reserve.interestRateStrategy.from],
-          `./assets/${reserve.interestRateStrategy.from}`
+          `./assets/`,
+          reserve.interestRateStrategy.from
         );
         fetchRateStrategyImage(
           to.strategies[reserve.interestRateStrategy.to],
-          `./assets/${reserve.interestRateStrategy.to}`
+          `./assets/`,
+          reserve.interestRateStrategy.to
         );
       }
-      content += `| key | value |\n`;
-      content += `| --- | --- |\n`;
-      Object.keys(reserve).map((key) => {
-        content += `| ${key} | ~~${reserve[key].from}~~${reserve[key].to} |\n`;
-      });
-      content += `\n\n`;
     }
   }
 
   if (added.length) {
     content += `### Reserves added\n\n`;
     for (const reserve of added) {
-      // prepare assets
-      if (reserve.interestRateStrategy) {
-        fetchRateStrategyImage(
-          to.strategies[reserve.interestRateStrategy],
-          `./assets/${reserve.interestRateStrategy}`
-        );
-      }
-
       content += `| key | value |\n`;
       content += `| --- | --- |\n`;
       Object.keys(reserve).map((key) => {
@@ -88,6 +91,15 @@ export function renderReserves(
         content += `| ${key} | ${reserve[key]} |\n`;
       });
       content += `\n\n`;
+
+      // prepare assets
+      if (reserve.interestRateStrategy) {
+        fetchRateStrategyImage(
+          to.strategies[reserve.interestRateStrategy],
+          `./assets/`,
+          reserve.interestRateStrategy
+        );
+      }
     }
   }
   return content;

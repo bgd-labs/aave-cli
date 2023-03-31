@@ -10,13 +10,13 @@ import { finished } from "stream/promises";
  * @param filePath the path to store the ir to
  */
 export async function fetchRateStrategyImage(rate, filePath, address) {
-  const realPath = path.join(process.cwd(), filePath);
-  const pathWithFile = path.join(realPath, `${address}.svg`);
+  const relativePath = path.join(process.cwd(), filePath);
+  const pathWithFile = path.join(relativePath, `${address}.svg`);
   // skip in case file already exists
   if (fs.existsSync(pathWithFile)) return;
   // create folder if it doesn't exist
-  if (!fs.existsSync(realPath)) {
-    fs.mkdirSync(realPath, { recursive: true });
+  if (!fs.existsSync(relativePath)) {
+    fs.mkdirSync(relativePath, { recursive: true });
   }
   const paramsObj = {
     variableRateSlope1: rate.variableRateSlope1,
@@ -31,7 +31,7 @@ export async function fetchRateStrategyImage(rate, filePath, address) {
   const { body } = await fetch(
     `https://rate-strategy-explorer.vercel.app/api/static?${searchParams.toString()}`
   );
-  const fileStream = fs.createWriteStream(`realPath`);
+  const fileStream = fs.createWriteStream(pathWithFile);
   if (!body) throw Error("Error fetchign the image");
   // any cast due to some mismatch on ReadableStream node vs web
   await finished(Readable.fromWeb(body as any).pipe(fileStream));
