@@ -51,7 +51,7 @@ export function renderReserves(
         content += `| ${key} | ~~${renderReserveValue(
           key,
           reserve[key].from
-        )}~~${renderReserveValue(key, reserve[key].to)} |\n`;
+        )}~~ ${renderReserveValue(key, reserve[key].to)} |\n`;
       });
       content += `\n\n`;
       // prepare assets
