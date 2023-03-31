@@ -7,7 +7,7 @@ export function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snapshot>(
   post: B
 ) {
   const diff = diffler(pre, post);
-  let content = renderReserves(diff.reserves);
+  let content = renderReserves(pre, post, diff.reserves);
 
   content += `### Raw diff\n\n\`\`\`json\n${JSON.stringify(
     diff,

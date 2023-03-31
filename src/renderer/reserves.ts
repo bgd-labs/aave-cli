@@ -1,6 +1,11 @@
-import { DiffedInput, AaveV3Reserve } from "../types";
+import { fetchRateStrategyImage } from "../fetchIRStrategy";
+import { DiffedInput, AaveV3Reserve, AaveV3Snapshot } from "../types";
 
-export function renderReserves(reserves: DiffedInput<AaveV3Reserve>): string {
+export function renderReserves(
+  from: AaveV3Snapshot,
+  to: AaveV3Snapshot,
+  reserves: DiffedInput<AaveV3Reserve>
+): string {
   const { added, removed, altered } = Object.entries(reserves)
     .sort(([keyA], [keyB]) => {
       return keyA.localeCompare(keyB, "en-US");
@@ -32,8 +37,19 @@ export function renderReserves(reserves: DiffedInput<AaveV3Reserve>): string {
   content += `## Reserves\n\n`;
 
   if (altered.length) {
-    content += `### Reserve altered\n\n`;
+    content += `### Reserves altered\n\n`;
     for (const reserve of altered) {
+      // prepare assets
+      if (reserve.interestRateStrategy) {
+        fetchRateStrategyImage(
+          from.strategies[reserve.interestRateStrategy.from],
+          `./assets/${reserve.interestRateStrategy.from}`
+        );
+        fetchRateStrategyImage(
+          to.strategies[reserve.interestRateStrategy.to],
+          `./assets/${reserve.interestRateStrategy.to}`
+        );
+      }
       content += `| key | value |\n`;
       content += `| --- | --- |\n`;
       Object.keys(reserve).map((key) => {
@@ -44,8 +60,16 @@ export function renderReserves(reserves: DiffedInput<AaveV3Reserve>): string {
   }
 
   if (added.length) {
-    content += `### Reserve added\n\n`;
+    content += `### Reserves added\n\n`;
     for (const reserve of added) {
+      // prepare assets
+      if (reserve.interestRateStrategy) {
+        fetchRateStrategyImage(
+          to.strategies[reserve.interestRateStrategy],
+          `./assets/${reserve.interestRateStrategy}`
+        );
+      }
+
       content += `| key | value |\n`;
       content += `| --- | --- |\n`;
       Object.keys(reserve).map((key) => {
@@ -56,7 +80,7 @@ export function renderReserves(reserves: DiffedInput<AaveV3Reserve>): string {
   }
 
   if (removed.length) {
-    content += `### Reserve added\n\n`;
+    content += `### Reserves added\n\n`;
     for (const reserve of removed) {
       content += `| key | value |\n`;
       content += `| --- | --- |\n`;
