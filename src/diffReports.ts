@@ -1,18 +1,33 @@
+import { fetchRateStrategyImage } from "./fetchIRStrategy";
 import { renderReserve, renderReserveDiff } from "./renderer/reserve";
-import { AaveV3Reserve, AaveV3Snapshot } from "./types";
+import { AaveV3Snapshot } from "./types";
 import { diff } from "./utils/diff";
 
-export function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snapshot>(
-  pre: A,
-  post: B
-) {
+export async function diffReports<
+  A extends AaveV3Snapshot,
+  B extends AaveV3Snapshot
+>(pre: A, post: B) {
+  const chainId = pre.chainId;
   const diffResult = diff(pre, post);
+  // download interest rate strategies
+  // only downloads if it doesn't exist yet
+  for (const ir in pre.strategies) {
+    await fetchRateStrategyImage(pre.strategies[ir], `${chainId}_${ir}`);
+  }
+  for (const ir in post.strategies) {
+    await fetchRateStrategyImage(post.strategies[ir], `${chainId}_${ir}`);
+  }
+
+  // create report
   let content = "";
   const reservesAdded = Object.keys(diffResult.reserves)
     .map((reserveKey) => {
       // to being present on reserve level % trueish means reserve was added
       if ((diffResult.reserves[reserveKey] as any).to) {
-        return renderReserve((diffResult.reserves[reserveKey] as any).to, 1);
+        return renderReserve(
+          (diffResult.reserves[reserveKey] as any).to,
+          chainId
+        );
       }
     })
     .filter((i) => i);
@@ -20,7 +35,10 @@ export function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snapshot>(
     .map((reserveKey) => {
       // from being present on reserve level % trueish means reserve was removed
       if ((diffResult.reserves[reserveKey] as any).from) {
-        return renderReserve((diffResult.reserves[reserveKey] as any).from, 1);
+        return renderReserve(
+          (diffResult.reserves[reserveKey] as any).from,
+          chainId
+        );
       }
     })
     .filter((i) => i);
@@ -35,7 +53,10 @@ export function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snapshot>(
         )
       ) {
         console.log(diffResult.reserves[reserveKey]);
-        return renderReserveDiff(diffResult.reserves[reserveKey] as any, 1);
+        return renderReserveDiff(
+          diffResult.reserves[reserveKey] as any,
+          chainId
+        );
       }
     })
     .filter((i) => i);

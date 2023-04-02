@@ -25,10 +25,10 @@ yargs(hideBin(process.argv))
         describe: "the output path & filename",
       });
     },
-    function (argv) {
+    async function (argv) {
       const from = readJson(argv.from);
       const to = readJson(argv.to);
-      const content = diffReports(from, to);
+      const content = await diffReports(from, to);
       fs.writeFileSync(argv.out, content);
     }
   )

@@ -1,12 +1,21 @@
-import { AaveV3Reserve } from "../types";
+import { fetchRateStrategyImage } from "../fetchIRStrategy";
+import { AaveV3Reserve, CHAIN_ID } from "../types";
 
-export enum CHAIN_ID {
-  MAINNET = 1,
-}
-
-export const getBlockExplorerLink = {
+export const getBlockExplorerLink: {
+  [key in CHAIN_ID]: (address: string) => string;
+} = {
   [CHAIN_ID.MAINNET]: (address) =>
     `[${address}](https://etherscan.io/address/${address})`,
+  [CHAIN_ID.OPTIMISM]: (address) =>
+    `[${address}](https://optimistic.etherscan.io/address/${address})`,
+  [CHAIN_ID.POLYGON]: (address) =>
+    `[${address}](https://polygonscan.com/address/${address})`,
+  [CHAIN_ID.FANTOM]: (address) =>
+    `[${address}](https://ftmscan.com/address/${address})`,
+  [CHAIN_ID.ARBITRUM]: (address) =>
+    `[${address}](https://https://arbiscan.io/address/${address})`,
+  [CHAIN_ID.AVALANCHE]: (address) =>
+    `[${address}](https://snowtrace.io/address/${address})`,
 };
 
 export function renderValue<T extends keyof AaveV3Reserve>(
@@ -27,10 +36,14 @@ export function renderValue<T extends keyof AaveV3Reserve>(
     return `${reserve[key].toLocaleString("en-US")} ${reserve.symbol}`;
   if (key === "liquidationBonus")
     return `${((reserve[key] as number) - 10000) / 100} %`;
+  if (key === "interestRateStrategy")
+    return `![${getBlockExplorerLink[chainId](
+      reserve[key] as string
+    )}](/.assets/${chainId}_${reserve[key]}.svg)`;
   if (typeof reserve[key] === "number")
     return reserve[key].toLocaleString("en-US");
   if (typeof reserve[key] === "string" && /0x.+/.test(reserve[key] as string))
-    return getBlockExplorerLink[chainId](reserve[key]);
+    return getBlockExplorerLink[chainId](reserve[key] as string);
   return reserve[key];
 }
 
@@ -99,11 +112,6 @@ function renderReserveConfigDiff(
   return content;
 }
 
-/**
- * Renders a full reserve
- * @param reserve
- * @param chainId
- */
 export function renderReserve(reserve: AaveV3Reserve, chainId: CHAIN_ID) {
   let content = renderReserveHeadline(reserve, chainId);
   content += renderReserveConfig(reserve, chainId);
@@ -112,7 +120,6 @@ export function renderReserve(reserve: AaveV3Reserve, chainId: CHAIN_ID) {
 
 export function renderReserveDiff(diff: ReserveConfigDiff, chainId: CHAIN_ID) {
   let content = renderReserveHeadline(diff as AaveV3Reserve, chainId);
-
   content += renderReserveConfigDiff(diff, chainId);
   return content;
 }

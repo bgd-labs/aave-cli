@@ -1,5 +1,17 @@
 import { z } from "zod";
 
+export const aaveV3ConfigSchema = z.object({
+  oracle: z.string(),
+  pool: z.string(),
+  poolAddressesProvider: z.string(),
+  poolConfigurator: z.string(),
+  poolConfiguratorImpl: z.string(),
+  poolImpl: z.string(),
+  protocolDataProvider: z.string(),
+});
+
+export type AaveV3Config = z.infer<typeof aaveV3ConfigSchema>;
+
 export const aaveV3ReserveSchema = z.object({
   isBorrowableInIsolation: z.boolean(),
   borrowCap: z.number(),
@@ -61,17 +73,25 @@ export const aaveV3EmodeSchema = z.object({
 
 export type AaveV3Emode = z.infer<typeof aaveV3EmodeSchema>;
 
+export const CHAIN_ID = {
+  MAINNET: 1,
+  OPTIMISM: 10,
+  POLYGON: 137,
+  FANTOM: 250,
+  ARBITRUM: 42161,
+  AVALANCHE: 43114,
+} as const;
+
+const zodChainId = z.nativeEnum(CHAIN_ID);
+
+export type CHAIN_ID = z.infer<typeof zodChainId>;
+
 export const aaveV3SnapshotSchema = z.object({
   reserves: z.record(aaveV3ReserveSchema),
   strategies: z.record(aaveV3StrategySchema),
   eModes: z.record(aaveV3EmodeSchema),
+  poolConfig: aaveV3ConfigSchema,
+  chainId: zodChainId,
 });
 
 export type AaveV3Snapshot = z.infer<typeof aaveV3SnapshotSchema>;
-
-export type DiffedInput<T> = Record<
-  string,
-  { from: T | null; to: T | null } & Partial<{
-    [K in keyof T]?: { from: T[K]; to: T[K] };
-  }>
->;

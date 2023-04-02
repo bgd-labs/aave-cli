@@ -7,11 +7,11 @@ import { finished } from "stream/promises";
  * Fetches the rate image from rate-strategy explorer
  * @dev currently broken as https://github.com/foundry-rs/foundry/issues/4601 results in json numbers which will be broken inside js
  * @param {*} rate
- * @param filePath the path to store the ir to
+ * @param fileName the fileName to store the ir to
  */
-export async function fetchRateStrategyImage(rate, filePath, address) {
-  const relativePath = path.join(process.cwd(), filePath);
-  const pathWithFile = path.join(relativePath, `${address}.svg`);
+export async function fetchRateStrategyImage(rate, fileName) {
+  const relativePath = path.join(process.cwd(), ".assets");
+  const pathWithFile = path.join(relativePath, `${fileName}.svg`);
   // skip in case file already exists
   if (fs.existsSync(pathWithFile)) return;
   // create folder if it doesn't exist
