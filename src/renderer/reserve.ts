@@ -96,7 +96,7 @@ function renderReserveConfigDiff(
   let content =
     "| description | value before | value after |\n| --- | --- | --- |\n";
   (Object.keys(reserve) as (keyof AaveV3Reserve)[])
-    .filter((key) => reserve[key].from)
+    .filter((key) => reserve[key].hasOwnProperty("from"))
     .sort(sortReserveKeys)
     .map((key) => {
       content += `| ${key} | ${renderValue(
