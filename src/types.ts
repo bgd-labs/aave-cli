@@ -26,7 +26,8 @@ export const aaveV3ReserveSchema = z.object({
   stableDebtTokenImpl: z.string(),
   interestRateStrategy: z.string(),
   variableDebtTokenImpl: z.string(),
-  oracle: z.object({ latestAnswer: z.number(), address: z.string() }),
+  oracleLatestAnswer: z.number(),
+  oracle: z.string(),
   decimals: z.number(),
   isSiloed: z.boolean(),
 });

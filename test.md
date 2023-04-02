@@ -1,48 +1,76 @@
 ## Reserves
 
-### Reserves altered
+### Reserves added
 
-| key | value |
-| --- | --- |
-| interestRateStrategy | ~~![](./assets/0x9b34E3e183c9b0d1a08fF57a8fb59c821616295f.svg)~~ ![](./assets/0x27eFE5db315b71753b2a38ED3d5dd7E9362ba93F.svg) |
-| reserveFactor | ~~1 %~~ 1.5 % |
-
-
-| key | value |
-| --- | --- |
-| interestRateStrategy | ~~![](./assets/0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4.svg)~~ ![](./assets/0xA9F3C3caE095527061e6d270DBE163693e6fda9D.svg) |
-
-
-| key | value |
-| --- | --- |
-| interestRateStrategy | ~~![](./assets/0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4.svg)~~ ![](./assets/0xA9F3C3caE095527061e6d270DBE163693e6fda9D.svg) |
-
+| key                      | value                                      |
+| ------------------------ | ------------------------------------------ |
+| isBorrowableInIsolation  | true                                       |
+| borrowCap                | 0                                          |
+| liquidationBonus         | 10500                                      |
+| underlying               | 0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1 |
+| isFrozen                 | false                                      |
+| stableDebtToken          | 0xd94112B5B62d53C9402e7A60289c6810dEF1dC9B |
+| variableDebtToken        | 0x8619d80FB0141ba7F184CbF22fd724116D9f7ffC |
+| reserveFactor            | 1000                                       |
+| liquidationProtocolFee   | 1000                                       |
+| usageAsCollateralEnabled | true                                       |
+| ltv                      | 7500                                       |
+| supplyCap                | 2000000000                                 |
+| debtCeiling              | 0                                          |
+| borrowingEnabled         | true                                       |
+| isActive                 | true                                       |
+| eModeCategory            | 1                                          |
+| symbol                   | DAI                                        |
+| stableBorrowRateEnabled  | true                                       |
+| isFlashloanable          | false                                      |
+| aToken                   | 0x82E64f49Ed5EC1bC6e43DAD4FC8Af9bb3A2312EE |
+| liquidationThreshold     | 8000                                       |
+| aTokenImpl               | 0xa5ba6E5EC19a1Bf23C857991c857dB62b2Aa187B |
+| stableDebtTokenImpl      | 0x52A1CeB68Ee6b7B5D13E0376A1E0E4423A8cE26e |
+| interestRateStrategy     | 0xA9F3C3caE095527061e6d270DBE163693e6fda9D |
+| variableDebtTokenImpl    | 0x81387c40EB75acB02757C1Ae55D5936E78c9dEd3 |
+| oracle                   | [object Object]                            |
+| decimals                 | 18                                         |
+| isSiloed                 | false                                      |
 
 ### Raw diff
 
 ```json
 {
   "reserves": {
-    "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9": {
-      "interestRateStrategy": {
-        "from": "0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4",
-        "to": "0xA9F3C3caE095527061e6d270DBE163693e6fda9D"
-      }
-    },
-    "0xD22a58f79e9481D1a88e00c343885A588b34b68B": {
-      "interestRateStrategy": {
-        "from": "0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4",
-        "to": "0xA9F3C3caE095527061e6d270DBE163693e6fda9D"
-      }
-    },
-    "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1": {
-      "interestRateStrategy": {
-        "from": "0x9b34E3e183c9b0d1a08fF57a8fb59c821616295f",
-        "to": "0x27eFE5db315b71753b2a38ED3d5dd7E9362ba93F"
-      },
-      "reserveFactor": {
-        "from": 1000,
-        "to": 1500
+    "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1": {
+      "from": {
+        "isBorrowableInIsolation": true,
+        "borrowCap": 0,
+        "liquidationBonus": 10500,
+        "underlying": "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+        "isFrozen": false,
+        "stableDebtToken": "0xd94112B5B62d53C9402e7A60289c6810dEF1dC9B",
+        "variableDebtToken": "0x8619d80FB0141ba7F184CbF22fd724116D9f7ffC",
+        "reserveFactor": 1000,
+        "liquidationProtocolFee": 1000,
+        "usageAsCollateralEnabled": true,
+        "ltv": 7500,
+        "supplyCap": 2000000000,
+        "debtCeiling": 0,
+        "borrowingEnabled": true,
+        "isActive": true,
+        "eModeCategory": 1,
+        "symbol": "DAI",
+        "stableBorrowRateEnabled": true,
+        "isFlashloanable": false,
+        "aToken": "0x82E64f49Ed5EC1bC6e43DAD4FC8Af9bb3A2312EE",
+        "liquidationThreshold": 8000,
+        "aTokenImpl": "0xa5ba6E5EC19a1Bf23C857991c857dB62b2Aa187B",
+        "stableDebtTokenImpl": "0x52A1CeB68Ee6b7B5D13E0376A1E0E4423A8cE26e",
+        "interestRateStrategy": "0xA9F3C3caE095527061e6d270DBE163693e6fda9D",
+        "variableDebtTokenImpl": "0x81387c40EB75acB02757C1Ae55D5936E78c9dEd3",
+        "oracle": {
+          "latestAnswer": 99992560,
+          "address": "0xc5C8E77B397E531B8EC06BFb0048328B30E9eCfB"
+        },
+        "decimals": 18,
+        "isSiloed": false
       }
     }
   },
