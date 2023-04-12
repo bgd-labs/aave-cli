@@ -1,4 +1,3 @@
-import { fetchRateStrategyImage } from "../fetchIRStrategy";
 import { AaveV3Reserve, CHAIN_ID } from "../types";
 
 export const getBlockExplorerLink: {
@@ -18,7 +17,7 @@ export const getBlockExplorerLink: {
     `[${address}](https://snowtrace.io/address/${address})`,
 };
 
-export function renderValue<T extends keyof AaveV3Reserve>(
+export function renderReserveValue<T extends keyof AaveV3Reserve>(
   key: T,
   reserve: AaveV3Reserve,
   chainId: CHAIN_ID
@@ -80,34 +79,7 @@ function renderReserveConfig(reserve: AaveV3Reserve, chainId: CHAIN_ID) {
     .filter((key) => !OMIT_KEYS.includes(key))
     .sort(sortReserveKeys)
     .map((key) => {
-      content += `| ${key} | ${renderValue(key, reserve, chainId)} |\n`;
-    });
-  return content;
-}
-
-export type ReserveConfigDiff<A extends AaveV3Reserve = AaveV3Reserve> = {
-  [key in keyof A]: A[key] & { from: A[key] | null; to: A[key] | null };
-};
-
-function renderReserveConfigDiff(
-  reserve: ReserveConfigDiff,
-  chainId: CHAIN_ID
-) {
-  let content =
-    "| description | value before | value after |\n| --- | --- | --- |\n";
-  (Object.keys(reserve) as (keyof AaveV3Reserve)[])
-    .filter((key) => reserve[key].hasOwnProperty("from"))
-    .sort(sortReserveKeys)
-    .map((key) => {
-      content += `| ${key} | ${renderValue(
-        key,
-        { ...reserve, [key]: reserve[key].from },
-        chainId
-      )} | ${renderValue(
-        key,
-        { ...reserve, [key]: reserve[key].to },
-        chainId
-      )} |\n`;
+      content += `| ${key} | ${renderReserveValue(key, reserve, chainId)} |\n`;
     });
   return content;
 }
@@ -118,8 +90,27 @@ export function renderReserve(reserve: AaveV3Reserve, chainId: CHAIN_ID) {
   return content;
 }
 
-export function renderReserveDiff(diff: ReserveConfigDiff, chainId: CHAIN_ID) {
+export type ReserveDiff<A extends AaveV3Reserve = AaveV3Reserve> = {
+  [key in keyof A]: A[key] & { from: A[key] | null; to: A[key] | null };
+};
+
+export function renderReserveDiff(diff: ReserveDiff, chainId: CHAIN_ID) {
   let content = renderReserveHeadline(diff as AaveV3Reserve, chainId);
-  content += renderReserveConfigDiff(diff, chainId);
+  content +=
+    "| description | value before | value after |\n| --- | --- | --- |\n";
+  (Object.keys(diff) as (keyof AaveV3Reserve)[])
+    .filter((key) => diff[key].hasOwnProperty("from"))
+    .sort(sortReserveKeys)
+    .map((key) => {
+      content += `| ${key} | ${renderReserveValue(
+        key,
+        { ...diff, [key]: diff[key].from },
+        chainId
+      )} | ${renderReserveValue(
+        key,
+        { ...diff, [key]: diff[key].to },
+        chainId
+      )} |\n`;
+    });
   return content;
 }

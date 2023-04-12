@@ -1,7 +1,8 @@
-import fs from "fs";
+import fs from "node:fs";
 import path from "path";
-import { Readable } from "stream";
-import { finished } from "stream/promises";
+import { Readable } from "node:stream";
+import { finished } from "node:stream/promises";
+import fetch from "node-fetch";
 
 /**
  * Fetches the rate image from rate-strategy explorer
