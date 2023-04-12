@@ -1,8 +1,10 @@
-import fs from "node:fs";
 import path from "path";
-import { Readable } from "node:stream";
-import { finished } from "node:stream/promises";
+import { existsSync, mkdirSync, createWriteStream } from "fs";
+import { pipeline } from "stream";
+import { promisify } from "util";
 import fetch from "node-fetch";
+
+const streamPipeline = promisify(pipeline);
 
 /**
  * Fetches the rate image from rate-strategy explorer
@@ -14,10 +16,10 @@ export async function fetchRateStrategyImage(rate, fileName) {
   const relativePath = path.join(process.cwd(), ".assets");
   const pathWithFile = path.join(relativePath, `${fileName}.svg`);
   // skip in case file already exists
-  if (fs.existsSync(pathWithFile)) return;
+  if (existsSync(pathWithFile)) return;
   // create folder if it doesn't exist
-  if (!fs.existsSync(relativePath)) {
-    fs.mkdirSync(relativePath, { recursive: true });
+  if (!existsSync(relativePath)) {
+    mkdirSync(relativePath, { recursive: true });
   }
   const paramsObj = {
     variableRateSlope1: rate.variableRateSlope1,
@@ -32,8 +34,6 @@ export async function fetchRateStrategyImage(rate, fileName) {
   const { body } = await fetch(
     `https://rate-strategy-explorer.vercel.app/api/static?${searchParams.toString()}`
   );
-  const fileStream = fs.createWriteStream(pathWithFile);
   if (!body) throw Error("Error fetchign the image");
-  // any cast due to some mismatch on ReadableStream node vs web
-  await finished(Readable.fromWeb(body as any).pipe(fileStream));
+  await streamPipeline(body, createWriteStream(pathWithFile));
 }
