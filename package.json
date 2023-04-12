@@ -1,6 +1,6 @@
 {
   "name": "@bgd-labs/report-engine",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "./dist/index.js",
   "module": "./dist/index.cjs",
@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "json-bigint": "^1.0.0",
-    "node-fetch": "^3.3.1",
+    "node-fetch": "^2.6.9",
     "viem": "^0.3.0",
     "yargs": "^17.7.1",
     "zod": "^3.21.4"

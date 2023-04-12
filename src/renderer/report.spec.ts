@@ -7,7 +7,6 @@ describe("report", () => {
     const from = readJson("/src/mocks/preTestEngineArbV3.json");
     const to = readJson("/src/mocks/postTestEngineArbV3.json");
     const content = await diffReports(from, to);
-    console.log(content);
     expect(content).toMatchSnapshot();
   });
 });

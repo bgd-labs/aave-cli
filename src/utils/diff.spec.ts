@@ -20,7 +20,6 @@ describe("diff", () => {
     const input0 = { a: { a: "a" } } as const;
     const input1 = { a: { a: "b" } } as const;
     const out = diff(input0, input1);
-    console.log(out);
     expect(out.a.a).eql({ from: "a", to: "b" });
   });
 
