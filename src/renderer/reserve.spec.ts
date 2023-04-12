@@ -51,7 +51,7 @@ describe("reserve", () => {
 | debtCeiling | 0 |
 | decimals | 8 |
 | eModeCategory | 0 |
-| interestRateStrategy | [0x9b34E3e183c9b0d1a08fF57a8fb59c821616295f](https://etherscan.io/address/0x9b34E3e183c9b0d1a08fF57a8fb59c821616295f) |
+| interestRateStrategy | ![[0x9b34E3e183c9b0d1a08fF57a8fb59c821616295f](https://etherscan.io/address/0x9b34E3e183c9b0d1a08fF57a8fb59c821616295f)](/.assets/1_0x9b34E3e183c9b0d1a08fF57a8fb59c821616295f.svg) |
 | isActive | true |
 | isBorrowableInIsolation | false |
 | isFlashloanable | false |

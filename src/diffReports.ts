@@ -1,6 +1,7 @@
 import { fetchRateStrategyImage } from "./fetchIRStrategy";
 import { renderReserve, renderReserveDiff } from "./renderer/reserve";
-import { AaveV3Snapshot } from "./types";
+import { renderStrategy, renderStrategyDiff } from "./renderer/strategy";
+import { AaveV3Snapshot, AaveV3Reserve } from "./types";
 import { diff } from "./utils/diff";
 
 export async function diffReports<
@@ -24,10 +25,18 @@ export async function diffReports<
     .map((reserveKey) => {
       // to being present on reserve level % trueish means reserve was added
       if ((diffResult.reserves[reserveKey] as any).to) {
-        return renderReserve(
+        let report = renderReserve(
           (diffResult.reserves[reserveKey] as any).to,
           chainId
         );
+        report += renderStrategy(
+          post.strategies[
+            ((diffResult.reserves[reserveKey] as any).to as AaveV3Reserve)
+              .interestRateStrategy
+          ]
+        );
+
+        return report;
       }
     })
     .filter((i) => i);
@@ -52,11 +61,29 @@ export async function diffReports<
             typeof diffResult.reserves[reserveKey][fieldKey] === "object"
         )
       ) {
-        console.log(diffResult.reserves[reserveKey]);
-        return renderReserveDiff(
+        let report = renderReserveDiff(
           diffResult.reserves[reserveKey] as any,
           chainId
         );
+        if (
+          diffResult.reserves[reserveKey].interestRateStrategy.hasOwnProperty(
+            "from"
+          )
+        ) {
+          report += renderStrategyDiff(
+            diff(
+              pre.strategies[
+                (diffResult.reserves[reserveKey].interestRateStrategy as any)
+                  .from
+              ],
+              post.strategies[
+                (diffResult.reserves[reserveKey].interestRateStrategy as any).to
+              ]
+            ) as any
+          );
+        }
+
+        return report;
       }
     })
     .filter((i) => i);
