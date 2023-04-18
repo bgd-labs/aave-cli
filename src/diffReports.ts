@@ -1,3 +1,4 @@
+import hash from "object-hash";
 import { fetchRateStrategyImage } from "./fetchIRStrategy";
 import { renderReserve, renderReserveDiff } from "./renderer/reserve";
 import { renderStrategy, renderStrategyDiff } from "./renderer/strategy";
@@ -13,10 +14,10 @@ export async function diffReports<
   // download interest rate strategies
   // only downloads if it doesn't exist yet
   for (const ir in pre.strategies) {
-    await fetchRateStrategyImage(pre.strategies[ir], `${chainId}_${ir}`);
+    await fetchRateStrategyImage(pre.strategies[ir]);
   }
   for (const ir in post.strategies) {
-    await fetchRateStrategyImage(post.strategies[ir], `${chainId}_${ir}`);
+    await fetchRateStrategyImage(post.strategies[ir]);
   }
 
   // create report
@@ -29,12 +30,20 @@ export async function diffReports<
           (diffResult.reserves[reserveKey] as any).to,
           chainId
         );
+        const imageHash = hash(
+          post.strategies[
+            ((diffResult.reserves[reserveKey] as any).to as AaveV3Reserve)
+              .interestRateStrategy
+          ]
+        );
         report += renderStrategy(
           post.strategies[
             ((diffResult.reserves[reserveKey] as any).to as AaveV3Reserve)
               .interestRateStrategy
           ]
         );
+
+        report += `| interestRate | ![ir](/.assets/${imageHash}.svg) |`;
 
         return report;
       }
@@ -81,6 +90,15 @@ export async function diffReports<
               ]
             ) as any
           );
+          report += `| interestRate | ![before](/.assets/${hash(
+            pre.strategies[
+              (diffResult.reserves[reserveKey].interestRateStrategy as any).from
+            ]
+          )}.svg) | ![after](/.assets/${hash(
+            post.strategies[
+              (diffResult.reserves[reserveKey].interestRateStrategy as any).to
+            ]
+          )}.svg) |`;
         }
 
         return report;

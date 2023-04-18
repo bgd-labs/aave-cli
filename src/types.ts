@@ -40,6 +40,9 @@ export const aaveV3ReserveSchema = z.object({
   variableDebtTokenImpl: z.string(),
   oracleLatestAnswer: z.number(),
   oracle: z.string(),
+  oracleDecimals: z.number(),
+  oracleName: z.string(),
+  oracleDescription: z.string(),
   decimals: z.number(),
   isSiloed: z.boolean(),
 });

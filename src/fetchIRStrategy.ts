@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, createWriteStream } from "fs";
 import { pipeline } from "stream";
 import { promisify } from "util";
 import fetch from "node-fetch";
+import hash from "object-hash";
 
 const streamPipeline = promisify(pipeline);
 
@@ -12,9 +13,10 @@ const streamPipeline = promisify(pipeline);
  * @param {*} rate
  * @param fileName the fileName to store the ir to
  */
-export async function fetchRateStrategyImage(rate, fileName) {
+export async function fetchRateStrategyImage(rate) {
+  const fileHash = hash(rate);
   const relativePath = path.join(process.cwd(), ".assets");
-  const pathWithFile = path.join(relativePath, `${fileName}.svg`);
+  const pathWithFile = path.join(relativePath, `${fileHash}.svg`);
   // skip in case file already exists
   if (existsSync(pathWithFile)) return;
   // create folder if it doesn't exist

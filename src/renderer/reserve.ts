@@ -1,3 +1,4 @@
+import { formatUnits } from "viem";
 import { AaveV3Reserve, CHAIN_ID } from "../types";
 
 export const getBlockExplorerLink: {
@@ -36,9 +37,9 @@ export function renderReserveValue<T extends keyof AaveV3Reserve>(
   if (key === "liquidationBonus")
     return `${((reserve[key] as number) - 10000) / 100} %`;
   if (key === "interestRateStrategy")
-    return `![${getBlockExplorerLink[chainId](
-      reserve[key] as string
-    )}](/.assets/${chainId}_${reserve[key]}.svg)`;
+    return getBlockExplorerLink[chainId](reserve[key] as string);
+  if (key === "oracleLatestAnswer" && reserve.oracleDecimals)
+    return formatUnits(BigInt(reserve[key]), reserve.oracleDecimals);
   if (typeof reserve[key] === "number")
     return reserve[key].toLocaleString("en-US");
   if (typeof reserve[key] === "string" && /0x.+/.test(reserve[key] as string))
@@ -52,7 +53,15 @@ function renderReserveHeadline(reserve: AaveV3Reserve, chainId: CHAIN_ID) {
   )})\n\n`;
 }
 
-const ORDER: (keyof AaveV3Reserve)[] = ["supplyCap", "borrowCap"];
+const ORDER: (keyof AaveV3Reserve)[] = [
+  "supplyCap",
+  "borrowCap",
+  "oracle",
+  "oracleDecimals",
+  "oracleDescription",
+  "oracleName",
+  "oracleLatestAnswer",
+];
 function sortReserveKeys(a: keyof AaveV3Reserve, b: keyof AaveV3Reserve) {
   const indexA = ORDER.indexOf(a);
   const indexB = ORDER.indexOf(b);
