@@ -16,6 +16,8 @@ export const getBlockExplorerLink: {
     `[${address}](https://https://arbiscan.io/address/${address})`,
   [CHAIN_ID.AVALANCHE]: (address) =>
     `[${address}](https://snowtrace.io/address/${address})`,
+  [CHAIN_ID.METIS]: (address) =>
+    `[${address}](https://andromeda-explorer.metis.io/address/${address})`,
 };
 
 export function renderReserveValue<T extends keyof AaveV3Reserve>(
