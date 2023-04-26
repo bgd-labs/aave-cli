@@ -36,7 +36,10 @@ export function renderReserveValue<T extends keyof AaveV3Reserve>(
     return `${formatUnits(BigInt(reserve[key]), 2)} %`;
   if (["supplyCap", "borrowCap"].includes(key))
     return `${reserve[key].toLocaleString("en-US")} ${reserve.symbol}`;
-  if (key === "debtCeiling") return `${formatUnits(BigInt(reserve[key]), 2)} $`;
+  if (key === "debtCeiling")
+    return `${Number(formatUnits(BigInt(reserve[key]), 2)).toLocaleString(
+      "en-US"
+    )} $`;
   if (key === "liquidationBonus")
     return reserve[key] === 0
       ? "0 %"

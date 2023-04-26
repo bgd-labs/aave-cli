@@ -48,7 +48,7 @@ describe("reserve", () => {
       expect(renderReserveValue("reserveFactor", WBTC_MOCK, 1)).toBe("20 %");
     });
     it("debtCeiling", () => {
-      expect(renderReserveValue("debtCeiling", WBTC_MOCK, 1)).toBe("1000 $");
+      expect(renderReserveValue("debtCeiling", WBTC_MOCK, 1)).toBe("1,000 $");
     });
     it("lt", () => {
       expect(renderReserveValue("liquidationThreshold", WBTC_MOCK, 1)).toBe(
