@@ -19,7 +19,7 @@ exports[`reserve > renderReserve > should properly render new reserve 1`] = `
 | isFrozen | false |
 | supplyCap | 2,100 WBTC |
 | borrowCap | 1,115 WBTC |
-| debtCeiling | 1000 $ |
+| debtCeiling | 1,000 $ |
 | isSiloed | false |
 | isFlashloanable | false |
 | eModeCategory | 0 |
