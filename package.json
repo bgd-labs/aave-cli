@@ -10,7 +10,8 @@
   },
   "scripts": {
     "build": "tsup",
-    "test": "vitest"
+    "test": "vitest",
+    "ci:publish": "npm run build && npm publish --access=public"
   },
   "repository": {
     "type": "git",

@@ -33,11 +33,14 @@ export function renderReserveValue<T extends keyof AaveV3Reserve>(
       "ltv",
     ].includes(key)
   )
-    return `${(reserve[key] as number) / 100} %`;
+    return `${formatUnits(BigInt(reserve[key]), 2)} %`;
   if (["supplyCap", "borrowCap"].includes(key))
     return `${reserve[key].toLocaleString("en-US")} ${reserve.symbol}`;
+  if (key === "debtCeiling") return `${formatUnits(BigInt(reserve[key]), 2)} $`;
   if (key === "liquidationBonus")
-    return `${((reserve[key] as number) - 10000) / 100} %`;
+    return reserve[key] === 0
+      ? "0 %"
+      : `${((reserve[key] as number) - 10000) / 100} %`;
   if (key === "interestRateStrategy")
     return getBlockExplorerLink[chainId](reserve[key] as string);
   if (key === "oracleLatestAnswer" && reserve.oracleDecimals)
@@ -56,28 +59,44 @@ function renderReserveHeadline(reserve: AaveV3Reserve, chainId: CHAIN_ID) {
 }
 
 const ORDER: (keyof AaveV3Reserve)[] = [
+  "symbol",
+  "decimals",
+  "isActive",
+  "isFrozen",
   "supplyCap",
   "borrowCap",
+  "debtCeiling",
+  "isSiloed",
+  "isFlashloanable",
+  "eModeCategory",
   "oracle",
   "oracleDecimals",
   "oracleDescription",
   "oracleName",
   "oracleLatestAnswer",
+  "usageAsCollateralEnabled",
+  "ltv",
+  "liquidationThreshold",
+  "liquidationBonus",
+  "liquidationProtocolFee",
+  "reserveFactor",
+  "aToken",
+  "aTokenImpl",
+  "variableDebtToken",
+  "variableDebtTokenImpl",
+  "stableDebtToken",
+  "stableDebtTokenImpl",
+  "borrowingEnabled",
+  "stableBorrowRateEnabled",
+  "isBorrowableInIsolation",
+  "interestRateStrategy",
 ];
 function sortReserveKeys(a: keyof AaveV3Reserve, b: keyof AaveV3Reserve) {
   const indexA = ORDER.indexOf(a);
+  if (indexA === -1) return 1;
   const indexB = ORDER.indexOf(b);
-  if (indexA != -1 && indexB != -1) {
-    if (indexA > indexB) {
-      return 1;
-    }
-    if (indexB > indexA) {
-      return -1;
-    }
-  }
-  if (indexA != -1) return -1;
-  if (indexB != -1) return -1;
-  return a.localeCompare(b);
+  if (indexB === -1) return -1;
+  return indexA - indexB;
 }
 
 function renderReserveConfig(reserve: AaveV3Reserve, chainId: CHAIN_ID) {
