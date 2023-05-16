@@ -25,6 +25,7 @@
   "homepage": "https://github.com/bgd-labs/report-engine#readme",
   "type": "module",
   "devDependencies": {
+    "@types/node-fetch": "^2.6.4",
     "@types/yargs": "^17.0.23",
     "tsup": "^6.7.0",
     "typescript": "^5.0.2",
@@ -40,6 +41,10 @@
     "access": "public"
   },
   "dependencies": {
+    "bs58": "^5.0.0",
+    "dotenv": "^16.0.3",
+    "ipfs-http-client": "^60.0.0",
+    "ipfs-only-hash": "^4.0.0",
     "json-bigint": "^1.0.0",
     "node-fetch": "^2.6.9",
     "object-hash": "^3.0.0",
