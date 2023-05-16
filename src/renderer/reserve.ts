@@ -13,7 +13,7 @@ export const getBlockExplorerLink: {
   [CHAIN_ID.FANTOM]: (address) =>
     `[${address}](https://ftmscan.com/address/${address})`,
   [CHAIN_ID.ARBITRUM]: (address) =>
-    `[${address}](https://https://arbiscan.io/address/${address})`,
+    `[${address}](https://arbiscan.io/address/${address})`,
   [CHAIN_ID.AVALANCHE]: (address) =>
     `[${address}](https://snowtrace.io/address/${address})`,
   [CHAIN_ID.METIS]: (address) =>
