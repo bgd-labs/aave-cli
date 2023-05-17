@@ -1,3 +1,7 @@
+/**
+ * While javascript supports bigint, JSON.parse doesn't
+ * Therefore this file contains utilities to parse JSON containing bigint
+ */
 import JSONbig from "json-bigint";
 import fs from "fs";
 import path from "path";

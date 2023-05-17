@@ -1,5 +1,5 @@
 import { formatUnits } from "viem";
-import { AaveV3Reserve, CHAIN_ID } from "../types";
+import { AaveV3Reserve, CHAIN_ID } from "./snapshot-types";
 
 export const getBlockExplorerLink: {
   [key in CHAIN_ID]: (address: string) => string;

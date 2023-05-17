@@ -43,6 +43,7 @@
   "dependencies": {
     "bs58": "^5.0.0",
     "dotenv": "^16.0.3",
+    "gray-matter": "^4.0.3",
     "ipfs-http-client": "^60.0.0",
     "ipfs-only-hash": "^4.0.0",
     "json-bigint": "^1.0.0",

@@ -4,7 +4,7 @@ dotenv.config();
 
 import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
-import * as ipfsCmd from "./commands/ipfs";
+import * as ipfsCmd from "./commands/ipfs-upload";
 import * as diffSnapshot from "./commands/diff-snaphots";
 
 yargs(hideBin(process.argv))

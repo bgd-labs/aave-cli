@@ -1,4 +1,4 @@
-import { diffReports } from "../diffReports";
+import { diffReports } from "../renderer/diff-reports";
 import { readJsonString, readJsonFile } from "../utils/json";
 import fs from "fs";
 
@@ -11,7 +11,8 @@ export const builder = (yargs) =>
   yargs
     .option("out", {
       type: "string",
-      describe: "write file to out path",
+      describe: "output path",
+      alias: "o",
     })
     .option("stringMode", {
       type: "boolean",

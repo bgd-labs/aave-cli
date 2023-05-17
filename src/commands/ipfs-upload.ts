@@ -3,6 +3,7 @@ import path from "path";
 import Hash from "ipfs-only-hash";
 import bs58 from "bs58";
 import { create } from "ipfs-http-client";
+import { validateAIPHeader } from "../ipfs/aip-validation";
 
 // https://ethereum.stackexchange.com/questions/44506/ipfs-hash-algorithm
 async function getHash(data: string) {
@@ -55,7 +56,7 @@ export const builder = (yargs) =>
 export const handler = async function (argv) {
   const filePath = path.join(process.cwd(), argv.source);
   const content = fs.readFileSync(filePath, "utf8");
-  // TODO: validate
+  validateAIPHeader(content);
 
   const hash = await getHash(content);
   const bs58Hash = `0x${Buffer.from(bs58.decode(hash))
