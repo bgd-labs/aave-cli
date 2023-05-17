@@ -1,4 +1,4 @@
-import { diffReports } from "../renderer/diff-reports";
+import { diffReports } from "../reports/diff-reports";
 import { readJsonString, readJsonFile } from "../utils/json";
 import fs from "fs";
 

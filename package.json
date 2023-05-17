@@ -1,12 +1,12 @@
 {
-  "name": "@bgd-labs/report-engine",
-  "version": "0.0.11",
-  "description": "",
+  "name": "@bgd-labs/aave-cli",
+  "version": "0.0.1",
+  "description": "A cli to perform various aave governance related tasks",
   "main": "./dist/index.js",
   "module": "./dist/index.cjs",
   "private": false,
   "bin": {
-    "aave-report-engine": "dist/cli.cjs"
+    "aave-cli": "dist/cli.cjs"
   },
   "scripts": {
     "build": "tsup",
@@ -26,10 +26,10 @@
   "type": "module",
   "devDependencies": {
     "@types/node-fetch": "^2.6.4",
-    "@types/yargs": "^17.0.23",
+    "@types/yargs": "^17.0.24",
     "tsup": "^6.7.0",
-    "typescript": "^5.0.2",
-    "vitest": "^0.29.3"
+    "typescript": "^5.0.4",
+    "vitest": "^0.31.0"
   },
   "exports": {
     "default": "./dist/index.cjs",
@@ -44,13 +44,12 @@
     "bs58": "^5.0.0",
     "dotenv": "^16.0.3",
     "gray-matter": "^4.0.3",
-    "ipfs-http-client": "^60.0.0",
     "ipfs-only-hash": "^4.0.0",
     "json-bigint": "^1.0.0",
     "node-fetch": "^2.6.9",
     "object-hash": "^3.0.0",
-    "viem": "^0.3.0",
-    "yargs": "^17.7.1",
+    "viem": "^0.3.27",
+    "yargs": "^17.7.2",
     "zod": "^3.21.4"
   }
 }

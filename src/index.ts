@@ -1,1 +1,1 @@
-export * from "./diffReports";
+export * from "./reports/diff-reports";

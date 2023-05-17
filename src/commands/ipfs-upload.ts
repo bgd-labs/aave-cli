@@ -37,8 +37,13 @@ async function uploadToPinata(source: string) {
 }
 
 async function uploadToTheGraph(source: string) {
-  const ipfsClient = create({ url: "https://api.thegraph.com/ipfs/api/v0/" });
-  return await ipfsClient.add(source);
+  const data = new FormData();
+  data.append("file", new Blob([source]));
+  const res = await fetch("https://api.thegraph.com/ipfs/api/v0/add", {
+    method: "POST",
+    body: data,
+  });
+  return await res.json();
 }
 
 export const command = "ipfs <source>";
@@ -46,12 +51,17 @@ export const command = "ipfs <source>";
 export const describe = "generates the ipfs hash for specified source";
 
 export const builder = (yargs) =>
-  yargs.option("upload", {
-    describe: "upload to ipfs",
-    default: false,
-    alias: "u",
-    type: "boolean",
-  });
+  yargs
+    .option("upload", {
+      describe: "upload to ipfs",
+      default: false,
+      alias: "u",
+      type: "boolean",
+    })
+    .option("verbose", {
+      default: false,
+      type: "boolean",
+    });
 
 export const handler = async function (argv) {
   const filePath = path.join(process.cwd(), argv.source);
@@ -64,7 +74,14 @@ export const handler = async function (argv) {
     .toString("hex")}`;
 
   if (argv.upload) {
-    await Promise.all([uploadToPinata(content), uploadToTheGraph(content)]);
+    const [pinata, thegraph] = await Promise.all([
+      uploadToPinata(content),
+      uploadToTheGraph(content),
+    ]);
+    if (argv.verbose) {
+      console.log("pinata response", pinata);
+      console.log("thegraph response", thegraph);
+    }
   }
 
   // log as hex to console so foundry can read the content

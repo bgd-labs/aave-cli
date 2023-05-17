@@ -1,1 +1,1 @@
-# BGD Labs <> Aave Proposal tools
+# BGD Labs <> Aave CLI
