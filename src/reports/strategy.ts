@@ -1,4 +1,4 @@
-import { AaveV3Strategy } from "../types";
+import { AaveV3Strategy } from "./snapshot-types";
 import { formatUnits } from "viem";
 
 export function renderStrategyValue<T extends keyof AaveV3Strategy>(

@@ -1,9 +1,9 @@
 import hash from "object-hash";
-import { fetchRateStrategyImage } from "./fetchIRStrategy";
-import { renderReserve, renderReserveDiff } from "./renderer/reserve";
-import { renderStrategy, renderStrategyDiff } from "./renderer/strategy";
-import { AaveV3Snapshot, AaveV3Reserve } from "./types";
-import { diff } from "./utils/diff";
+import { fetchRateStrategyImage } from "./fetch-IR-strategy";
+import { renderReserve, renderReserveDiff } from "./reserve";
+import { renderStrategy, renderStrategyDiff } from "./strategy";
+import { AaveV3Snapshot, AaveV3Reserve } from "./snapshot-types";
+import { diff } from "./diff";
 
 export async function diffReports<
   A extends AaveV3Snapshot,

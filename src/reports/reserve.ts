@@ -1,5 +1,5 @@
 import { formatUnits } from "viem";
-import { AaveV3Reserve, CHAIN_ID } from "../types";
+import { AaveV3Reserve, CHAIN_ID } from "./snapshot-types";
 
 export const getBlockExplorerLink: {
   [key in CHAIN_ID]: (address: string) => string;
@@ -13,7 +13,7 @@ export const getBlockExplorerLink: {
   [CHAIN_ID.FANTOM]: (address) =>
     `[${address}](https://ftmscan.com/address/${address})`,
   [CHAIN_ID.ARBITRUM]: (address) =>
-    `[${address}](https://https://arbiscan.io/address/${address})`,
+    `[${address}](https://arbiscan.io/address/${address})`,
   [CHAIN_ID.AVALANCHE]: (address) =>
     `[${address}](https://snowtrace.io/address/${address})`,
   [CHAIN_ID.METIS]: (address) =>
