@@ -1,5 +1,5 @@
 import { AaveGovernanceV2 } from "@bgd-labs/aave-address-book";
-import { ActionSetState, L2NetworkModule } from "./types";
+import { MainnetModule, ProposalState } from "./types";
 import {
   decodeFunctionData,
   encodeFunctionData,
@@ -10,81 +10,76 @@ import {
   ARBITRUM_BRIDGE_EXECUTOR_ABI,
   ARBITRUM_BRIDGE_EXECUTOR_START_BLOCK,
 } from "../abis/ArbitrumBridgeExecutor";
-import { arbitrumClient } from "../../utils/rpcClients";
+import { mainnetClient } from "../../utils/rpcClients";
 import { getLogs } from "../../utils/logs";
 import { StateObject, tenderly } from "../../utils/tenderlyClient";
 import { EOA } from "../../utils/constants";
 import { MOCK_EXECUTOR_BYTECODE } from "../abis/MockExecutor";
+import {
+  AAVE_GOVERNANCE_V2_ABI,
+  AAVE_GOVERNANCE_V2_START_BLOCK,
+} from "../abis/AaveGovernanceV2";
 
-const arbitrumExecutorContract = getContract({
-  address: AaveGovernanceV2.ARBITRUM_BRIDGE_EXECUTOR,
-  abi: ARBITRUM_BRIDGE_EXECUTOR_ABI,
-  publicClient: arbitrumClient,
+const aaveGovernanceV2 = getContract({
+  address: AaveGovernanceV2.GOV,
+  abi: AAVE_GOVERNANCE_V2_ABI,
+  publicClient: mainnetClient,
 });
 
-export const arbitrum: L2NetworkModule<
-  typeof ARBITRUM_BRIDGE_EXECUTOR_ABI,
-  "ActionsSetQueued",
-  "ActionsSetExecuted"
+export const mainnet: MainnetModule<
+  typeof AAVE_GOVERNANCE_V2_ABI,
+  "ProposalCreated",
+  "ProposalQueued",
+  "ProposalExecuted"
 > = {
   async cacheLogs() {
-    const queuedLogs = await getLogs(arbitrumClient, (fromBLock, toBlock) =>
-      arbitrumExecutorContract.createEventFilter.ActionsSetQueued(
+    const createdLogs = await getLogs(mainnetClient, (fromBLock, toBlock) =>
+      aaveGovernanceV2.createEventFilter.ProposalCreated(
         {},
         {
-          fromBlock: fromBLock || ARBITRUM_BRIDGE_EXECUTOR_START_BLOCK,
+          fromBlock: fromBLock || AAVE_GOVERNANCE_V2_START_BLOCK,
           toBlock: toBlock,
         }
       )
     );
-    const executedLogs = await getLogs(arbitrumClient, (fromBLock, toBlock) =>
-      arbitrumExecutorContract.createEventFilter.ActionsSetExecuted(
+    const queuedLogs = await getLogs(mainnetClient, (fromBLock, toBlock) =>
+      aaveGovernanceV2.createEventFilter.ProposalQueued(
         {},
         {
-          fromBlock: fromBLock || ARBITRUM_BRIDGE_EXECUTOR_START_BLOCK,
+          fromBlock: fromBLock || AAVE_GOVERNANCE_V2_START_BLOCK,
+          toBlock: toBlock,
+        }
+      )
+    );
+    const executedLogs = await getLogs(mainnetClient, (fromBLock, toBlock) =>
+      aaveGovernanceV2.createEventFilter.ProposalExecuted(
+        {},
+        {
+          fromBlock: fromBLock || AAVE_GOVERNANCE_V2_START_BLOCK,
           toBlock: toBlock,
         }
       )
     );
 
-    return { queuedLogs, executedLogs };
+    return { queuedLogs, executedLogs, createdLogs };
   },
-  getProposalState({ trace, queuedLogs, executedLogs }) {
-    const dataValue = trace.decoded_input.find(
-      (input) => input.soltype.name === "data"
-    ).value as `0x${string}`;
-    const { args } = decodeFunctionData({
-      abi: ARBITRUM_BRIDGE_EXECUTOR_ABI,
-      data: dataValue,
-    });
-    if (!args) throw new Error("Error: cannot decode trace");
-    const queuedLog = queuedLogs.find(
-      (event) => JSON.stringify(event.args.targets) == JSON.stringify(args[0])
-    );
-    if (queuedLog) {
-      const executedLog = executedLogs.find(
-        (event) => event.args.id == queuedLog.args.id
-      );
-      if (executedLog) {
-        console.log("arbitrum payload executed");
-        return { log: executedLog, state: ActionSetState.EXECUTED };
-      } else {
-        console.log("arbitrum payload queued");
-        return { log: queuedLog, state: ActionSetState.QUEUED };
-      }
-    }
-    console.log("arbitrum payload not found");
-    return { state: ActionSetState.NOT_FOUND };
+  getProposalState({ proposalId, createdLogs, queuedLogs, executedLogs }) {
+    const executedLog = executedLogs.find((log) => log.args.id == proposalId);
+    if (executedLog) return { log: executedLog, state: ProposalState.EXECUTED };
+    const queuedLog = queuedLogs.find((log) => log.args.id == proposalId);
+    if (queuedLog) return { log: queuedLog, state: ProposalState.QUEUED };
+    const createdLog = createdLogs.find((log) => log.args.id == proposalId);
+    return { log: createdLog, state: ProposalState.CREATED };
   },
   async simulateOnTenderly({ state, log, trace }) {
-    if (state === ActionSetState.EXECUTED) {
+    if (state === ProposalState.EXECUTED) {
       console.log("using tenderly trace api for ", log.transactionHash!);
-      return tenderly.trace(arbitrumClient.chain.id, log.transactionHash!);
+      return tenderly.trace(mainnetClient.chain.id, log.transactionHash!);
     }
-    if (state === ActionSetState.QUEUED) {
+    if (state === ProposalState.QUEUED) {
       console.log("using tenderly simulation api");
-      const gracePeriod = await arbitrumExecutorContract.read.getGracePeriod();
-      const currentBlock = await arbitrumClient.getBlock();
+      const gracePeriod = await aaveGovernanceV2.read.getGracePeriod();
+      const currentBlock = await mainnetClient.getBlock();
       /**
        * When the proposal is expired, simulate one block after queuing
        * When the proposal could still be executed, simulate on current block
@@ -95,7 +90,7 @@ export const arbitrum: L2NetworkModule<
           : (currentBlock.number as bigint) - BigInt(1);
 
       const simulationPayload = {
-        network_id: String(arbitrumClient.chain.id),
+        network_id: String(mainnetClient.chain.id),
         from: EOA,
         to: AaveGovernanceV2.ARBITRUM_BRIDGE_EXECUTOR,
         block_number: Number(simulationBlock),
@@ -110,12 +105,12 @@ export const arbitrum: L2NetworkModule<
       };
       return tenderly.simulate(simulationPayload);
     }
-    if (state === ActionSetState.NOT_FOUND) {
+    if (state === ProposalState.CREATED) {
       const dataValue = trace.decoded_input.find(
         (input) => input.soltype.name === "data"
       ).value as `0x${string}`;
       const simulationPayload = {
-        network_id: String(arbitrumClient.chain.id),
+        network_id: String(mainnetClient.chain.id),
         from: EOA,
         to: AaveGovernanceV2.ARBITRUM_BRIDGE_EXECUTOR,
         input: dataValue,
