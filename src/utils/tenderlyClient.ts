@@ -46,6 +46,59 @@ export type TenderlyRequest = {
   root?: string;
 };
 
+enum SoltypeType {
+  Address = "address",
+  Bool = "bool",
+  Bytes32 = "bytes32",
+  MappingAddressUint256 = "mapping (address => uint256)",
+  MappingUint256Uint256 = "mapping (uint256 => uint256)",
+  String = "string",
+  Tuple = "tuple",
+  TypeAddress = "address[]",
+  TypeTuple = "tuple[]",
+  Uint16 = "uint16",
+  Uint256 = "uint256",
+  Uint48 = "uint48",
+  Uint56 = "uint56",
+  Uint8 = "uint8",
+}
+
+enum StorageLocation {
+  Calldata = "calldata",
+  Default = "default",
+  Memory = "memory",
+  Storage = "storage",
+}
+
+enum SimpleTypeType {
+  Address = "address",
+  Bool = "bool",
+  Bytes = "bytes",
+  Slice = "slice",
+  String = "string",
+  Uint = "uint",
+}
+
+interface Type {
+  type: SimpleTypeType;
+}
+
+export interface SoltypeElement {
+  name: string;
+  type: SoltypeType;
+  storage_location: StorageLocation;
+  components: SoltypeElement[] | null;
+  offset: number;
+  index: string;
+  indexed: boolean;
+  simple_type?: Type;
+}
+
+export interface Input {
+  soltype: SoltypeElement | null;
+  value: boolean | string;
+}
+
 export interface Trace {
   from: string;
   to?: string;
@@ -53,6 +106,7 @@ export interface Trace {
   input: string;
   output: string;
   calls?: Trace[];
+  decoded_input: Input[];
 }
 
 export type TenderlyResponse = {
