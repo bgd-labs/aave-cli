@@ -1,26 +1,30 @@
 import { AaveGovernanceV2 } from "@bgd-labs/aave-address-book";
 import { MainnetModule, ProposalState } from "./types";
 import {
-  decodeFunctionData,
+  concat,
+  encodeAbiParameters,
   encodeFunctionData,
+  fromHex,
   getContract,
+  keccak256,
+  pad,
+  parseAbiParameters,
+  parseEther,
   toHex,
 } from "viem";
-import {
-  ARBITRUM_BRIDGE_EXECUTOR_ABI,
-  ARBITRUM_BRIDGE_EXECUTOR_START_BLOCK,
-} from "../abis/ArbitrumBridgeExecutor";
 import { mainnetClient } from "../../utils/rpcClients";
 import { getLogs } from "../../utils/logs";
-import { StateObject, tenderly } from "../../utils/tenderlyClient";
+import { tenderly } from "../../utils/tenderlyClient";
 import { EOA } from "../../utils/constants";
-import { MOCK_EXECUTOR_BYTECODE } from "../abis/MockExecutor";
 import {
   AAVE_GOVERNANCE_V2_ABI,
   AAVE_GOVERNANCE_V2_START_BLOCK,
+  getAaveGovernanceV2Slots,
 } from "../abis/AaveGovernanceV2";
+import { EXECUTOR_ABI } from "../abis/Executor";
+import { getSolidityStorageSlotBytes } from "../../utils/storageSlots";
 
-const aaveGovernanceV2 = getContract({
+const aaveGovernanceV2Contract = getContract({
   address: AaveGovernanceV2.GOV,
   abi: AAVE_GOVERNANCE_V2_ABI,
   publicClient: mainnetClient,
@@ -34,7 +38,7 @@ export const mainnet: MainnetModule<
 > = {
   async cacheLogs() {
     const createdLogs = await getLogs(mainnetClient, (fromBLock, toBlock) =>
-      aaveGovernanceV2.createEventFilter.ProposalCreated(
+      aaveGovernanceV2Contract.createEventFilter.ProposalCreated(
         {},
         {
           fromBlock: fromBLock || AAVE_GOVERNANCE_V2_START_BLOCK,
@@ -43,7 +47,7 @@ export const mainnet: MainnetModule<
       )
     );
     const queuedLogs = await getLogs(mainnetClient, (fromBLock, toBlock) =>
-      aaveGovernanceV2.createEventFilter.ProposalQueued(
+      aaveGovernanceV2Contract.createEventFilter.ProposalQueued(
         {},
         {
           fromBlock: fromBLock || AAVE_GOVERNANCE_V2_START_BLOCK,
@@ -52,7 +56,7 @@ export const mainnet: MainnetModule<
       )
     );
     const executedLogs = await getLogs(mainnetClient, (fromBLock, toBlock) =>
-      aaveGovernanceV2.createEventFilter.ProposalExecuted(
+      aaveGovernanceV2Contract.createEventFilter.ProposalExecuted(
         {},
         {
           fromBlock: fromBLock || AAVE_GOVERNANCE_V2_START_BLOCK,
@@ -71,87 +75,95 @@ export const mainnet: MainnetModule<
     const createdLog = createdLogs.find((log) => log.args.id == proposalId);
     return { log: createdLog, state: ProposalState.CREATED };
   },
-  async simulateOnTenderly({ state, log, trace }) {
+  async simulateOnTenderly({ state, log, proposalId }) {
     if (state === ProposalState.EXECUTED) {
       console.log("using tenderly trace api for ", log.transactionHash!);
       return tenderly.trace(mainnetClient.chain.id, log.transactionHash!);
     }
-    if (state === ProposalState.QUEUED) {
-      console.log("using tenderly simulation api");
-      const gracePeriod = await aaveGovernanceV2.read.getGracePeriod();
-      const currentBlock = await mainnetClient.getBlock();
-      /**
-       * When the proposal is expired, simulate one block after queuing
-       * When the proposal could still be executed, simulate on current block
-       */
-      const simulationBlock =
-        currentBlock.timestamp > BigInt(log.args.executionTime!) + gracePeriod
-          ? Number(log.blockNumber) + 1
-          : (currentBlock.number as bigint) - BigInt(1);
+    const proposal = await aaveGovernanceV2Contract.read.getProposalById([
+      proposalId,
+    ]);
+    const slots = getAaveGovernanceV2Slots(proposalId, proposal.executor);
+    const executorContract = getContract({
+      address: proposal.executor,
+      abi: EXECUTOR_ABI,
+      publicClient: mainnetClient,
+    });
+    const duration = await executorContract.read.VOTING_DURATION();
+    const delay = await executorContract.read.getDelay();
+    /**
+     * For proposals that are still pending it might happen that the startBlock is not mined yet.
+     * Therefore in this case we need to estimate the startTimestamp.
+     */
+    const latestBlock = await mainnetClient.getBlock();
+    const isStartBlockMinted = latestBlock.number! < proposal.startBlock;
+    const startTimestamp = isStartBlockMinted
+      ? latestBlock.timestamp +
+        (proposal.startBlock - latestBlock.number!) * 12n
+      : (await mainnetClient.getBlock({ blockNumber: proposal.startBlock }))
+          .timestamp;
 
-      const simulationPayload = {
-        network_id: String(mainnetClient.chain.id),
-        from: EOA,
-        to: AaveGovernanceV2.ARBITRUM_BRIDGE_EXECUTOR,
-        block_number: Number(simulationBlock),
-        input: encodeFunctionData({
-          abi: ARBITRUM_BRIDGE_EXECUTOR_ABI,
-          functionName: "execute",
-          args: [log.args.id!],
-        }),
-        block_header: {
-          timestamp: toHex(BigInt(log.args.executionTime!)),
-        },
-      };
-      return tenderly.simulate(simulationPayload);
-    }
-    if (state === ProposalState.CREATED) {
-      const dataValue = trace.decoded_input.find(
-        (input) => input.soltype.name === "data"
-      ).value as `0x${string}`;
-      const simulationPayload = {
-        network_id: String(mainnetClient.chain.id),
-        from: EOA,
-        to: AaveGovernanceV2.ARBITRUM_BRIDGE_EXECUTOR,
-        input: dataValue,
-        state_objects: {
-          [AaveGovernanceV2.ARBITRUM_BRIDGE_EXECUTOR]: {
-            code: MOCK_EXECUTOR_BYTECODE,
-          },
-        },
-      };
-      const queueResult = await tenderly.simulate(simulationPayload);
+    const endBlockNumber = proposal.startBlock + duration + 2n;
+    const isEndBlockMinted = latestBlock.number! > endBlockNumber;
 
-      const queueState =
-        queueResult.transaction.transaction_info.state_diff.reduce(
-          (acc, diff) => {
-            diff.raw.forEach((raw) => {
-              if (!acc[raw.address]) acc[raw.address] = { storage: {} };
-              acc[raw.address].storage![raw.key] = raw.dirty;
-            });
+    // construct earliest possible header for execution
+    const blockHeader = {
+      timestamp: toHex(startTimestamp + (duration + 1n) * 12n + delay + 1n),
+      number: toHex(endBlockNumber),
+    };
+
+    const simulationPayload = {
+      network_id: mainnetClient.chain.id,
+      block_number: isEndBlockMinted ? endBlockNumber : latestBlock.number,
+      from: EOA,
+      to: AaveGovernanceV2.GOV,
+      gas_price: "0",
+      value: proposal.values.reduce((sum, cur) => sum + cur).toString(),
+      gas: 30_000_000,
+      input: encodeFunctionData({
+        abi: AAVE_GOVERNANCE_V2_ABI,
+        functionName: "execute",
+        args: [proposalId],
+      }),
+      block_header: blockHeader,
+      state_objects: {
+        // Give `from` address 10 ETH to send transaction
+        [EOA]: { balance: parseEther("10").toString() },
+        // Ensure transactions are queued in the executor
+        [proposal.executor]: {
+          storage: proposal.targets.reduce((acc, target, i) => {
+            const hash = keccak256(
+              encodeAbiParameters(
+                parseAbiParameters(
+                  "address, uint256, string, bytes, uint256, bool"
+                ),
+                [
+                  target,
+                  proposal.values[i],
+                  proposal.signatures[i],
+                  proposal.calldatas[i],
+                  fromHex(blockHeader.timestamp, "bigint"),
+                  proposal.withDelegatecalls[i],
+                ]
+              )
+            );
+            const slot = getSolidityStorageSlotBytes(slots.queuedTxsSlot, hash);
+            acc[slot] = pad("0x1", { size: 32 });
             return acc;
+          }, {}),
+        },
+        [AaveGovernanceV2.GOV]: {
+          storage: {
+            [slots.eta]: pad(blockHeader.timestamp, { size: 32 }),
+            [slots.forVotes]: pad(toHex(parseEther("3000000")), { size: 32 }),
+            [slots.againstVotes]: pad("0x0", { size: 32 }),
+            [slots.canceled]: pad(
+              concat([AaveGovernanceV2.GOV_STRATEGY, "0x0000"]),
+              { size: 32 }
+            ),
           },
-          {} as Record<string, StateObject>
-        );
-      queueState[AaveGovernanceV2.ARBITRUM_BRIDGE_EXECUTOR] = {
-        code: MOCK_EXECUTOR_BYTECODE,
-      };
-      const id = queueResult.transaction.transaction_info.state_diff.find(
-        (diff) =>
-          diff.address.toLowerCase() ===
-            AaveGovernanceV2.ARBITRUM_BRIDGE_EXECUTOR.toLowerCase() &&
-          diff.soltype.name === "_actionsSetCounter"
-      );
-
-      return await tenderly.simulate({
-        ...simulationPayload,
-        state_objects: queueState,
-        input: encodeFunctionData({
-          abi: ARBITRUM_BRIDGE_EXECUTOR_ABI,
-          functionName: "execute",
-          args: [id.original],
-        }),
-      });
-    }
+        },
+      },
+    };
   },
 };

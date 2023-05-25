@@ -77,7 +77,7 @@ export interface MainnetModule<
       | ArrayElement<GetFilterLogsReturnType<TAbi, TExecutedEventName>>;
   };
   simulateOnTenderly: (
-    args: { trace: Trace } & (
+    args: { proposalId: bigint } & (
       | {
           state: ProposalState.CREATED;
           log: ArrayElement<GetFilterLogsReturnType<TAbi, TCreatedEventName>>;
