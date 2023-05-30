@@ -1,5 +1,5 @@
-import { AaveGovernanceV2 } from "@bgd-labs/aave-address-book";
-import { MainnetModule, ProposalState } from "./types";
+import { AaveGovernanceV2 } from '@bgd-labs/aave-address-book';
+import { MainnetModule, ProposalState } from './types';
 import {
   concat,
   encodeAbiParameters,
@@ -11,18 +11,23 @@ import {
   parseAbiParameters,
   parseEther,
   toHex,
-} from "viem";
-import { mainnetClient } from "../../utils/rpcClients";
-import { getLogs } from "../../utils/logs";
-import { tenderly } from "../../utils/tenderlyClient";
-import { EOA } from "../../utils/constants";
+} from 'viem';
+import { mainnetClient } from '../../utils/rpcClients';
+import { getLogs } from '../../utils/logs';
+import { TenderlySimulationResponse, TenderlyTraceResponse, tenderly } from '../../utils/tenderlyClient';
+import { EOA } from '../../utils/constants';
 import {
   AAVE_GOVERNANCE_V2_ABI,
   AAVE_GOVERNANCE_V2_START_BLOCK,
   getAaveGovernanceV2Slots,
-} from "../abis/AaveGovernanceV2";
-import { EXECUTOR_ABI } from "../abis/Executor";
-import { getSolidityStorageSlotBytes } from "../../utils/storageSlots";
+} from '../abis/AaveGovernanceV2';
+import { EXECUTOR_ABI } from '../abis/Executor';
+import { getSolidityStorageSlotBytes } from '../../utils/storageSlots';
+import { arbitrum } from './arbitrum';
+import { polygon } from './polygon';
+import { optimism } from './optimism';
+import { metis } from './metis';
+import { logInfo } from '../../utils/logger';
 
 const aaveGovernanceV2Contract = getContract({
   address: AaveGovernanceV2.GOV,
@@ -32,10 +37,11 @@ const aaveGovernanceV2Contract = getContract({
 
 export const mainnet: MainnetModule<
   typeof AAVE_GOVERNANCE_V2_ABI,
-  "ProposalCreated",
-  "ProposalQueued",
-  "ProposalExecuted"
+  'ProposalCreated',
+  'ProposalQueued',
+  'ProposalExecuted'
 > = {
+  name: 'Mainnet',
   async cacheLogs() {
     const createdLogs = await getLogs(mainnetClient, (fromBLock, toBlock) =>
       aaveGovernanceV2Contract.createEventFilter.ProposalCreated(
@@ -77,12 +83,9 @@ export const mainnet: MainnetModule<
   },
   async simulateOnTenderly({ state, log, proposalId }) {
     if (state === ProposalState.EXECUTED) {
-      console.log("using tenderly trace api for ", log.transactionHash!);
       return tenderly.trace(mainnetClient.chain.id, log.transactionHash!);
     }
-    const proposal = await aaveGovernanceV2Contract.read.getProposalById([
-      proposalId,
-    ]);
+    const proposal = await aaveGovernanceV2Contract.read.getProposalById([proposalId]);
     const slots = getAaveGovernanceV2Slots(proposalId, proposal.executor);
     const executorContract = getContract({
       address: proposal.executor,
@@ -98,10 +101,8 @@ export const mainnet: MainnetModule<
     const latestBlock = await mainnetClient.getBlock();
     const isStartBlockMinted = latestBlock.number! < proposal.startBlock;
     const startTimestamp = isStartBlockMinted
-      ? latestBlock.timestamp +
-        (proposal.startBlock - latestBlock.number!) * 12n
-      : (await mainnetClient.getBlock({ blockNumber: proposal.startBlock }))
-          .timestamp;
+      ? latestBlock.timestamp + (proposal.startBlock - latestBlock.number!) * 12n
+      : (await mainnetClient.getBlock({ blockNumber: proposal.startBlock })).timestamp;
 
     const endBlockNumber = proposal.startBlock + duration + 2n;
     const isEndBlockMinted = latestBlock.number! > endBlockNumber;
@@ -113,57 +114,108 @@ export const mainnet: MainnetModule<
     };
 
     const simulationPayload = {
-      network_id: mainnetClient.chain.id,
-      block_number: isEndBlockMinted ? endBlockNumber : latestBlock.number,
+      network_id: String(mainnetClient.chain.id),
+      block_number: Number(isEndBlockMinted ? endBlockNumber : latestBlock.number),
       from: EOA,
       to: AaveGovernanceV2.GOV,
-      gas_price: "0",
+      gas_price: '0',
       value: proposal.values.reduce((sum, cur) => sum + cur).toString(),
       gas: 30_000_000,
       input: encodeFunctionData({
         abi: AAVE_GOVERNANCE_V2_ABI,
-        functionName: "execute",
+        functionName: 'execute',
         args: [proposalId],
       }),
       block_header: blockHeader,
       state_objects: {
         // Give `from` address 10 ETH to send transaction
-        [EOA]: { balance: parseEther("10").toString() },
+        [EOA]: { balance: parseEther('10').toString() },
         // Ensure transactions are queued in the executor
         [proposal.executor]: {
           storage: proposal.targets.reduce((acc, target, i) => {
             const hash = keccak256(
-              encodeAbiParameters(
-                parseAbiParameters(
-                  "address, uint256, string, bytes, uint256, bool"
-                ),
-                [
-                  target,
-                  proposal.values[i],
-                  proposal.signatures[i],
-                  proposal.calldatas[i],
-                  fromHex(blockHeader.timestamp, "bigint"),
-                  proposal.withDelegatecalls[i],
-                ]
-              )
+              encodeAbiParameters(parseAbiParameters('address, uint256, string, bytes, uint256, bool'), [
+                target,
+                proposal.values[i],
+                proposal.signatures[i],
+                proposal.calldatas[i],
+                fromHex(blockHeader.timestamp, 'bigint'),
+                proposal.withDelegatecalls[i],
+              ])
             );
             const slot = getSolidityStorageSlotBytes(slots.queuedTxsSlot, hash);
-            acc[slot] = pad("0x1", { size: 32 });
+            acc[slot] = pad('0x1', { size: 32 });
             return acc;
           }, {}),
         },
         [AaveGovernanceV2.GOV]: {
           storage: {
             [slots.eta]: pad(blockHeader.timestamp, { size: 32 }),
-            [slots.forVotes]: pad(toHex(parseEther("3000000")), { size: 32 }),
-            [slots.againstVotes]: pad("0x0", { size: 32 }),
-            [slots.canceled]: pad(
-              concat([AaveGovernanceV2.GOV_STRATEGY, "0x0000"]),
-              { size: 32 }
-            ),
+            [slots.forVotes]: pad(toHex(parseEther('3000000')), { size: 32 }),
+            [slots.againstVotes]: pad('0x0', { size: 32 }),
+            [slots.canceled]: pad(concat([AaveGovernanceV2.GOV_STRATEGY, '0x0000']), { size: 32 }),
           },
         },
       },
     };
+    return tenderly.simulate(simulationPayload);
   },
 };
+
+const l2Modules = [/*arbitrum, optimism, polygon */ polygon];
+
+export async function simulateMainnet(proposalId: bigint) {
+  logInfo(mainnet.name, 'Updating events cache');
+  const mainnetCache = await mainnet.cacheLogs();
+
+  logInfo(mainnet.name, 'Fetching latest known proposal state');
+  const mainnetState = await mainnet.getProposalState({
+    ...mainnetCache,
+    proposalId,
+  });
+
+  logInfo(mainnet.name, 'Simulate on tenderly');
+  const mainnetSimulationResult = await mainnet.simulateOnTenderly({
+    ...mainnetState,
+    proposalId,
+  });
+  const subResults: {
+    name: string;
+    simulation: TenderlySimulationResponse | TenderlyTraceResponse;
+  }[] = [];
+  for (const module of l2Modules) {
+    logInfo(module.name, 'Updating events cache');
+    const moduleBridgeTraces = await module.findBridgeInMainnetCalls(
+      (mainnetSimulationResult as TenderlyTraceResponse).call_trace?.calls ||
+        (mainnetSimulationResult as TenderlySimulationResponse).transaction?.transaction_info.call_trace.calls
+    );
+
+    if (moduleBridgeTraces.length > 0) {
+      logInfo(module.name, `Found ${moduleBridgeTraces.length} bridge messages in mainnet trace`);
+
+      logInfo(module.name, 'Updating events cache');
+      const moduleCache = await module.cacheLogs();
+
+      for (const trace of moduleBridgeTraces) {
+        logInfo(module.name, 'Fetching latest known proposal state');
+        const moduleState = await module.getProposalState({
+          trace: trace,
+          ...moduleCache,
+        });
+        if (module.simulateOnTenderly) {
+          logInfo(module.name, 'Simulate on tenderly');
+          const simulationResult = await module.simulateOnTenderly({
+            trace: trace,
+            ...moduleState,
+          });
+          subResults.push({ name: module.name, simulation: simulationResult });
+        } else {
+          logInfo(module.name, 'Simulation on tenderly not supported');
+        }
+      }
+    } else {
+      logInfo(module.name, 'Did not find bridge messages in mainnet trace');
+    }
+  }
+  return { simulation: mainnetSimulationResult, subSimulations: subResults };
+}

@@ -4,12 +4,27 @@ export type StateObject = {
   storage?: Record<string, string>;
 };
 
+interface RawElement {
+  address: string;
+  key: string;
+  original: string;
+  dirty: string;
+}
+
+export interface StateDiff {
+  soltype: SoltypeElement | null;
+  original: string | Record<string, any>;
+  dirty: string | Record<string, any>;
+  raw: RawElement[];
+  address: string;
+}
+
 type ContractObject = {
   contractName: string;
   source: string;
   sourcePath: string;
   compiler: {
-    name: "solc";
+    name: 'solc';
     version: string;
   };
   networks: Record<
@@ -33,7 +48,7 @@ export type TenderlyRequest = {
   gas?: number;
   gas_price?: string;
   value?: string;
-  simulation_type?: "full" | "quick";
+  simulation_type?: 'full' | 'quick';
   save?: boolean;
   save_if_fails?: boolean;
   state_objects?: Record<string, StateObject>;
@@ -47,36 +62,36 @@ export type TenderlyRequest = {
 };
 
 enum SoltypeType {
-  Address = "address",
-  Bool = "bool",
-  Bytes32 = "bytes32",
-  MappingAddressUint256 = "mapping (address => uint256)",
-  MappingUint256Uint256 = "mapping (uint256 => uint256)",
-  String = "string",
-  Tuple = "tuple",
-  TypeAddress = "address[]",
-  TypeTuple = "tuple[]",
-  Uint16 = "uint16",
-  Uint256 = "uint256",
-  Uint48 = "uint48",
-  Uint56 = "uint56",
-  Uint8 = "uint8",
+  Address = 'address',
+  Bool = 'bool',
+  Bytes32 = 'bytes32',
+  MappingAddressUint256 = 'mapping (address => uint256)',
+  MappingUint256Uint256 = 'mapping (uint256 => uint256)',
+  String = 'string',
+  Tuple = 'tuple',
+  TypeAddress = 'address[]',
+  TypeTuple = 'tuple[]',
+  Uint16 = 'uint16',
+  Uint256 = 'uint256',
+  Uint48 = 'uint48',
+  Uint56 = 'uint56',
+  Uint8 = 'uint8',
 }
 
 enum StorageLocation {
-  Calldata = "calldata",
-  Default = "default",
-  Memory = "memory",
-  Storage = "storage",
+  Calldata = 'calldata',
+  Default = 'default',
+  Memory = 'memory',
+  Storage = 'storage',
 }
 
 enum SimpleTypeType {
-  Address = "address",
-  Bool = "bool",
-  Bytes = "bytes",
-  Slice = "slice",
-  String = "string",
-  Uint = "uint",
+  Address = 'address',
+  Bool = 'bool',
+  Bytes = 'bytes',
+  Slice = 'slice',
+  String = 'string',
+  Uint = 'uint',
 }
 
 interface Type {
@@ -109,11 +124,22 @@ export interface Trace {
   decoded_input: Input[];
 }
 
-export type TenderlyResponse = {
+type TransactionInfo = {
   call_trace: {
     calls: Trace[];
   };
+  state_diff: StateDiff[];
 };
+
+type Transaction = {
+  transaction_info: TransactionInfo;
+};
+
+export type TenderlySimulationResponse = {
+  transaction: Transaction;
+};
+
+export type TenderlyTraceResponse = TransactionInfo;
 
 class Tenderly {
   TENDERLY_BASE: string = `https://api.tenderly.co/api/v1`;
@@ -128,38 +154,36 @@ class Tenderly {
     this.PROJECT = project;
   }
 
-  trace = async (chainId: number, txHash: string) => {
-    const response = await fetch(
-      `${this.TENDERLY_BASE}/public-contract/${chainId}/trace/${txHash}`,
-      {
-        method: "GET",
-        headers: new Headers({
-          "Content-Type": "application/json",
-          "X-Access-Key": this.ACCESS_TOKEN,
-        }),
-      }
-    );
+  trace = async (chainId: number, txHash: string): Promise<TenderlyTraceResponse> => {
+    const response = await fetch(`${this.TENDERLY_BASE}/public-contract/${chainId}/trace/${txHash}`, {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'X-Access-Key': this.ACCESS_TOKEN,
+      }),
+    });
     return await response.json();
   };
 
-  simulate = async (request: TenderlyRequest) => {
-    const response = await fetch(
-      `${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/simulate`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          generate_access_list: true,
-          save: true,
-          gas_price: "0",
-          gas: 30_000_000,
-          ...request,
-        }),
-        headers: new Headers({
-          "Content-Type": "application/json",
-          "X-Access-Key": this.ACCESS_TOKEN,
-        }),
-      }
-    );
+  simulate = async (request: TenderlyRequest): Promise<TenderlySimulationResponse> => {
+    const response = await fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/simulate`, {
+      method: 'POST',
+      body: JSON.stringify({
+        generate_access_list: true,
+        save: true,
+        gas_price: '0',
+        gas: 30_000_000,
+        ...request,
+      }),
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'X-Access-Key': this.ACCESS_TOKEN,
+      }),
+    });
+    if (response.status !== 200) {
+      console.log(await response.text());
+      throw new Error(`TenderlyError: ${response.statusText}`);
+    }
     return await response.json();
   };
 }

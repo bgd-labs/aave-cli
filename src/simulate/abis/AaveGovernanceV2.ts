@@ -1,6 +1,6 @@
 import { Address, Hex, fromHex, pad, toHex } from "viem";
 import { AaveGovernanceV2 } from "@bgd-labs/aave-address-book";
-import { getSolidityStorageSlotUint } from "../utils/storageSlots";
+import { getSolidityStorageSlotUint } from "../../utils/storageSlots";
 
 export const AAVE_GOVERNANCE_V2_ABI = [
   {
