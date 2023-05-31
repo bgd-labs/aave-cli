@@ -1,10 +1,11 @@
 import { logInfo } from '../utils/logger';
 import { TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { arbitrum } from './networks/arbitrum';
+import { FormattedArgs } from './networks/commonL2';
 import { mainnet } from './networks/mainnet';
 import { optimism } from './networks/optimism';
 import { polygon } from './networks/polygon';
-import { L2NetworkModule } from './networks/types';
+import { ActionSetState } from './networks/types';
 
 const l2Modules = [arbitrum, polygon, optimism];
 
@@ -26,7 +27,8 @@ export async function simulateProposal(proposalId: bigint) {
   const subResults: {
     name: string;
     simulation: TenderlySimulationResponse;
-    moduleState: ReturnType<typeof optimism.getProposalState>;
+    state: ActionSetState;
+    args: FormattedArgs;
   }[] = [];
   for (const module of l2Modules) {
     logInfo(module.name, 'Updating events cache');
@@ -49,11 +51,8 @@ export async function simulateProposal(proposalId: bigint) {
         } as any);
         if (module.simulateOnTenderly) {
           logInfo(module.name, 'Simulate on tenderly');
-          const simulationResult = await module.simulateOnTenderly({
-            trace: trace,
-            ...moduleState,
-          } as any);
-          subResults.push({ name: module.name, simulation: simulationResult, moduleState: moduleState as any });
+          const simulation = await module.simulateOnTenderly(moduleState as any);
+          subResults.push({ name: module.name, simulation, state: moduleState.state, args: moduleState.args });
         } else {
           logInfo(module.name, 'Simulation on tenderly not supported');
         }
