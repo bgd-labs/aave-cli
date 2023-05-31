@@ -4,6 +4,7 @@ import { arbitrum } from './networks/arbitrum';
 import { mainnet } from './networks/mainnet';
 import { optimism } from './networks/optimism';
 import { polygon } from './networks/polygon';
+import { L2NetworkModule } from './networks/types';
 
 const l2Modules = [arbitrum, polygon, optimism];
 
@@ -18,13 +19,14 @@ export async function simulateProposal(proposalId: bigint) {
   });
 
   logInfo(mainnet.name, 'Simulate on tenderly');
-  const mainnetSimulationResult = await mainnet.simulateOnTenderly({
+  const { proposal, simulation: mainnetSimulationResult } = await mainnet.simulateOnTenderly({
     ...mainnetState,
     proposalId,
   });
   const subResults: {
     name: string;
     simulation: TenderlySimulationResponse;
+    moduleState: ReturnType<typeof optimism.getProposalState>;
   }[] = [];
   for (const module of l2Modules) {
     logInfo(module.name, 'Updating events cache');
@@ -40,6 +42,7 @@ export async function simulateProposal(proposalId: bigint) {
 
       for (const trace of moduleBridgeTraces) {
         logInfo(module.name, 'Fetching latest known proposal state');
+        // any casts needed as types are slightly different on polygon vs others
         const moduleState = await module.getProposalState({
           trace: trace,
           ...moduleCache,
@@ -50,7 +53,7 @@ export async function simulateProposal(proposalId: bigint) {
             trace: trace,
             ...moduleState,
           } as any);
-          subResults.push({ name: module.name, simulation: simulationResult });
+          subResults.push({ name: module.name, simulation: simulationResult, moduleState: moduleState as any });
         } else {
           logInfo(module.name, 'Simulation on tenderly not supported');
         }
@@ -59,5 +62,5 @@ export async function simulateProposal(proposalId: bigint) {
       logInfo(module.name, 'Did not find bridge messages in mainnet trace');
     }
   }
-  return { simulation: mainnetSimulationResult, subSimulations: subResults };
+  return { proposal, simulation: mainnetSimulationResult, subSimulations: subResults };
 }
