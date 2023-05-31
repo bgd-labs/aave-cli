@@ -1,12 +1,11 @@
 import { AaveGovernanceV2 } from '@bgd-labs/aave-address-book';
-import { ActionSetState, L2NetworkModule } from './types';
-import { decodeFunctionData, encodeFunctionData, getContract, toHex } from 'viem';
+import { L2NetworkModule } from './types';
+import { getContract } from 'viem';
 import { METIS_BRIDGE_EXECUTOR_START_BLOCK, METIS_BRIDGE_EXECUTOR_ABI } from '../abis/MetisBridgeExecutor';
 import { metisClient } from '../../utils/rpcClients';
 import { getLogs } from '../../utils/logs';
-import { StateObject, Trace, tenderly } from '../../utils/tenderlyClient';
-import { EOA } from '../../utils/constants';
-import { MOCK_EXECUTOR_BYTECODE } from '../abis/MockExecutor';
+import { Trace } from '../../utils/tenderlyClient';
+import { getProposalState } from './commonL2';
 
 const METIS_L1_CROSS_COMAIN_MESSENGER = '0x081D1101855bD523bA69A9794e0217F0DB6323ff';
 
@@ -54,24 +53,11 @@ export const metis: L2NetworkModule<typeof METIS_BRIDGE_EXECUTOR_ABI, 'ActionsSe
       return acc;
     }, [] as Array<Trace>);
   },
-  getProposalState({ trace, queuedLogs, executedLogs }) {
-    const dataValue = trace.decoded_input.find((input) => input.soltype.name === '_message').value as `0x${string}`;
-    const { args } = decodeFunctionData({
-      abi: METIS_BRIDGE_EXECUTOR_ABI,
-      data: dataValue,
-    });
-    if (!args) throw new Error('Error: cannot decode trace');
-    const queuedLog = queuedLogs.find((event) => JSON.stringify(event.args.targets) == JSON.stringify(args[0]));
-    if (queuedLog) {
-      const executedLog = executedLogs.find((event) => event.args.id == queuedLog.args.id);
-      if (executedLog) {
-        return { log: executedLog, state: ActionSetState.EXECUTED };
-      } else {
-        return { log: queuedLog, state: ActionSetState.QUEUED };
-      }
-    }
-    return { state: ActionSetState.NOT_FOUND };
-  },
+  getProposalState: (args) =>
+    getProposalState({
+      ...args,
+      dataValue: args.trace.decoded_input.find((input) => input.soltype.name === '_message').value as `0x${string}`,
+    }),
   // Tenderly doesn't support metis
   // async simulateOnTenderly({ state, log, trace }) {
   //   if (state === ActionSetState.EXECUTED) {

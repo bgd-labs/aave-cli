@@ -2,6 +2,7 @@ import type { Abi } from 'abitype';
 import { TenderlySimulationResponse, Trace } from '../../utils/tenderlyClient';
 import { GetFilterLogsReturnType, ReadContractReturnType } from 'viem';
 import { AAVE_GOVERNANCE_V2_ABI } from '../abis/AaveGovernanceV2';
+import { FormattedArgs, GetProposalStateProps, getProposalState } from './commonL2';
 
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly (infer ElementType)[]
   ? ElementType
@@ -13,11 +14,7 @@ export enum ActionSetState {
   EXECUTED,
 }
 
-export interface L2NetworkModule<
-  TAbi extends Abi | readonly unknown[],
-  TQueuedEventName extends string | undefined,
-  TExecutedEventName extends string | undefined
-> {
+export interface L2NetworkModule<TAbi extends Abi, TQueuedEventName extends string, TExecutedEventName extends string> {
   name: 'Optimism' | 'Polygon' | 'Arbitrum' | 'Metis';
   cacheLogs: () => Promise<{
     queuedLogs: GetFilterLogsReturnType<TAbi, TQueuedEventName>;
@@ -26,33 +23,24 @@ export interface L2NetworkModule<
   findBridgeInMainnetCalls: (
     calls: TenderlySimulationResponse['transaction']['transaction_info']['call_trace']['calls']
   ) => Array<Trace>;
-  getProposalState: (args: {
-    trace: Trace;
-    queuedLogs: GetFilterLogsReturnType<TAbi, TQueuedEventName>;
-    executedLogs: GetFilterLogsReturnType<TAbi, TExecutedEventName>;
-  }) =>
-    | {
-        state: ActionSetState.EXECUTED;
-        log: ArrayElement<GetFilterLogsReturnType<TAbi, TExecutedEventName>>;
-      }
-    | {
-        state: ActionSetState.QUEUED;
-        log: ArrayElement<GetFilterLogsReturnType<TAbi, TQueuedEventName>>;
-      }
-    | { state: ActionSetState.NOT_FOUND; log?: undefined };
+  getProposalState: (
+    args: Omit<GetProposalStateProps<TAbi>, 'dataValue'> & { trace: Trace }
+  ) => ReturnType<typeof getProposalState<TAbi>>;
   simulateOnTenderly?: (
     args: {
-      trace: Trace;
+      args: FormattedArgs;
     } & (
       | {
           state: ActionSetState.EXECUTED;
-          log: ArrayElement<GetFilterLogsReturnType<TAbi, TExecutedEventName>>;
+          executedLog: ArrayElement<GetFilterLogsReturnType<TAbi, TExecutedEventName>>;
+          queuedLog: ArrayElement<GetFilterLogsReturnType<TAbi, TQueuedEventName>>;
         }
       | {
           state: ActionSetState.QUEUED;
-          log: ArrayElement<GetFilterLogsReturnType<TAbi, TQueuedEventName>>;
+          queuedLog: ArrayElement<GetFilterLogsReturnType<TAbi, TQueuedEventName>>;
+          executedLog?: undefined;
         }
-      | { state: ActionSetState.NOT_FOUND; log?: undefined }
+      | { state: ActionSetState.NOT_FOUND; queuedLog?: undefined; executedLog?: undefined }
     )
   ) => Promise<TenderlySimulationResponse>;
 }

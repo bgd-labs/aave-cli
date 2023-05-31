@@ -1,5 +1,17 @@
-import { Hex, PublicClient, encodeAbiParameters, encodeFunctionData, fromHex, keccak256, pad, toHex } from 'viem';
-import { tenderly } from '../../utils/tenderlyClient';
+import {
+  Abi,
+  GetFilterLogsReturnType,
+  Hex,
+  PublicClient,
+  decodeFunctionData,
+  encodeAbiParameters,
+  encodeFunctionData,
+  fromHex,
+  keccak256,
+  pad,
+  toHex,
+} from 'viem';
+import { Trace, tenderly } from '../../utils/tenderlyClient';
 import { EOA } from '../../utils/constants';
 import {
   getBytesValue,
@@ -7,11 +19,76 @@ import {
   getSolidityStorageSlotBytes,
   getSolidityStorageSlotUint,
 } from '../../utils/storageSlots';
+import { ActionSetState, L2NetworkModule } from './types';
 
 /**
  * The executors are slightly different, but the execute signature is always the same
  */
 const executorABI = [
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'uint256', name: 'id', type: 'uint256' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'initiatorExecution',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'bytes[]',
+        name: 'returnedData',
+        type: 'bytes[]',
+      },
+    ],
+    name: 'ActionsSetExecuted',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'uint256', name: 'id', type: 'uint256' },
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: 'targets',
+        type: 'address[]',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256[]',
+        name: 'values',
+        type: 'uint256[]',
+      },
+      {
+        indexed: false,
+        internalType: 'string[]',
+        name: 'signatures',
+        type: 'string[]',
+      },
+      {
+        indexed: false,
+        internalType: 'bytes[]',
+        name: 'calldatas',
+        type: 'bytes[]',
+      },
+      {
+        indexed: false,
+        internalType: 'bool[]',
+        name: 'withDelegatecalls',
+        type: 'bool[]',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'executionTime',
+        type: 'uint256',
+      },
+    ],
+    name: 'ActionsSetQueued',
+    type: 'event',
+  },
   {
     inputs: [{ internalType: 'uint256', name: 'actionsSetId', type: 'uint256' }],
     name: 'execute',
@@ -19,7 +96,69 @@ const executorABI = [
     stateMutability: 'payable',
     type: 'function',
   },
-];
+  {
+    inputs: [
+      { internalType: 'address[]', name: 'targets', type: 'address[]' },
+      { internalType: 'uint256[]', name: 'values', type: 'uint256[]' },
+      { internalType: 'string[]', name: 'signatures', type: 'string[]' },
+      { internalType: 'bytes[]', name: 'calldatas', type: 'bytes[]' },
+      { internalType: 'bool[]', name: 'withDelegatecalls', type: 'bool[]' },
+    ],
+    name: 'queue',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+] as const;
+
+export interface GetProposalStateProps<TAbi extends Abi> {
+  queuedLogs: GetFilterLogsReturnType<TAbi, 'ActionsSetQueued'>;
+  executedLogs: GetFilterLogsReturnType<TAbi, 'ActionsSetExecuted'>;
+  dataValue: Hex;
+}
+
+export type FormattedArgs = {
+  targets: Hex[];
+  values: bigint[];
+  signatures: string[];
+  calldatas: Hex[];
+  withDelegatecalls: boolean[];
+  proposalId?: bigint;
+};
+
+export function formatArgs(rawArgs: any): FormattedArgs {
+  return {
+    targets: rawArgs[0],
+    values: rawArgs[1],
+    signatures: rawArgs[2],
+    calldatas: rawArgs[3],
+    withDelegatecalls: rawArgs[4],
+  };
+}
+
+export async function getProposalState<TAbi>({
+  queuedLogs,
+  executedLogs,
+  dataValue,
+}: GetProposalStateProps<typeof executorABI>) {
+  const { args: rawArgs } = decodeFunctionData({
+    abi: executorABI,
+    data: dataValue,
+  });
+  if (!rawArgs) throw new Error('Error: cannot decode trace');
+  const args = formatArgs(rawArgs);
+  const queuedLog = queuedLogs.find((event) => JSON.stringify(event.args.targets) == JSON.stringify(args.targets));
+  if (queuedLog) {
+    args.proposalId = queuedLog.args.id;
+    const executedLog = executedLogs.find((event) => event.args.id == queuedLog.args.id);
+    if (executedLog) {
+      return { executedLog: executedLog, queuedLog: queuedLog, state: ActionSetState.EXECUTED, args };
+    } else {
+      return { queuedLog: queuedLog, state: ActionSetState.QUEUED, args };
+    }
+  }
+  return { state: ActionSetState.NOT_FOUND, args };
+}
 
 export async function simulateQueuedActionSet(executorContract, executorAddress: Hex, client: PublicClient, log) {
   const gracePeriod = await executorContract.read.getGracePeriod();
@@ -50,7 +189,12 @@ export async function simulateQueuedActionSet(executorContract, executorAddress:
   return tenderly.simulate(simulationPayload);
 }
 
-export async function simulateNewActionSet(executorContract, executorAddress: Hex, client: PublicClient, args) {
+export async function simulateNewActionSet(
+  executorContract,
+  executorAddress: Hex,
+  client: PublicClient,
+  args: FormattedArgs
+) {
   const latestBlock = await client.getBlock();
   const currentCount = await executorContract.read.getActionsSetCount();
   const actionSetHash = fromHex(getSolidityStorageSlotUint(6n, currentCount), 'bigint');
@@ -68,35 +212,36 @@ export async function simulateNewActionSet(executorContract, executorAddress: He
    */
   const proposalStorage: { [key: `0x${string}`]: number | string | boolean } = {};
   // targets
-  proposalStorage[toHex(actionSetHash)] = pad(toHex(args[0].length), { size: 32 });
-  args[0].map((target, index) => {
+  proposalStorage[toHex(actionSetHash)] = pad(toHex(args.targets.length), { size: 32 });
+  args.targets.map((target, index) => {
     proposalStorage[getDynamicArraySlot(actionSetHash, index, 1)] = pad(target, { size: 32 }) as Hex;
   });
   // values
-  proposalStorage[toHex(actionSetHash + 1n)] = pad(toHex(args[1].length), { size: 32 });
-  args[1].map((value, index) => {
+  proposalStorage[toHex(actionSetHash + 1n)] = pad(toHex(args.values.length), { size: 32 });
+  args.values.map((value, index) => {
     proposalStorage[getDynamicArraySlot(actionSetHash + 1n, index, 1)] = pad(toHex(value), { size: 32 });
   });
   // signatures
-  proposalStorage[toHex(actionSetHash + 2n)] = pad(toHex(args[2].length), { size: 32 });
-  args[2].map((signature, index) => {
+  proposalStorage[toHex(actionSetHash + 2n)] = pad(toHex(args.signatures.length), { size: 32 });
+  args.signatures.map((signature, index) => {
     proposalStorage[getDynamicArraySlot(actionSetHash + 2n, index, 1)] = getBytesValue(signature);
   });
   // calldatas
-  proposalStorage[toHex(actionSetHash + 3n)] = pad(toHex(args[3].length), { size: 32 });
-  args[3].map((calldata, index) => {
+  proposalStorage[toHex(actionSetHash + 3n)] = pad(toHex(args.calldatas.length), { size: 32 });
+  args.calldatas.map((calldata, index) => {
     proposalStorage[getDynamicArraySlot(actionSetHash + 3n, index, 1)] = getBytesValue(calldata);
   });
   // withDelegateCalls
-  proposalStorage[toHex(actionSetHash + 4n)] = pad(toHex(args[4].length), { size: 32 });
-  args[4].map((withDelegateCalls, index) => {
+  proposalStorage[toHex(actionSetHash + 4n)] = pad(toHex(args.withDelegatecalls.length), { size: 32 });
+  args.withDelegatecalls.map((withDelegateCalls, index) => {
     proposalStorage[getDynamicArraySlot(actionSetHash + 4n, index, 1)] = pad(toHex(withDelegateCalls), {
       size: 32,
     });
   });
   // executionTime
   proposalStorage[pad(toHex(actionSetHash + 5n), { size: 32 })] = pad(toHex(latestBlock.timestamp), { size: 32 });
-  const hashes = args[0].reduce((acc, target, index) => {
+  // queued hashes
+  const hashes = args.targets.reduce((acc, target, index) => {
     const actionHash = keccak256(
       encodeAbiParameters(
         [
@@ -107,7 +252,14 @@ export async function simulateNewActionSet(executorContract, executorAddress: He
           { name: 'executionTime', type: 'uint256' },
           { name: 'withDelegatecall', type: 'bool' },
         ],
-        [args[0][index], args[1][index], args[2][index], args[3][index], latestBlock.timestamp, args[4][index]]
+        [
+          args.targets[index],
+          args.values[index],
+          args.signatures[index],
+          args.calldatas[index],
+          latestBlock.timestamp,
+          args.withDelegatecalls[index],
+        ]
       )
     );
     acc[getSolidityStorageSlotBytes(toHex(7), actionHash)] = pad(toHex(true), { size: 32 });

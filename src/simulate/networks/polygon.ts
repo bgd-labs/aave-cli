@@ -5,7 +5,7 @@ import { polygonClient } from '../../utils/rpcClients';
 import { getLogs } from '../../utils/logs';
 import { Trace, tenderly } from '../../utils/tenderlyClient';
 import { POLYGON_BRIDGE_EXECUTOR_ABI, POLYGON_BRIDGE_EXECUTOR_START_BLOCK } from '../abis/PolygonBridgeExecutor';
-import { simulateNewActionSet, simulateQueuedActionSet } from './commonL2';
+import { formatArgs, simulateNewActionSet, simulateQueuedActionSet } from './commonL2';
 
 const POLYGON_FX_ROOT = '0xfe5e5D361b2ad62c541bAb87C45a0B9B018389a2';
 
@@ -49,7 +49,7 @@ export const polygon: L2NetworkModule<typeof POLYGON_BRIDGE_EXECUTOR_ABI, 'Actio
   },
   getProposalState({ trace, queuedLogs, executedLogs }) {
     const dataValue = trace.decoded_input.find((input) => input.soltype.name === '_data').value as `0x${string}`;
-    const args = decodeAbiParameters(
+    const rawArgs = decodeAbiParameters(
       [
         { name: 'targets', type: 'address[]' },
         { name: 'values', type: 'uint256[]' },
@@ -59,21 +59,24 @@ export const polygon: L2NetworkModule<typeof POLYGON_BRIDGE_EXECUTOR_ABI, 'Actio
       ],
       dataValue
     );
-    if (!args) throw new Error('Error: cannot decode trace');
-    const queuedLog = queuedLogs.find((event) => JSON.stringify(event.args.targets) == JSON.stringify(args[0]));
+    if (!rawArgs) throw new Error('Error: cannot decode trace');
+    const args = formatArgs(rawArgs);
+
+    const queuedLog = queuedLogs.find((event) => JSON.stringify(event.args.targets) == JSON.stringify(args.targets));
     if (queuedLog) {
+      args.proposalId = queuedLog.args.id;
       const executedLog = executedLogs.find((event) => event.args.id == queuedLog.args.id);
       if (executedLog) {
-        return { log: executedLog, state: ActionSetState.EXECUTED };
+        return { executedLog: executedLog, queuedLog: queuedLog, state: ActionSetState.EXECUTED, args };
       } else {
-        return { log: queuedLog, state: ActionSetState.QUEUED };
+        return { queuedLog: queuedLog, state: ActionSetState.QUEUED, args };
       }
     }
-    return { state: ActionSetState.NOT_FOUND };
+    return { state: ActionSetState.NOT_FOUND, args };
   },
-  async simulateOnTenderly({ state, log, trace }) {
+  async simulateOnTenderly({ state, executedLog, queuedLog, args }) {
     if (state === ActionSetState.EXECUTED) {
-      const tx = await polygonClient.getTransaction({ hash: log.transactionHash! });
+      const tx = await polygonClient.getTransaction({ hash: executedLog.transactionHash! });
       return tenderly.simulateTx(polygonClient.chain.id, tx);
     }
     if (state === ActionSetState.QUEUED) {
@@ -81,21 +84,10 @@ export const polygon: L2NetworkModule<typeof POLYGON_BRIDGE_EXECUTOR_ABI, 'Actio
         polygonExecutorContract,
         AaveGovernanceV2.POLYGON_BRIDGE_EXECUTOR,
         polygonClient,
-        log
+        queuedLog
       );
     }
     if (state === ActionSetState.NOT_FOUND) {
-      const dataValue = trace.decoded_input.find((input) => input.soltype.name === '_data').value as `0x${string}`;
-      const args = decodeAbiParameters(
-        [
-          { name: 'targets', type: 'address[]' },
-          { name: 'values', type: 'uint256[]' },
-          { name: 'signatures', type: 'string[]' },
-          { name: 'calldatas', type: 'bytes[]' },
-          { name: 'withDelegatecalls', type: 'bool[]' },
-        ],
-        dataValue
-      );
       return simulateNewActionSet(
         polygonExecutorContract,
         AaveGovernanceV2.POLYGON_BRIDGE_EXECUTOR,

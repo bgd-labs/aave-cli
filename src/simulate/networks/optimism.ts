@@ -1,11 +1,11 @@
 import { AaveGovernanceV2 } from '@bgd-labs/aave-address-book';
 import { ActionSetState, L2NetworkModule } from './types';
-import { Hex, decodeFunctionData, getContract } from 'viem';
+import { getContract } from 'viem';
 import { OPTIMISM_BRIDGE_EXECUTOR_ABI, OPTIMISM_BRIDGE_EXECUTOR_START_BLOCK } from '../abis/OptimismBridgeExecutor';
 import { optimismClient } from '../../utils/rpcClients';
 import { getLogs } from '../../utils/logs';
 import { Trace, tenderly } from '../../utils/tenderlyClient';
-import { simulateNewActionSet, simulateQueuedActionSet } from './commonL2';
+import { getProposalState, simulateNewActionSet, simulateQueuedActionSet } from './commonL2';
 
 const OPTIMISM_L1_CROSS_COMAIN_MESSENGER = '0x25ace71c97B33Cc4729CF772ae268934F7ab5fA1';
 
@@ -54,27 +54,14 @@ export const optimism: L2NetworkModule<typeof OPTIMISM_BRIDGE_EXECUTOR_ABI, 'Act
         return acc;
       }, [] as Array<Trace>);
     },
-    getProposalState({ trace, queuedLogs, executedLogs }) {
-      const dataValue = trace.decoded_input.find((input) => input.soltype.name === '_message').value as `0x${string}`;
-      const { args } = decodeFunctionData({
-        abi: OPTIMISM_BRIDGE_EXECUTOR_ABI,
-        data: dataValue,
-      });
-      if (!args) throw new Error('Error: cannot decode trace');
-      const queuedLog = queuedLogs.find((event) => JSON.stringify(event.args.targets) == JSON.stringify(args[0]));
-      if (queuedLog) {
-        const executedLog = executedLogs.find((event) => event.args.id == queuedLog.args.id);
-        if (executedLog) {
-          return { log: executedLog, state: ActionSetState.EXECUTED };
-        } else {
-          return { log: queuedLog, state: ActionSetState.QUEUED };
-        }
-      }
-      return { state: ActionSetState.NOT_FOUND };
-    },
-    async simulateOnTenderly({ state, log, trace }) {
+    getProposalState: (args) =>
+      getProposalState({
+        ...args,
+        dataValue: args.trace.decoded_input.find((input) => input.soltype.name === '_message').value as `0x${string}`,
+      }),
+    async simulateOnTenderly({ state, executedLog, queuedLog, args }) {
       if (state === ActionSetState.EXECUTED) {
-        const tx = await optimismClient.getTransaction({ hash: log.transactionHash! });
+        const tx = await optimismClient.getTransaction({ hash: executedLog.transactionHash! });
         return tenderly.simulateTx(optimismClient.chain.id, tx);
       }
       if (state === ActionSetState.QUEUED) {
@@ -82,15 +69,10 @@ export const optimism: L2NetworkModule<typeof OPTIMISM_BRIDGE_EXECUTOR_ABI, 'Act
           optimismExecutorContract,
           AaveGovernanceV2.OPTIMISM_BRIDGE_EXECUTOR,
           optimismClient,
-          log
+          queuedLog
         );
       }
       if (state === ActionSetState.NOT_FOUND) {
-        const dataValue = trace.decoded_input.find((input) => input.soltype.name === '_message').value as Hex;
-        const { functionName, args } = decodeFunctionData({
-          abi: OPTIMISM_BRIDGE_EXECUTOR_ABI,
-          data: dataValue,
-        });
         return simulateNewActionSet(
           optimismExecutorContract,
           AaveGovernanceV2.OPTIMISM_BRIDGE_EXECUTOR,
