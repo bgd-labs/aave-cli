@@ -4,7 +4,7 @@ import { arbitrum } from './networks/arbitrum';
 import { mainnet } from './networks/mainnet';
 import { optimism } from './networks/optimism';
 import { polygon } from './networks/polygon';
-import { L2NetworkModule } from './networks/types';
+import { ActionSetState } from './networks/types';
 
 const l2Modules = [arbitrum, polygon, optimism];
 
@@ -26,7 +26,7 @@ export async function simulateProposal(proposalId: bigint) {
   const subResults: {
     name: string;
     simulation: TenderlySimulationResponse;
-    moduleState: ReturnType<typeof optimism.getProposalState>;
+    moduleState: { state: ActionSetState; log?: { args: { id: string } } };
   }[] = [];
   for (const module of l2Modules) {
     logInfo(module.name, 'Updating events cache');

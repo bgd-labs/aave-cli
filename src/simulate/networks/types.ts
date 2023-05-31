@@ -18,7 +18,7 @@ export interface L2NetworkModule<
   TQueuedEventName extends string | undefined,
   TExecutedEventName extends string | undefined
 > {
-  name: string;
+  name: 'Optimism' | 'Polygon' | 'Arbitrum' | 'Metis';
   cacheLogs: () => Promise<{
     queuedLogs: GetFilterLogsReturnType<TAbi, TQueuedEventName>;
     executedLogs: GetFilterLogsReturnType<TAbi, TExecutedEventName>;
@@ -39,7 +39,7 @@ export interface L2NetworkModule<
         state: ActionSetState.QUEUED;
         log: ArrayElement<GetFilterLogsReturnType<TAbi, TQueuedEventName>>;
       }
-    | { state: ActionSetState.NOT_FOUND; log: undefined };
+    | { state: ActionSetState.NOT_FOUND; log?: undefined };
   simulateOnTenderly?: (
     args: {
       trace: Trace;
@@ -52,7 +52,7 @@ export interface L2NetworkModule<
           state: ActionSetState.QUEUED;
           log: ArrayElement<GetFilterLogsReturnType<TAbi, TQueuedEventName>>;
         }
-      | { state: ActionSetState.NOT_FOUND; log: undefined }
+      | { state: ActionSetState.NOT_FOUND; log?: undefined }
     )
   ) => Promise<TenderlySimulationResponse>;
 }
