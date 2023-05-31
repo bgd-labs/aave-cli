@@ -1,5 +1,6 @@
-import { createPublicClient, http } from "viem";
-import { mainnet, arbitrum, polygon, optimism, metis } from "viem/chains";
+// import 'dotenv/config';
+import { createPublicClient, http } from 'viem';
+import { mainnet, arbitrum, polygon, optimism, metis } from 'viem/chains';
 
 export const mainnetClient = createPublicClient({
   chain: mainnet,

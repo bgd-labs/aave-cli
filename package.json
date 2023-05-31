@@ -42,7 +42,6 @@
   },
   "dependencies": {
     "@bgd-labs/aave-address-book": "^1.23.1",
-    "@tenderly/sdk": "^0.1.12",
     "bs58": "^5.0.0",
     "chalk": "^5.2.0",
     "dotenv": "^16.0.3",
@@ -51,7 +50,7 @@
     "json-bigint": "^1.0.0",
     "node-fetch": "^2.6.9",
     "object-hash": "^3.0.0",
-    "viem": "^0.3.36",
+    "viem": "^0.3.40",
     "yargs": "^17.7.2",
     "zod": "^3.21.4"
   }

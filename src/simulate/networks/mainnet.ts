@@ -14,7 +14,7 @@ import {
 } from 'viem';
 import { mainnetClient } from '../../utils/rpcClients';
 import { getLogs } from '../../utils/logs';
-import { TenderlySimulationResponse, TenderlyTraceResponse, tenderly } from '../../utils/tenderlyClient';
+import { tenderly } from '../../utils/tenderlyClient';
 import { EOA } from '../../utils/constants';
 import {
   AAVE_GOVERNANCE_V2_ABI,
@@ -23,11 +23,6 @@ import {
 } from '../abis/AaveGovernanceV2';
 import { EXECUTOR_ABI } from '../abis/Executor';
 import { getSolidityStorageSlotBytes } from '../../utils/storageSlots';
-import { arbitrum } from './arbitrum';
-import { polygon } from './polygon';
-import { optimism } from './optimism';
-import { metis } from './metis';
-import { logInfo } from '../../utils/logger';
 
 const aaveGovernanceV2Contract = getContract({
   address: AaveGovernanceV2.GOV,
@@ -79,11 +74,13 @@ export const mainnet: MainnetModule<
     const queuedLog = queuedLogs.find((log) => log.args.id == proposalId);
     if (queuedLog) return { log: queuedLog, state: ProposalState.QUEUED };
     const createdLog = createdLogs.find((log) => log.args.id == proposalId);
-    return { log: createdLog, state: ProposalState.CREATED };
+    if (createdLog) return { log: createdLog, state: ProposalState.CREATED };
+    throw new Error('Proposal not found');
   },
   async simulateOnTenderly({ state, log, proposalId }) {
     if (state === ProposalState.EXECUTED) {
-      return tenderly.trace(mainnetClient.chain.id, log.transactionHash!);
+      const tx = await mainnetClient.getTransaction({ hash: log.transactionHash! });
+      return tenderly.simulateTx(mainnetClient.chain.id, tx);
     }
     const proposal = await aaveGovernanceV2Contract.read.getProposalById([proposalId]);
     const slots = getAaveGovernanceV2Slots(proposalId, proposal.executor);
@@ -161,61 +158,3 @@ export const mainnet: MainnetModule<
     return tenderly.simulate(simulationPayload);
   },
 };
-
-const l2Modules = [/*arbitrum, optimism, polygon */ polygon];
-
-export async function simulateMainnet(proposalId: bigint) {
-  logInfo(mainnet.name, 'Updating events cache');
-  const mainnetCache = await mainnet.cacheLogs();
-
-  logInfo(mainnet.name, 'Fetching latest known proposal state');
-  const mainnetState = await mainnet.getProposalState({
-    ...mainnetCache,
-    proposalId,
-  });
-
-  logInfo(mainnet.name, 'Simulate on tenderly');
-  const mainnetSimulationResult = await mainnet.simulateOnTenderly({
-    ...mainnetState,
-    proposalId,
-  });
-  const subResults: {
-    name: string;
-    simulation: TenderlySimulationResponse | TenderlyTraceResponse;
-  }[] = [];
-  for (const module of l2Modules) {
-    logInfo(module.name, 'Updating events cache');
-    const moduleBridgeTraces = await module.findBridgeInMainnetCalls(
-      (mainnetSimulationResult as TenderlyTraceResponse).call_trace?.calls ||
-        (mainnetSimulationResult as TenderlySimulationResponse).transaction?.transaction_info.call_trace.calls
-    );
-
-    if (moduleBridgeTraces.length > 0) {
-      logInfo(module.name, `Found ${moduleBridgeTraces.length} bridge messages in mainnet trace`);
-
-      logInfo(module.name, 'Updating events cache');
-      const moduleCache = await module.cacheLogs();
-
-      for (const trace of moduleBridgeTraces) {
-        logInfo(module.name, 'Fetching latest known proposal state');
-        const moduleState = await module.getProposalState({
-          trace: trace,
-          ...moduleCache,
-        });
-        if (module.simulateOnTenderly) {
-          logInfo(module.name, 'Simulate on tenderly');
-          const simulationResult = await module.simulateOnTenderly({
-            trace: trace,
-            ...moduleState,
-          });
-          subResults.push({ name: module.name, simulation: simulationResult });
-        } else {
-          logInfo(module.name, 'Simulation on tenderly not supported');
-        }
-      }
-    } else {
-      logInfo(module.name, 'Did not find bridge messages in mainnet trace');
-    }
-  }
-  return { simulation: mainnetSimulationResult, subSimulations: subResults };
-}

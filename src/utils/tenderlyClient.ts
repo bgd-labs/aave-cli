@@ -1,3 +1,4 @@
+import { Transaction as ViemTransaction } from 'viem';
 export type StateObject = {
   balance?: string;
   code?: string;
@@ -185,6 +186,17 @@ class Tenderly {
       throw new Error(`TenderlyError: ${response.statusText}`);
     }
     return await response.json();
+  };
+
+  simulateTx = async (chainId: number, tx: ViemTransaction): Promise<TenderlySimulationResponse> => {
+    const simulationPayload = {
+      network_id: String(chainId),
+      from: tx.from!,
+      to: tx.to!,
+      block_number: Number(tx.blockNumber),
+      input: tx.input,
+    };
+    return this.simulate(simulationPayload);
   };
 }
 

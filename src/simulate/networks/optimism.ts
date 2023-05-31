@@ -1,12 +1,11 @@
 import { AaveGovernanceV2 } from '@bgd-labs/aave-address-book';
 import { ActionSetState, L2NetworkModule } from './types';
-import { decodeFunctionData, encodeFunctionData, getContract, toHex } from 'viem';
+import { Hex, decodeFunctionData, getContract } from 'viem';
 import { OPTIMISM_BRIDGE_EXECUTOR_ABI, OPTIMISM_BRIDGE_EXECUTOR_START_BLOCK } from '../abis/OptimismBridgeExecutor';
 import { optimismClient } from '../../utils/rpcClients';
 import { getLogs } from '../../utils/logs';
-import { StateObject, Trace, tenderly } from '../../utils/tenderlyClient';
-import { EOA } from '../../utils/constants';
-import { MOCK_EXECUTOR_BYTECODE } from '../abis/MockExecutor';
+import { Trace, tenderly } from '../../utils/tenderlyClient';
+import { simulateNewActionSet, simulateQueuedActionSet } from './commonL2';
 
 const OPTIMISM_L1_CROSS_COMAIN_MESSENGER = '0x25ace71c97B33Cc4729CF772ae268934F7ab5fA1';
 
@@ -75,76 +74,30 @@ export const optimism: L2NetworkModule<typeof OPTIMISM_BRIDGE_EXECUTOR_ABI, 'Act
     },
     async simulateOnTenderly({ state, log, trace }) {
       if (state === ActionSetState.EXECUTED) {
-        return tenderly.trace(optimismClient.chain.id, log.transactionHash!);
+        const tx = await optimismClient.getTransaction({ hash: log.transactionHash! });
+        return tenderly.simulateTx(optimismClient.chain.id, tx);
       }
       if (state === ActionSetState.QUEUED) {
-        const gracePeriod = await optimismExecutorContract.read.getGracePeriod();
-        const currentBlock = await optimismClient.getBlock();
-        /**
-         * When the proposal is expired, simulate one block after queuing
-         * When the proposal could still be executed, simulate on current block
-         */
-        const simulationBlock =
-          currentBlock.timestamp > BigInt(log.args.executionTime!) + gracePeriod
-            ? Number(log!.blockNumber) + 1
-            : (currentBlock.number as bigint) - BigInt(1);
-
-        const simulationPayload = {
-          network_id: String(optimismClient.chain.id),
-          from: EOA,
-          to: AaveGovernanceV2.OPTIMISM_BRIDGE_EXECUTOR,
-          block_number: Number(simulationBlock),
-          input: encodeFunctionData({
-            abi: OPTIMISM_BRIDGE_EXECUTOR_ABI,
-            functionName: 'execute',
-            args: [log!.args.id!],
-          }),
-          block_header: {
-            timestamp: toHex(BigInt(log.args.executionTime!)),
-          },
-        };
-        return tenderly.simulate(simulationPayload);
+        return simulateQueuedActionSet(
+          optimismExecutorContract,
+          AaveGovernanceV2.OPTIMISM_BRIDGE_EXECUTOR,
+          optimismClient,
+          log
+        );
       }
       if (state === ActionSetState.NOT_FOUND) {
-        const dataValue = trace.decoded_input.find((input) => input.soltype.name === '_message').value as `0x${string}`;
-        const simulationPayload = {
-          network_id: String(optimismClient.chain.id),
-          from: EOA,
-          to: AaveGovernanceV2.OPTIMISM_BRIDGE_EXECUTOR,
-          input: dataValue,
-          state_objects: {
-            [AaveGovernanceV2.OPTIMISM_BRIDGE_EXECUTOR]: {
-              code: MOCK_EXECUTOR_BYTECODE,
-            },
-          },
-        };
-        const queueResult = await tenderly.simulate(simulationPayload);
-
-        const queueState = queueResult.transaction.transaction_info.state_diff.reduce((acc, diff) => {
-          diff.raw.forEach((raw) => {
-            if (!acc[raw.address]) acc[raw.address] = { storage: {} };
-            acc[raw.address].storage![raw.key] = raw.dirty;
-          });
-          return acc;
-        }, {} as Record<string, StateObject>);
-        queueState[AaveGovernanceV2.OPTIMISM_BRIDGE_EXECUTOR] = {
-          code: MOCK_EXECUTOR_BYTECODE,
-        };
-        const id = queueResult.transaction.transaction_info.state_diff.find(
-          (diff) =>
-            diff.address.toLowerCase() === AaveGovernanceV2.OPTIMISM_BRIDGE_EXECUTOR.toLowerCase() &&
-            diff.soltype?.name === '_actionsSetCounter'
-        );
-
-        return await tenderly.simulate({
-          ...simulationPayload,
-          state_objects: queueState,
-          input: encodeFunctionData({
-            abi: OPTIMISM_BRIDGE_EXECUTOR_ABI,
-            functionName: 'execute',
-            args: [id.original],
-          }),
+        const dataValue = trace.decoded_input.find((input) => input.soltype.name === '_message').value as Hex;
+        const { functionName, args } = decodeFunctionData({
+          abi: OPTIMISM_BRIDGE_EXECUTOR_ABI,
+          data: dataValue,
         });
+        return simulateNewActionSet(
+          optimismExecutorContract,
+          AaveGovernanceV2.OPTIMISM_BRIDGE_EXECUTOR,
+          optimismClient,
+          args
+        );
       }
+      throw new Error(`Unexpected ActionSetState: ${state}`);
     },
   };

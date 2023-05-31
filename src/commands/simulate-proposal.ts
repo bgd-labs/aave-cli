@@ -1,5 +1,4 @@
-import { concat, encodeAbiParameters, encodePacked, pad, toBytes, toHex } from 'viem';
-import { simulateMainnet } from '../simulate/networks/mainnet';
+import { simulateProposal } from '../simulate/simulate';
 
 export const command = 'simulate-proposal [proposalId]';
 
@@ -14,6 +13,6 @@ export const builder = (yargs) =>
 export const handler = async function (argv) {
   if (!argv.proposalId) throw new Error('proposalId is required');
   const proposalId = BigInt(argv.proposalId);
-  const result = await simulateMainnet(proposalId);
+  const result = await simulateProposal(proposalId);
   // console.log(result);
 };
