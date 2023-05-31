@@ -1,14 +1,9 @@
 #!/usr/bin/env node
-import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-dotenv.config();
+import 'dotenv/config';
+import yargs from 'yargs/yargs';
+import { hideBin } from 'yargs/helpers';
+import * as ipfsCmd from './commands/ipfs-upload';
+import * as diffSnapshot from './commands/diff-snaphots';
+import * as simulateProposal from './commands/simulate-proposal';
 
-import yargs from "yargs/yargs";
-import { hideBin } from "yargs/helpers";
-import * as ipfsCmd from "./commands/ipfs-upload";
-import * as diffSnapshot from "./commands/diff-snaphots";
-
-yargs(hideBin(process.argv))
-  .command(ipfsCmd)
-  .command(diffSnapshot)
-  .demandCommand()
-  .help().argv;
+yargs(hideBin(process.argv)).command(ipfsCmd).command(diffSnapshot).command(simulateProposal).demandCommand().argv;

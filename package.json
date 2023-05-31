@@ -29,7 +29,7 @@
     "@types/yargs": "^17.0.24",
     "tsup": "^6.7.0",
     "typescript": "^5.0.4",
-    "vitest": "^0.31.0"
+    "vitest": "^0.31.1"
   },
   "exports": {
     "default": "./dist/index.cjs",
@@ -41,14 +41,16 @@
     "access": "public"
   },
   "dependencies": {
+    "@bgd-labs/aave-address-book": "^1.23.1",
     "bs58": "^5.0.0",
+    "chalk": "^5.2.0",
     "dotenv": "^16.0.3",
     "gray-matter": "^4.0.3",
     "ipfs-only-hash": "^4.0.0",
     "json-bigint": "^1.0.0",
     "node-fetch": "^2.6.9",
     "object-hash": "^3.0.0",
-    "viem": "^0.3.27",
+    "viem": "^0.3.40",
     "yargs": "^17.7.2",
     "zod": "^3.21.4"
   }
