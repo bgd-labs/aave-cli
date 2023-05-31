@@ -1,6 +1,7 @@
 import type { Abi } from 'abitype';
 import { TenderlySimulationResponse, Trace } from '../../utils/tenderlyClient';
-import { GetFilterLogsReturnType } from 'viem';
+import { GetFilterLogsReturnType, ReadContractReturnType } from 'viem';
+import { AAVE_GOVERNANCE_V2_ABI } from '../abis/AaveGovernanceV2';
 
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly (infer ElementType)[]
   ? ElementType
@@ -63,34 +64,33 @@ export enum ProposalState {
 }
 
 export interface MainnetModule<
-  TAbi extends Abi | readonly unknown[],
   TCreatedEventName extends string | undefined,
   TQueuedEventName extends string | undefined,
   TExecutedEventName extends string | undefined
 > {
   name: string;
   cacheLogs: () => Promise<{
-    createdLogs: GetFilterLogsReturnType<TAbi, TCreatedEventName>;
-    queuedLogs: GetFilterLogsReturnType<TAbi, TQueuedEventName>;
-    executedLogs: GetFilterLogsReturnType<TAbi, TExecutedEventName>;
+    createdLogs: GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TCreatedEventName>;
+    queuedLogs: GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TQueuedEventName>;
+    executedLogs: GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TExecutedEventName>;
   }>;
   getProposalState: (args: {
     proposalId: bigint;
-    createdLogs: GetFilterLogsReturnType<TAbi, TCreatedEventName>;
-    queuedLogs: GetFilterLogsReturnType<TAbi, TQueuedEventName>;
-    executedLogs: GetFilterLogsReturnType<TAbi, TExecutedEventName>;
+    createdLogs: GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TCreatedEventName>;
+    queuedLogs: GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TQueuedEventName>;
+    executedLogs: GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TExecutedEventName>;
   }) =>
     | {
         state: ProposalState.EXECUTED;
-        log: ArrayElement<GetFilterLogsReturnType<TAbi, TExecutedEventName>>;
+        log: ArrayElement<GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TExecutedEventName>>;
       }
     | {
         state: ProposalState.QUEUED;
-        log: ArrayElement<GetFilterLogsReturnType<TAbi, TQueuedEventName>>;
+        log: ArrayElement<GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TQueuedEventName>>;
       }
     | {
         state: ProposalState.CREATED;
-        log: ArrayElement<GetFilterLogsReturnType<TAbi, TCreatedEventName>>;
+        log: ArrayElement<GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TCreatedEventName>>;
       };
   simulateOnTenderly: (
     args: {
@@ -98,16 +98,19 @@ export interface MainnetModule<
     } & (
       | {
           state: ProposalState.EXECUTED;
-          log: ArrayElement<GetFilterLogsReturnType<TAbi, TExecutedEventName>>;
+          log: ArrayElement<GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TExecutedEventName>>;
         }
       | {
           state: ProposalState.QUEUED;
-          log: ArrayElement<GetFilterLogsReturnType<TAbi, TQueuedEventName>>;
+          log: ArrayElement<GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TQueuedEventName>>;
         }
       | {
           state: ProposalState.CREATED;
-          log: ArrayElement<GetFilterLogsReturnType<TAbi, TCreatedEventName>>;
+          log: ArrayElement<GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TCreatedEventName>>;
         }
     )
-  ) => Promise<TenderlySimulationResponse>;
+  ) => Promise<{
+    proposal: ReadContractReturnType<typeof AAVE_GOVERNANCE_V2_ABI, 'getProposalById'>;
+    simulation: TenderlySimulationResponse;
+  }>;
 }
