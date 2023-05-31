@@ -30,12 +30,7 @@ const aaveGovernanceV2Contract = getContract({
   publicClient: mainnetClient,
 });
 
-export const mainnet: MainnetModule<
-  typeof AAVE_GOVERNANCE_V2_ABI,
-  'ProposalCreated',
-  'ProposalQueued',
-  'ProposalExecuted'
-> = {
+export const mainnet: MainnetModule<'ProposalCreated', 'ProposalQueued', 'ProposalExecuted'> = {
   name: 'Mainnet',
   async cacheLogs() {
     const createdLogs = await getLogs(mainnetClient, (fromBLock, toBlock) =>
@@ -78,11 +73,11 @@ export const mainnet: MainnetModule<
     throw new Error('Proposal not found');
   },
   async simulateOnTenderly({ state, log, proposalId }) {
+    const proposal = await aaveGovernanceV2Contract.read.getProposalById([proposalId]);
     if (state === ProposalState.EXECUTED) {
       const tx = await mainnetClient.getTransaction({ hash: log.transactionHash! });
-      return tenderly.simulateTx(mainnetClient.chain.id, tx);
+      return { proposal, simulation: await tenderly.simulateTx(mainnetClient.chain.id, tx) };
     }
-    const proposal = await aaveGovernanceV2Contract.read.getProposalById([proposalId]);
     const slots = getAaveGovernanceV2Slots(proposalId, proposal.executor);
     const executorContract = getContract({
       address: proposal.executor,
@@ -155,6 +150,6 @@ export const mainnet: MainnetModule<
         },
       },
     };
-    return tenderly.simulate(simulationPayload);
+    return { proposal, simulation: await tenderly.simulate(simulationPayload) };
   },
 };

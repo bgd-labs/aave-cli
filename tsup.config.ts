@@ -12,6 +12,7 @@ const config: Options = {
     },
   },
   // otherwise .env is ordered wrongly
+  // https://github.com/evanw/esbuild/issues/399
   splitting: false,
 };
 
