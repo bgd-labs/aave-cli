@@ -1,12 +1,12 @@
-import { logInfo } from '../utils/logger';
+import { logError, logInfo, logSuccess } from '../utils/logger';
 import { TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { arbitrum } from './networks/arbitrum';
-import { mainnet } from './networks/mainnet';
+import { arc, mainnet } from './networks/mainnet';
 import { optimism } from './networks/optimism';
 import { polygon } from './networks/polygon';
 import { ActionSetState, FormattedArgs } from './networks/types';
 
-const l2Modules = [arbitrum, polygon, optimism];
+const l2Modules = [arbitrum, polygon, optimism, arc];
 
 export async function simulateProposal(proposalId: bigint) {
   logInfo(mainnet.name, 'Updating events cache');
@@ -51,9 +51,10 @@ export async function simulateProposal(proposalId: bigint) {
         if (module.simulateOnTenderly) {
           logInfo(module.name, 'Simulate on tenderly');
           const simulation = await module.simulateOnTenderly(moduleState as any);
+          logSuccess(module.name, 'Simulation finished');
           subResults.push({ name: module.name, simulation, state: moduleState.state, args: moduleState.args });
         } else {
-          logInfo(module.name, 'Simulation on tenderly not supported');
+          logError(module.name, 'Simulation on tenderly not supported');
         }
       }
     } else {

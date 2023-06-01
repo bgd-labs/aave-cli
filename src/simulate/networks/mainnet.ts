@@ -1,5 +1,5 @@
 import { AaveGovernanceV2 } from '@bgd-labs/aave-address-book';
-import { MainnetModule, ProposalState } from './types';
+import { ActionSetState, L2NetworkModule, MainnetModule, ProposalState } from './types';
 import {
   concat,
   encodeAbiParameters,
@@ -14,7 +14,7 @@ import {
 } from 'viem';
 import { mainnetClient } from '../../utils/rpcClients';
 import { getLogs } from '../../utils/logs';
-import { tenderly } from '../../utils/tenderlyClient';
+import { Trace, tenderly } from '../../utils/tenderlyClient';
 import { EOA } from '../../utils/constants';
 import {
   AAVE_GOVERNANCE_V2_ABI,
@@ -23,6 +23,8 @@ import {
 } from '../abis/AaveGovernanceV2';
 import { EXECUTOR_ABI } from '../abis/Executor';
 import { getSolidityStorageSlotBytes } from '../../utils/storageSlots';
+import { ARC_TIMELOCK_ABI } from '../abis/ArcTimelock';
+import { getProposalState, simulateNewActionSet, simulateQueuedActionSet } from './commonL2';
 
 const aaveGovernanceV2Contract = getContract({
   address: AaveGovernanceV2.GOV,
@@ -151,5 +153,63 @@ export const mainnet: MainnetModule<'ProposalCreated', 'ProposalQueued', 'Propos
       },
     };
     return { proposal, simulation: await tenderly.simulate(simulationPayload) };
+  },
+};
+
+const arcContract = getContract({
+  address: AaveGovernanceV2.ARC_TIMELOCK,
+  abi: ARC_TIMELOCK_ABI,
+  publicClient: mainnetClient,
+});
+
+export const arc: L2NetworkModule<typeof ARC_TIMELOCK_ABI, 'ActionsSetQueued', 'ActionsSetExecuted'> = {
+  name: 'Arc',
+  async cacheLogs() {
+    const queuedLogs = await getLogs(mainnetClient, (fromBLock, toBlock) =>
+      arcContract.createEventFilter.ActionsSetQueued({
+        fromBlock: fromBLock || 13581293n,
+        toBlock: toBlock,
+      })
+    );
+    const executedLogs = await getLogs(mainnetClient, (fromBLock, toBlock) =>
+      arcContract.createEventFilter.ActionsSetExecuted(
+        {},
+        {
+          fromBlock: fromBLock || 13581293n,
+          toBlock: toBlock,
+        }
+      )
+    );
+
+    return { queuedLogs, executedLogs };
+  },
+  findBridgeInMainnetCalls(calls) {
+    return calls.reduce((acc, call) => {
+      if (call.to?.toLowerCase() === AaveGovernanceV2.ARC_TIMELOCK.toLowerCase() && call.function_name == 'queue') {
+        return [...acc, call];
+      }
+      if (call?.calls) {
+        return [...acc, ...arc.findBridgeInMainnetCalls(call?.calls)];
+      }
+      return acc;
+    }, [] as Array<Trace>);
+  },
+  getProposalState: ({ trace, ...args }) =>
+    getProposalState({
+      ...args,
+      dataValue: trace.input,
+    }),
+  async simulateOnTenderly({ state, executedLog, queuedLog, args }) {
+    if (state === ActionSetState.EXECUTED) {
+      const tx = await mainnetClient.getTransaction({ hash: executedLog.transactionHash! });
+      return tenderly.simulateTx(mainnetClient.chain.id, tx);
+    }
+    if (state === ActionSetState.QUEUED) {
+      return simulateQueuedActionSet(arcContract, AaveGovernanceV2.ARC_TIMELOCK, mainnetClient, queuedLog);
+    }
+    if (state === ActionSetState.NOT_FOUND) {
+      return simulateNewActionSet(arcContract, AaveGovernanceV2.ARC_TIMELOCK, mainnetClient, args);
+    }
+    throw new Error(`Unexpected ActionSetState: ${state}`);
   },
 };

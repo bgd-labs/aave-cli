@@ -119,7 +119,7 @@ export interface Trace {
   from: Hex;
   to?: Hex;
   function_name?: string;
-  input: string;
+  input: Hex;
   output: string;
   calls?: Trace[];
   decoded_input: Input[];
@@ -169,6 +169,13 @@ type Transaction = {
 type TenderlyContractResponseObject = {
   address: Hex;
   contract_name: string;
+  standards?: string[];
+  token_data?: {
+    symbol: string;
+    name: string;
+    decimals: number;
+  };
+  child_contracts?: { id: string; address: Hex; network_id: string }[];
 };
 
 export interface TenderlySimulationResponseObject {

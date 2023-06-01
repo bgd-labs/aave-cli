@@ -24,7 +24,7 @@ export enum ActionSetState {
 }
 
 export interface L2NetworkModule<TAbi extends Abi, TQueuedEventName extends string, TExecutedEventName extends string> {
-  name: 'Optimism' | 'Polygon' | 'Arbitrum' | 'Metis';
+  name: 'Optimism' | 'Polygon' | 'Arbitrum' | 'Metis' | 'Arc';
   cacheLogs: () => Promise<{
     queuedLogs: GetFilterLogsReturnType<TAbi, TQueuedEventName>;
     executedLogs: GetFilterLogsReturnType<TAbi, TExecutedEventName>;
