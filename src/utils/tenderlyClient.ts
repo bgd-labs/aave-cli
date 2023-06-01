@@ -20,7 +20,7 @@ export interface StateDiff {
   address: string;
 }
 
-type ContractObject = {
+export type ContractObject = {
   contractName: string;
   source: string;
   sourcePath: string;
@@ -123,17 +123,47 @@ export interface Trace {
   output: string;
   calls?: Trace[];
   decoded_input: Input[];
+  caller_op: string;
 }
 
-type TransactionInfo = {
+export interface TenderlyLogRaw {
+  address: string;
+  topics: string[];
+  data: string;
+}
+
+export interface TenderlyLog {
+  name: string | null;
+  anonymous: boolean;
+  inputs: Input[];
+  raw: TenderlyLogRaw;
+}
+
+export interface TenderlyStackTrace {
+  file_index: number;
+  contract: string;
+  name: string;
+  line: number;
+  error: string;
+  error_reason: string;
+  code: string;
+  op: string;
+  length: number;
+}
+
+export type TransactionInfo = {
   call_trace: {
     calls: Trace[];
   };
   state_diff: StateDiff[];
+  logs: TenderlyLog[] | null;
+  stack_trace: TenderlyStackTrace[] | null;
 };
 
 type Transaction = {
   transaction_info: TransactionInfo;
+  status: boolean;
+  addresses: Hex[];
 };
 
 type TenderlyContractResponseObject = {
@@ -141,7 +171,7 @@ type TenderlyContractResponseObject = {
   contract_name: string;
 };
 
-interface TenderlySimulationResponseObject {
+export interface TenderlySimulationResponseObject {
   id: string;
   project_id: string;
   owner_id: string;
