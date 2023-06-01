@@ -2,6 +2,7 @@ import { GetFilterLogsParameters, GetFilterLogsReturnType, PublicClient } from '
 import type { Abi } from 'abitype';
 import fs from 'fs';
 import path from 'path';
+import { logInfo } from './logger';
 
 /**
  * Fetches the logs and stores them in a cache folder.
@@ -13,13 +14,12 @@ export async function getLogs<TAbi extends Abi | readonly unknown[], TEventName 
   client: PublicClient,
   filterFn: (from, to) => Promise<GetFilterLogsParameters<TAbi, TEventName>['filter']>
 ): Promise<GetFilterLogsReturnType<TAbi, TEventName>> {
-  // create .tmp folder if doesn't exist yet
-  const cachePath = path.join(process.cwd(), '.tmp', client.chain!.id.toString());
+  // create cache folder if doesn't exist yet
+  const cachePath = path.join(process.cwd(), 'cache', client.chain!.id.toString());
   const currentBlock = await client.getBlockNumber();
   const filter = await filterFn(0, currentBlock);
   const filePath = path.join(cachePath, filter.eventName + '.json');
   if (!fs.existsSync(cachePath)) {
-    console.log('creating tmp folder');
     fs.mkdirSync(cachePath, { recursive: true });
   }
   // read stale cache if it exists
@@ -28,24 +28,30 @@ export async function getLogs<TAbi extends Abi | readonly unknown[], TEventName 
     : [];
   const logs = await getPastLogsRecursive(
     client,
-    cache.length > 1 ? (cache[cache.length - 1].blockNumber as bigint) : 0n,
+    cache.length > 1 ? (cache[cache.length - 1].blockNumber as bigint) + 1n : 0n,
     currentBlock,
     filterFn
   );
-  const combinedCache = [
-    ...cache,
-    ...logs.filter((l) => !cache.find((c) => l.transactionHash === c.transactionHash && l.logIndex === c.logIndex)),
-  ].sort((a, b) =>
-    a.blockNumber !== b.blockNumber
-      ? Number(a.blockNumber) - Number(b.blockNumber)
-      : Number(a.logIndex) - Number(b.logIndex)
+  const newLogs = logs.filter(
+    (l) => !cache.find((c) => l.transactionHash === c.transactionHash && Number(l.logIndex) === Number(c.logIndex))
   );
-  console.log(`store logs for event: ${filter.eventName} on chainId: ${client.chain!.id}`);
-  fs.writeFileSync(
-    filePath,
-    JSON.stringify(combinedCache, (key, value) => (typeof value === 'bigint' ? value.toString() : value), 2)
-  );
-  return combinedCache;
+  if (newLogs.length) {
+    const combinedCache = [...cache, ...newLogs].sort((a, b) =>
+      a.blockNumber !== b.blockNumber
+        ? Number(a.blockNumber) - Number(b.blockNumber)
+        : Number(a.logIndex) - Number(b.logIndex)
+    );
+    logInfo(
+      client.chain?.name!,
+      `Store ${newLogs.length} logs for event: ${filter.eventName} on chainId: ${client.chain!.id}`
+    );
+    fs.writeFileSync(
+      filePath,
+      JSON.stringify(combinedCache, (key, value) => (typeof value === 'bigint' ? value.toString() : value), 2)
+    );
+    return combinedCache;
+  }
+  return cache;
 }
 
 /**

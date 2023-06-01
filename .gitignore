@@ -3,4 +3,5 @@
 dist
 node_modules
 
-.tmp
+# proposal cache
+cache
