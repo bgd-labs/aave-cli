@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/bgd-labs/report-engine/compare/v0.0.6...v0.0.7) (2023-06-01)
+
+
+### Features
+
+* export tenderly types ([2635c6f](https://github.com/bgd-labs/report-engine/commit/2635c6ffa37f05c59d925bc702cbfcc1415df5d8))
+
+
+### Bug Fixes
+
+* checksum tenderly addresses ([e2a3adc](https://github.com/bgd-labs/report-engine/commit/e2a3adc1f35e83f6ccc7399822a7d4ff87492027))
+
 ### [0.0.6](https://github.com/bgd-labs/report-engine/compare/v0.0.5...v0.0.6) (2023-06-01)
 
 
