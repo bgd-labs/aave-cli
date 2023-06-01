@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/bgd-labs/report-engine/compare/v0.0.7...v0.0.8) (2023-06-01)
+
+
+### Features
+
+* arc support ([125285d](https://github.com/bgd-labs/report-engine/commit/125285d6437fa08d157a4a3cc3f959efa23ad59b))
+
 ### [0.0.7](https://github.com/bgd-labs/report-engine/compare/v0.0.6...v0.0.7) (2023-06-01)
 
 
