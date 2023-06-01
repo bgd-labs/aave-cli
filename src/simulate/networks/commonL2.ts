@@ -19,7 +19,7 @@ import {
   getSolidityStorageSlotBytes,
   getSolidityStorageSlotUint,
 } from '../../utils/storageSlots';
-import { ActionSetState, L2NetworkModule } from './types';
+import { ActionSetState, FormattedArgs } from './types';
 
 /**
  * The executors are slightly different, but the execute signature is always the same
@@ -116,15 +116,6 @@ export interface GetProposalStateProps<TAbi extends Abi> {
   executedLogs: GetFilterLogsReturnType<TAbi, 'ActionsSetExecuted'>;
   dataValue: Hex;
 }
-
-export type FormattedArgs = {
-  targets: Hex[];
-  values: bigint[];
-  signatures: string[];
-  calldatas: Hex[];
-  withDelegatecalls: boolean[];
-  proposalId?: bigint;
-};
 
 export function formatArgs(rawArgs: any): FormattedArgs {
   return {

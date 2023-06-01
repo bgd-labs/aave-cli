@@ -54,10 +54,10 @@ export const optimism: L2NetworkModule<typeof OPTIMISM_BRIDGE_EXECUTOR_ABI, 'Act
         return acc;
       }, [] as Array<Trace>);
     },
-    getProposalState: (args) =>
+    getProposalState: ({ trace, ...args }) =>
       getProposalState({
         ...args,
-        dataValue: args.trace.decoded_input.find((input) => input.soltype.name === '_message').value as `0x${string}`,
+        dataValue: trace!!.decoded_input.find((input) => input.soltype.name === '_message').value as `0x${string}`,
       }),
     async simulateOnTenderly({ state, executedLog, queuedLog, args }) {
       if (state === ActionSetState.EXECUTED) {

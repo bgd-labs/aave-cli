@@ -1,11 +1,10 @@
 import { logInfo } from '../utils/logger';
 import { TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { arbitrum } from './networks/arbitrum';
-import { FormattedArgs } from './networks/commonL2';
 import { mainnet } from './networks/mainnet';
 import { optimism } from './networks/optimism';
 import { polygon } from './networks/polygon';
-import { ActionSetState } from './networks/types';
+import { ActionSetState, FormattedArgs } from './networks/types';
 
 const l2Modules = [arbitrum, polygon, optimism];
 

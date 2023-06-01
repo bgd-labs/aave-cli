@@ -1,8 +1,17 @@
 import type { Abi } from 'abitype';
 import { TenderlySimulationResponse, Trace } from '../../utils/tenderlyClient';
-import { GetFilterLogsReturnType, ReadContractReturnType } from 'viem';
+import { GetFilterLogsReturnType, Hex, ReadContractReturnType } from 'viem';
 import { AAVE_GOVERNANCE_V2_ABI } from '../abis/AaveGovernanceV2';
-import { FormattedArgs, GetProposalStateProps, getProposalState } from './commonL2';
+import { GetProposalStateProps, getProposalState } from './commonL2';
+
+export type FormattedArgs = {
+  targets: Hex[];
+  values: bigint[];
+  signatures: string[];
+  calldatas: Hex[];
+  withDelegatecalls: boolean[];
+  proposalId?: bigint;
+};
 
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly (infer ElementType)[]
   ? ElementType

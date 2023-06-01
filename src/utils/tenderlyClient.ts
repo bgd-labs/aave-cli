@@ -1,4 +1,4 @@
-import { Transaction as ViemTransaction } from 'viem';
+import { Hex, Transaction as ViemTransaction } from 'viem';
 export type StateObject = {
   balance?: string;
   code?: string;
@@ -116,8 +116,8 @@ export interface Input {
 }
 
 export interface Trace {
-  from: string;
-  to?: string;
+  from: Hex;
+  to?: Hex;
   function_name?: string;
   input: string;
   output: string;
@@ -136,8 +136,38 @@ type Transaction = {
   transaction_info: TransactionInfo;
 };
 
+type TenderlyContractResponseObject = {
+  address: Hex;
+  contract_name: string;
+};
+
+interface TenderlySimulationResponseObject {
+  id: string;
+  project_id: string;
+  owner_id: string;
+  network_id: string;
+  block_number: number;
+  transaction_index: number;
+  from: string;
+  to: string;
+  input: string;
+  gas: number;
+  gas_price: string;
+  value: string;
+  method: string;
+  status: boolean;
+  access_list: null;
+  queue_origin: string;
+  created_at: Date;
+  block_header: {
+    timestamp: string;
+  };
+}
+
 export type TenderlySimulationResponse = {
   transaction: Transaction;
+  contracts: TenderlyContractResponseObject[];
+  simulation: TenderlySimulationResponseObject;
 };
 
 export type TenderlyTraceResponse = TransactionInfo;
