@@ -1,4 +1,4 @@
-import { Hex, Transaction as ViemTransaction } from 'viem';
+import { Hex, Transaction as ViemTransaction, getAddress } from 'viem';
 export type StateObject = {
   balance?: string;
   code?: string;
@@ -223,7 +223,11 @@ class Tenderly {
         'X-Access-Key': this.ACCESS_TOKEN,
       }),
     });
-    return await response.json();
+    const result = await response.json();
+    // Post-processing to ensure addresses we use are checksummed (since ethers returns checksummed addresses)
+    result.transaction.addresses = result.transaction.addresses.map(getAddress);
+    result.contracts.forEach((contract) => (contract.address = getAddress(contract.address)));
+    return result;
   };
 
   simulate = async (request: TenderlyRequest): Promise<TenderlySimulationResponse> => {
