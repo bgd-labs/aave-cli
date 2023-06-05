@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/bgd-labs/report-engine/compare/v0.0.8...v0.0.9) (2023-06-05)
+
+
+### Bug Fixes
+
+* correctly snapshot v2-rates ([#21](https://github.com/bgd-labs/report-engine/issues/21)) ([c350ee1](https://github.com/bgd-labs/report-engine/commit/c350ee1eefb53a9611565fbc463dec1a2dd46215))
+
 ### [0.0.8](https://github.com/bgd-labs/report-engine/compare/v0.0.7...v0.0.8) (2023-06-01)
 
 
