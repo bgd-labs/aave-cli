@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://github.com/bgd-labs/report-engine/compare/v0.0.9...v0.0.11) (2023-06-05)
+
+
+### Bug Fixes
+
+* fix events cache ([#23](https://github.com/bgd-labs/report-engine/issues/23)) ([f931f62](https://github.com/bgd-labs/report-engine/commit/f931f6278a113692bc75aef37795b1a958c3343d))
+
 ### [0.0.10](https://github.com/bgd-labs/report-engine/compare/v0.0.9...v0.0.10) (2023-06-05)
 
 
