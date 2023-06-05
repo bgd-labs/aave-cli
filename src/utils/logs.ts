@@ -28,7 +28,7 @@ export async function getLogs<TAbi extends Abi | readonly unknown[], TEventName 
     : [];
   const logs = await getPastLogsRecursive(
     client,
-    cache.length > 1 ? (cache[cache.length - 1].blockNumber as bigint) + 1n : 0n,
+    cache.length > 0 ? BigInt(cache[cache.length - 1].blockNumber as bigint) + 1n : 0n,
     currentBlock,
     filterFn
   );

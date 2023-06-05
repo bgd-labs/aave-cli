@@ -88,12 +88,7 @@ export const polygon: L2NetworkModule<typeof POLYGON_BRIDGE_EXECUTOR_ABI, 'Actio
       );
     }
     if (state === ActionSetState.NOT_FOUND) {
-      return simulateNewActionSet(
-        polygonExecutorContract,
-        AaveGovernanceV2.POLYGON_BRIDGE_EXECUTOR,
-        polygonClient,
-        args
-      );
+      return simulateNewActionSet(polygonExecutorContract, polygonClient, args);
     }
     throw new Error(`Unexpected ActionSetState: ${state}`);
   },

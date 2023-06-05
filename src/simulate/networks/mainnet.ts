@@ -35,29 +35,29 @@ const aaveGovernanceV2Contract = getContract({
 export const mainnet: MainnetModule<'ProposalCreated', 'ProposalQueued', 'ProposalExecuted'> = {
   name: 'Mainnet',
   async cacheLogs() {
-    const createdLogs = await getLogs(mainnetClient, (fromBLock, toBlock) =>
+    const createdLogs = await getLogs(mainnetClient, (fromBlock, toBlock) =>
       aaveGovernanceV2Contract.createEventFilter.ProposalCreated(
         {},
         {
-          fromBlock: fromBLock || AAVE_GOVERNANCE_V2_START_BLOCK,
+          fromBlock: fromBlock || AAVE_GOVERNANCE_V2_START_BLOCK,
           toBlock: toBlock,
         }
       )
     );
-    const queuedLogs = await getLogs(mainnetClient, (fromBLock, toBlock) =>
+    const queuedLogs = await getLogs(mainnetClient, (fromBlock, toBlock) =>
       aaveGovernanceV2Contract.createEventFilter.ProposalQueued(
         {},
         {
-          fromBlock: fromBLock || AAVE_GOVERNANCE_V2_START_BLOCK,
+          fromBlock: fromBlock || AAVE_GOVERNANCE_V2_START_BLOCK,
           toBlock: toBlock,
         }
       )
     );
-    const executedLogs = await getLogs(mainnetClient, (fromBLock, toBlock) =>
+    const executedLogs = await getLogs(mainnetClient, (fromBlock, toBlock) =>
       aaveGovernanceV2Contract.createEventFilter.ProposalExecuted(
         {},
         {
-          fromBlock: fromBLock || AAVE_GOVERNANCE_V2_START_BLOCK,
+          fromBlock: fromBlock || AAVE_GOVERNANCE_V2_START_BLOCK,
           toBlock: toBlock,
         }
       )
@@ -208,7 +208,7 @@ export const arc: L2NetworkModule<typeof ARC_TIMELOCK_ABI, 'ActionsSetQueued', '
       return simulateQueuedActionSet(arcContract, AaveGovernanceV2.ARC_TIMELOCK, mainnetClient, queuedLog);
     }
     if (state === ActionSetState.NOT_FOUND) {
-      return simulateNewActionSet(arcContract, AaveGovernanceV2.ARC_TIMELOCK, mainnetClient, args);
+      return simulateNewActionSet(arcContract, mainnetClient, args);
     }
     throw new Error(`Unexpected ActionSetState: ${state}`);
   },
