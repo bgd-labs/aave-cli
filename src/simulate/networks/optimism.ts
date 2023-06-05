@@ -65,12 +65,7 @@ export const optimism: L2NetworkModule<typeof OPTIMISM_BRIDGE_EXECUTOR_ABI, 'Act
         return tenderly.simulateTx(optimismClient.chain.id, tx);
       }
       if (state === ActionSetState.QUEUED) {
-        return simulateQueuedActionSet(
-          optimismExecutorContract,
-          AaveGovernanceV2.OPTIMISM_BRIDGE_EXECUTOR,
-          optimismClient,
-          queuedLog
-        );
+        return simulateQueuedActionSet(optimismExecutorContract, optimismClient, queuedLog);
       }
       if (state === ActionSetState.NOT_FOUND) {
         return simulateNewActionSet(optimismExecutorContract, optimismClient, args);

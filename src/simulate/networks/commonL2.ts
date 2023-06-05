@@ -34,6 +34,13 @@ const executorABI = [
     type: 'function',
   },
   {
+    inputs: [],
+    name: 'getGracePeriod',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     anonymous: false,
     inputs: [
       { indexed: true, internalType: 'uint256', name: 'id', type: 'uint256' },
@@ -159,7 +166,11 @@ export async function getProposalState<TAbi>({
   return { state: ActionSetState.NOT_FOUND, args };
 }
 
-export async function simulateQueuedActionSet(executorContract, executorAddress: Hex, client: PublicClient, log) {
+export async function simulateQueuedActionSet(
+  executorContract: GetContractReturnType<typeof executorABI, PublicClient>,
+  client: PublicClient,
+  log
+) {
   const gracePeriod = await executorContract.read.getGracePeriod();
   const currentBlock = await client.getBlock();
   /**
@@ -174,7 +185,7 @@ export async function simulateQueuedActionSet(executorContract, executorAddress:
   const simulationPayload = {
     network_id: String(client.chain!.id),
     from: EOA,
-    to: executorAddress,
+    to: executorContract.address,
     block_number: Number(simulationBlock),
     input: encodeFunctionData({
       abi: executorABI,
