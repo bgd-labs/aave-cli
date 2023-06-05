@@ -80,12 +80,7 @@ export const polygon: L2NetworkModule<typeof POLYGON_BRIDGE_EXECUTOR_ABI, 'Actio
       return tenderly.simulateTx(polygonClient.chain.id, tx);
     }
     if (state === ActionSetState.QUEUED) {
-      return simulateQueuedActionSet(
-        polygonExecutorContract,
-        AaveGovernanceV2.POLYGON_BRIDGE_EXECUTOR,
-        polygonClient,
-        queuedLog
-      );
+      return simulateQueuedActionSet(polygonExecutorContract, polygonClient, queuedLog);
     }
     if (state === ActionSetState.NOT_FOUND) {
       return simulateNewActionSet(polygonExecutorContract, polygonClient, args);

@@ -205,7 +205,7 @@ export const arc: L2NetworkModule<typeof ARC_TIMELOCK_ABI, 'ActionsSetQueued', '
       return tenderly.simulateTx(mainnetClient.chain.id, tx);
     }
     if (state === ActionSetState.QUEUED) {
-      return simulateQueuedActionSet(arcContract, AaveGovernanceV2.ARC_TIMELOCK, mainnetClient, queuedLog);
+      return simulateQueuedActionSet(arcContract, mainnetClient, queuedLog);
     }
     if (state === ActionSetState.NOT_FOUND) {
       return simulateNewActionSet(arcContract, mainnetClient, args);

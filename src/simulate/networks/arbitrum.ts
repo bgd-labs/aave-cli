@@ -65,20 +65,10 @@ export const arbitrum: L2NetworkModule<typeof ARBITRUM_BRIDGE_EXECUTOR_ABI, 'Act
         return tenderly.simulateTx(arbitrumClient.chain.id, tx);
       }
       if (state === ActionSetState.QUEUED) {
-        return simulateQueuedActionSet(
-          arbitrumExecutorContract,
-          AaveGovernanceV2.ARBITRUM_BRIDGE_EXECUTOR,
-          arbitrumClient,
-          queuedLog
-        );
+        return simulateQueuedActionSet(arbitrumExecutorContract, arbitrumClient, queuedLog);
       }
       if (state === ActionSetState.NOT_FOUND) {
-        return simulateNewActionSet(
-          arbitrumExecutorContract,
-          AaveGovernanceV2.ARBITRUM_BRIDGE_EXECUTOR,
-          arbitrumClient,
-          args
-        );
+        return simulateNewActionSet(arbitrumExecutorContract, arbitrumClient, args);
       }
       throw new Error(`Unexpected ActionSetState: ${state}`);
     },
