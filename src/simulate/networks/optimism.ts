@@ -73,12 +73,7 @@ export const optimism: L2NetworkModule<typeof OPTIMISM_BRIDGE_EXECUTOR_ABI, 'Act
         );
       }
       if (state === ActionSetState.NOT_FOUND) {
-        return simulateNewActionSet(
-          optimismExecutorContract,
-          AaveGovernanceV2.OPTIMISM_BRIDGE_EXECUTOR,
-          optimismClient,
-          args
-        );
+        return simulateNewActionSet(optimismExecutorContract, optimismClient, args);
       }
       throw new Error(`Unexpected ActionSetState: ${state}`);
     },

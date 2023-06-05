@@ -1,5 +1,6 @@
 import {
   Abi,
+  GetContractReturnType,
   GetFilterLogsReturnType,
   Hex,
   PublicClient,
@@ -25,6 +26,13 @@ import { ActionSetState, FormattedArgs } from './types';
  * The executors are slightly different, but the execute signature is always the same
  */
 const executorABI = [
+  {
+    inputs: [],
+    name: 'getActionsSetCount',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
   {
     anonymous: false,
     inputs: [
@@ -181,8 +189,7 @@ export async function simulateQueuedActionSet(executorContract, executorAddress:
 }
 
 export async function simulateNewActionSet(
-  executorContract,
-  executorAddress: Hex,
+  executorContract: GetContractReturnType<typeof executorABI, PublicClient>,
   client: PublicClient,
   args: FormattedArgs
 ) {
@@ -260,9 +267,9 @@ export async function simulateNewActionSet(
   return tenderly.simulate({
     network_id: String(client.chain!.id),
     from: EOA,
-    to: executorAddress,
+    to: executorContract.address,
     state_objects: {
-      [executorAddress]: {
+      [executorContract.address]: {
         storage: {
           // _actionsSetCounter slot
           [pad(toHex(5), { size: 32 })]: toHex(currentCount + 1n),
