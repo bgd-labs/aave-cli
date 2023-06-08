@@ -46,6 +46,7 @@ export async function simulateProposal(proposalId: bigint) {
         // any casts needed as types are slightly different on polygon vs others
         const moduleState = await module.getProposalState({
           trace: trace,
+          fromTimestamp: mainnetState.log.timestamp,
           ...moduleCache,
         } as any);
         if (module.simulateOnTenderly) {

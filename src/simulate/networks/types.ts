@@ -23,17 +23,21 @@ export enum ActionSetState {
   EXECUTED,
 }
 
+export type FilterLogWithTimestamp<TAbi extends Abi, TEventName extends string> = ArrayElement<
+  GetFilterLogsReturnType<TAbi, TEventName>
+> & { timestamp: number };
+
 export interface L2NetworkModule<TAbi extends Abi, TQueuedEventName extends string, TExecutedEventName extends string> {
   name: 'Optimism' | 'Polygon' | 'Arbitrum' | 'Metis' | 'Arc';
   cacheLogs: () => Promise<{
-    queuedLogs: GetFilterLogsReturnType<TAbi, TQueuedEventName>;
-    executedLogs: GetFilterLogsReturnType<TAbi, TExecutedEventName>;
+    queuedLogs: Array<FilterLogWithTimestamp<TAbi, TQueuedEventName>>;
+    executedLogs: Array<FilterLogWithTimestamp<TAbi, TExecutedEventName>>;
   }>;
   findBridgeInMainnetCalls: (
     calls: TenderlySimulationResponse['transaction']['transaction_info']['call_trace']['calls']
   ) => Array<Trace>;
   getProposalState: (
-    args: Omit<GetProposalStateProps<TAbi>, 'dataValue'> & { trace: Trace }
+    args: Omit<GetProposalStateProps<TAbi>, 'dataValue'> & { trace: Trace; fromTimestamp: number }
   ) => ReturnType<typeof getProposalState<TAbi>>;
   simulateOnTenderly?: (
     args: {
@@ -41,12 +45,12 @@ export interface L2NetworkModule<TAbi extends Abi, TQueuedEventName extends stri
     } & (
       | {
           state: ActionSetState.EXECUTED;
-          executedLog: ArrayElement<GetFilterLogsReturnType<TAbi, TExecutedEventName>>;
-          queuedLog: ArrayElement<GetFilterLogsReturnType<TAbi, TQueuedEventName>>;
+          executedLog: FilterLogWithTimestamp<TAbi, TExecutedEventName>;
+          queuedLog: FilterLogWithTimestamp<TAbi, TQueuedEventName>;
         }
       | {
           state: ActionSetState.QUEUED;
-          queuedLog: ArrayElement<GetFilterLogsReturnType<TAbi, TQueuedEventName>>;
+          queuedLog: FilterLogWithTimestamp<TAbi, TQueuedEventName>;
           executedLog?: undefined;
         }
       | { state: ActionSetState.NOT_FOUND; queuedLog?: undefined; executedLog?: undefined }
@@ -60,34 +64,30 @@ export enum ProposalState {
   EXECUTED,
 }
 
-export interface MainnetModule<
-  TCreatedEventName extends string | undefined,
-  TQueuedEventName extends string | undefined,
-  TExecutedEventName extends string | undefined
-> {
+export interface MainnetModule {
   name: string;
   cacheLogs: () => Promise<{
-    createdLogs: GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TCreatedEventName>;
-    queuedLogs: GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TQueuedEventName>;
-    executedLogs: GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TExecutedEventName>;
+    createdLogs: Array<FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalCreated'>>;
+    queuedLogs: Array<FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalQueued'>>;
+    executedLogs: Array<FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalExecuted'>>;
   }>;
   getProposalState: (args: {
     proposalId: bigint;
-    createdLogs: GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TCreatedEventName>;
-    queuedLogs: GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TQueuedEventName>;
-    executedLogs: GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TExecutedEventName>;
+    createdLogs: Array<FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalCreated'>>;
+    queuedLogs: Array<FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalQueued'>>;
+    executedLogs: Array<FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalExecuted'>>;
   }) =>
     | {
         state: ProposalState.EXECUTED;
-        log: ArrayElement<GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TExecutedEventName>>;
+        log: FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalExecuted'>;
       }
     | {
         state: ProposalState.QUEUED;
-        log: ArrayElement<GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TQueuedEventName>>;
+        log: FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalQueued'>;
       }
     | {
         state: ProposalState.CREATED;
-        log: ArrayElement<GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TCreatedEventName>>;
+        log: FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalCreated'>;
       };
   simulateOnTenderly: (
     args: {
@@ -95,15 +95,15 @@ export interface MainnetModule<
     } & (
       | {
           state: ProposalState.EXECUTED;
-          log: ArrayElement<GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TExecutedEventName>>;
+          log: FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalExecuted'>;
         }
       | {
           state: ProposalState.QUEUED;
-          log: ArrayElement<GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TQueuedEventName>>;
+          log: FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalQueued'>;
         }
       | {
           state: ProposalState.CREATED;
-          log: ArrayElement<GetFilterLogsReturnType<typeof AAVE_GOVERNANCE_V2_ABI, TCreatedEventName>>;
+          log: FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalCreated'>;
         }
     )
   ) => Promise<{

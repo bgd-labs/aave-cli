@@ -162,6 +162,7 @@ export type TransactionInfo = {
 
 type Transaction = {
   transaction_info: TransactionInfo;
+  block_number: number;
   status: boolean;
   addresses: Hex[];
 };

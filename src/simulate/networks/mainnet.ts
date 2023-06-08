@@ -32,7 +32,7 @@ const aaveGovernanceV2Contract = getContract({
   publicClient: mainnetClient,
 });
 
-export const mainnet: MainnetModule<'ProposalCreated', 'ProposalQueued', 'ProposalExecuted'> = {
+export const mainnet: MainnetModule = {
   name: 'Mainnet',
   async cacheLogs() {
     const createdLogs = await getLogs(mainnetClient, (fromBlock, toBlock) =>

@@ -20,7 +20,7 @@ import {
   getSolidityStorageSlotBytes,
   getSolidityStorageSlotUint,
 } from '../../utils/storageSlots';
-import { ActionSetState, FormattedArgs } from './types';
+import { ActionSetState, FilterLogWithTimestamp, FormattedArgs } from './types';
 
 /**
  * The executors are slightly different, but the execute signature is always the same
@@ -127,9 +127,11 @@ const executorABI = [
 ] as const;
 
 export interface GetProposalStateProps<TAbi extends Abi> {
-  queuedLogs: GetFilterLogsReturnType<TAbi, 'ActionsSetQueued'>;
-  executedLogs: GetFilterLogsReturnType<TAbi, 'ActionsSetExecuted'>;
+  queuedLogs: Array<FilterLogWithTimestamp<TAbi, 'ActionsSetQueued'>>;
+  executedLogs: Array<FilterLogWithTimestamp<TAbi, 'ActionsSetExecuted'>>;
   dataValue: Hex;
+  // earliest timestamp to look for events (latest mainnet event)
+  fromTimestamp: number;
 }
 
 export function formatArgs(rawArgs: any): FormattedArgs {
@@ -146,6 +148,7 @@ export async function getProposalState<TAbi>({
   queuedLogs,
   executedLogs,
   dataValue,
+  fromTimestamp,
 }: GetProposalStateProps<typeof executorABI>) {
   const { args: rawArgs } = decodeFunctionData({
     abi: executorABI,
@@ -153,7 +156,12 @@ export async function getProposalState<TAbi>({
   });
   if (!rawArgs) throw new Error('Error: cannot decode trace');
   const args = formatArgs(rawArgs);
-  const queuedLog = queuedLogs.find((event) => JSON.stringify(event.args.targets) == JSON.stringify(args.targets));
+  const queuedLog = queuedLogs.find(
+    (event) =>
+      event.timestamp > fromTimestamp &&
+      JSON.stringify(event.args.targets) == JSON.stringify(args.targets) &&
+      JSON.stringify(event.args.calldatas) == JSON.stringify(args.calldatas)
+  );
   if (queuedLog) {
     args.proposalId = queuedLog.args.id;
     const executedLog = executedLogs.find((event) => event.args.id == queuedLog.args.id);
