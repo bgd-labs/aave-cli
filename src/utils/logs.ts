@@ -3,6 +3,7 @@ import type { Abi } from 'abitype';
 import fs from 'fs';
 import path from 'path';
 import { logInfo } from './logger';
+import { FilterLogWithTimestamp } from '../simulate/networks/types';
 
 /**
  * Fetches the logs and stores them in a cache folder.
@@ -10,10 +11,10 @@ import { logInfo } from './logger';
  * @param filter
  * @returns logs
  */
-export async function getLogs<TAbi extends Abi | readonly unknown[], TEventName extends string | undefined>(
+export async function getLogs<TAbi extends Abi, TEventName extends string>(
   client: PublicClient,
   filterFn: (from, to) => Promise<GetFilterLogsParameters<TAbi, TEventName>['filter']>
-): Promise<GetFilterLogsReturnType<TAbi, TEventName>> {
+): Promise<Array<FilterLogWithTimestamp<TAbi, TEventName>>> {
   // create cache folder if doesn't exist yet
   const cachePath = path.join(process.cwd(), 'cache', client.chain!.id.toString());
   const currentBlock = await client.getBlockNumber();
@@ -23,7 +24,7 @@ export async function getLogs<TAbi extends Abi | readonly unknown[], TEventName 
     fs.mkdirSync(cachePath, { recursive: true });
   }
   // read stale cache if it exists
-  const cache: GetFilterLogsReturnType<TAbi, TEventName> = fs.existsSync(filePath)
+  const cache: Array<FilterLogWithTimestamp<TAbi, TEventName>> = fs.existsSync(filePath)
     ? JSON.parse(fs.readFileSync(filePath, 'utf8'))
     : [];
   const logs = await getPastLogsRecursive(
@@ -32,8 +33,15 @@ export async function getLogs<TAbi extends Abi | readonly unknown[], TEventName 
     currentBlock,
     filterFn
   );
-  const newLogs = logs.filter(
-    (l) => !cache.find((c) => l.transactionHash === c.transactionHash && Number(l.logIndex) === Number(c.logIndex))
+  const newLogs = await Promise.all(
+    logs
+      .filter(
+        (l) => !cache.find((c) => l.transactionHash === c.transactionHash && Number(l.logIndex) === Number(c.logIndex))
+      )
+      .map(async (l) => ({
+        ...l,
+        timestamp: Number((await client.getBlock({ blockNumber: l.blockNumber as bigint })).timestamp),
+      }))
   );
   if (newLogs.length) {
     const combinedCache = [...cache, ...newLogs].sort((a, b) =>
