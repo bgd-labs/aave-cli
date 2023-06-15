@@ -9,7 +9,7 @@ import { formatArgs, simulateNewActionSet, simulateQueuedActionSet } from './com
 
 const POLYGON_FX_ROOT = '0xfe5e5D361b2ad62c541bAb87C45a0B9B018389a2';
 
-const polygonExecutorContract = getContract({
+export const polygonExecutorContract = getContract({
   address: AaveGovernanceV2.POLYGON_BRIDGE_EXECUTOR,
   abi: POLYGON_BRIDGE_EXECUTOR_ABI,
   publicClient: polygonClient,

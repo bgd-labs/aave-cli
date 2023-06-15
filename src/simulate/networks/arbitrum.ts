@@ -9,7 +9,7 @@ import { getProposalState, simulateNewActionSet, simulateQueuedActionSet } from 
 
 const ARBITRUM_INBOX = '0x4Dbd4fc535Ac27206064B68FfCf827b0A60BAB3f'; // TODO: should probably be on address-book
 
-const arbitrumExecutorContract = getContract({
+export const arbitrumExecutorContract = getContract({
   address: AaveGovernanceV2.ARBITRUM_BRIDGE_EXECUTOR,
   abi: ARBITRUM_BRIDGE_EXECUTOR_ABI,
   publicClient: arbitrumClient,

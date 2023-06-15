@@ -1,8 +1,20 @@
-import { Hex, Transaction as ViemTransaction, getAddress } from 'viem';
+import {
+  Hex,
+  PublicClient,
+  Transaction as ViemTransaction,
+  WalletClient,
+  createPublicClient,
+  createWalletClient,
+  getAddress,
+  http,
+  pad,
+  toHex,
+} from 'viem';
+import { EOA } from './constants';
 export type StateObject = {
   balance?: string;
   code?: string;
-  storage?: Record<string, string>;
+  storage?: Record<Hex, Hex>;
 };
 
 interface RawElement {
@@ -43,16 +55,16 @@ export type TenderlyRequest = {
   network_id: string;
   block_number?: number;
   transaction_index?: number;
-  from: string;
-  to: string;
-  input: string;
+  from: Hex;
+  to: Hex;
+  input: Hex;
   gas?: number;
   gas_price?: string;
   value?: string;
   simulation_type?: 'full' | 'quick';
   save?: boolean;
   save_if_fails?: boolean;
-  state_objects?: Record<string, StateObject>;
+  state_objects?: Record<Hex, StateObject>;
   contracts?: ContractObject[];
   block_header?: {
     number?: string;
@@ -295,11 +307,61 @@ class Tenderly {
 
     const result = await response.json();
     return {
-      forkId: result.simulation_fork.id,
+      id: result.simulation_fork.id,
       chainId: result.simulation_fork.network_id,
       block_number: result.simulation_fork.block_number,
       forkNetworkId: result.simulation_fork.chain_config.chain_id,
+      forkUrl: `https://rpc.tenderly.co/fork/${result.simulation_fork.id}`,
     };
+  };
+
+  unwrapAndExecuteSimulationPayloadOnFork = async (fork: any, request: TenderlyRequest) => {
+    // 0. fund account
+    await this.fundAccount(fork, EOA);
+
+    // 1. apply storage changes
+    const publicProvider = createPublicClient({
+      chain: { id: 3030 } as any,
+      transport: http(fork.forkUrl),
+    });
+    if (request.state_objects) {
+      for (const address of Object.keys(request.state_objects)) {
+        if (request.state_objects[address].storage) {
+          for (const slot of Object.keys(request.state_objects[address].storage!)) {
+            console.log('setting storage');
+            await publicProvider.request({
+              method: 'tenderly_setStorageAt' as any,
+              params: [address as Hex, slot as Hex, request.state_objects[address].storage![slot] as Hex],
+            });
+          }
+        }
+      }
+    }
+
+    // 2. execute txn
+    if (request.input) {
+      const walletProvider = createWalletClient({
+        account: EOA,
+        chain: { id: 3030, name: 'tenderly' } as any,
+        transport: http(fork.forkUrl),
+      });
+      await walletProvider.sendTransaction({
+        data: request.input,
+        to: request.to,
+        value: 0n,
+      } as any);
+    }
+  };
+
+  fundAccount = (fork, address) => {
+    return fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/fork/${fork.id}/balance`, {
+      method: 'POST',
+      body: JSON.stringify({ accounts: [address], amount: 1000 }),
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'X-Access-Key': this.ACCESS_TOKEN,
+      }),
+    });
   };
 }
 

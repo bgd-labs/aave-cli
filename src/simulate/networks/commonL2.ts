@@ -207,7 +207,7 @@ export async function simulateQueuedActionSet(
   return tenderly.simulate(simulationPayload);
 }
 
-export async function simulateNewActionSet(
+export async function getTenderlyActionSetCreationPayload(
   executorContract: GetContractReturnType<typeof executorABI, PublicClient>,
   client: PublicClient,
   args: FormattedArgs
@@ -283,7 +283,7 @@ export async function simulateNewActionSet(
     return acc;
   }, {});
 
-  return tenderly.simulate({
+  const payload = {
     network_id: String(client.chain!.id),
     from: EOA,
     to: executorContract.address,
@@ -291,7 +291,7 @@ export async function simulateNewActionSet(
       [executorContract.address]: {
         storage: {
           // _actionsSetCounter slot
-          [pad(toHex(5), { size: 32 })]: toHex(currentCount + 1n),
+          [pad(toHex(5), { size: 32 })]: pad(toHex(currentCount + 1n), { size: 32 }),
           // _actionsSets
           ...proposalStorage,
           // _queuedActions
@@ -308,5 +308,15 @@ export async function simulateNewActionSet(
       timestamp: toHex(latestBlock.timestamp),
       number: toHex(latestBlock.number!),
     },
-  });
+  };
+  return payload;
+}
+
+export async function simulateNewActionSet(
+  executorContract: GetContractReturnType<typeof executorABI, PublicClient>,
+  client: PublicClient,
+  args: FormattedArgs
+) {
+  const payload = await getTenderlyActionSetCreationPayload(executorContract, client, args);
+  return tenderly.simulate(payload);
 }

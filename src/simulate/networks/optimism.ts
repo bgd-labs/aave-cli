@@ -9,7 +9,7 @@ import { getProposalState, simulateNewActionSet, simulateQueuedActionSet } from 
 
 const OPTIMISM_L1_CROSS_COMAIN_MESSENGER = '0x25ace71c97B33Cc4729CF772ae268934F7ab5fA1';
 
-const optimismExecutorContract = getContract({
+export const optimismExecutorContract = getContract({
   address: AaveGovernanceV2.OPTIMISM_BRIDGE_EXECUTOR,
   abi: OPTIMISM_BRIDGE_EXECUTOR_ABI,
   publicClient: optimismClient,
