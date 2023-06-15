@@ -260,6 +260,12 @@ class Tenderly {
     return await response.json();
   };
 
+  /**
+   * Trace api lacks most information we need, so simulateTx uses the simulation api to replicate the trace.
+   * @param chainId
+   * @param tx
+   * @returns
+   */
   simulateTx = async (chainId: number, tx: ViemTransaction): Promise<TenderlySimulationResponse> => {
     const simulationPayload = {
       network_id: String(chainId),
@@ -269,6 +275,31 @@ class Tenderly {
       input: tx.input,
     };
     return this.simulate(simulationPayload);
+  };
+
+  fork = async ({ chainId, blockNumber, alias }: { chainId: number; blockNumber?: number; alias?: string }) => {
+    const forkingPoint = {
+      network_id: chainId,
+      chain_config: { chain_id: 3030 },
+    };
+    if (blockNumber) (forkingPoint as any).block_number = blockNumber;
+    if (alias) (forkingPoint as any).alias = alias;
+    const response = await fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/fork`, {
+      method: 'POST',
+      body: JSON.stringify(forkingPoint),
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'X-Access-Key': this.ACCESS_TOKEN,
+      }),
+    });
+
+    const result = await response.json();
+    return {
+      forkId: result.simulation_fork.id,
+      chainId: result.simulation_fork.network_id,
+      block_number: result.simulation_fork.block_number,
+      forkNetworkId: result.simulation_fork.chain_config.chain_id,
+    };
   };
 }
 
