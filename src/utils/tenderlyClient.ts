@@ -11,6 +11,7 @@ import {
   toHex,
 } from 'viem';
 import { EOA } from './constants';
+import { logInfo } from './logger';
 export type StateObject = {
   balance?: string;
   code?: string;
@@ -306,13 +307,18 @@ class Tenderly {
     });
 
     const result = await response.json();
-    return {
+    const fork = {
       id: result.simulation_fork.id,
       chainId: result.simulation_fork.network_id,
       block_number: result.simulation_fork.block_number,
       forkNetworkId: result.simulation_fork.chain_config.chain_id,
       forkUrl: `https://rpc.tenderly.co/fork/${result.simulation_fork.id}`,
     };
+    logInfo(
+      'tenderly',
+      `Fork created! To use in aave interface you need to run the following commands:\n\n---\nlocalStorage.setItem('forkEnabled', 'true');\nlocalStorage.setItem('forkBaseChainId', ${fork.chainId});\nlocalStorage.setItem('forkNetworkId', ${fork.forkNetworkId});\nlocalStorage.setItem("forkRPCUrl", "${fork.forkUrl}");\n---\n`
+    );
+    return fork;
   };
 
   unwrapAndExecuteSimulationPayloadOnFork = async (fork: any, request: TenderlyRequest) => {
@@ -325,10 +331,10 @@ class Tenderly {
       transport: http(fork.forkUrl),
     });
     if (request.state_objects) {
+      logInfo('tenderly', 'setting storage');
       for (const address of Object.keys(request.state_objects)) {
         if (request.state_objects[address].storage) {
           for (const slot of Object.keys(request.state_objects[address].storage!)) {
-            console.log('setting storage');
             await publicProvider.request({
               method: 'tenderly_setStorageAt' as any,
               params: [address as Hex, slot as Hex, request.state_objects[address].storage![slot] as Hex],
@@ -340,6 +346,7 @@ class Tenderly {
 
     // 2. execute txn
     if (request.input) {
+      logInfo('tenderly', 'execute transaction');
       const walletProvider = createWalletClient({
         account: EOA,
         chain: { id: 3030, name: 'tenderly' } as any,
@@ -354,6 +361,7 @@ class Tenderly {
   };
 
   fundAccount = (fork, address) => {
+    logInfo('tenderly', 'fund account');
     return fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/fork/${fork.id}/balance`, {
       method: 'POST',
       body: JSON.stringify({ accounts: [address], amount: 1000 }),

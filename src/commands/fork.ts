@@ -5,6 +5,7 @@ import { arbitrumClient, optimismClient, polygonClient } from '../utils/rpcClien
 import { tenderly } from '../utils/tenderlyClient';
 import { arbitrumExecutorContract } from '../simulate/networks/arbitrum';
 import { optimismExecutorContract } from '../simulate/networks/optimism';
+import { logInfo } from '../utils/logger';
 
 export const command = 'fork';
 
