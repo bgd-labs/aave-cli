@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.13](https://github.com/bgd-labs/report-engine/compare/v0.0.12...v0.0.13) (2023-06-24)
+
+
+### Bug Fixes
+
+* monkey patch tenderly regression ([#30](https://github.com/bgd-labs/report-engine/issues/30)) ([3cab1de](https://github.com/bgd-labs/report-engine/commit/3cab1de6e07f67399782bdda7cbc9384983d63af))
+
 ### [0.0.12](https://github.com/bgd-labs/report-engine/compare/v0.0.9...v0.0.12) (2023-06-08)
 
 
