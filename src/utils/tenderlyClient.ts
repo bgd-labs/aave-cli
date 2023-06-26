@@ -1,8 +1,23 @@
-import { Hex, Transaction as ViemTransaction, getAddress, parseEther } from 'viem';
+import {
+  Hex,
+  PublicClient,
+  Transaction as ViemTransaction,
+  WalletClient,
+  createPublicClient,
+  createWalletClient,
+  getAddress,
+  http,
+  pad,
+  toHex,
+  parseEther,
+  fromHex,
+} from 'viem';
+import { EOA } from './constants';
+import { logInfo } from './logger';
 export type StateObject = {
   balance?: string;
   code?: string;
-  storage?: Record<string, string>;
+  storage?: Record<Hex, Hex>;
 };
 
 interface RawElement {
@@ -43,20 +58,20 @@ export type TenderlyRequest = {
   network_id: string;
   block_number?: number;
   transaction_index?: number;
-  from: string;
-  to: string;
-  input: string;
+  from: Hex;
+  to: Hex;
+  input: Hex;
   gas?: number;
   gas_price?: string;
   value?: string;
   simulation_type?: 'full' | 'quick';
   save?: boolean;
   save_if_fails?: boolean;
-  state_objects?: Record<string, StateObject>;
+  state_objects?: Record<Hex, StateObject>;
   contracts?: ContractObject[];
   block_header?: {
     number?: string;
-    timestamp?: string;
+    timestamp?: Hex;
   };
   generate_access_list?: boolean;
   root?: string;
@@ -268,6 +283,12 @@ class Tenderly {
     return await response.json();
   };
 
+  /**
+   * Trace api lacks most information we need, so simulateTx uses the simulation api to replicate the trace.
+   * @param chainId
+   * @param tx
+   * @returns
+   */
   simulateTx = async (chainId: number, tx: ViemTransaction): Promise<TenderlySimulationResponse> => {
     const simulationPayload = {
       network_id: String(chainId),
@@ -277,6 +298,97 @@ class Tenderly {
       input: tx.input,
     };
     return this.simulate(simulationPayload);
+  };
+
+  fork = async ({ chainId, blockNumber, alias }: { chainId: number; blockNumber?: number; alias?: string }) => {
+    const forkingPoint = {
+      network_id: chainId,
+      chain_config: { chain_id: 3030 },
+    };
+    if (blockNumber) (forkingPoint as any).block_number = blockNumber;
+    if (alias) (forkingPoint as any).alias = alias;
+    const response = await fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/fork`, {
+      method: 'POST',
+      body: JSON.stringify(forkingPoint),
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'X-Access-Key': this.ACCESS_TOKEN,
+      }),
+    });
+
+    const result = await response.json();
+    const fork = {
+      id: result.simulation_fork.id,
+      chainId: result.simulation_fork.network_id,
+      block_number: result.simulation_fork.block_number,
+      forkNetworkId: result.simulation_fork.chain_config.chain_id,
+      forkUrl: `https://rpc.tenderly.co/fork/${result.simulation_fork.id}`,
+    };
+    logInfo(
+      'tenderly',
+      `Fork created! To use in aave interface you need to run the following commands:\n\n---\nlocalStorage.setItem('forkEnabled', 'true');\nlocalStorage.setItem('forkBaseChainId', ${fork.chainId});\nlocalStorage.setItem('forkNetworkId', ${fork.forkNetworkId});\nlocalStorage.setItem("forkRPCUrl", "${fork.forkUrl}");\n---\n`
+    );
+    return fork;
+  };
+
+  unwrapAndExecuteSimulationPayloadOnFork = async (fork: any, request: TenderlyRequest) => {
+    // 0. fund account
+    await this.fundAccount(fork, EOA);
+
+    const publicProvider = createPublicClient({
+      chain: { id: 3030 } as any,
+      transport: http(fork.forkUrl),
+    });
+    // 1. apply storage changes
+    if (request.state_objects) {
+      logInfo('tenderly', 'setting storage');
+      for (const address of Object.keys(request.state_objects)) {
+        if (request.state_objects[address].storage) {
+          for (const slot of Object.keys(request.state_objects[address].storage!)) {
+            await publicProvider.request({
+              method: 'tenderly_setStorageAt' as any,
+              params: [address as Hex, slot as Hex, request.state_objects[address].storage![slot] as Hex],
+            });
+          }
+        }
+      }
+    }
+
+    // 2. warp time
+    if (request.block_header?.timestamp) {
+      const currentBlock = await publicProvider.getBlock();
+      await publicProvider.request({
+        method: 'evm_increaseTime' as any,
+        params: [toHex(fromHex(request.block_header?.timestamp, 'bigint') - currentBlock.timestamp)],
+      });
+    }
+
+    // 3. execute txn
+    if (request.input) {
+      logInfo('tenderly', 'execute transaction');
+      const walletProvider = createWalletClient({
+        account: EOA,
+        chain: { id: 3030, name: 'tenderly' } as any,
+        transport: http(fork.forkUrl),
+      });
+      await walletProvider.sendTransaction({
+        data: request.input,
+        to: request.to,
+        value: 0n,
+      } as any);
+    }
+  };
+
+  fundAccount = (fork, address) => {
+    logInfo('tenderly', 'fund account');
+    return fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/fork/${fork.id}/balance`, {
+      method: 'POST',
+      body: JSON.stringify({ accounts: [address], amount: 1000 }),
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'X-Access-Key': this.ACCESS_TOKEN,
+      }),
+    });
   };
 }
 
