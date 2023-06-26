@@ -9,6 +9,7 @@ import {
   http,
   pad,
   toHex,
+  parseEther,
 } from 'viem';
 import { EOA } from './constants';
 import { logInfo } from './logger';
@@ -252,6 +253,14 @@ class Tenderly {
   };
 
   simulate = async (request: TenderlyRequest): Promise<TenderlySimulationResponse> => {
+    if (!request.state_objects) {
+      request.state_objects = {};
+    }
+    if (!request.state_objects[request.from]) {
+      request.state_objects[request.from] = { balance: String(parseEther('3')) };
+    } else {
+      request.state_objects[request.from].balance = String(parseEther('3'));
+    }
     const response = await fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/simulate`, {
       method: 'POST',
       body: JSON.stringify({
