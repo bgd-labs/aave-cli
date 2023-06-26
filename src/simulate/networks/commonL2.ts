@@ -144,6 +144,23 @@ export function formatArgs(rawArgs: any): FormattedArgs {
   };
 }
 
+export async function getProposalStateById({
+  queuedLogs,
+  executedLogs,
+  proposalId,
+}: GetProposalStateProps<typeof executorABI> & { proposalId: number }) {
+  const queuedLog = queuedLogs.find((event) => Number(event.args.id) === Number(proposalId));
+  if (queuedLog) {
+    const executedLog = executedLogs.find((event) => Number(event.args.id) == Number(proposalId));
+    if (executedLog) {
+      return { executedLog: executedLog, queuedLog: queuedLog, state: ActionSetState.EXECUTED };
+    } else {
+      return { queuedLog: queuedLog, state: ActionSetState.QUEUED };
+    }
+  }
+  return { state: ActionSetState.NOT_FOUND };
+}
+
 export async function getProposalState<TAbi>({
   queuedLogs,
   executedLogs,
@@ -174,7 +191,7 @@ export async function getProposalState<TAbi>({
   return { state: ActionSetState.NOT_FOUND, args };
 }
 
-export async function simulateQueuedActionSet(
+export async function getTenderlyActionSetExecutionPayload(
   executorContract: GetContractReturnType<typeof executorABI, PublicClient>,
   client: PublicClient,
   log
@@ -204,7 +221,16 @@ export async function simulateQueuedActionSet(
       timestamp: toHex(BigInt(log.args.executionTime!)),
     },
   };
-  return tenderly.simulate(simulationPayload);
+  return simulationPayload;
+}
+
+export async function simulateQueuedActionSet(
+  executorContract: GetContractReturnType<typeof executorABI, PublicClient>,
+  client: PublicClient,
+  log
+) {
+  const payload = await getTenderlyActionSetExecutionPayload(executorContract, client, log);
+  return tenderly.simulate(payload);
 }
 
 export async function getTenderlyActionSetCreationPayload(

@@ -10,6 +10,7 @@ import {
   pad,
   toHex,
   parseEther,
+  fromHex,
 } from 'viem';
 import { EOA } from './constants';
 import { logInfo } from './logger';
@@ -70,7 +71,7 @@ export type TenderlyRequest = {
   contracts?: ContractObject[];
   block_header?: {
     number?: string;
-    timestamp?: string;
+    timestamp?: Hex;
   };
   generate_access_list?: boolean;
   root?: string;
@@ -334,11 +335,11 @@ class Tenderly {
     // 0. fund account
     await this.fundAccount(fork, EOA);
 
-    // 1. apply storage changes
     const publicProvider = createPublicClient({
       chain: { id: 3030 } as any,
       transport: http(fork.forkUrl),
     });
+    // 1. apply storage changes
     if (request.state_objects) {
       logInfo('tenderly', 'setting storage');
       for (const address of Object.keys(request.state_objects)) {
@@ -353,7 +354,16 @@ class Tenderly {
       }
     }
 
-    // 2. execute txn
+    // 2. warp time
+    if (request.block_header?.timestamp) {
+      const currentBlock = await publicProvider.getBlock();
+      await publicProvider.request({
+        method: 'evm_increaseTime' as any,
+        params: [toHex(fromHex(request.block_header?.timestamp, 'bigint') - currentBlock.timestamp)],
+      });
+    }
+
+    // 3. execute txn
     if (request.input) {
       logInfo('tenderly', 'execute transaction');
       const walletProvider = createWalletClient({
