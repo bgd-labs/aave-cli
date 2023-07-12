@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.16](https://github.com/bgd-labs/report-engine/compare/v0.0.15...v0.0.16) (2023-07-12)
+
+
+### Bug Fixes
+
+* correct esm paths ([#36](https://github.com/bgd-labs/report-engine/issues/36)) ([993a4c9](https://github.com/bgd-labs/report-engine/commit/993a4c9e7a64d0c119417c3f066d8fb4552e2ec7))
+
 ### [0.0.15](https://github.com/bgd-labs/report-engine/compare/v0.0.14...v0.0.15) (2023-07-12)
 
 
