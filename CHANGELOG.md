@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.17](https://github.com/bgd-labs/report-engine/compare/v0.0.16...v0.0.17) (2023-07-12)
+
+
+### Bug Fixes
+
+* patch eMode comparison for v2 were it doesn't exist ([#38](https://github.com/bgd-labs/report-engine/issues/38)) ([1d83412](https://github.com/bgd-labs/report-engine/commit/1d8341207146327adcc410babb90f0243d2ae43c))
+
 ### [0.0.16](https://github.com/bgd-labs/report-engine/compare/v0.0.15...v0.0.16) (2023-07-12)
 
 
