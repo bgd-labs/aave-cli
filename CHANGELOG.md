@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.15](https://github.com/bgd-labs/report-engine/compare/v0.0.14...v0.0.15) (2023-07-12)
+
+
+### Features
+
+* bump address book ([#34](https://github.com/bgd-labs/report-engine/issues/34)) ([15f1d9d](https://github.com/bgd-labs/report-engine/commit/15f1d9d407523cf5c59db00f917c0163526024c2))
+
 ### [0.0.14](https://github.com/bgd-labs/report-engine/compare/v0.0.13...v0.0.14) (2023-07-12)
 
 
