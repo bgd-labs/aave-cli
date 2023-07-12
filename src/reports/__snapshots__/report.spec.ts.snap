@@ -17,7 +17,7 @@ exports[`report > should generate a well formatted report 1`] = `
 | debtCeiling | 0 $ |
 | isSiloed | false |
 | isFlashloanable | false |
-| eModeCategory | 0 |
+| eModeCategory | 1 |
 | oracle | [0x443C5116CdF663Eb387e72C688D276e702135C87](https://polygonscan.com/address/0x443C5116CdF663Eb387e72C688D276e702135C87) |
 | oracleDecimals | 8 |
 | oracleDescription | 1INCH / USD |
@@ -49,12 +49,38 @@ exports[`report > should generate a well formatted report 1`] = `
 | optimalStableToTotalDebtRatio | 20 % |
 | maxExcessStableToTotalDebtRatio | 80 % |
 | interestRate | ![ir](/.assets/4ab0dbcff3f330539d66319942d38435e45137bf.svg) |
+| eMode.label | Stablecoins |
+| eMode.ltv | 97 % |
+| eMode.liquidationThreshold | 97.5 % |
+| eMode.liquidationBonus | 1 % |
+| eMode.priceSource | 0x0000000000000000000000000000000000000000 |
+
+
+### Reserves altered
+
+#### WMATIC ([0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270](https://polygonscan.com/address/0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eModeCategory | 0 | 2 |
+| eMode.label | - | MATIC correlated |
+| eMode.ltv | - | 92.5 % |
+| eMode.liquidationThreshold | - | 95 % |
+| eMode.liquidationBonus | - | 1 % |
+| eMode.priceSource | - | 0x0000000000000000000000000000000000000000 |
+
 
 ## Raw diff
 
 \`\`\`json
 {
   \\"reserves\\": {
+    \\"0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270\\": {
+      \\"eModeCategory\\": {
+        \\"from\\": 0,
+        \\"to\\": 2
+      }
+    },
     \\"0x9c2C5fd7b07E95EE044DDeba0E97a665F142394f\\": {
       \\"from\\": null,
       \\"to\\": {
@@ -64,7 +90,7 @@ exports[`report > should generate a well formatted report 1`] = `
         \\"borrowingEnabled\\": true,
         \\"debtCeiling\\": 0,
         \\"decimals\\": 18,
-        \\"eModeCategory\\": 0,
+        \\"eModeCategory\\": 1,
         \\"interestRateStrategy\\": \\"0x03733F4E008d36f2e37F0080fF1c8DF756622E6F\\",
         \\"isActive\\": true,
         \\"isBorrowableInIsolation\\": false,
