@@ -3,10 +3,10 @@
   "version": "0.0.15",
   "description": "A cli to perform various aave governance related tasks",
   "main": "./dist/index.js",
-  "module": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "private": false,
   "bin": {
-    "aave-cli": "dist/cli.cjs"
+    "aave-cli": "dist/cli.js"
   },
   "scripts": {
     "build": "tsup",
@@ -32,10 +32,14 @@
     "vitest": "^0.32.0"
   },
   "exports": {
-    "default": "./dist/index.cjs",
     "require": "./dist/index.cjs",
-    "node": "./dist/index.cjs",
-    "imports": "./dist/index.js"
+    "node": "./dist/index.js",
+    "imports": "./dist/index.js",
+    "import": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "default": "./dist/index.js"
   },
   "publishConfig": {
     "access": "public"
