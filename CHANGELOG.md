@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.14](https://github.com/bgd-labs/report-engine/compare/v0.0.13...v0.0.14) (2023-07-12)
+
+
+### Features
+
+* fork utils ([#29](https://github.com/bgd-labs/report-engine/issues/29)) ([338e0eb](https://github.com/bgd-labs/report-engine/commit/338e0eb7f04eba1c173385df87b8103d5507be68))
+* render eModes ([#32](https://github.com/bgd-labs/report-engine/issues/32)) ([394780b](https://github.com/bgd-labs/report-engine/commit/394780b91cd8926fca63b4a969b8451c04fc28c3))
+
 ### [0.0.13](https://github.com/bgd-labs/report-engine/compare/v0.0.12...v0.0.13) (2023-06-24)
 
 
