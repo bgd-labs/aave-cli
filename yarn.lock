@@ -33,10 +33,10 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@bgd-labs/aave-address-book@^1.24.0":
-  version "1.24.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-1.24.0.tgz#c6396651f82492d69e5b0c83a6131aeebb3c9d95"
-  integrity sha512-9tD2TIntIo6AD+4ima6RyQGAE/8hHwf4j9Gls+tQZhLKhVlebp3Ecotv3KWzMeNqrKF6TNghCaVAEFPW04wIyQ==
+"@bgd-labs/aave-address-book@^1.28.0":
+  version "1.28.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-1.28.0.tgz#d2976404efe2379314cbf4edaf0cad8fdb92de25"
+  integrity sha512-TYtSENzd0xETNxc+uD5/0xtIHjlNRMAxQ+qNdspC2wTk5M6WDarrz4w+Z8smghRgvYI66Y0k/Stkc4O9fZ6YDQ==
 
 "@esbuild/android-arm64@0.17.12":
   version "0.17.12"

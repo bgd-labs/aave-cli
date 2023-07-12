@@ -41,7 +41,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@bgd-labs/aave-address-book": "^1.24.0",
+    "@bgd-labs/aave-address-book": "^1.28.0",
     "bs58": "^5.0.0",
     "chalk": "^4.1.2",
     "dotenv": "^16.0.3",
