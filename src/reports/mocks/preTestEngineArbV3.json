@@ -68,7 +68,7 @@
       "borrowingEnabled": true,
       "debtCeiling": 0,
       "decimals": 18,
-      "eModeCategory": 2,
+      "eModeCategory": 0,
       "interestRateStrategy": "0xFB0898dCFb69DF9E01DBE625A5988D6542e5BdC5",
       "isActive": true,
       "isBorrowableInIsolation": false,
