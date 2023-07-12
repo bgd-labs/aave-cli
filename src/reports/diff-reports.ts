@@ -33,8 +33,7 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
         );
 
         report += `| interestRate | ![ir](/.assets/${imageHash}.svg) |\n`;
-        if (post.reserves[reserveKey].eModeCategory != 0) {
-          console.log(post.reserves[reserveKey].eModeCategory, post.eModes);
+        if (post.reserves[reserveKey].eModeCategory && post.reserves[reserveKey].eModeCategory != 0) {
           report += renderEmode(post.eModes[post.reserves[reserveKey].eModeCategory]);
         }
 
@@ -73,7 +72,7 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
             post.strategies[(diffResult.reserves[reserveKey].interestRateStrategy as any).to]
           )}.svg) |`;
         }
-        if (diffResult.reserves[reserveKey].eModeCategory.hasOwnProperty('from')) {
+        if (diffResult.reserves[reserveKey].eModeCategory?.hasOwnProperty('from')) {
           report += renderEmodeDiff(
             diff(
               pre.eModes[(diffResult.reserves[reserveKey].eModeCategory as any).from] || {},
