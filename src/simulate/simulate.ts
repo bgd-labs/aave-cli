@@ -4,9 +4,10 @@ import { arbitrum } from './networks/arbitrum';
 import { arc, mainnet } from './networks/mainnet';
 import { optimism } from './networks/optimism';
 import { polygon } from './networks/polygon';
+import { base } from './networks/base';
 import { ActionSetState, FormattedArgs } from './networks/types';
 
-const l2Modules = [arbitrum, polygon, optimism, arc];
+const l2Modules = [arbitrum, polygon, optimism, arc, base];
 
 export async function simulateProposal(proposalId: bigint) {
   logInfo(mainnet.name, 'Updating events cache');

@@ -2,7 +2,7 @@ import { AaveGovernanceV2 } from '@bgd-labs/aave-address-book';
 import { ActionSetState, L2NetworkModule } from './types';
 import { getContract } from 'viem';
 import { OPTIMISM_BRIDGE_EXECUTOR_ABI, OPTIMISM_BRIDGE_EXECUTOR_START_BLOCK } from '../abis/OptimismBridgeExecutor';
-import { optimismClient } from '../../utils/rpcClients';
+import { mainnetClient, optimismClient } from '../../utils/rpcClients';
 import { getLogs } from '../../utils/logs';
 import { Trace, tenderly } from '../../utils/tenderlyClient';
 import { getProposalState, simulateNewActionSet, simulateQueuedActionSet } from './commonL2';
