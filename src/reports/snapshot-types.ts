@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const aaveV3ConfigSchema = z.object({
   oracle: z.string(),
@@ -84,6 +84,7 @@ export const CHAIN_ID = {
   ARBITRUM: 42161,
   AVALANCHE: 43114,
   METIS: 1088,
+  BASENET: 8453,
 } as const;
 
 const zodChainId = z.nativeEnum(CHAIN_ID);

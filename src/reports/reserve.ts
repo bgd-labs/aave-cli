@@ -1,5 +1,5 @@
-import { formatUnits } from "viem";
-import { AaveV3Reserve, CHAIN_ID } from "./snapshot-types";
+import { formatUnits } from 'viem';
+import { AaveV3Reserve, CHAIN_ID } from './snapshot-types';
 
 export const getBlockExplorerLink: {
   [key in CHAIN_ID]: (address: string) => string;
@@ -18,6 +18,8 @@ export const getBlockExplorerLink: {
     `[${address}](https://snowtrace.io/address/${address})`,
   [CHAIN_ID.METIS]: (address) =>
     `[${address}](https://andromeda-explorer.metis.io/address/${address})`,
+  [CHAIN_ID.BASENET]: (address) =>
+    `[${address}](https://basescan.org/address/${address})`,
 };
 
 export function renderReserveValue<T extends keyof AaveV3Reserve>(
@@ -27,30 +29,30 @@ export function renderReserveValue<T extends keyof AaveV3Reserve>(
 ) {
   if (
     [
-      "reserveFactor",
-      "liquidationProtocolFee",
-      "liquidationThreshold",
-      "ltv",
+      'reserveFactor',
+      'liquidationProtocolFee',
+      'liquidationThreshold',
+      'ltv',
     ].includes(key)
   )
     return `${formatUnits(BigInt(reserve[key]), 2)} %`;
-  if (["supplyCap", "borrowCap"].includes(key))
-    return `${reserve[key].toLocaleString("en-US")} ${reserve.symbol}`;
-  if (key === "debtCeiling")
+  if (['supplyCap', 'borrowCap'].includes(key))
+    return `${reserve[key].toLocaleString('en-US')} ${reserve.symbol}`;
+  if (key === 'debtCeiling')
     return `${Number(formatUnits(BigInt(reserve[key]), 2)).toLocaleString(
-      "en-US"
+      'en-US'
     )} $`;
-  if (key === "liquidationBonus")
+  if (key === 'liquidationBonus')
     return reserve[key] === 0
-      ? "0 %"
+      ? '0 %'
       : `${((reserve[key] as number) - 10000) / 100} %`;
-  if (key === "interestRateStrategy")
+  if (key === 'interestRateStrategy')
     return getBlockExplorerLink[chainId](reserve[key] as string);
-  if (key === "oracleLatestAnswer" && reserve.oracleDecimals)
+  if (key === 'oracleLatestAnswer' && reserve.oracleDecimals)
     return formatUnits(BigInt(reserve[key]), reserve.oracleDecimals);
-  if (typeof reserve[key] === "number")
-    return reserve[key].toLocaleString("en-US");
-  if (typeof reserve[key] === "string" && /0x.+/.test(reserve[key] as string))
+  if (typeof reserve[key] === 'number')
+    return reserve[key].toLocaleString('en-US');
+  if (typeof reserve[key] === 'string' && /0x.+/.test(reserve[key] as string))
     return getBlockExplorerLink[chainId](reserve[key] as string);
   return reserve[key];
 }
@@ -62,37 +64,37 @@ function renderReserveHeadline(reserve: AaveV3Reserve, chainId: CHAIN_ID) {
 }
 
 const ORDER: (keyof AaveV3Reserve)[] = [
-  "symbol",
-  "decimals",
-  "isActive",
-  "isFrozen",
-  "supplyCap",
-  "borrowCap",
-  "debtCeiling",
-  "isSiloed",
-  "isFlashloanable",
-  "eModeCategory",
-  "oracle",
-  "oracleDecimals",
-  "oracleDescription",
-  "oracleName",
-  "oracleLatestAnswer",
-  "usageAsCollateralEnabled",
-  "ltv",
-  "liquidationThreshold",
-  "liquidationBonus",
-  "liquidationProtocolFee",
-  "reserveFactor",
-  "aToken",
-  "aTokenImpl",
-  "variableDebtToken",
-  "variableDebtTokenImpl",
-  "stableDebtToken",
-  "stableDebtTokenImpl",
-  "borrowingEnabled",
-  "stableBorrowRateEnabled",
-  "isBorrowableInIsolation",
-  "interestRateStrategy",
+  'symbol',
+  'decimals',
+  'isActive',
+  'isFrozen',
+  'supplyCap',
+  'borrowCap',
+  'debtCeiling',
+  'isSiloed',
+  'isFlashloanable',
+  'eModeCategory',
+  'oracle',
+  'oracleDecimals',
+  'oracleDescription',
+  'oracleName',
+  'oracleLatestAnswer',
+  'usageAsCollateralEnabled',
+  'ltv',
+  'liquidationThreshold',
+  'liquidationBonus',
+  'liquidationProtocolFee',
+  'reserveFactor',
+  'aToken',
+  'aTokenImpl',
+  'variableDebtToken',
+  'variableDebtTokenImpl',
+  'stableDebtToken',
+  'stableDebtTokenImpl',
+  'borrowingEnabled',
+  'stableBorrowRateEnabled',
+  'isBorrowableInIsolation',
+  'interestRateStrategy',
 ];
 function sortReserveKeys(a: keyof AaveV3Reserve, b: keyof AaveV3Reserve) {
   const indexA = ORDER.indexOf(a);
@@ -103,10 +105,10 @@ function sortReserveKeys(a: keyof AaveV3Reserve, b: keyof AaveV3Reserve) {
 }
 
 function renderReserveConfig(reserve: AaveV3Reserve, chainId: CHAIN_ID) {
-  let content = "| description | value |\n| --- | --- |\n";
+  let content = '| description | value |\n| --- | --- |\n';
   const OMIT_KEYS: (keyof AaveV3Reserve)[] = [
-    "underlying", // already rendered in the header
-    "symbol", // already rendered in the header
+    'underlying', // already rendered in the header
+    'symbol', // already rendered in the header
   ];
   (Object.keys(reserve) as (keyof AaveV3Reserve)[])
     .filter((key) => !OMIT_KEYS.includes(key))
@@ -130,9 +132,9 @@ export type ReserveDiff<A extends AaveV3Reserve = AaveV3Reserve> = {
 export function renderReserveDiff(diff: ReserveDiff, chainId: CHAIN_ID) {
   let content = renderReserveHeadline(diff as AaveV3Reserve, chainId);
   content +=
-    "| description | value before | value after |\n| --- | --- | --- |\n";
+    '| description | value before | value after |\n| --- | --- | --- |\n';
   (Object.keys(diff) as (keyof AaveV3Reserve)[])
-    .filter((key) => diff[key].hasOwnProperty("from"))
+    .filter((key) => diff[key].hasOwnProperty('from'))
     .sort(sortReserveKeys)
     .map((key) => {
       content += `| ${key} | ${renderReserveValue(
