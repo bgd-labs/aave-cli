@@ -1,13 +1,6 @@
 // import 'dotenv/config';
 import { createPublicClient, http, fallback } from 'viem';
-import {
-  mainnet,
-  arbitrum,
-  polygon,
-  optimism,
-  metis,
-  base as basenet,
-} from 'viem/chains';
+import { mainnet, arbitrum, polygon, optimism, metis, base } from 'viem/chains';
 
 export const mainnetClient = createPublicClient({
   chain: mainnet,
@@ -34,7 +27,7 @@ export const metisClient = createPublicClient({
   transport: http(process.env.RPC_METIS),
 });
 
-export const basenetClient = createPublicClient({
-  chain: basenet,
-  transport: http(process.env.RPC_BASENET),
+export const baseClient = createPublicClient({
+  chain: base,
+  transport: http(process.env.RPC_BASE),
 });

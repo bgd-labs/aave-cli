@@ -18,7 +18,7 @@ export const getBlockExplorerLink: {
     `[${address}](https://snowtrace.io/address/${address})`,
   [CHAIN_ID.METIS]: (address) =>
     `[${address}](https://andromeda-explorer.metis.io/address/${address})`,
-  [CHAIN_ID.BASENET]: (address) =>
+  [CHAIN_ID.BASE]: (address) =>
     `[${address}](https://basescan.org/address/${address})`,
 };
 
