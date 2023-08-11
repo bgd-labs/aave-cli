@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.18](https://github.com/bgd-labs/report-engine/compare/v0.0.17...v0.0.18) (2023-08-11)
+
+
+### Features
+
+* add basenet reports ([#40](https://github.com/bgd-labs/report-engine/issues/40)) ([39b9602](https://github.com/bgd-labs/report-engine/commit/39b9602d3685d3dd5e3931db4f7dfd7de3970b43))
+* enable strict mode ([#41](https://github.com/bgd-labs/report-engine/issues/41)) ([615beca](https://github.com/bgd-labs/report-engine/commit/615beca3070c6226be75e43ead4b78dd7b729707))
+
 ### [0.0.17](https://github.com/bgd-labs/report-engine/compare/v0.0.16...v0.0.17) (2023-07-12)
 
 
