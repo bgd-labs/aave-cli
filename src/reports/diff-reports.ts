@@ -55,7 +55,7 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
       if (
         !(diffResult.reserves[reserveKey] as any).hasOwnProperty('from') &&
         Object.keys(diffResult.reserves[reserveKey]).find(
-          (fieldKey) => typeof diffResult.reserves[reserveKey][fieldKey] === 'object'
+          (fieldKey) => (typeof diffResult.reserves as any)[reserveKey][fieldKey] === 'object'
         )
       ) {
         let report = renderReserveDiff(diffResult.reserves[reserveKey] as any, chainId);

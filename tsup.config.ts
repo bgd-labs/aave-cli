@@ -8,6 +8,7 @@ const config: Options = {
     compilerOptions: {
       moduleResolution: 'node',
       allowSyntheticDefaultImports: true,
+      strict: true,
     },
   },
   // otherwise .env is ordered wrongly
