@@ -238,20 +238,20 @@ class Tenderly {
     this.PROJECT = project;
   }
 
-  trace = async (chainId: number, txHash: string): Promise<TenderlyTraceResponse> => {
-    const response = await fetch(`${this.TENDERLY_BASE}/public-contract/${chainId}/trace/${txHash}`, {
-      method: 'GET',
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        'X-Access-Key': this.ACCESS_TOKEN,
-      }),
-    });
-    const result = await response.json();
-    // Post-processing to ensure addresses we use are checksummed (since ethers returns checksummed addresses)
-    result.transaction.addresses = result.transaction.addresses.map(getAddress);
-    result.contracts.forEach((contract) => (contract.address = getAddress(contract.address)));
-    return result;
-  };
+  // trace = async (chainId: number, txHash: string): Promise<TenderlyTraceResponse> => {
+  //   const response = await fetch(`${this.TENDERLY_BASE}/public-contract/${chainId}/trace/${txHash}`, {
+  //     method: 'GET',
+  //     headers: new Headers({
+  //       'Content-Type': 'application/json',
+  //       'X-Access-Key': this.ACCESS_TOKEN,
+  //     }),
+  //   });
+  //   const result: TenderlyTraceResponse = await response.json();
+  //   // Post-processing to ensure addresses we use are checksummed (since ethers returns checksummed addresses)
+  //   result.transaction.addresses = result.transaction.addresses.map(getAddress);
+  //   result.contracts.forEach((contract) => (contract.address = getAddress(contract.address)));
+  //   return result;
+  // };
 
   simulate = async (request: TenderlyRequest): Promise<TenderlySimulationResponse> => {
     if (!request.state_objects) {
@@ -342,9 +342,9 @@ class Tenderly {
     // 1. apply storage changes
     if (request.state_objects) {
       logInfo('tenderly', 'setting storage');
-      for (const address of Object.keys(request.state_objects)) {
+      for (const address of Object.keys(request.state_objects) as Hex[]) {
         if (request.state_objects[address].storage) {
-          for (const slot of Object.keys(request.state_objects[address].storage!)) {
+          for (const slot of Object.keys(request.state_objects[address].storage!) as Hex[]) {
             await publicProvider.request({
               method: 'tenderly_setStorageAt' as any,
               params: [address as Hex, slot as Hex, request.state_objects[address].storage![slot] as Hex],
@@ -379,7 +379,7 @@ class Tenderly {
     }
   };
 
-  fundAccount = (fork, address) => {
+  fundAccount = (fork: { id: string }, address: Hex) => {
     logInfo('tenderly', 'fund account');
     return fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/fork/${fork.id}/balance`, {
       method: 'POST',

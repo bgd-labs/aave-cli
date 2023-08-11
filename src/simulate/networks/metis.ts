@@ -6,6 +6,7 @@ import { metisClient } from '../../utils/rpcClients';
 import { getLogs } from '../../utils/logs';
 import { Trace } from '../../utils/tenderlyClient';
 import { getProposalState } from './commonL2';
+import { OPTIMISM_BRIDGE_EXECUTOR_ABI } from '../abis/OptimismBridgeExecutor';
 
 const METIS_L1_CROSS_COMAIN_MESSENGER = '0x081D1101855bD523bA69A9794e0217F0DB6323ff';
 
@@ -15,7 +16,7 @@ const arbitrumExecutorContract = getContract({
   publicClient: metisClient,
 });
 
-export const metis: L2NetworkModule<typeof METIS_BRIDGE_EXECUTOR_ABI, 'ActionsSetQueued', 'ActionsSetExecuted'> = {
+export const metis: L2NetworkModule<typeof OPTIMISM_BRIDGE_EXECUTOR_ABI, 'ActionsSetQueued', 'ActionsSetExecuted'> = {
   name: 'Metis',
   async cacheLogs() {
     const queuedLogs = await getLogs(metisClient, (fromBLock, toBlock) =>
@@ -56,7 +57,7 @@ export const metis: L2NetworkModule<typeof METIS_BRIDGE_EXECUTOR_ABI, 'ActionsSe
   getProposalState: (args) =>
     getProposalState({
       ...args,
-      dataValue: args.trace.decoded_input.find((input) => input.soltype.name === '_message').value as `0x${string}`,
+      dataValue: args.trace.decoded_input.find((input) => input.soltype!.name === '_message')!.value as `0x${string}`,
     }),
   // Tenderly doesn't support metis
   // async simulateOnTenderly({ state, log, trace }) {

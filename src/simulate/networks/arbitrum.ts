@@ -57,7 +57,7 @@ export const arbitrum: L2NetworkModule<typeof ARBITRUM_BRIDGE_EXECUTOR_ABI, 'Act
     getProposalState: (args) =>
       getProposalState({
         ...args,
-        dataValue: args.trace.decoded_input.find((input) => input.soltype.name === 'data').value as `0x${string}`,
+        dataValue: args.trace.decoded_input.find((input) => input.soltype!.name === 'data')!.value as `0x${string}`,
       }),
     async simulateOnTenderly({ state, executedLog, queuedLog, args }) {
       if (state === ActionSetState.EXECUTED) {

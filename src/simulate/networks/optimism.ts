@@ -2,7 +2,7 @@ import { AaveGovernanceV2 } from '@bgd-labs/aave-address-book';
 import { ActionSetState, L2NetworkModule } from './types';
 import { getContract } from 'viem';
 import { OPTIMISM_BRIDGE_EXECUTOR_ABI, OPTIMISM_BRIDGE_EXECUTOR_START_BLOCK } from '../abis/OptimismBridgeExecutor';
-import { optimismClient } from '../../utils/rpcClients';
+import { mainnetClient, optimismClient } from '../../utils/rpcClients';
 import { getLogs } from '../../utils/logs';
 import { Trace, tenderly } from '../../utils/tenderlyClient';
 import { getProposalState, simulateNewActionSet, simulateQueuedActionSet } from './commonL2';
@@ -57,7 +57,7 @@ export const optimism: L2NetworkModule<typeof OPTIMISM_BRIDGE_EXECUTOR_ABI, 'Act
     getProposalState: ({ trace, ...args }) =>
       getProposalState({
         ...args,
-        dataValue: trace.decoded_input.find((input) => input.soltype.name === '_message').value as `0x${string}`,
+        dataValue: trace.decoded_input.find((input) => input.soltype!.name === '_message')!.value as `0x${string}`,
       }),
     async simulateOnTenderly({ state, executedLog, queuedLog, args }) {
       if (state === ActionSetState.EXECUTED) {

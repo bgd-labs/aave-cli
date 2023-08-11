@@ -194,7 +194,7 @@ export async function getProposalState<TAbi>({
 export async function getTenderlyActionSetExecutionPayload(
   executorContract: GetContractReturnType<typeof executorABI, PublicClient>,
   client: PublicClient,
-  log
+  log: any
 ) {
   const gracePeriod = await executorContract.read.getGracePeriod();
   const currentBlock = await client.getBlock();
@@ -227,7 +227,7 @@ export async function getTenderlyActionSetExecutionPayload(
 export async function simulateQueuedActionSet(
   executorContract: GetContractReturnType<typeof executorABI, PublicClient>,
   client: PublicClient,
-  log
+  log: any
 ) {
   const payload = await getTenderlyActionSetExecutionPayload(executorContract, client, log);
   return tenderly.simulate(payload);
@@ -307,7 +307,7 @@ export async function getTenderlyActionSetCreationPayload(
     );
     acc[getSolidityStorageSlotBytes(toHex(7), actionHash)] = pad(toHex(true), { size: 32 });
     return acc;
-  }, {});
+  }, {} as { [key: Hex]: Hex });
 
   const payload = {
     network_id: String(client.chain!.id),
