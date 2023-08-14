@@ -1,11 +1,10 @@
-name: Head branch workflow
+name: Test & release
 
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
 
 on:
-  pull_request:
   push:
     branches:
       - main
