@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.19](https://github.com/bgd-labs/report-engine/compare/v0.0.18...v0.0.19) (2023-08-14)
+
+
+### Bug Fixes
+
+* revert wrong cast ([#43](https://github.com/bgd-labs/report-engine/issues/43)) ([ef5aced](https://github.com/bgd-labs/report-engine/commit/ef5aced5e42f1a6ba2cbbd9c2856c3ef591d6161))
+
 ### [0.0.18](https://github.com/bgd-labs/report-engine/compare/v0.0.17...v0.0.18) (2023-08-11)
 
 
