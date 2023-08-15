@@ -2,12 +2,7 @@
   "name": "@bgd-labs/aave-cli",
   "version": "0.0.19",
   "description": "A cli to perform various aave governance related tasks",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
   "private": false,
-  "bin": {
-    "aave-cli": "dist/cli.js"
-  },
   "scripts": {
     "build": "tsup",
     "test": "vitest",
@@ -17,13 +12,12 @@
     "type": "git",
     "url": "git+https://github.com/bgd-labs/report-engine.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "BGD labs",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/bgd-labs/report-engine/issues"
   },
   "homepage": "https://github.com/bgd-labs/report-engine#readme",
-  "type": "module",
   "devDependencies": {
     "@types/node-fetch": "^2.6.4",
     "@types/object-hash": "^3.0.3",
@@ -32,15 +26,25 @@
     "typescript": "^5.1.6",
     "vitest": "^0.34.1"
   },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "exports": {
-    "require": "./dist/index.cjs",
-    "node": "./dist/index.js",
-    "imports": "./dist/index.js",
-    "import": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "default": "./dist/index.js"
+    ".": {
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "types": "./dist/AaveAddressBook.d.cts",
+      "default": "./dist/index.cjs"
+    }
+  },
+  "bin": {
+    "aave-cli": "dist/cli.cjs"
   },
   "publishConfig": {
     "access": "public"
