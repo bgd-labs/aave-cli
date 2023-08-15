@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.20](https://github.com/bgd-labs/report-engine/compare/v0.0.19...v0.0.20) (2023-08-15)
+
+
+### Features
+
+* add ci for alpha releases ([#45](https://github.com/bgd-labs/report-engine/issues/45)) ([e68515e](https://github.com/bgd-labs/report-engine/commit/e68515ec099fd22b31621a3cbf3a538ecefcf83e))
+
 ### [0.0.19](https://github.com/bgd-labs/report-engine/compare/v0.0.18...v0.0.19) (2023-08-14)
 
 
