@@ -12,7 +12,7 @@ const BASE_L1_CROSS_DOMAIN_MESSENGER = '0x866E82a600A1414e583f7F13623F1aC5d58b0A
 const BASE_BRIDGE_EXECUTOR_START_BLOCK = 2135076n;
 
 export const baseExecutorContract = getContract({
-  address: AaveGovernanceV2.BASENET_BRIDGE_EXECUTOR,
+  address: AaveGovernanceV2.BASE_BRIDGE_EXECUTOR,
   abi: OPTIMISM_BRIDGE_EXECUTOR_ABI,
   publicClient: baseClient,
 });
@@ -25,7 +25,7 @@ export const base: L2NetworkModule<typeof OPTIMISM_BRIDGE_EXECUTOR_ABI, 'Actions
         {},
         {
           fromBlock: fromBLock || BASE_BRIDGE_EXECUTOR_START_BLOCK,
-          toBlock: toBlock,
+          toBlock: toBlock || BASE_BRIDGE_EXECUTOR_START_BLOCK + 1n,
         }
       )
     );
@@ -34,7 +34,7 @@ export const base: L2NetworkModule<typeof OPTIMISM_BRIDGE_EXECUTOR_ABI, 'Actions
         {},
         {
           fromBlock: fromBLock || BASE_BRIDGE_EXECUTOR_START_BLOCK,
-          toBlock: toBlock,
+          toBlock: toBlock || BASE_BRIDGE_EXECUTOR_START_BLOCK + 1n,
         }
       )
     );

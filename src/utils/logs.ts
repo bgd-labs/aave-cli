@@ -13,12 +13,12 @@ import { FilterLogWithTimestamp } from '../simulate/networks/types';
  */
 export async function getLogs<TAbi extends Abi, TEventName extends string>(
   client: PublicClient,
-  filterFn: (from, to) => Promise<GetFilterLogsParameters<TAbi, TEventName>['filter']>
+  filterFn: (from: bigint, to?: bigint) => Promise<GetFilterLogsParameters<TAbi, TEventName>['filter']>
 ): Promise<Array<FilterLogWithTimestamp<TAbi, TEventName>>> {
   // create cache folder if doesn't exist yet
   const cachePath = path.join(process.cwd(), 'cache', client.chain!.id.toString());
   const currentBlock = await client.getBlockNumber();
-  const filter = await filterFn(0, currentBlock);
+  const filter = await filterFn(0n);
   const filePath = path.join(cachePath, filter.eventName + '.json');
   if (!fs.existsSync(cachePath)) {
     fs.mkdirSync(cachePath, { recursive: true });
@@ -29,7 +29,7 @@ export async function getLogs<TAbi extends Abi, TEventName extends string>(
     : [];
   const logs = await getPastLogsRecursive(
     client,
-    cache.length > 0 ? BigInt(cache[cache.length - 1].blockNumber as bigint) + 1n : 0n,
+    cache.length > 0 ? BigInt(cache[cache.length - 1].blockNumber as bigint) + 1n : filter.fromBlock!,
     currentBlock,
     filterFn
   );
@@ -72,7 +72,7 @@ export async function getPastLogsRecursive<
   client: PublicClient,
   fromBlock: bigint,
   toBlock: bigint,
-  filterFn: (from, to) => Promise<GetFilterLogsParameters<TAbi, TEventName>['filter']>
+  filterFn: (from: bigint, to?: bigint) => Promise<GetFilterLogsParameters<TAbi, TEventName>['filter']>
 ): Promise<GetFilterLogsReturnType<TAbi, TEventName>> {
   if (fromBlock <= toBlock) {
     try {
