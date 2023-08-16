@@ -1,9 +1,10 @@
 {
   "name": "@bgd-labs/aave-cli",
-  "version": "0.0.20",
+  "version": "0.0.19",
   "description": "A cli to perform various aave governance related tasks",
   "private": false,
   "scripts": {
+    "start": "tsx src/cli.ts",
     "build": "tsup",
     "test": "vitest",
     "ci:publish": "npm run build && npm publish --access=public"
@@ -23,6 +24,7 @@
     "@types/object-hash": "^3.0.3",
     "@types/yargs": "^17.0.24",
     "tsup": "^7.2.0",
+    "tsx": "^3.12.7",
     "typescript": "^5.1.6",
     "vitest": "^0.34.1"
   },
