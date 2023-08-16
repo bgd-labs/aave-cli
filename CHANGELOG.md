@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.21](https://github.com/bgd-labs/report-engine/compare/v0.0.20...v0.0.21) (2023-08-16)
+
+
+### Bug Fixes
+
+* base simulation ([#47](https://github.com/bgd-labs/report-engine/issues/47)) ([00b75bb](https://github.com/bgd-labs/report-engine/commit/00b75bbc321450f89f239c97f2016869e7fd6ebb))
+
 ### [0.0.20](https://github.com/bgd-labs/report-engine/compare/v0.0.19...v0.0.20) (2023-08-15)
 
 
