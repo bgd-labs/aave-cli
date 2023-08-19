@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.23](https://github.com/bgd-labs/report-engine/compare/v0.0.22...v0.0.23) (2023-08-19)
+
+
+### Bug Fixes
+
+* improve payload unwrapping ([#52](https://github.com/bgd-labs/report-engine/issues/52)) ([6d9c866](https://github.com/bgd-labs/report-engine/commit/6d9c866c82363ee4acf8ed42ab4ed1819dd07c9c))
+
 ### [0.0.22](https://github.com/bgd-labs/report-engine/compare/v0.0.21...v0.0.22) (2023-08-19)
 
 ### [0.0.21](https://github.com/bgd-labs/report-engine/compare/v0.0.20...v0.0.21) (2023-08-16)
