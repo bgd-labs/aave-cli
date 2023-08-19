@@ -13,7 +13,7 @@ import {
   fromHex,
 } from 'viem';
 import { EOA } from './constants';
-import { logInfo } from './logger';
+import { logInfo, logWarning } from './logger';
 export type StateObject = {
   balance?: string;
   code?: string;
@@ -357,10 +357,15 @@ class Tenderly {
     // 2. warp time
     if (request.block_header?.timestamp) {
       const currentBlock = await publicProvider.getBlock();
-      await publicProvider.request({
-        method: 'evm_increaseTime' as any,
-        params: [toHex(fromHex(request.block_header?.timestamp, 'bigint') - currentBlock.timestamp)],
-      });
+      // warping back in time
+      if (fromHex(request.block_header?.timestamp, 'bigint') > currentBlock.timestamp) {
+        await publicProvider.request({
+          method: 'evm_increaseTime' as any,
+          params: [toHex(fromHex(request.block_header?.timestamp, 'bigint') - currentBlock.timestamp)],
+        });
+      } else {
+        logWarning('tenderly', 'skipping time warp as tenderly forks do not support traveling back in time');
+      }
     }
 
     // 3. execute txn
