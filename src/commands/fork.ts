@@ -1,18 +1,20 @@
-import { arbitrum, mainnet, optimism, polygon } from 'viem/chains';
+import { arbitrum, base, mainnet, optimism, polygon } from 'viem/chains';
 import {
   getProposalStateById,
   getTenderlyActionSetCreationPayload,
   getTenderlyActionSetExecutionPayload,
 } from '../simulate/networks/commonL2';
 import { polygonExecutorContract } from '../simulate/networks/polygon';
-import { arbitrumClient, optimismClient, polygonClient } from '../utils/rpcClients';
+import { arbitrumClient, baseClient, optimismClient, polygonClient } from '../utils/rpcClients';
 import { tenderly } from '../utils/tenderlyClient';
 import { arbitrumExecutorContract } from '../simulate/networks/arbitrum';
 import { optimismExecutorContract } from '../simulate/networks/optimism';
 import { polygon as modulePolygon } from '../simulate/networks/polygon';
 import { arbitrum as moduleArbitrum } from '../simulate/networks/arbitrum';
 import { optimism as moduleOptimism } from '../simulate/networks/optimism';
+import { base as moduleBase } from '../simulate/networks/base';
 import { ActionSetState } from '../simulate/networks/types';
+import { baseExecutorContract } from '../simulate/networks/base';
 
 export type ForkOptions = {
   chainId: number;
@@ -58,6 +60,7 @@ const getL2 = (chainId: number) => {
   if (chainId === polygon.id) return [polygonExecutorContract, polygonClient, modulePolygon] as const;
   if (chainId === arbitrum.id) return [arbitrumExecutorContract, arbitrumClient, moduleArbitrum] as const;
   if (chainId === optimism.id) return [optimismExecutorContract, optimismClient, moduleOptimism] as const;
+  if (chainId === base.id) return [baseExecutorContract, baseClient, moduleBase] as const;
   throw new Error(`ChainId: ${chainId} not supported`);
 };
 
