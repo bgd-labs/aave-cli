@@ -3,7 +3,7 @@ import type { Abi } from 'abitype';
 import fs from 'fs';
 import path from 'path';
 import { logInfo } from './logger';
-import { FilterLogWithTimestamp } from '../simulate/networks/types';
+import { FilterLogWithTimestamp } from '../simulate/govv2/networks/types';
 
 /**
  * Fetches the logs and stores them in a cache folder.

@@ -1,5 +1,5 @@
-import { logError, logInfo, logSuccess } from '../utils/logger';
-import { TenderlySimulationResponse } from '../utils/tenderlyClient';
+import { logError, logInfo, logSuccess } from '../../utils/logger';
+import { TenderlySimulationResponse } from '../../utils/tenderlyClient';
 import { arbitrum } from './networks/arbitrum';
 import { arc, mainnet } from './networks/mainnet';
 import { optimism } from './networks/optimism';
