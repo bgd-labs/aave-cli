@@ -3,5 +3,7 @@ declare namespace NodeJS {
     TENDERLY_ACCESS_TOKEN: string;
     TENDERLY_ACCOUNT: string;
     TENDERLY_PROJECT_SLUG: string;
+
+    RPC_SEPOLIA: string;
   }
 }

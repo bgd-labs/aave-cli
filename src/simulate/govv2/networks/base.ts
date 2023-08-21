@@ -2,9 +2,9 @@ import { AaveGovernanceV2 } from '@bgd-labs/aave-address-book';
 import { ActionSetState, L2NetworkModule } from './types';
 import { getContract } from 'viem';
 import { OPTIMISM_BRIDGE_EXECUTOR_ABI } from '../abis/OptimismBridgeExecutor';
-import { baseClient } from '../../utils/rpcClients';
-import { getLogs } from '../../utils/logs';
-import { Trace, tenderly } from '../../utils/tenderlyClient';
+import { baseClient } from '../../../utils/rpcClients';
+import { getLogs } from '../../../utils/logs';
+import { Trace, tenderly } from '../../../utils/tenderlyClient';
 import { getProposalState, simulateNewActionSet, simulateQueuedActionSet } from './commonL2';
 
 const BASE_L1_CROSS_DOMAIN_MESSENGER = '0x866E82a600A1414e583f7F13623F1aC5d58b0Afa';

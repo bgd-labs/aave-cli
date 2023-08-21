@@ -2,9 +2,9 @@ import { AaveGovernanceV2 } from '@bgd-labs/aave-address-book';
 import { L2NetworkModule } from './types';
 import { getContract } from 'viem';
 import { METIS_BRIDGE_EXECUTOR_START_BLOCK, METIS_BRIDGE_EXECUTOR_ABI } from '../abis/MetisBridgeExecutor';
-import { metisClient } from '../../utils/rpcClients';
-import { getLogs } from '../../utils/logs';
-import { Trace } from '../../utils/tenderlyClient';
+import { metisClient } from '../../../utils/rpcClients';
+import { getLogs } from '../../../utils/logs';
+import { Trace } from '../../../utils/tenderlyClient';
 import { getProposalState } from './commonL2';
 import { OPTIMISM_BRIDGE_EXECUTOR_ABI } from '../abis/OptimismBridgeExecutor';
 

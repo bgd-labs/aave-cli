@@ -10,9 +10,13 @@ interface PayloadsController {
     queuedLogs: Array<FilterLogWithTimestamp<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI, 'PayloadQueued'>>;
     executedLogs: Array<FilterLogWithTimestamp<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI, 'PayloadExecuted'>>;
   }>;
+  // executes an existing payload
+  simulateExecutionByIdOnTenderly: (id: bigint) => Promise<any>;
+  // creates and executes a payload
+  // TODO: not sure yet about types etc
 }
 
-const getPayloadsController = (address: Hex, publicClient: PublicClient): PayloadsController => {
+export const getPayloadsController = (address: Hex, publicClient: PublicClient): PayloadsController => {
   const controllerContract = getContract({ abi: PAYLOADS_CONTROLLER_EXTENDED_ABI, address, publicClient });
   return {
     cacheLogs: async () => {
@@ -39,8 +43,6 @@ const getPayloadsController = (address: Hex, publicClient: PublicClient): Payloa
       });
       return { createdLogs, queuedLogs, executedLogs };
     },
-    create: () => {},
-    queue: () => {},
-    execute: () => {},
+    simulateExecutionByIdOnTenderly: async (id: bigint) => {},
   };
 };

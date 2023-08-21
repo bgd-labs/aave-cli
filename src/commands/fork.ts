@@ -3,18 +3,18 @@ import {
   getProposalStateById,
   getTenderlyActionSetCreationPayload,
   getTenderlyActionSetExecutionPayload,
-} from '../simulate/networks/commonL2';
-import { polygonExecutorContract } from '../simulate/networks/polygon';
+} from '../simulate/govv2/networks/commonL2';
+import { polygonExecutorContract } from '../simulate/govv2/networks/polygon';
 import { arbitrumClient, baseClient, optimismClient, polygonClient } from '../utils/rpcClients';
 import { tenderly } from '../utils/tenderlyClient';
-import { arbitrumExecutorContract } from '../simulate/networks/arbitrum';
-import { optimismExecutorContract } from '../simulate/networks/optimism';
-import { polygon as modulePolygon } from '../simulate/networks/polygon';
-import { arbitrum as moduleArbitrum } from '../simulate/networks/arbitrum';
-import { optimism as moduleOptimism } from '../simulate/networks/optimism';
-import { base as moduleBase } from '../simulate/networks/base';
-import { ActionSetState } from '../simulate/networks/types';
-import { baseExecutorContract } from '../simulate/networks/base';
+import { arbitrumExecutorContract } from '../simulate/govv2/networks/arbitrum';
+import { optimismExecutorContract } from '../simulate/govv2/networks/optimism';
+import { polygon as modulePolygon } from '../simulate/govv2/networks/polygon';
+import { arbitrum as moduleArbitrum } from '../simulate/govv2/networks/arbitrum';
+import { optimism as moduleOptimism } from '../simulate/govv2/networks/optimism';
+import { base as moduleBase } from '../simulate/govv2/networks/base';
+import { ActionSetState } from '../simulate/govv2/networks/types';
+import { baseExecutorContract } from '../simulate/govv2/networks/base';
 
 export type ForkOptions = {
   chainId: number;

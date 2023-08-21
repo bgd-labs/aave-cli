@@ -2,9 +2,9 @@ import { AaveGovernanceV2 } from '@bgd-labs/aave-address-book';
 import { ActionSetState, L2NetworkModule } from './types';
 import { getContract } from 'viem';
 import { ARBITRUM_BRIDGE_EXECUTOR_ABI, ARBITRUM_BRIDGE_EXECUTOR_START_BLOCK } from '../abis/ArbitrumBridgeExecutor';
-import { arbitrumClient } from '../../utils/rpcClients';
-import { getLogs } from '../../utils/logs';
-import { Trace, tenderly } from '../../utils/tenderlyClient';
+import { arbitrumClient } from '../../../utils/rpcClients';
+import { getLogs } from '../../../utils/logs';
+import { Trace, tenderly } from '../../../utils/tenderlyClient';
 import { getProposalState, simulateNewActionSet, simulateQueuedActionSet } from './commonL2';
 
 const ARBITRUM_INBOX = '0x4Dbd4fc535Ac27206064B68FfCf827b0A60BAB3f'; // TODO: should probably be on address-book

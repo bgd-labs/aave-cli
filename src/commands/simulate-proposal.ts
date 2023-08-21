@@ -1,4 +1,4 @@
-import { simulateProposal } from '../simulate/simulate';
+import { simulateProposal } from '../simulate/govv2/simulate';
 
 export const command = 'simulate-proposal [proposalId]';
 

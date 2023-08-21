@@ -1,5 +1,5 @@
 import type { Abi } from 'abitype';
-import { TenderlySimulationResponse, Trace } from '../../utils/tenderlyClient';
+import { TenderlySimulationResponse, Trace } from '../../../utils/tenderlyClient';
 import { GetFilterLogsReturnType, Hex, ReadContractReturnType } from 'viem';
 import { AAVE_GOVERNANCE_V2_ABI } from '../abis/AaveGovernanceV2';
 import { GetProposalStateProps, getProposalState } from './commonL2';
