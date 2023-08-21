@@ -33,42 +33,58 @@ export const getGovernance = (address: Hex, publicClient: PublicClient, blockCre
 
   return {
     async cacheLogs() {
-      const createdLogs = await getLogs(publicClient, (fromBlock, toBlock) => {
-        return governanceContract.createEventFilter.ProposalCreated(
-          {},
-          {
-            fromBlock: fromBlock || blockCreated,
-            toBlock,
-          }
-        );
-      });
-      const queuedLogs = await getLogs(publicClient, (fromBlock, toBlock) => {
-        return governanceContract.createEventFilter.ProposalQueued(
-          {},
-          {
-            fromBlock: fromBlock || blockCreated,
-            toBlock,
-          }
-        );
-      });
-      const executedLogs = await getLogs(publicClient, (fromBlock, toBlock) => {
-        return governanceContract.createEventFilter.ProposalExecuted(
-          {},
-          {
-            fromBlock: fromBlock || blockCreated,
-            toBlock,
-          }
-        );
-      });
-      const payloadSentLogs = await getLogs(publicClient, (fromBlock, toBlock) => {
-        return governanceContract.createEventFilter.PayloadSent(
-          {},
-          {
-            fromBlock: fromBlock || blockCreated,
-            toBlock,
-          }
-        );
-      });
+      const createdLogs = await getLogs(
+        publicClient,
+        (fromBlock, toBlock) => {
+          return governanceContract.createEventFilter.ProposalCreated(
+            {},
+            {
+              fromBlock: fromBlock,
+              toBlock,
+            }
+          );
+        },
+        blockCreated
+      );
+      const queuedLogs = await getLogs(
+        publicClient,
+        (fromBlock, toBlock) => {
+          return governanceContract.createEventFilter.ProposalQueued(
+            {},
+            {
+              fromBlock: fromBlock,
+              toBlock,
+            }
+          );
+        },
+        blockCreated
+      );
+      const executedLogs = await getLogs(
+        publicClient,
+        (fromBlock, toBlock) => {
+          return governanceContract.createEventFilter.ProposalExecuted(
+            {},
+            {
+              fromBlock: fromBlock,
+              toBlock,
+            }
+          );
+        },
+        blockCreated
+      );
+      const payloadSentLogs = await getLogs(
+        publicClient,
+        (fromBlock, toBlock) => {
+          return governanceContract.createEventFilter.PayloadSent(
+            {},
+            {
+              fromBlock: fromBlock,
+              toBlock,
+            }
+          );
+        },
+        blockCreated
+      );
       return { createdLogs, queuedLogs, executedLogs, payloadSentLogs };
     },
     async getProposal(proposalId: bigint, logs: Awaited<ReturnType<Governance['cacheLogs']>>) {

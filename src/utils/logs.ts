@@ -13,12 +13,13 @@ import { FilterLogWithTimestamp } from '../simulate/govv2/networks/types';
  */
 export async function getLogs<TAbi extends Abi, TEventName extends string>(
   client: PublicClient,
-  filterFn: (from: bigint, to?: bigint) => Promise<GetFilterLogsParameters<TAbi, TEventName>['filter']>
+  filterFn: (from: bigint, to?: bigint) => Promise<GetFilterLogsParameters<TAbi, TEventName>['filter']>,
+  fromBlock?: bigint
 ): Promise<Array<FilterLogWithTimestamp<TAbi, TEventName>>> {
   // create cache folder if doesn't exist yet
   const cachePath = path.join(process.cwd(), 'cache', client.chain!.id.toString());
   const currentBlock = await client.getBlockNumber();
-  const filter = await filterFn(0n);
+  const filter = await filterFn(fromBlock || 0n);
   const filePath = path.join(cachePath, filter.eventName + '.json');
   if (!fs.existsSync(cachePath)) {
     fs.mkdirSync(cachePath, { recursive: true });
@@ -29,7 +30,7 @@ export async function getLogs<TAbi extends Abi, TEventName extends string>(
     : [];
   const logs = await getPastLogsRecursive(
     client,
-    cache.length > 0 ? BigInt(cache[cache.length - 1].blockNumber as bigint) + 1n : filter.fromBlock!,
+    cache.length > 0 ? BigInt(cache[cache.length - 1].blockNumber as bigint) + 1n : filter.fromBlock || fromBlock || 0n,
     currentBlock,
     filterFn
   );
