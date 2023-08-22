@@ -11,7 +11,7 @@ type PayloadCreatedLog = FilterLogWithTimestamp<typeof PAYLOADS_CONTROLLER_EXTEN
 type PayloadQueuedLog = FilterLogWithTimestamp<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI, 'PayloadQueued'>;
 type PayloadExecutedLog = FilterLogWithTimestamp<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI, 'PayloadExecuted'>;
 
-interface PayloadsController {
+export interface PayloadsController {
   // cache created / queued / Executed logs
   cacheLogs: () => Promise<{
     createdLogs: Array<PayloadCreatedLog>;

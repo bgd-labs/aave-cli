@@ -4,7 +4,7 @@ import { TenderlySimulationResponse } from '../../utils/tenderlyClient';
 import { getGovernance } from './governance';
 import { createPublicClient, http } from 'viem';
 import { sepolia, polygonMumbai, bscTestnet, avalancheFuji } from 'viem/chains';
-import { getPayloadsController } from './payloadsController';
+import { PayloadsController, getPayloadsController } from './payloadsController';
 
 const CHAIN_ID_CLIENT_MAP = {
   [sepolia.id]: { client: createPublicClient({ chain: sepolia, transport: http(process.env.RPC_SEPOLIA) }) },
@@ -31,6 +31,10 @@ export async function simulateProposal(proposalId: bigint) {
   );
   const logs = await governance.cacheLogs();
   const proposal = await governance.getProposal(proposalId, logs);
+  const payloads: {
+    payload: Awaited<ReturnType<PayloadsController['getPayload']>>;
+    simulation: TenderlySimulationResponse;
+  }[] = [];
   for (const payload of proposal.proposal.payloads) {
     const controllerContract = getPayloadsController(
       payload.payloadsController,
@@ -40,6 +44,7 @@ export async function simulateProposal(proposalId: bigint) {
     const logs = await controllerContract.cacheLogs();
     const config = await controllerContract.getPayload(payload.payloadId, logs);
     const result = await controllerContract.simulatePayloadExecutionOnTenderly(payload.payloadId, config);
+    payloads.push({ payload: config, simulation: result });
   }
-  return {};
+  return { proposal, payloads };
 }
