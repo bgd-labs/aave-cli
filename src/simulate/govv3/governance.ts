@@ -1,4 +1,4 @@
-import { ContractFunctionResult, Hex, PublicClient, getContract } from 'viem';
+import { ContractFunctionResult, GetContractReturnType, Hex, PublicClient, getContract } from 'viem';
 import { FilterLogWithTimestamp } from '../govv2/networks/types';
 import { GOVERNANCE_EXTENDED_ABI } from './abis/GovernanceExtended';
 import { getLogs } from '../../utils/logs';
@@ -9,6 +9,7 @@ type ExecutedLog = FilterLogWithTimestamp<typeof GOVERNANCE_EXTENDED_ABI, 'Propo
 type PayloadSentLog = FilterLogWithTimestamp<typeof GOVERNANCE_EXTENDED_ABI, 'PayloadSent'>;
 
 export interface Governance {
+  governanceContract: GetContractReturnType<typeof GOVERNANCE_EXTENDED_ABI>;
   cacheLogs: () => Promise<{
     createdLogs: Array<CreatedLog>;
     queuedLogs: Array<QueuedLog>;
@@ -32,6 +33,7 @@ export const getGovernance = (address: Hex, publicClient: PublicClient, blockCre
   const governanceContract = getContract({ abi: GOVERNANCE_EXTENDED_ABI, address, publicClient });
 
   return {
+    governanceContract,
     async cacheLogs() {
       const createdLogs = await getLogs(
         publicClient,

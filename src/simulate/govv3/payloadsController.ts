@@ -1,4 +1,13 @@
-import { ContractFunctionResult, Hex, PublicClient, encodeFunctionData, encodePacked, getContract, toHex } from 'viem';
+import {
+  ContractFunctionResult,
+  GetContractReturnType,
+  Hex,
+  PublicClient,
+  encodeFunctionData,
+  encodePacked,
+  getContract,
+  toHex,
+} from 'viem';
 import { PAYLOADS_CONTROLLER_EXTENDED_ABI } from './abis/PayloadsControllerExtended';
 import { getLogs } from '../../utils/logs';
 import { FilterLogWithTimestamp } from '../govv2/networks/types';
@@ -10,7 +19,17 @@ type PayloadCreatedLog = FilterLogWithTimestamp<typeof PAYLOADS_CONTROLLER_EXTEN
 type PayloadQueuedLog = FilterLogWithTimestamp<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI, 'PayloadQueued'>;
 type PayloadExecutedLog = FilterLogWithTimestamp<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI, 'PayloadExecuted'>;
 
+export enum PayloadState {
+  None,
+  Created,
+  Queued,
+  Executed,
+  Cancelled,
+  Expired,
+}
+
 export interface PayloadsController {
+  controllerContract: GetContractReturnType<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI>;
   // cache created / queued / Executed logs
   cacheLogs: () => Promise<{
     createdLogs: Array<PayloadCreatedLog>;
@@ -42,6 +61,7 @@ export const getPayloadsController = (
 ): PayloadsController => {
   const controllerContract = getContract({ abi: PAYLOADS_CONTROLLER_EXTENDED_ABI, address, publicClient });
   return {
+    controllerContract,
     cacheLogs: async () => {
       const createdLogs = await getLogs(
         publicClient,
