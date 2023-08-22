@@ -29,7 +29,7 @@ export enum PayloadState {
 }
 
 export interface PayloadsController {
-  controllerContract: GetContractReturnType<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI>;
+  controllerContract: GetContractReturnType<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI, PublicClient>;
   // cache created / queued / Executed logs
   cacheLogs: () => Promise<{
     createdLogs: Array<PayloadCreatedLog>;

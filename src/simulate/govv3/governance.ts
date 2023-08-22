@@ -9,7 +9,7 @@ type ExecutedLog = FilterLogWithTimestamp<typeof GOVERNANCE_EXTENDED_ABI, 'Propo
 type PayloadSentLog = FilterLogWithTimestamp<typeof GOVERNANCE_EXTENDED_ABI, 'PayloadSent'>;
 
 export interface Governance {
-  governanceContract: GetContractReturnType<typeof GOVERNANCE_EXTENDED_ABI>;
+  governanceContract: GetContractReturnType<typeof GOVERNANCE_EXTENDED_ABI, PublicClient>;
   cacheLogs: () => Promise<{
     createdLogs: Array<CreatedLog>;
     queuedLogs: Array<QueuedLog>;
