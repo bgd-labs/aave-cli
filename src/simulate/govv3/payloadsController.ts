@@ -1,10 +1,11 @@
-import { ContractFunctionResult, Hex, PublicClient, encodeFunctionData, getContract, toHex } from 'viem';
+import { ContractFunctionResult, Hex, PublicClient, encodeFunctionData, encodePacked, getContract, toHex } from 'viem';
 import { PAYLOADS_CONTROLLER_EXTENDED_ABI } from './abis/PayloadsControllerExtended';
 import { getLogs } from '../../utils/logs';
 import { FilterLogWithTimestamp } from '../govv2/networks/types';
 import { TenderlyRequest, tenderly } from '../../utils/tenderlyClient';
 import { TenderlySimulationResponse } from '../../../dist';
 import { EOA } from '../../utils/constants';
+import { getSolidityStorageSlotUint } from '../../utils/storageSlots';
 
 type PayloadCreatedLog = FilterLogWithTimestamp<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI, 'PayloadCreated'>;
 type PayloadQueuedLog = FilterLogWithTimestamp<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI, 'PayloadQueued'>;
@@ -86,13 +87,14 @@ export const getPayloadsController = (
       const payload = await controllerContract.read.getPayloadById([id]);
       return { createdLog, queuedLog, executedLog, payload };
     },
-    simulatePayloadExecutionOnTenderly: async (id, { executedLog, payload, queuedLog }) => {
+    simulatePayloadExecutionOnTenderly: async (id, { executedLog, payload }) => {
+      // if successfully executed just replay the txn
       if (executedLog) {
         const tx = await publicClient.getTransaction({ hash: executedLog.transactionHash! });
         return tenderly.simulateTx(publicClient.chain!.id, tx);
       }
       const currentBlock = await publicClient.getBlock();
-      const simulationPayload = {
+      const simulationPayload: TenderlyRequest = {
         network_id: String(publicClient.chain!.id),
         from: EOA,
         to: controllerContract.address,
@@ -101,14 +103,23 @@ export const getPayloadsController = (
           functionName: 'executePayload',
           args: [id],
         }),
-        block_header: {
-          timestamp: toHex(BigInt(payload.queuedAt + payload.gracePeriod)),
+        state_objects: {
+          [controllerContract.address]: {
+            storage: {
+              [getSolidityStorageSlotUint(3n, BigInt(id))]: encodePacked(
+                ['uint40', 'uint40', 'uint8', 'uint8', 'address'],
+                [
+                  Number(currentBlock.timestamp - BigInt(payload.delay) - 1n), // altering queued time so can be executed in current block
+                  payload.createdAt,
+                  2, // QUEUED - might make sense to enum
+                  payload.maximumAccessLevelRequired,
+                  payload.creator,
+                ]
+              ),
+            },
+          },
         },
       };
-      if (queuedLog) {
-      } else {
-        // TODO: overwrite state so it's queued etc
-      }
 
       return tenderly.simulate(simulationPayload);
     },
