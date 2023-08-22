@@ -2,8 +2,7 @@ import { ContractFunctionResult, Hex, PublicClient, encodeFunctionData, encodePa
 import { PAYLOADS_CONTROLLER_EXTENDED_ABI } from './abis/PayloadsControllerExtended';
 import { getLogs } from '../../utils/logs';
 import { FilterLogWithTimestamp } from '../govv2/networks/types';
-import { TenderlyRequest, tenderly } from '../../utils/tenderlyClient';
-import { TenderlySimulationResponse } from '../../../dist';
+import { TenderlyRequest, tenderly, TenderlySimulationResponse } from '../../utils/tenderlyClient';
 import { EOA } from '../../utils/constants';
 import { getSolidityStorageSlotUint } from '../../utils/storageSlots';
 
