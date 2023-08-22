@@ -8,7 +8,7 @@ type QueuedLog = FilterLogWithTimestamp<typeof GOVERNANCE_EXTENDED_ABI, 'Proposa
 type ExecutedLog = FilterLogWithTimestamp<typeof GOVERNANCE_EXTENDED_ABI, 'ProposalExecuted'>;
 type PayloadSentLog = FilterLogWithTimestamp<typeof GOVERNANCE_EXTENDED_ABI, 'PayloadSent'>;
 
-interface Governance {
+export interface Governance {
   cacheLogs: () => Promise<{
     createdLogs: Array<CreatedLog>;
     queuedLogs: Array<QueuedLog>;
