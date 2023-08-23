@@ -12,7 +12,7 @@ export function tenderlyDeepDiff(
 ): string {
   if (typeof before !== 'object' || typeof after !== 'object') {
     return `${prefix ? `@@ ${prefix} @@\n` : ''}- ${before}
-  + ${after}\n`;
++ ${after}\n`;
   }
   return Object.keys(before).reduce((acc, key) => {
     if (before[key] === after[key]) return acc;
@@ -21,8 +21,8 @@ export function tenderlyDeepDiff(
     return (
       acc +
       `@@ ${prefix ? `${prefix}.${key}` : key} @@
-  - ${before[key]}
-  + ${after[key]}\n`
+- ${before[key]}
++ ${after[key]}\n`
     );
   }, '');
 }
