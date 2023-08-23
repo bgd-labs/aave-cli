@@ -11,18 +11,12 @@ export function tenderlyDeepDiff(
   prefix?: string
 ): string {
   if (typeof before !== 'object' || typeof after !== 'object') {
-    return `${prefix ? `@@ ${prefix} @@\n` : ''}- ${before}
-+ ${after}\n`;
+    return `${prefix ? `@@ ${prefix} @@\n` : ''}- ${before}\n+ ${after}\n`;
   }
   return Object.keys(before).reduce((acc, key) => {
     if (before[key] === after[key]) return acc;
     if (typeof before[key] === 'object')
       return tenderlyDeepDiff(before[key], after[key], prefix ? `${prefix}.${key}` : key);
-    return (
-      acc +
-      `@@ ${prefix ? `${prefix}.${key}` : key} @@
-- ${before[key]}
-+ ${after[key]}\n`
-    );
+    return acc + `@@ ${prefix ? `${prefix}.${key}` : key} @@\n- ${before[key]}\n+ ${after[key]}\n`;
   }, '');
 }

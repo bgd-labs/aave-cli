@@ -11,7 +11,7 @@ export function boolToMarkdown(value: boolean) {
  * @param code whether to link to the code tab
  */
 export function toAddressLink(address: Hex, code: boolean = false, client: PublicClient): string {
-  return `[${address}](${client.chain?.blockExplorers?.default}/address/${address}${code ? '#code' : ''})`;
+  return `[${address}](${client.chain?.blockExplorers?.default.url}/address/${address}${code ? '#code' : ''})`;
 }
 
 /**
@@ -20,7 +20,7 @@ export function toAddressLink(address: Hex, code: boolean = false, client: Publi
  * @param code whether to link to the code tab
  */
 export function toTxLink(txn: Hex, md: boolean, client: PublicClient): string {
-  const link = `${client.chain?.blockExplorers?.default}/tx/${txn}`;
+  const link = `${client.chain?.blockExplorers?.default.url}/tx/${txn}`;
   if (md) return `[${txn}](${link})`;
   return link;
 }
