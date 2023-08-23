@@ -2492,10 +2492,10 @@ varint@^6.0.0:
   resolved "https://registry.npmjs.org/varint/-/varint-6.0.0.tgz"
   integrity sha512-cXEIW6cfr15lFv563k4GuVuW/fiwjknytD37jIOLSdSWuOI6WnO/oKwmP2FQTU2l01LP8/M5TSAJpzUaGe3uWg==
 
-viem@^1.6.2:
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/viem/-/viem-1.6.2.tgz#298ac87de69abcb9e772ffd7cdba9c46ff2849d2"
-  integrity sha512-ZHmjfEdIZE+FP3tRzDgskAsn1IQHn/5knh47fUUWa9jcVNZLC0kA0hiqGS3uy0uqUtWTDMykA+ALRUTzi+qYVg==
+viem@^1.6.7:
+  version "1.6.7"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-1.6.7.tgz#2445ea47aae96f5bfc3b79ed08df20ce9530ca7a"
+  integrity sha512-w2OMJqKcQrzPQnmMFxe4ex+md8wSwfle6L3LvEi25CBvDKhkuljVrsWY19UzG05ssQhiZ+cdxU3YMBrX817Qiw==
   dependencies:
     "@adraffy/ens-normalize" "1.9.0"
     "@noble/curves" "1.1.0"

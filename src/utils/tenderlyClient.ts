@@ -130,6 +130,19 @@ export interface Input {
   value: boolean | string;
 }
 
+export interface Log {
+  name: string | null;
+  anonymous: boolean;
+  inputs: Input[];
+  raw: LogRaw;
+}
+
+export interface LogRaw {
+  address: string;
+  topics: string[];
+  data: string;
+}
+
 export interface Trace {
   from: Hex;
   to?: Hex;
@@ -262,6 +275,7 @@ class Tenderly {
     } else {
       request.state_objects[request.from].balance = String(parseEther('3'));
     }
+
     const response = await fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/simulate`, {
       method: 'POST',
       body: JSON.stringify({

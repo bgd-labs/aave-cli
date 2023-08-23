@@ -122,6 +122,7 @@ export const getPayloadsController = (
           functionName: 'executePayload',
           args: [id],
         }),
+        block_number: Number(currentBlock.number),
         state_objects: {
           [controllerContract.address]: {
             storage: {
@@ -130,7 +131,7 @@ export const getPayloadsController = (
                 [
                   Number(currentBlock.timestamp - BigInt(payload.delay) - 1n), // altering queued time so can be executed in current block
                   payload.createdAt,
-                  2, // QUEUED - might make sense to enum
+                  PayloadState.Queued,
                   payload.maximumAccessLevelRequired,
                   payload.creator,
                 ]
