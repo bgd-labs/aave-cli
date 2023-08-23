@@ -18,6 +18,7 @@ export enum ProposalState {
   Cancelled, // got cancelled by guardian, or because proposition power of creator dropped below allowed minimum
   Expired,
 }
+
 export interface Governance {
   governanceContract: GetContractReturnType<typeof GOVERNANCE_EXTENDED_ABI, PublicClient>;
   cacheLogs: () => Promise<{
