@@ -112,7 +112,7 @@ export const getPayloadsController = (
         const tx = await publicClient.getTransaction({ hash: executedLog.transactionHash! });
         return tenderly.simulateTx(publicClient.chain!.id, tx);
       }
-      const currentBlock = await publicClient.getBlock();
+      const currentBlock = await publicClient.getBlock({ blockTag: 'finalized' });
       const simulationPayload: TenderlyRequest = {
         network_id: String(publicClient.chain!.id),
         from: EOA,

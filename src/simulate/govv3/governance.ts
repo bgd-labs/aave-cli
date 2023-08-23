@@ -8,6 +8,16 @@ type QueuedLog = FilterLogWithTimestamp<typeof GOVERNANCE_EXTENDED_ABI, 'Proposa
 type ExecutedLog = FilterLogWithTimestamp<typeof GOVERNANCE_EXTENDED_ABI, 'ProposalExecuted'>;
 type PayloadSentLog = FilterLogWithTimestamp<typeof GOVERNANCE_EXTENDED_ABI, 'PayloadSent'>;
 
+export enum ProposalState {
+  Null, // proposal does not exists
+  Created, // created, waiting for a cooldown to initiate the balances snapshot
+  Active, // balances snapshot set, voting in progress
+  Queued, // voting results submitted, but proposal is under grace period when guardian can cancel it
+  Executed, // results sent to the execution chain(s)
+  Failed, // voting was not successful
+  Cancelled, // got cancelled by guardian, or because proposition power of creator dropped below allowed minimum
+  Expired,
+}
 export interface Governance {
   governanceContract: GetContractReturnType<typeof GOVERNANCE_EXTENDED_ABI, PublicClient>;
   cacheLogs: () => Promise<{
