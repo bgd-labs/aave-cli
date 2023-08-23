@@ -112,7 +112,9 @@ export const getPayloadsController = (
         const tx = await publicClient.getTransaction({ hash: executedLog.transactionHash! });
         return tenderly.simulateTx(publicClient.chain!.id, tx);
       }
-      const currentBlock = await publicClient.getBlock({ blockTag: 'finalized' });
+      const _currentBlock = await publicClient.getBlockNumber();
+      // workaround for tenderly lags & bugs when not specifying the blocknumber
+      const currentBlock = await publicClient.getBlock({ blockNumber: _currentBlock - 5n });
       const simulationPayload: TenderlyRequest = {
         network_id: String(publicClient.chain!.id),
         from: EOA,

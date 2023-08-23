@@ -11,7 +11,7 @@ export const builder = (yargs) =>
   });
 
 export const handler = async function (argv) {
-  if (!argv.proposalId) throw new Error('proposalId is required');
+  if (argv.proposalId == undefined) throw new Error('proposalId is required');
   const proposalId = BigInt(argv.proposalId);
   const result = await simulateProposal(proposalId);
   // console.log(result);
