@@ -350,7 +350,7 @@ class Tenderly {
 
     const artifact = require(filePath);
 
-    walletProvider.deployContract({
+    return walletProvider.deployContract({
       abi: artifact.abi,
       bytecode: artifact.bytecode,
     } as any);
