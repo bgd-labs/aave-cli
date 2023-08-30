@@ -161,7 +161,7 @@ export async function getProposalStateById({
   return { state: ActionSetState.NOT_FOUND };
 }
 
-export async function getProposalState<TAbi>({
+export async function getProposalState({
   queuedLogs,
   executedLogs,
   dataValue,

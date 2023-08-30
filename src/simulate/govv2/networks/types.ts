@@ -38,7 +38,7 @@ export interface L2NetworkModule<TAbi extends Abi, TQueuedEventName extends stri
   ) => Array<Trace>;
   getProposalState: (
     args: Omit<GetProposalStateProps<TAbi>, 'dataValue'> & { trace: Trace; fromTimestamp: number }
-  ) => ReturnType<typeof getProposalState<TAbi>>;
+  ) => ReturnType<typeof getProposalState>;
   simulateOnTenderly?: (
     args: {
       args: FormattedArgs;

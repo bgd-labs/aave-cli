@@ -1,13 +1,9 @@
 import {
   Hex,
-  PublicClient,
   Transaction as ViemTransaction,
-  WalletClient,
   createPublicClient,
   createWalletClient,
-  getAddress,
   http,
-  pad,
   toHex,
   parseEther,
   fromHex,
@@ -343,6 +339,21 @@ class Tenderly {
       `Fork created! To use in aave interface you need to run the following commands:\n\n---\nlocalStorage.setItem('forkEnabled', 'true');\nlocalStorage.setItem('forkBaseChainId', ${fork.chainId});\nlocalStorage.setItem('forkNetworkId', ${fork.forkNetworkId});\nlocalStorage.setItem("forkRPCUrl", "${fork.forkUrl}");\n---\n`
     );
     return fork;
+  };
+
+  deployCode = (fork: any, filePath: string) => {
+    const walletProvider = createWalletClient({
+      account: EOA,
+      chain: { id: 3030, name: 'tenderly' } as any,
+      transport: http(fork.forkUrl),
+    });
+
+    const artifact = require(filePath);
+
+    walletProvider.deployContract({
+      abi: artifact.abi,
+      bytecode: artifact.bytecode,
+    } as any);
   };
 
   unwrapAndExecuteSimulationPayloadOnFork = async (fork: any, request: TenderlyRequest) => {

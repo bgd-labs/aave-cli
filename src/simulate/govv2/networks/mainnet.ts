@@ -1,6 +1,8 @@
 import { AaveGovernanceV2 } from '@bgd-labs/aave-address-book';
 import { ActionSetState, L2NetworkModule, MainnetModule, ProposalState } from './types';
 import {
+  Hex,
+  PublicClient,
   concat,
   encodeAbiParameters,
   encodeFunctionData,
@@ -14,7 +16,7 @@ import {
 } from 'viem';
 import { mainnetClient } from '../../../utils/rpcClients';
 import { getLogs } from '../../../utils/logs';
-import { Trace, tenderly } from '../../../utils/tenderlyClient';
+import { StateObject, Trace, tenderly } from '../../../utils/tenderlyClient';
 import { EOA } from '../../../utils/constants';
 import {
   AAVE_GOVERNANCE_V2_ABI,
@@ -26,11 +28,15 @@ import { getSolidityStorageSlotBytes } from '../../../utils/storageSlots';
 import { ARC_TIMELOCK_ABI } from '../abis/ArcTimelock';
 import { getProposalState, simulateNewActionSet, simulateQueuedActionSet } from './commonL2';
 
-const aaveGovernanceV2Contract = getContract({
-  address: AaveGovernanceV2.GOV,
-  abi: AAVE_GOVERNANCE_V2_ABI,
-  publicClient: mainnetClient,
-});
+export const getGovernanceV2Contract = <T extends PublicClient>(publicClient: T) => {
+  return getContract({
+    address: AaveGovernanceV2.GOV,
+    abi: AAVE_GOVERNANCE_V2_ABI,
+    publicClient,
+  });
+};
+
+const aaveGovernanceV2Contract = getGovernanceV2Contract(mainnetClient);
 
 export const mainnet: MainnetModule = {
   name: 'Mainnet',
@@ -140,7 +146,7 @@ export const mainnet: MainnetModule = {
             const slot = getSolidityStorageSlotBytes(slots.queuedTxsSlot, hash);
             acc[slot] = pad('0x1', { size: 32 });
             return acc;
-          }, {}),
+          }, {} as any),
         },
         [AaveGovernanceV2.GOV]: {
           storage: {
@@ -198,17 +204,17 @@ export const arc: L2NetworkModule<typeof ARC_TIMELOCK_ABI, 'ActionsSetQueued', '
     getProposalState({
       ...args,
       dataValue: trace.input,
-    }),
+    } as any),
   async simulateOnTenderly({ state, executedLog, queuedLog, args }) {
     if (state === ActionSetState.EXECUTED) {
       const tx = await mainnetClient.getTransaction({ hash: executedLog.transactionHash! });
       return tenderly.simulateTx(mainnetClient.chain.id, tx);
     }
     if (state === ActionSetState.QUEUED) {
-      return simulateQueuedActionSet(arcContract, mainnetClient, queuedLog);
+      return simulateQueuedActionSet(arcContract as any, mainnetClient, queuedLog);
     }
     if (state === ActionSetState.NOT_FOUND) {
-      return simulateNewActionSet(arcContract, mainnetClient, args);
+      return simulateNewActionSet(arcContract as any, mainnetClient, args);
     }
     throw new Error(`Unexpected ActionSetState: ${state}`);
   },
