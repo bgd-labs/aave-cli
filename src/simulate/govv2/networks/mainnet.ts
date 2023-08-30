@@ -3,6 +3,7 @@ import { ActionSetState, L2NetworkModule, MainnetModule, ProposalState } from '.
 import {
   Hex,
   PublicClient,
+  WalletClient,
   concat,
   encodeAbiParameters,
   encodeFunctionData,
@@ -28,7 +29,21 @@ import { getSolidityStorageSlotBytes } from '../../../utils/storageSlots';
 import { ARC_TIMELOCK_ABI } from '../abis/ArcTimelock';
 import { getProposalState, simulateNewActionSet, simulateQueuedActionSet } from './commonL2';
 
-export const getGovernanceV2Contract = <T extends PublicClient>(publicClient: T) => {
+export const getGovernanceV2Contract = <T extends PublicClient, Y extends WalletClient>({
+  publicClient,
+  walletClient,
+}: {
+  publicClient: T;
+  walletClient?: Y;
+}) => {
+  if (walletClient) {
+    return getContract({
+      address: AaveGovernanceV2.GOV,
+      abi: AAVE_GOVERNANCE_V2_ABI,
+      walletClient,
+      publicClient,
+    });
+  }
   return getContract({
     address: AaveGovernanceV2.GOV,
     abi: AAVE_GOVERNANCE_V2_ABI,
@@ -36,7 +51,7 @@ export const getGovernanceV2Contract = <T extends PublicClient>(publicClient: T)
   });
 };
 
-const aaveGovernanceV2Contract = getGovernanceV2Contract(mainnetClient);
+const aaveGovernanceV2Contract = getGovernanceV2Contract({ publicClient: mainnetClient });
 
 export const mainnet: MainnetModule = {
   name: 'Mainnet',
