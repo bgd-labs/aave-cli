@@ -356,6 +356,24 @@ class Tenderly {
     } as any);
   };
 
+  warp = async (fork: any, timestamp: bigint) => {
+    const publicProvider = createPublicClient({
+      chain: { id: 3030 } as any,
+      transport: http(fork.forkUrl),
+    });
+
+    const currentBlock = await publicProvider.getBlock();
+    // warping forward in time
+    if (timestamp > currentBlock.timestamp) {
+      await publicProvider.request({
+        method: 'evm_increaseTime' as any,
+        params: [toHex(timestamp - currentBlock.timestamp)],
+      });
+    } else {
+      logWarning('tenderly', 'skipping time warp as tenderly forks do not support traveling back in time');
+    }
+  };
+
   unwrapAndExecuteSimulationPayloadOnFork = async (fork: any, request: TenderlyRequest) => {
     // 0. fund account
     await this.fundAccount(fork, EOA);
@@ -381,16 +399,7 @@ class Tenderly {
 
     // 2. warp time
     if (request.block_header?.timestamp) {
-      const currentBlock = await publicProvider.getBlock();
-      // warping back in time
-      if (fromHex(request.block_header?.timestamp, 'bigint') > currentBlock.timestamp) {
-        await publicProvider.request({
-          method: 'evm_increaseTime' as any,
-          params: [toHex(fromHex(request.block_header?.timestamp, 'bigint') - currentBlock.timestamp)],
-        });
-      } else {
-        logWarning('tenderly', 'skipping time warp as tenderly forks do not support traveling back in time');
-      }
+      this.warp(fork, fromHex(request.block_header?.timestamp, 'bigint'));
     }
 
     // 3. execute txn
