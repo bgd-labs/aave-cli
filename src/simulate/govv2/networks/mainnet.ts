@@ -29,12 +29,12 @@ import { getSolidityStorageSlotBytes } from '../../../utils/storageSlots';
 import { ARC_TIMELOCK_ABI } from '../abis/ArcTimelock';
 import { getProposalState, simulateNewActionSet, simulateQueuedActionSet } from './commonL2';
 
-export const getGovernanceV2Contract = <T extends PublicClient, Y extends WalletClient>({
+export const getGovernanceV2Contract = ({
   publicClient,
   walletClient,
 }: {
-  publicClient: T;
-  walletClient?: Y;
+  publicClient: PublicClient;
+  walletClient?: WalletClient;
 }) => {
   if (walletClient) {
     return getContract({
