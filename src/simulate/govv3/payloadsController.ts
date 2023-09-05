@@ -6,18 +6,17 @@ import {
   encodeFunctionData,
   encodePacked,
   getContract,
-  toHex,
 } from 'viem';
-import { PAYLOADS_CONTROLLER_EXTENDED_ABI } from './abis/PayloadsControllerExtended';
 import { getLogs } from '../../utils/logs';
 import { FilterLogWithTimestamp } from '../govv2/networks/types';
 import { TenderlyRequest, tenderly, TenderlySimulationResponse } from '../../utils/tenderlyClient';
 import { EOA } from '../../utils/constants';
 import { getSolidityStorageSlotUint } from '../../utils/storageSlots';
+import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book';
 
-type PayloadCreatedLog = FilterLogWithTimestamp<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI, 'PayloadCreated'>;
-type PayloadQueuedLog = FilterLogWithTimestamp<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI, 'PayloadQueued'>;
-type PayloadExecutedLog = FilterLogWithTimestamp<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI, 'PayloadExecuted'>;
+type PayloadCreatedLog = FilterLogWithTimestamp<typeof IPayloadsControllerCore_ABI, 'PayloadCreated'>;
+type PayloadQueuedLog = FilterLogWithTimestamp<typeof IPayloadsControllerCore_ABI, 'PayloadQueued'>;
+type PayloadExecutedLog = FilterLogWithTimestamp<typeof IPayloadsControllerCore_ABI, 'PayloadExecuted'>;
 
 export enum PayloadState {
   None,
@@ -29,7 +28,7 @@ export enum PayloadState {
 }
 
 export interface PayloadsController {
-  controllerContract: GetContractReturnType<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI, PublicClient>;
+  controllerContract: GetContractReturnType<typeof IPayloadsControllerCore_ABI, PublicClient>;
   // cache created / queued / Executed logs
   cacheLogs: () => Promise<{
     createdLogs: Array<PayloadCreatedLog>;
@@ -41,7 +40,7 @@ export interface PayloadsController {
     id: number,
     logs: Awaited<ReturnType<PayloadsController['cacheLogs']>>
   ) => Promise<{
-    payload: ContractFunctionResult<typeof PAYLOADS_CONTROLLER_EXTENDED_ABI, 'getPayloadById'>;
+    payload: ContractFunctionResult<typeof IPayloadsControllerCore_ABI, 'getPayloadById'>;
     createdLog: PayloadCreatedLog;
     queuedLog?: PayloadQueuedLog;
     executedLog?: PayloadExecutedLog;
@@ -59,7 +58,7 @@ export const getPayloadsController = (
   publicClient: PublicClient,
   blockCreated?: bigint
 ): PayloadsController => {
-  const controllerContract = getContract({ abi: PAYLOADS_CONTROLLER_EXTENDED_ABI, address, publicClient });
+  const controllerContract = getContract({ abi: IPayloadsControllerCore_ABI, address, publicClient });
   return {
     controllerContract,
     cacheLogs: async () => {
@@ -120,7 +119,7 @@ export const getPayloadsController = (
         from: EOA,
         to: controllerContract.address,
         input: encodeFunctionData({
-          abi: PAYLOADS_CONTROLLER_EXTENDED_ABI,
+          abi: IPayloadsControllerCore_ABI,
           functionName: 'executePayload',
           args: [id],
         }),

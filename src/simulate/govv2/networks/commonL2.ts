@@ -1,7 +1,6 @@
 import {
   Abi,
   GetContractReturnType,
-  GetFilterLogsReturnType,
   Hex,
   PublicClient,
   decodeFunctionData,

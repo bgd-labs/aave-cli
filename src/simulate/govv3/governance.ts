@@ -1,12 +1,12 @@
 import { ContractFunctionResult, GetContractReturnType, Hex, PublicClient, getContract } from 'viem';
 import { FilterLogWithTimestamp } from '../govv2/networks/types';
-import { GOVERNANCE_EXTENDED_ABI } from './abis/GovernanceExtended';
 import { getLogs } from '../../utils/logs';
+import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book';
 
-type CreatedLog = FilterLogWithTimestamp<typeof GOVERNANCE_EXTENDED_ABI, 'ProposalCreated'>;
-type QueuedLog = FilterLogWithTimestamp<typeof GOVERNANCE_EXTENDED_ABI, 'ProposalQueued'>;
-type ExecutedLog = FilterLogWithTimestamp<typeof GOVERNANCE_EXTENDED_ABI, 'ProposalExecuted'>;
-type PayloadSentLog = FilterLogWithTimestamp<typeof GOVERNANCE_EXTENDED_ABI, 'PayloadSent'>;
+type CreatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
+type QueuedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
+type ExecutedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalExecuted'>;
+type PayloadSentLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'PayloadSent'>;
 
 export enum ProposalState {
   Null, // proposal does not exists
@@ -20,7 +20,7 @@ export enum ProposalState {
 }
 
 export interface Governance {
-  governanceContract: GetContractReturnType<typeof GOVERNANCE_EXTENDED_ABI, PublicClient>;
+  governanceContract: GetContractReturnType<typeof IGovernanceCore_ABI, PublicClient>;
   cacheLogs: () => Promise<{
     createdLogs: Array<CreatedLog>;
     queuedLogs: Array<QueuedLog>;
@@ -31,7 +31,7 @@ export interface Governance {
     proposalId: bigint,
     logs: Awaited<ReturnType<Governance['cacheLogs']>>
   ) => Promise<{
-    proposal: ContractFunctionResult<typeof GOVERNANCE_EXTENDED_ABI, 'getProposal'>;
+    proposal: ContractFunctionResult<typeof IGovernanceCore_ABI, 'getProposal'>;
     createdLog: CreatedLog;
     queuedLog?: QueuedLog;
     executedLog?: ExecutedLog;
@@ -41,7 +41,7 @@ export interface Governance {
 }
 
 export const getGovernance = (address: Hex, publicClient: PublicClient, blockCreated?: bigint): Governance => {
-  const governanceContract = getContract({ abi: GOVERNANCE_EXTENDED_ABI, address, publicClient });
+  const governanceContract = getContract({ abi: IGovernanceCore_ABI, address, publicClient });
 
   return {
     governanceContract,

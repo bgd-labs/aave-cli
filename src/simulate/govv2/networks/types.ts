@@ -1,8 +1,8 @@
 import type { Abi } from 'abitype';
 import { TenderlySimulationResponse, Trace } from '../../../utils/tenderlyClient';
 import { GetFilterLogsReturnType, Hex, ReadContractReturnType } from 'viem';
-import { AAVE_GOVERNANCE_V2_ABI } from '../abis/AaveGovernanceV2';
 import { GetProposalStateProps, getProposalState } from './commonL2';
+import { IAaveGovernanceV2_ABI } from '@bgd-labs/aave-address-book';
 
 export type FormattedArgs = {
   targets: Hex[];
@@ -67,27 +67,27 @@ export enum ProposalState {
 export interface MainnetModule {
   name: string;
   cacheLogs: () => Promise<{
-    createdLogs: Array<FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalCreated'>>;
-    queuedLogs: Array<FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalQueued'>>;
-    executedLogs: Array<FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalExecuted'>>;
+    createdLogs: Array<FilterLogWithTimestamp<typeof IAaveGovernanceV2_ABI, 'ProposalCreated'>>;
+    queuedLogs: Array<FilterLogWithTimestamp<typeof IAaveGovernanceV2_ABI, 'ProposalQueued'>>;
+    executedLogs: Array<FilterLogWithTimestamp<typeof IAaveGovernanceV2_ABI, 'ProposalExecuted'>>;
   }>;
   getProposalState: (args: {
     proposalId: bigint;
-    createdLogs: Array<FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalCreated'>>;
-    queuedLogs: Array<FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalQueued'>>;
-    executedLogs: Array<FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalExecuted'>>;
+    createdLogs: Array<FilterLogWithTimestamp<typeof IAaveGovernanceV2_ABI, 'ProposalCreated'>>;
+    queuedLogs: Array<FilterLogWithTimestamp<typeof IAaveGovernanceV2_ABI, 'ProposalQueued'>>;
+    executedLogs: Array<FilterLogWithTimestamp<typeof IAaveGovernanceV2_ABI, 'ProposalExecuted'>>;
   }) =>
     | {
         state: ProposalState.EXECUTED;
-        log: FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalExecuted'>;
+        log: FilterLogWithTimestamp<typeof IAaveGovernanceV2_ABI, 'ProposalExecuted'>;
       }
     | {
         state: ProposalState.QUEUED;
-        log: FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalQueued'>;
+        log: FilterLogWithTimestamp<typeof IAaveGovernanceV2_ABI, 'ProposalQueued'>;
       }
     | {
         state: ProposalState.CREATED;
-        log: FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalCreated'>;
+        log: FilterLogWithTimestamp<typeof IAaveGovernanceV2_ABI, 'ProposalCreated'>;
       };
   simulateOnTenderly: (
     args: {
@@ -95,19 +95,19 @@ export interface MainnetModule {
     } & (
       | {
           state: ProposalState.EXECUTED;
-          log: FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalExecuted'>;
+          log: FilterLogWithTimestamp<typeof IAaveGovernanceV2_ABI, 'ProposalExecuted'>;
         }
       | {
           state: ProposalState.QUEUED;
-          log: FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalQueued'>;
+          log: FilterLogWithTimestamp<typeof IAaveGovernanceV2_ABI, 'ProposalQueued'>;
         }
       | {
           state: ProposalState.CREATED;
-          log: FilterLogWithTimestamp<typeof AAVE_GOVERNANCE_V2_ABI, 'ProposalCreated'>;
+          log: FilterLogWithTimestamp<typeof IAaveGovernanceV2_ABI, 'ProposalCreated'>;
         }
     )
   ) => Promise<{
-    proposal: ReadContractReturnType<typeof AAVE_GOVERNANCE_V2_ABI, 'getProposalById'>;
+    proposal: ReadContractReturnType<typeof IAaveGovernanceV2_ABI, 'getProposalById'>;
     simulation: TenderlySimulationResponse;
   }>;
 }

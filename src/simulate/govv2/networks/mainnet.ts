@@ -1,7 +1,6 @@
-import { AaveGovernanceV2 } from '@bgd-labs/aave-address-book';
+import { AaveGovernanceV2, IAaveGovernanceV2_ABI } from '@bgd-labs/aave-address-book';
 import { ActionSetState, L2NetworkModule, MainnetModule, ProposalState } from './types';
 import {
-  Hex,
   PublicClient,
   WalletClient,
   concat,
@@ -17,13 +16,9 @@ import {
 } from 'viem';
 import { mainnetClient } from '../../../utils/rpcClients';
 import { getLogs } from '../../../utils/logs';
-import { StateObject, Trace, tenderly } from '../../../utils/tenderlyClient';
+import { Trace, tenderly } from '../../../utils/tenderlyClient';
 import { EOA } from '../../../utils/constants';
-import {
-  AAVE_GOVERNANCE_V2_ABI,
-  AAVE_GOVERNANCE_V2_START_BLOCK,
-  getAaveGovernanceV2Slots,
-} from '../abis/AaveGovernanceV2';
+import { AAVE_GOVERNANCE_V2_START_BLOCK, getAaveGovernanceV2Slots } from '../abis/AaveGovernanceV2';
 import { EXECUTOR_ABI } from '../abis/Executor';
 import { getSolidityStorageSlotBytes } from '../../../utils/storageSlots';
 import { ARC_TIMELOCK_ABI } from '../abis/ArcTimelock';
@@ -39,14 +34,14 @@ export const getGovernanceV2Contract = ({
   if (walletClient) {
     return getContract({
       address: AaveGovernanceV2.GOV,
-      abi: AAVE_GOVERNANCE_V2_ABI,
+      abi: IAaveGovernanceV2_ABI,
       walletClient,
       publicClient,
     });
   }
   return getContract({
     address: AaveGovernanceV2.GOV,
-    abi: AAVE_GOVERNANCE_V2_ABI,
+    abi: IAaveGovernanceV2_ABI,
     publicClient,
   });
 };
@@ -137,7 +132,7 @@ export const mainnet: MainnetModule = {
       value: proposal.values.reduce((sum, cur) => sum + cur).toString(),
       gas: 30_000_000,
       input: encodeFunctionData({
-        abi: AAVE_GOVERNANCE_V2_ABI,
+        abi: IAaveGovernanceV2_ABI,
         functionName: 'execute',
         args: [proposalId],
       }),
