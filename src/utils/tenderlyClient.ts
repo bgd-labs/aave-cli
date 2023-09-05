@@ -417,10 +417,10 @@ class Tenderly {
 
     // 2. warp time
     if (request.block_header?.timestamp) {
-      this.warpTime(fork, fromHex(request.block_header?.timestamp, 'bigint'));
+      await this.warpTime(fork, fromHex(request.block_header?.timestamp, 'bigint'));
     }
     if (request.block_header?.number) {
-      this.warpBlocks(fork, fromHex(request.block_header?.number, 'bigint'));
+      await this.warpBlocks(fork, fromHex(request.block_header?.number, 'bigint'));
     }
 
     // 3. execute txn
