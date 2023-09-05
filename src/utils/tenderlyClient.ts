@@ -66,7 +66,7 @@ export type TenderlyRequest = {
   state_objects?: Record<Hex, StateObject>;
   contracts?: ContractObject[];
   block_header?: {
-    number?: string;
+    number?: Hex;
     timestamp?: Hex;
   };
   generate_access_list?: boolean;
@@ -356,7 +356,7 @@ class Tenderly {
     } as any);
   };
 
-  warp = async (fork: any, timestamp: bigint) => {
+  warpTime = async (fork: any, timestamp: bigint) => {
     const publicProvider = createPublicClient({
       chain: { id: 3030 } as any,
       transport: http(fork.forkUrl),
@@ -365,12 +365,30 @@ class Tenderly {
     const currentBlock = await publicProvider.getBlock();
     // warping forward in time
     if (timestamp > currentBlock.timestamp) {
+      logInfo('tenderly', 'warping time');
       await publicProvider.request({
         method: 'evm_increaseTime' as any,
         params: [toHex(timestamp - currentBlock.timestamp)],
       });
     } else {
       logWarning('tenderly', 'skipping time warp as tenderly forks do not support traveling back in time');
+    }
+  };
+
+  warpBlocks = async (fork: any, blockNumber: bigint) => {
+    const publicProvider = createPublicClient({
+      chain: { id: 3030 } as any,
+      transport: http(fork.forkUrl),
+    });
+    const currentBlock = await publicProvider.getBlock();
+    if (blockNumber > currentBlock.number) {
+      logInfo('tenderly', 'warping blocks');
+      await publicProvider.request({
+        method: 'evm_increaseBlocks' as any,
+        params: [toHex(blockNumber - currentBlock.number)],
+      });
+    } else {
+      logWarning('tenderly', 'skipping block warp as tenderly forks do not support traveling back in time');
     }
   };
 
@@ -399,7 +417,10 @@ class Tenderly {
 
     // 2. warp time
     if (request.block_header?.timestamp) {
-      this.warp(fork, fromHex(request.block_header?.timestamp, 'bigint'));
+      this.warpTime(fork, fromHex(request.block_header?.timestamp, 'bigint'));
+    }
+    if (request.block_header?.number) {
+      this.warpBlocks(fork, fromHex(request.block_header?.number, 'bigint'));
     }
 
     // 3. execute txn
