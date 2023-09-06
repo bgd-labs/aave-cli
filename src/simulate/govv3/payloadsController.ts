@@ -54,6 +54,10 @@ export interface PayloadsController {
   // TODO: not sure yet about types etc
 }
 
+const SLOTS = {
+  PAYLOADS_MAPPING: 3n,
+};
+
 export const getPayloadsController = (
   address: Hex,
   publicClient: PublicClient,
@@ -63,9 +67,7 @@ export const getPayloadsController = (
 
   const getSimulationPayloadForExecution = async (id: number) => {
     const payload = await controllerContract.read.getPayloadById([id]);
-    const _currentBlock = await publicClient.getBlockNumber();
-    // workaround for tenderly lags & bugs when not specifying the blocknumber
-    const currentBlock = await publicClient.getBlock({ blockNumber: _currentBlock - 5n });
+    const currentBlock = await publicClient.getBlock();
     const simulationPayload: TenderlyRequest = {
       network_id: String(publicClient.chain!.id),
       from: EOA,
@@ -79,7 +81,7 @@ export const getPayloadsController = (
       state_objects: {
         [controllerContract.address]: {
           storage: {
-            [getSolidityStorageSlotUint(3n, BigInt(id))]: encodePacked(
+            [getSolidityStorageSlotUint(SLOTS.PAYLOADS_MAPPING, BigInt(id))]: encodePacked(
               ['uint40', 'uint40', 'uint8', 'uint8', 'address'],
               [
                 Number(currentBlock.timestamp - BigInt(payload.delay) - 1n), // altering queued time so can be executed in current block
@@ -95,6 +97,7 @@ export const getPayloadsController = (
     };
     return simulationPayload;
   };
+
   return {
     controllerContract,
     cacheLogs: async () => {

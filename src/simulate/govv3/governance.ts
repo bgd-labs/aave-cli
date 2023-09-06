@@ -1,7 +1,19 @@
-import { ContractFunctionResult, GetContractReturnType, Hex, PublicClient, getContract } from 'viem';
+import {
+  ContractFunctionResult,
+  GetContractReturnType,
+  Hex,
+  PublicClient,
+  encodeFunctionData,
+  formatUnits,
+  getContract,
+  parseEther,
+} from 'viem';
 import { FilterLogWithTimestamp } from '../govv2/networks/types';
 import { getLogs } from '../../utils/logs';
 import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book';
+import { TenderlyRequest } from '../../utils/tenderlyClient';
+import { EOA } from '../../utils/constants';
+import { getSolidityStorageSlotUint } from '../../utils/storageSlots';
 
 type CreatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
 type QueuedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
@@ -37,8 +49,13 @@ export interface Governance {
     executedLog?: ExecutedLog;
     payloadSentLog: PayloadSentLog[];
   }>;
+  getSimulationPayloadForExecution: (proposalId: bigint) => Promise<TenderlyRequest>;
   simulateProposal: any;
 }
+
+const SLOTS = {
+  PROPOSALS_MAPPING: 7n,
+};
 
 export const getGovernance = (address: Hex, publicClient: PublicClient, blockCreated?: bigint): Governance => {
   const governanceContract = getContract({ abi: IGovernanceCore_ABI, address, publicClient });
@@ -100,7 +117,7 @@ export const getGovernance = (address: Hex, publicClient: PublicClient, blockCre
       );
       return { createdLogs, queuedLogs, executedLogs, payloadSentLogs };
     },
-    async getProposal(proposalId: bigint, logs: Awaited<ReturnType<Governance['cacheLogs']>>) {
+    async getProposal(proposalId, logs) {
       const proposal = await governanceContract.read.getProposal([proposalId]);
       const createdLog = logs.createdLogs.find((log) => String(log.args.proposalId) === proposalId.toString())!;
       const queuedLog = logs.queuedLogs.find((log) => String(log.args.proposalId) === proposalId.toString());
@@ -109,6 +126,30 @@ export const getGovernance = (address: Hex, publicClient: PublicClient, blockCre
         (log) => String(log.args.proposalId) === proposalId.toString()
       );
       return { proposal, createdLog, queuedLog, executedLog, payloadSentLog };
+    },
+    async getSimulationPayloadForExecution(proposalId: bigint) {
+      const proposal = await governanceContract.read.getProposal([proposalId]);
+      const currentBlock = await publicClient.getBlock();
+      const simulationPayload: TenderlyRequest = {
+        network_id: String(publicClient.chain!.id),
+        from: EOA,
+        to: governanceContract.address,
+        input: encodeFunctionData({
+          abi: IGovernanceCore_ABI,
+          functionName: 'executeProposal',
+          args: [proposalId],
+        }),
+        value: parseEther('0.5').toString(),
+        block_number: Number(currentBlock.number),
+        state_objects: {
+          [governanceContract.address]: {
+            storage: {
+              [getSolidityStorageSlotUint(SLOTS.PROPOSALS_MAPPING, proposalId)]: '0x0',
+            },
+          },
+        },
+      };
+      return simulationPayload;
     },
     // TODO
     async simulateProposal() {

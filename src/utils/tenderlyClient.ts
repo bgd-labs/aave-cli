@@ -341,9 +341,9 @@ class Tenderly {
     return fork;
   };
 
-  deployCode = (fork: any, filePath: string) => {
+  deployCode = (fork: any, filePath: string, from?: Hex) => {
     const walletProvider = createWalletClient({
-      account: EOA,
+      account: from || EOA,
       chain: { id: 3030, name: 'tenderly' } as any,
       transport: http(fork.forkUrl),
     });
@@ -394,7 +394,7 @@ class Tenderly {
 
   unwrapAndExecuteSimulationPayloadOnFork = async (fork: any, request: TenderlyRequest) => {
     // 0. fund account
-    await this.fundAccount(fork, EOA);
+    await this.fundAccount(fork, request.from);
 
     const publicProvider = createPublicClient({
       chain: { id: 3030 } as any,
@@ -427,7 +427,7 @@ class Tenderly {
     if (request.input) {
       logInfo('tenderly', 'execute transaction');
       const walletProvider = createWalletClient({
-        account: EOA,
+        account: request.from,
         chain: { id: 3030, name: 'tenderly' } as any,
         transport: http(fork.forkUrl),
       });
