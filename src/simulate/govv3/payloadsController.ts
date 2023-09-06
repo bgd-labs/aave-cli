@@ -45,6 +45,7 @@ export interface PayloadsController {
     queuedLog?: PayloadQueuedLog;
     executedLog?: PayloadExecutedLog;
   }>;
+  getSimulationPayloadForExecution: (id: number) => Promise<TenderlyRequest>;
   simulatePayloadExecutionOnTenderly: (
     id: number,
     logs: Awaited<ReturnType<PayloadsController['getPayload']>>
@@ -59,6 +60,41 @@ export const getPayloadsController = (
   blockCreated?: bigint
 ): PayloadsController => {
   const controllerContract = getContract({ abi: IPayloadsControllerCore_ABI, address, publicClient });
+
+  const getSimulationPayloadForExecution = async (id: number) => {
+    const payload = await controllerContract.read.getPayloadById([id]);
+    const _currentBlock = await publicClient.getBlockNumber();
+    // workaround for tenderly lags & bugs when not specifying the blocknumber
+    const currentBlock = await publicClient.getBlock({ blockNumber: _currentBlock - 5n });
+    const simulationPayload: TenderlyRequest = {
+      network_id: String(publicClient.chain!.id),
+      from: EOA,
+      to: controllerContract.address,
+      input: encodeFunctionData({
+        abi: IPayloadsControllerCore_ABI,
+        functionName: 'executePayload',
+        args: [id],
+      }),
+      block_number: Number(currentBlock.number),
+      state_objects: {
+        [controllerContract.address]: {
+          storage: {
+            [getSolidityStorageSlotUint(3n, BigInt(id))]: encodePacked(
+              ['uint40', 'uint40', 'uint8', 'uint8', 'address'],
+              [
+                Number(currentBlock.timestamp - BigInt(payload.delay) - 1n), // altering queued time so can be executed in current block
+                payload.createdAt,
+                PayloadState.Queued,
+                payload.maximumAccessLevelRequired,
+                payload.creator,
+              ]
+            ),
+          },
+        },
+      },
+    };
+    return simulationPayload;
+  };
   return {
     controllerContract,
     cacheLogs: async () => {
@@ -105,44 +141,16 @@ export const getPayloadsController = (
       const payload = await controllerContract.read.getPayloadById([id]);
       return { createdLog, queuedLog, executedLog, payload };
     },
-    simulatePayloadExecutionOnTenderly: async (id, { executedLog, payload }) => {
+    getSimulationPayloadForExecution,
+    simulatePayloadExecutionOnTenderly: async (id, { executedLog }) => {
       // if successfully executed just replay the txn
       if (executedLog) {
         const tx = await publicClient.getTransaction({ hash: executedLog.transactionHash! });
         return tenderly.simulateTx(publicClient.chain!.id, tx);
       }
-      const _currentBlock = await publicClient.getBlockNumber();
-      // workaround for tenderly lags & bugs when not specifying the blocknumber
-      const currentBlock = await publicClient.getBlock({ blockNumber: _currentBlock - 5n });
-      const simulationPayload: TenderlyRequest = {
-        network_id: String(publicClient.chain!.id),
-        from: EOA,
-        to: controllerContract.address,
-        input: encodeFunctionData({
-          abi: IPayloadsControllerCore_ABI,
-          functionName: 'executePayload',
-          args: [id],
-        }),
-        block_number: Number(currentBlock.number),
-        state_objects: {
-          [controllerContract.address]: {
-            storage: {
-              [getSolidityStorageSlotUint(3n, BigInt(id))]: encodePacked(
-                ['uint40', 'uint40', 'uint8', 'uint8', 'address'],
-                [
-                  Number(currentBlock.timestamp - BigInt(payload.delay) - 1n), // altering queued time so can be executed in current block
-                  payload.createdAt,
-                  PayloadState.Queued,
-                  payload.maximumAccessLevelRequired,
-                  payload.creator,
-                ]
-              ),
-            },
-          },
-        },
-      };
+      const payload = await getSimulationPayloadForExecution(id);
 
-      return tenderly.simulate(simulationPayload);
+      return tenderly.simulate(payload);
     },
   };
 };
