@@ -1,7 +1,7 @@
-import { Command } from '@commander-js/extra-typings';
+import { Command, Option } from '@commander-js/extra-typings';
 import { simulateProposal } from '../simulate/govv3/simulate';
 import { GovernanceV3Sepolia } from '@bgd-labs/aave-address-book';
-import { getGovernance } from '../simulate/govv3/governance';
+import { State, getGovernance } from '../simulate/govv3/governance';
 import { createPublicClient } from 'viem';
 import { sepoliaClient } from '../utils/rpcClients';
 import { logInfo } from '../utils/logger';
@@ -95,6 +95,28 @@ export function addCommand(program: Command) {
     .description('generates the proof etc')
     .requiredOption('--proposalId <number>', 'proposalId to generate the proof for')
     .action((name, options) => {
-      console.log('simulate', options);
+      console.log('proof', options);
+    });
+
+  govV3
+    .command('vote')
+    .description('vote for or against any given proposal')
+    .requiredOption('--proposalId <number>', 'proposalId to vote for')
+    .option('--for', 'Vote in favour of the proposal')
+    .option('--against', 'vote against the proposal')
+    .action(async (name, options) => {
+      const governance = getGovernance(GovernanceV3Sepolia.GOVERNANCE, sepoliaClient);
+      const proposalId = BigInt(options.getOptionValue('proposalId'));
+      const proposal = await governance.governanceContract.read.getProposal([proposalId]);
+      if (proposal.state !== State.Active) {
+        throw new Error('can only vote on active proposals');
+      }
+      const voteFor = options.getOptionValue('for');
+      const voteAgainst = options.getOptionValue('against');
+      if (voteFor && voteAgainst) {
+        throw new Error('you must either vote --for, or --against');
+      }
+
+      logInfo('Vote', 'not yet implemented');
     });
 }

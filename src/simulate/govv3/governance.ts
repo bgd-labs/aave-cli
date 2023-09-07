@@ -62,7 +62,7 @@ const SLOTS = {
   PROPOSALS_MAPPING: 7n,
 };
 
-enum State {
+export enum State {
   Null, // proposal does not exists
   Created, // created, waiting for a cooldown to initiate the balances snapshot
   Active, // balances snapshot set, voting in progress
