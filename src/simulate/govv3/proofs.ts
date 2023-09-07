@@ -8,14 +8,14 @@ const WAREHOUSE_SLOTS = {
 };
 
 export const VOTING_SLOTS = {
-  [AaveSafetyModule.STK_AAVE]: [
+  ['0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec' /*AaveSafetyModule.STK_AAVE*/]: [
     0, // balance
   ],
-  [AaveV3Ethereum.ASSETS.AAVE.A_TOKEN]: [
+  ['0xD1ff82609FB63A0eee6FE7D2896d80d29491cCCd' /*AaveV3Ethereum.ASSETS.AAVE.A_TOKEN*/]: [
     52, // balance
     64, // delegation
   ],
-  [AaveV3Ethereum.ASSETS.AAVE.UNDERLYING]: [
+  ['0xb6D88BfC5b145a558b279cf7692e6F02064889d0' /*AaveV3Ethereum.ASSETS.AAVE.UNDERLYING*/]: [
     0, // balance
   ],
 } as const;

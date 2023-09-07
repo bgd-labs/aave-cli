@@ -4,7 +4,7 @@ import { AaveV3Ethereum, GovernanceV3Sepolia, GovernanceV3Goerli } from '@bgd-la
 import { State, getGovernance } from '../simulate/govv3/governance';
 import { goerliClient, sepoliaClient } from '../utils/rpcClients';
 import { logError, logInfo } from '../utils/logger';
-import { Hex, createWalletClient, http } from 'viem';
+import { Hex, createWalletClient, http, toRlp } from 'viem';
 import { sepolia } from 'viem/chains';
 import { VOTING_SLOTS, getProof } from '../simulate/govv3/proofs';
 import { getSolidityStorageSlotAddress } from '../utils/storageSlots';
@@ -77,13 +77,15 @@ export function addCommand(program: Command) {
 
       const proposal = await governance.governanceContract.read.getProposal([proposalId]);
 
-      const aaveProof = await getProof(
-        DEFAULT_CLIENT,
-        AaveV3Ethereum.ASSETS.AAVE.UNDERLYING,
-        VOTING_SLOTS[AaveV3Ethereum.ASSETS.AAVE.UNDERLYING].map((slot) => getSolidityStorageSlotAddress(slot, voter)),
-        proposal.snapshotBlockHash
-      );
-      console.log(aaveProof);
+      for (const key of Object.keys(VOTING_SLOTS) as (keyof typeof VOTING_SLOTS)[]) {
+        console.log(key);
+        const proof = await getProof(
+          DEFAULT_CLIENT,
+          key,
+          VOTING_SLOTS[key].map((slot) => getSolidityStorageSlotAddress(slot, voter)),
+          proposal.snapshotBlockHash
+        );
+      }
     });
 
   govV3

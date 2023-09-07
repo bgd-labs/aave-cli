@@ -33,8 +33,8 @@ export function getSolidityStorageSlotUint(mappingSlot: bigint, key: bigint) {
   return keccak256(encodeAbiParameters(parseAbiParameters('uint256, uint256'), [key, mappingSlot]));
 }
 
-export function getSolidityStorageSlotAddress(mappingSlot: bigint, key: Hex) {
-  return keccak256(encodeAbiParameters(parseAbiParameters('address, uint256'), [key, mappingSlot]));
+export function getSolidityStorageSlotAddress(mappingSlot: bigint | number, key: Hex) {
+  return keccak256(encodeAbiParameters(parseAbiParameters('address, uint256'), [key, BigInt(mappingSlot)]));
 }
 
 export function getDynamicArraySlot(baseSlot: bigint, arrayIndex: number, itemSize: number): Hex {
