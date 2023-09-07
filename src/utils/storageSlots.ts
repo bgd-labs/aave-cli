@@ -30,9 +30,11 @@ export function getSolidityStorageSlotBytes(mappingSlot: Hex, key: Hex) {
  * @returns Storage slot
  */
 export function getSolidityStorageSlotUint(mappingSlot: bigint, key: bigint) {
-  // this will also work for address types, since address and uints are encoded the same way
-  // const slot = pad(mappingSlot, { size: 32 });
   return keccak256(encodeAbiParameters(parseAbiParameters('uint256, uint256'), [key, mappingSlot]));
+}
+
+export function getSolidityStorageSlotAddress(mappingSlot: bigint, key: Hex) {
+  return keccak256(encodeAbiParameters(parseAbiParameters('address, uint256'), [key, mappingSlot]));
 }
 
 export function getDynamicArraySlot(baseSlot: bigint, arrayIndex: number, itemSize: number): Hex {

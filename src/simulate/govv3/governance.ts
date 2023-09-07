@@ -3,6 +3,7 @@ import {
   GetContractReturnType,
   Hex,
   PublicClient,
+  WalletClient,
   encodeFunctionData,
   fromHex,
   getContract,
@@ -21,6 +22,7 @@ type CreatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCr
 type QueuedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
 type ExecutedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalExecuted'>;
 type PayloadSentLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'PayloadSent'>;
+type VotingActivatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'VotingActivated'>;
 
 export enum ProposalState {
   Null, // proposal does not exists
@@ -33,22 +35,24 @@ export enum ProposalState {
   Expired,
 }
 
-export interface Governance {
-  governanceContract: GetContractReturnType<typeof IGovernanceCore_ABI, PublicClient>;
+export interface Governance<T extends WalletClient | undefined> {
+  governanceContract: GetContractReturnType<typeof IGovernanceCore_ABI, PublicClient, WalletClient>;
   cacheLogs: () => Promise<{
     createdLogs: Array<CreatedLog>;
     queuedLogs: Array<QueuedLog>;
     executedLogs: Array<ExecutedLog>;
     payloadSentLogs: Array<PayloadSentLog>;
+    votingActivatedLogs: Array<VotingActivatedLog>;
   }>;
   getProposal: (
     proposalId: bigint,
-    logs: Awaited<ReturnType<Governance['cacheLogs']>>
+    logs: Awaited<ReturnType<Governance<T>['cacheLogs']>>
   ) => Promise<{
     proposal: ContractFunctionResult<typeof IGovernanceCore_ABI, 'getProposal'>;
     createdLog: CreatedLog;
     queuedLog?: QueuedLog;
     executedLog?: ExecutedLog;
+    votingActivatedLog?: VotingActivatedLog;
     payloadSentLog: PayloadSentLog[];
   }>;
   getSimulationPayloadForExecution: (proposalId: bigint) => Promise<TenderlyRequest>;
@@ -73,8 +77,20 @@ export enum State {
   Expired,
 }
 
-export const getGovernance = (address: Hex, publicClient: PublicClient, blockCreated?: bigint): Governance => {
-  const governanceContract = getContract({ abi: IGovernanceCore_ABI, address, publicClient });
+interface GetGovernanceParams {
+  address: Hex;
+  publicClient: PublicClient;
+  walletClient?: WalletClient;
+  blockCreated?: bigint;
+}
+
+export const getGovernance = ({
+  address,
+  publicClient,
+  blockCreated,
+  walletClient,
+}: GetGovernanceParams): Governance<typeof walletClient> => {
+  const governanceContract = getContract({ abi: IGovernanceCore_ABI, address, publicClient, walletClient });
 
   async function getSimulationPayloadForExecution(proposalId: bigint) {
     const currentBlock = await publicClient.getBlock();
@@ -171,17 +187,33 @@ export const getGovernance = (address: Hex, publicClient: PublicClient, blockCre
         },
         blockCreated
       );
-      return { createdLogs, queuedLogs, executedLogs, payloadSentLogs };
+      const votingActivatedLogs = await getLogs(
+        publicClient,
+        (fromBlock, toBlock) => {
+          return governanceContract.createEventFilter.VotingActivated(
+            {},
+            {
+              fromBlock: fromBlock,
+              toBlock,
+            }
+          );
+        },
+        blockCreated
+      );
+      return { createdLogs, queuedLogs, executedLogs, payloadSentLogs, votingActivatedLogs };
     },
     async getProposal(proposalId, logs) {
       const proposal = await governanceContract.read.getProposal([proposalId]);
       const createdLog = logs.createdLogs.find((log) => String(log.args.proposalId) === proposalId.toString())!;
+      const votingActivatedLog = logs.votingActivatedLogs.find(
+        (log) => String(log.args.proposalId) === proposalId.toString()
+      )!;
       const queuedLog = logs.queuedLogs.find((log) => String(log.args.proposalId) === proposalId.toString());
       const executedLog = logs.executedLogs.find((log) => String(log.args.proposalId) === proposalId.toString());
       const payloadSentLog = logs.payloadSentLogs.filter(
         (log) => String(log.args.proposalId) === proposalId.toString()
       );
-      return { proposal, createdLog, queuedLog, executedLog, payloadSentLog };
+      return { proposal, createdLog, votingActivatedLog, queuedLog, executedLog, payloadSentLog };
     },
     getSimulationPayloadForExecution,
     async simulateProposalExecutionOnTenderly(proposalId, { executedLog }) {

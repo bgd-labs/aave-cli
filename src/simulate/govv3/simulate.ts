@@ -28,7 +28,7 @@ const CHAIN_ID_CLIENT_MAP = {
 
 export async function simulateProposal(governanceAddress: Hex, proposalId: bigint) {
   logInfo('General', `Running simulation for ${proposalId}`);
-  const governance = getGovernance(governanceAddress, sepoliaClient, 3962575n);
+  const governance = getGovernance({ address: governanceAddress, publicClient: sepoliaClient, blockCreated: 3962575n });
   const logs = await governance.cacheLogs();
   const proposal = await governance.getProposal(proposalId, logs);
   const payloads: {

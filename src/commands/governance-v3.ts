@@ -1,48 +1,16 @@
 import { Command, Option } from '@commander-js/extra-typings';
 import { simulateProposal } from '../simulate/govv3/simulate';
-import { GovernanceV3Sepolia } from '@bgd-labs/aave-address-book';
+import { AaveV3Ethereum, GovernanceV3Sepolia, GovernanceV3Goerli } from '@bgd-labs/aave-address-book';
 import { State, getGovernance } from '../simulate/govv3/governance';
-import { createPublicClient } from 'viem';
-import { sepoliaClient } from '../utils/rpcClients';
-import { logInfo } from '../utils/logger';
+import { goerliClient, sepoliaClient } from '../utils/rpcClients';
+import { logError, logInfo } from '../utils/logger';
+import { Hex, createWalletClient, http } from 'viem';
+import { sepolia } from 'viem/chains';
+import { VOTING_SLOTS, getProof } from '../simulate/govv3/proofs';
+import { getSolidityStorageSlotAddress } from '../utils/storageSlots';
 
-export const command = 'governance-v3 [proposalId]';
-
-export const describe = 'interact with governance v3';
-
-export const builder = (yargs) =>
-  yargs
-    .option('chainId', {
-      type: 'number',
-      describe: 'the chainId to fork',
-    })
-    .option('blockNumber', {
-      type: 'number',
-      describe: 'the blocknumber to fork (latest if omitted)',
-    })
-    .option('alias', {
-      type: 'string',
-      describe: 'custom alias',
-    })
-    .option('proposalId', {
-      type: 'number',
-      describe: 'Proposal or actionSetId',
-    })
-    .option('payloadAddress', {
-      type: 'string',
-      describe: 'address of the payload to execute',
-    })
-    .option('executor', {
-      type: 'string',
-      describe: '(optional) address of the executor',
-    });
-
-export const handler = async function (argv) {
-  if (argv.proposalId == undefined) throw new Error('proposalId is required');
-  const proposalId = BigInt(argv.proposalId);
-  const result = await simulateProposal(GovernanceV3Sepolia.GOVERNANCE, proposalId);
-  // console.log(result);
-};
+const DEFAULT_GOVERNANCE = GovernanceV3Goerli.GOVERNANCE;
+const DEFAULT_CLIENT = goerliClient;
 
 export function addCommand(program: Command) {
   const govV3 = program.command('governanceV3').description('interact with governance v3 contracts');
@@ -53,14 +21,18 @@ export function addCommand(program: Command) {
     .requiredOption('--proposalId <number>', 'proposalId to simulate via tenderly')
     .action(async (name, options) => {
       const proposalId = BigInt(options.getOptionValue('proposalId'));
-      await simulateProposal(GovernanceV3Sepolia.GOVERNANCE, proposalId);
+      await simulateProposal(DEFAULT_GOVERNANCE, proposalId);
     });
 
   govV3
     .command('view')
     .description('shows all the proposals & state')
     .action(async () => {
-      const governance = getGovernance(GovernanceV3Sepolia.GOVERNANCE, sepoliaClient, 3962575n);
+      const governance = getGovernance({
+        address: DEFAULT_GOVERNANCE,
+        publicClient: DEFAULT_CLIENT,
+        blockCreated: 9640498n,
+      });
       const logs = await governance.cacheLogs();
       const count = await governance.governanceContract.read.getProposalsCount();
       const proposalIds = [...Array(Number(count)).keys()];
@@ -91,11 +63,27 @@ export function addCommand(program: Command) {
     });
 
   govV3
-    .command('generateProof')
-    .description('generates the proof etc')
+    .command('votingProof')
+    .description('generates the proofs for voting')
     .requiredOption('--proposalId <number>', 'proposalId to generate the proof for')
-    .action((name, options) => {
-      console.log('proof', options);
+    .requiredOption('--voter <string>', 'the address to vote')
+    .action(async (name, options) => {
+      const governance = getGovernance({
+        address: DEFAULT_GOVERNANCE,
+        publicClient: DEFAULT_CLIENT,
+      });
+      const proposalId = BigInt(options.getOptionValue('proposalId'));
+      const voter = options.getOptionValue('voter') as Hex;
+
+      const proposal = await governance.governanceContract.read.getProposal([proposalId]);
+
+      const aaveProof = await getProof(
+        DEFAULT_CLIENT,
+        AaveV3Ethereum.ASSETS.AAVE.UNDERLYING,
+        VOTING_SLOTS[AaveV3Ethereum.ASSETS.AAVE.UNDERLYING].map((slot) => getSolidityStorageSlotAddress(slot, voter)),
+        proposal.snapshotBlockHash
+      );
+      console.log(aaveProof);
     });
 
   govV3
@@ -105,7 +93,11 @@ export function addCommand(program: Command) {
     .option('--for', 'Vote in favour of the proposal')
     .option('--against', 'vote against the proposal')
     .action(async (name, options) => {
-      const governance = getGovernance(GovernanceV3Sepolia.GOVERNANCE, sepoliaClient);
+      const governance = getGovernance({
+        address: DEFAULT_GOVERNANCE,
+        publicClient: DEFAULT_CLIENT,
+        walletClient: createWalletClient({ account: '0x0', chain: DEFAULT_CLIENT.chain, transport: http() }),
+      });
       const proposalId = BigInt(options.getOptionValue('proposalId'));
       const proposal = await governance.governanceContract.read.getProposal([proposalId]);
       if (proposal.state !== State.Active) {
@@ -116,7 +108,6 @@ export function addCommand(program: Command) {
       if (voteFor && voteAgainst) {
         throw new Error('you must either vote --for, or --against');
       }
-
-      logInfo('Vote', 'not yet implemented');
+      logError('TODO', 'not yet implemented');
     });
 }
