@@ -4,7 +4,7 @@ import { Command } from '@commander-js/extra-typings';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import * as ipfsCmd from './commands/ipfs-upload';
-import * as diffSnapshot from './commands/diff-snaphots';
+import { addCommand as addDiffSnapshots } from './commands/diff-snaphots';
 import * as simulateProposal from './commands/simulate-proposal';
 import { addCommand as addGovernanceV3 } from './commands/governance-v3';
 import * as fork from './commands/fork';
@@ -21,5 +21,6 @@ const program = new Command();
 
 program.name('aave-cli').description('CLI to interact with the aave ecosystem').version('0.0.0').showHelpAfterError();
 addGovernanceV3(program);
+addDiffSnapshots(program);
 
 program.parse();

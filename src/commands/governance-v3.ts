@@ -1,11 +1,10 @@
-import { Command, Option } from '@commander-js/extra-typings';
+import { Command } from '@commander-js/extra-typings';
 import { simulateProposal } from '../simulate/govv3/simulate';
-import { AaveV3Ethereum, GovernanceV3Sepolia, GovernanceV3Goerli } from '@bgd-labs/aave-address-book';
+import { GovernanceV3Goerli } from '@bgd-labs/aave-address-book';
 import { State, getGovernance } from '../simulate/govv3/governance';
-import { goerliClient, sepoliaClient } from '../utils/rpcClients';
+import { goerliClient } from '../utils/rpcClients';
 import { logError, logInfo } from '../utils/logger';
-import { Hex, createWalletClient, http, toRlp } from 'viem';
-import { sepolia } from 'viem/chains';
+import { Hex, createWalletClient, http } from 'viem';
 import { VOTING_SLOTS, getProof } from '../simulate/govv3/proofs';
 import { getSolidityStorageSlotAddress } from '../utils/storageSlots';
 
@@ -63,7 +62,7 @@ export function addCommand(program: Command) {
     });
 
   govV3
-    .command('votingProof')
+    .command('votingProofs')
     .description('generates the proofs for voting')
     .requiredOption('--proposalId <number>', 'proposalId to generate the proof for')
     .requiredOption('--voter <string>', 'the address to vote')

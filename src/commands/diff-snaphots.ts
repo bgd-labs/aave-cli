@@ -1,34 +1,24 @@
-import { diffReports } from "../reports/diff-reports";
-import { readJsonString, readJsonFile } from "../utils/json";
-import fs from "fs";
+import { Command } from '@commander-js/extra-typings';
+import { diffReports } from '../reports/diff-reports';
+import { readJsonString, readJsonFile } from '../utils/json';
+import fs from 'fs';
 
-export const command = "diff-snapshots [from] [to]";
-
-export const describe =
-  "diffs two json snapshots and generates a markdown report";
-
-export const builder = (yargs) =>
-  yargs
-    .option("out", {
-      type: "string",
-      describe: "output path",
-      alias: "o",
-    })
-    .option("stringMode", {
-      type: "boolean",
-      describe: "assumes in/out to be string instead of files",
-      default: false,
+export function addCommand(program: Command) {
+  program
+    .command('diff-snapshots')
+    .description('generate a snapshot diff report')
+    .argument('<from>')
+    .argument('<to>')
+    .option('-o, --out <string>', 'output path')
+    .option('--stringMode', 'expects input to be a string, not paths')
+    .action(async (_from, _to, options) => {
+      const from = options.stringMode ? readJsonString(_from) : readJsonFile(_from);
+      const to = options.stringMode ? readJsonString(_to) : readJsonFile(_to);
+      const content = await diffReports(from, to);
+      if (options.out) {
+        fs.writeFileSync(options.out, content);
+      } else {
+        console.log(content);
+      }
     });
-
-export const handler = async function (argv) {
-  const from = argv.stringMode
-    ? readJsonString(argv.from)
-    : readJsonFile(argv.from);
-  const to = argv.stringMode ? readJsonString(argv.to) : readJsonFile(argv.to);
-  const content = await diffReports(from, to);
-  if (argv.out) {
-    fs.writeFileSync(argv.out, content);
-  } else {
-    console.log(content);
-  }
-};
+}
