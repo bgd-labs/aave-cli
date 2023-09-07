@@ -1,11 +1,11 @@
-import { AaveV3Sepolia } from '@bgd-labs/aave-address-book';
-import { logError, logInfo, logSuccess } from '../../utils/logger';
+import { logInfo } from '../../utils/logger';
 import { TenderlySimulationResponse } from '../../utils/tenderlyClient';
 import { getGovernance } from './governance';
 import { Hex, createPublicClient, http } from 'viem';
 import { sepolia, polygonMumbai, bscTestnet, avalancheFuji } from 'viem/chains';
 import { PayloadsController, getPayloadsController } from './payloadsController';
 import { generateReport } from './generatePayloadReport';
+import { sepoliaClient } from '../../utils/rpcClients';
 
 const CHAIN_ID_CLIENT_MAP = {
   [sepolia.id]: {
@@ -28,11 +28,7 @@ const CHAIN_ID_CLIENT_MAP = {
 
 export async function simulateProposal(governanceAddress: Hex, proposalId: bigint) {
   logInfo('General', `Running simulation for ${proposalId}`);
-  const governance = getGovernance(
-    governanceAddress,
-    createPublicClient({ chain: sepolia, transport: http(process.env.RPC_SEPOLIA) }),
-    3962575n
-  );
+  const governance = getGovernance(governanceAddress, sepoliaClient, 3962575n);
   const logs = await governance.cacheLogs();
   const proposal = await governance.getProposal(proposalId, logs);
   const payloads: {
