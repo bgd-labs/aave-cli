@@ -61,8 +61,16 @@ export function addCommand(program: Command) {
       }
     });
 
+  /**
+   *
+   */
+  govV3.command('getRoots');
+
+  /**
+   * TODO: TODO
+   */
   govV3
-    .command('votingProofs')
+    .command('getVotingProofs')
     .description('generates the proofs for voting')
     .requiredOption('--proposalId <number>', 'proposalId to generate the proof for')
     .requiredOption('--voter <string>', 'the address to vote')
@@ -77,13 +85,16 @@ export function addCommand(program: Command) {
       const proposal = await governance.governanceContract.read.getProposal([proposalId]);
 
       for (const key of Object.keys(VOTING_SLOTS) as (keyof typeof VOTING_SLOTS)[]) {
-        console.log(key);
         const proof = await getProof(
           DEFAULT_CLIENT,
           key,
           VOTING_SLOTS[key].map((slot) => getSolidityStorageSlotAddress(slot, voter)),
           proposal.snapshotBlockHash
         );
+        console.log(proof);
+        // TODO: prepare for etherscan / encode data for fields
+        // pint link to etherscan
+        // print summary
       }
     });
 
@@ -109,6 +120,7 @@ export function addCommand(program: Command) {
       if (voteFor && voteAgainst) {
         throw new Error('you must either vote --for, or --against');
       }
+      // perhaps makes sense to show encoded data to vote?
       logError('TODO', 'not yet implemented');
     });
 }

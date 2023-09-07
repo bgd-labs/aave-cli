@@ -1,11 +1,11 @@
 import { AaveSafetyModule, AaveV3Ethereum } from '@bgd-labs/aave-address-book';
 import { Block, Hex, PublicClient, toHex, toRlp } from 'viem';
 
-const WAREHOUSE_SLOTS = {
+export const WAREHOUSE_SLOTS = {
   [AaveSafetyModule.STK_AAVE]: [
     81, // exchangeRate
   ],
-};
+} as const;
 
 export const VOTING_SLOTS = {
   ['0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec' /*AaveSafetyModule.STK_AAVE*/]: [
