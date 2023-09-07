@@ -24,6 +24,30 @@ export function getBits(_bigIntValue: bigint | number | string, startBit: bigint
   return maskedValue.toString();
 }
 
+/**
+ * Sets the bits in a bigint
+ * @param _bigIntValue
+ * @param startBit inclusive
+ * @param endBit exclusive
+ * @param value the value to replace
+ * @returns
+ */
+export function setBits(_bigIntValue: bigint | number | string, startBit: bigint, endBit: bigint, value: bigint) {
+  const bigIntValue = BigInt(_bigIntValue);
+
+  // Calculate the mask for the specified range
+  let mask = BigInt(0);
+  for (let i = startBit; i < endBit; i++) {
+    mask |= BigInt(1) << BigInt(i);
+  }
+  // Clear the bits in the original number within the specified range
+  const clearedNumber = bigIntValue & ~mask;
+
+  // Set the new bits in the specified range
+  let result = clearedNumber | (value << BigInt(startBit));
+  return result.toString();
+}
+
 // --- Helper methods ---
 /**
  * @notice Given a Tenderly contract object, generates a descriptive human-friendly name for that contract
