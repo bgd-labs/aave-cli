@@ -4,16 +4,18 @@ import {
   Hex,
   PublicClient,
   encodeFunctionData,
-  formatUnits,
+  fromHex,
   getContract,
   parseEther,
+  toHex,
 } from 'viem';
 import { FilterLogWithTimestamp } from '../govv2/networks/types';
 import { getLogs } from '../../utils/logs';
 import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book';
-import { TenderlyRequest } from '../../utils/tenderlyClient';
+import { TenderlyRequest, TenderlySimulationResponse, tenderly } from '../../utils/tenderlyClient';
 import { EOA } from '../../utils/constants';
 import { getSolidityStorageSlotUint } from '../../utils/storageSlots';
+import { setBits } from './utils/solidityUtils';
 
 type CreatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
 type QueuedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
@@ -50,15 +52,69 @@ export interface Governance {
     payloadSentLog: PayloadSentLog[];
   }>;
   getSimulationPayloadForExecution: (proposalId: bigint) => Promise<TenderlyRequest>;
-  simulateProposal: any;
+  simulateProposalExecutionOnTenderly: (
+    proposalId: bigint,
+    params: { executedLog?: ExecutedLog }
+  ) => Promise<TenderlySimulationResponse>;
 }
 
 const SLOTS = {
   PROPOSALS_MAPPING: 7n,
 };
 
+enum State {
+  Null, // proposal does not exists
+  Created, // created, waiting for a cooldown to initiate the balances snapshot
+  Active, // balances snapshot set, voting in progress
+  Queued, // voting results submitted, but proposal is under grace period when guardian can cancel it
+  Executed, // results sent to the execution chain(s)
+  Failed, // voting was not successful
+  Cancelled, // got cancelled by guardian, or because proposition power of creator dropped below allowed minimum
+  Expired,
+}
+
 export const getGovernance = (address: Hex, publicClient: PublicClient, blockCreated?: bigint): Governance => {
   const governanceContract = getContract({ abi: IGovernanceCore_ABI, address, publicClient });
+
+  async function getSimulationPayloadForExecution(proposalId: bigint) {
+    const currentBlock = await publicClient.getBlock();
+    const proposalSlot = getSolidityStorageSlotUint(SLOTS.PROPOSALS_MAPPING, proposalId);
+    const data = await publicClient.getStorageAt({
+      address: governanceContract.address,
+      slot: proposalSlot,
+    });
+    let bigIntData = fromHex(data!, { to: 'bigint' });
+    // manipulate storage
+    // set queued
+    bigIntData = setBits(bigIntData, 0n, 8n, State.Queued);
+    // set creation time
+    bigIntData = setBits(
+      bigIntData,
+      16n,
+      56n,
+      currentBlock.timestamp - (await governanceContract.read.PROPOSAL_EXPIRATION_TIME())
+    );
+    const simulationPayload: TenderlyRequest = {
+      network_id: String(publicClient.chain!.id),
+      from: EOA,
+      to: governanceContract.address,
+      input: encodeFunctionData({
+        abi: IGovernanceCore_ABI,
+        functionName: 'executeProposal',
+        args: [proposalId],
+      }),
+      value: parseEther('0.5').toString(),
+      block_number: Number(currentBlock.number),
+      state_objects: {
+        [governanceContract.address]: {
+          storage: {
+            [proposalSlot]: toHex(bigIntData),
+          },
+        },
+      },
+    };
+    return simulationPayload;
+  }
 
   return {
     governanceContract,
@@ -127,41 +183,15 @@ export const getGovernance = (address: Hex, publicClient: PublicClient, blockCre
       );
       return { proposal, createdLog, queuedLog, executedLog, payloadSentLog };
     },
-    async getSimulationPayloadForExecution(proposalId: bigint) {
-      const proposal = await governanceContract.read.getProposal([proposalId]);
-      const currentBlock = await publicClient.getBlock();
-      const simulationPayload: TenderlyRequest = {
-        network_id: String(publicClient.chain!.id),
-        from: EOA,
-        to: governanceContract.address,
-        input: encodeFunctionData({
-          abi: IGovernanceCore_ABI,
-          functionName: 'executeProposal',
-          args: [proposalId],
-        }),
-        value: parseEther('0.5').toString(),
-        block_number: Number(currentBlock.number),
-        state_objects: {
-          [governanceContract.address]: {
-            storage: {
-              [getSolidityStorageSlotUint(SLOTS.PROPOSALS_MAPPING, proposalId)]: '0x0',
-            },
-          },
-        },
-      };
-      return simulationPayload;
-    },
-    // TODO
-    async simulateProposal() {
-      // # if executed just replay the txn
-      // # if queued
-      // 1. alter storage so it can be executed
-      // 2. execute
-      // # if created
-      // 1. alter storage so it's queued and can be executed
-      // 2. execute
-      // # if cancelled
-      // fork before cancelling & apply same rules as before
+    getSimulationPayloadForExecution,
+    async simulateProposalExecutionOnTenderly(proposalId, { executedLog }) {
+      // if successfully executed just replay the txn
+      if (executedLog) {
+        const tx = await publicClient.getTransaction({ hash: executedLog.transactionHash! });
+        return tenderly.simulateTx(publicClient.chain!.id, tx);
+      }
+      const payload = await getSimulationPayloadForExecution(proposalId);
+      return tenderly.simulate(payload);
     },
   };
 };

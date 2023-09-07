@@ -26,14 +26,20 @@ export function getBits(_bigIntValue: bigint | number | string, startBit: bigint
 
 /**
  * Sets the bits in a bigint
- * @param _bigIntValue
+ * @param _bigIntBase
  * @param startBit inclusive
  * @param endBit exclusive
  * @param value the value to replace
  * @returns
  */
-export function setBits(_bigIntValue: bigint | number | string, startBit: bigint, endBit: bigint, value: bigint) {
-  const bigIntValue = BigInt(_bigIntValue);
+export function setBits(
+  _bigIntBase: bigint | number | string,
+  startBit: bigint,
+  endBit: bigint,
+  _replaceValue: bigint | number
+) {
+  const bigIntBase = BigInt(_bigIntBase);
+  const bigIntReplaceValue = BigInt(_replaceValue);
 
   // Calculate the mask for the specified range
   let mask = BigInt(0);
@@ -41,11 +47,11 @@ export function setBits(_bigIntValue: bigint | number | string, startBit: bigint
     mask |= BigInt(1) << BigInt(i);
   }
   // Clear the bits in the original number within the specified range
-  const clearedNumber = bigIntValue & ~mask;
+  const clearedNumber = bigIntBase & ~mask;
 
   // Set the new bits in the specified range
-  let result = clearedNumber | (value << BigInt(startBit));
-  return result.toString();
+  let result = clearedNumber | (bigIntReplaceValue << BigInt(startBit));
+  return result;
 }
 
 // --- Helper methods ---
