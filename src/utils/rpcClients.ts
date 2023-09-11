@@ -35,3 +35,14 @@ export const baseClient = createPublicClient({
 export const sepoliaClient = createPublicClient({ chain: sepolia, transport: http(process.env.RPC_SEPOLIA) });
 
 export const goerliClient = createPublicClient({ chain: goerli, transport: http(process.env.RPC_GOERLI) });
+
+export const RPC_MAP = {
+  [mainnet.id]: mainnetClient,
+  [arbitrum.id]: arbitrumClient,
+  [polygon.id]: polygonClient,
+  [optimism.id]: optimismClient,
+  [metis.id]: metisClient,
+  [base.id]: baseClient,
+  [sepolia.id]: sepoliaClient,
+  [goerli.id]: goerliClient,
+} as const;

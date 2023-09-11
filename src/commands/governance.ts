@@ -10,7 +10,7 @@ const DEFAULT_GOVERNANCE = GovernanceV3Goerli.GOVERNANCE;
 const DEFAULT_CLIENT = goerliClient;
 
 export function addCommand(program: Command) {
-  const govV3 = program.command('governanceV3').description('interact with governance v3 contracts');
+  const govV3 = program.command('governance').description('interact with governance v3 contracts');
 
   govV3
     .command('simulate')

@@ -3,6 +3,7 @@ import path from 'path';
 import Hash from 'ipfs-only-hash';
 import bs58 from 'bs58';
 import { validateAIPHeader } from '../ipfs/aip-validation';
+import { Command } from '@commander-js/extra-typings';
 
 // https://ethereum.stackexchange.com/questions/44506/ipfs-hash-algorithm
 async function getHash(data: string) {
@@ -45,43 +46,30 @@ async function uploadToTheGraph(source: string) {
   return await res.json();
 }
 
-export const command = 'ipfs <source>';
+export function addCommand(program: Command) {
+  program
+    .command('ipfs')
+    .description('generates the ipfs hash for specified source')
+    .argument('<source>')
+    .option('-u, --upload')
+    .option('--verbose')
+    .action(async (source, { upload, verbose }) => {
+      const filePath = path.join(process.cwd(), source);
+      const content = fs.readFileSync(filePath, 'utf8');
+      validateAIPHeader(content);
 
-export const describe = 'generates the ipfs hash for specified source';
+      const hash = await getHash(content);
+      const bs58Hash = `0x${Buffer.from(bs58.decode(hash)).slice(2).toString('hex')}`;
 
-export const builder = (yargs) =>
-  yargs
-    // .positional('source', {
-    //   describe: 'path to the source',
-    //   type: 'string',
-    // })
-    .option('upload', {
-      describe: 'upload to ipfs',
-      default: false,
-      alias: 'u',
-      type: 'boolean',
-    })
-    .option('verbose', {
-      default: false,
-      type: 'boolean',
+      if (upload) {
+        const [pinata, thegraph] = await Promise.all([uploadToPinata(content), uploadToTheGraph(content)]);
+        if (verbose) {
+          console.log('pinata response', pinata);
+          console.log('thegraph response', thegraph);
+        }
+      }
+
+      // log as hex to console so foundry can read the content
+      console.log(bs58Hash);
     });
-
-export const handler = async function (argv) {
-  const filePath = path.join(process.cwd(), argv.source);
-  const content = fs.readFileSync(filePath, 'utf8');
-  validateAIPHeader(content);
-
-  const hash = await getHash(content);
-  const bs58Hash = `0x${Buffer.from(bs58.decode(hash)).slice(2).toString('hex')}`;
-
-  if (argv.upload) {
-    const [pinata, thegraph] = await Promise.all([uploadToPinata(content), uploadToTheGraph(content)]);
-    if (argv.verbose) {
-      console.log('pinata response', pinata);
-      console.log('thegraph response', thegraph);
-    }
-  }
-
-  // log as hex to console so foundry can read the content
-  console.log(bs58Hash);
-};
+}
