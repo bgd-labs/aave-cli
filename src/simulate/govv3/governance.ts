@@ -15,8 +15,9 @@ import { getLogs } from '../../utils/logs';
 import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book';
 import { TenderlyRequest, TenderlySimulationResponse, tenderly } from '../../utils/tenderlyClient';
 import { EOA } from '../../utils/constants';
-import { getSolidityStorageSlotUint } from '../../utils/storageSlots';
+import { getSolidityStorageSlotAddress, getSolidityStorageSlotUint } from '../../utils/storageSlots';
 import { setBits } from './utils/solidityUtils';
+import { VOTING_SLOTS, getProof } from './proofs';
 
 type CreatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
 type QueuedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
@@ -60,6 +61,13 @@ export interface Governance<T extends WalletClient | undefined> {
     proposalId: bigint,
     params: { executedLog?: ExecutedLog }
   ) => Promise<TenderlySimulationResponse>;
+  /**
+   * Returns the proofs that are non-zero for a specified address
+   * @param proposalId
+   * @param voter
+   */
+  getVotingProofs: (proposalId: bigint, voter: Hex) => any;
+  getRoots: (proposalId: bigint) => any;
 }
 
 const SLOTS = {
@@ -225,5 +233,20 @@ export const getGovernance = ({
       const payload = await getSimulationPayloadForExecution(proposalId);
       return tenderly.simulate(payload);
     },
+    async getVotingProofs(proposalId: bigint, voter: Hex) {
+      const proposal = await governanceContract.read.getProposal([proposalId]);
+
+      const proofs = (await Promise.all(Object.keys(VOTING_SLOTS) as (keyof typeof VOTING_SLOTS)[])).map((key) => {
+        getProof(
+          publicClient,
+          key,
+          VOTING_SLOTS[key].map((slot) => getSolidityStorageSlotAddress(slot, voter)),
+          proposal.snapshotBlockHash
+        );
+      });
+
+      return proofs;
+    },
+    async getRoots(proposalId: bigint) {},
   };
 };

@@ -4,9 +4,7 @@ import { GovernanceV3Goerli } from '@bgd-labs/aave-address-book';
 import { State, getGovernance } from '../simulate/govv3/governance';
 import { goerliClient } from '../utils/rpcClients';
 import { logError, logInfo } from '../utils/logger';
-import { Hex, createWalletClient, http } from 'viem';
-import { VOTING_SLOTS, getProof } from '../simulate/govv3/proofs';
-import { getSolidityStorageSlotAddress } from '../utils/storageSlots';
+import { Hex, createWalletClient, encodeAbiParameters, getContract, http } from 'viem';
 
 const DEFAULT_GOVERNANCE = GovernanceV3Goerli.GOVERNANCE;
 const DEFAULT_CLIENT = goerliClient;
@@ -82,20 +80,7 @@ export function addCommand(program: Command) {
       const proposalId = BigInt(options.getOptionValue('proposalId'));
       const voter = options.getOptionValue('voter') as Hex;
 
-      const proposal = await governance.governanceContract.read.getProposal([proposalId]);
-
-      for (const key of Object.keys(VOTING_SLOTS) as (keyof typeof VOTING_SLOTS)[]) {
-        const proof = await getProof(
-          DEFAULT_CLIENT,
-          key,
-          VOTING_SLOTS[key].map((slot) => getSolidityStorageSlotAddress(slot, voter)),
-          proposal.snapshotBlockHash
-        );
-        console.log(proof);
-        // TODO: prepare for etherscan / encode data for fields
-        // pint link to etherscan
-        // print summary
-      }
+      const proofs = await governance.getVotingProofs(proposalId, voter);
     });
 
   govV3
