@@ -1,7 +1,7 @@
 import { Command } from '@commander-js/extra-typings';
 import { simulateProposal } from '../simulate/govv3/simulate';
 import { GovernanceV3Goerli } from '@bgd-labs/aave-address-book';
-import { State, getGovernance } from '../simulate/govv3/governance';
+import { HUMAN_READABLE_STATE, State, getGovernance } from '../simulate/govv3/governance';
 import { goerliClient } from '../utils/rpcClients';
 import { logError, logInfo } from '../utils/logger';
 import { Hex, createWalletClient, encodeAbiParameters, getContract, http } from 'viem';
@@ -34,38 +34,76 @@ export function addCommand(program: Command) {
       const count = await governance.governanceContract.read.getProposalsCount();
       const proposalIds = [...Array(Number(count)).keys()];
       for (const proposalId of proposalIds) {
-        const { createdLog, executedLog, payloadSentLog, queuedLog, proposal } = await governance.getProposal(
-          BigInt(proposalId),
-          logs
-        );
+        const { createdLog, executedLog, payloadSentLog, votingActivatedLog, queuedLog, proposal } =
+          await governance.getProposal(BigInt(proposalId), logs);
         logInfo(
           `Proposal ${proposalId}`,
-          `Proposal created on ${new Date(createdLog.timestamp * 1000).toLocaleString()}`
+          `### Proposal ${proposalId} Summary ###\n` +
+            `State: ${HUMAN_READABLE_STATE[proposal.state as keyof typeof HUMAN_READABLE_STATE]}\n` +
+            `For Votes: ${proposal.forVotes}\n` +
+            `Against Votes: ${proposal.againstVotes}\n` +
+            `Creator: ${proposal.creator}\n` +
+            `Payloads: ${JSON.stringify(
+              proposal.payloads,
+              (key, value) => (typeof value === 'bigint' ? value.toString() : value),
+              2
+            )}`
         );
+        logInfo(
+          `Proposal ${proposalId} log`,
+          `${new Date(createdLog.timestamp * 1000).toLocaleString()} Proposal created`
+        );
+        if (votingActivatedLog) {
+          logInfo(
+            `Proposal ${proposalId} log`,
+            `${new Date(votingActivatedLog.timestamp * 1000).toLocaleString()} Voting activated`
+          );
+        }
         if (queuedLog) {
           logInfo(
-            `Proposal ${proposalId}`,
-            `Proposal was queued with final votes of ${queuedLog.args.votesFor} to ${
-              queuedLog.args.votesAgainst
-            } on ${new Date(queuedLog.timestamp * 1000).toLocaleString()}`
+            `Proposal ${proposalId} log`,
+            `${new Date(queuedLog.timestamp * 1000).toLocaleString()} Proposal queued`
           );
         }
         if (executedLog) {
           logInfo(
-            `Proposal ${proposalId}`,
-            `Proposal was executed on ${new Date(executedLog.timestamp * 1000).toLocaleString()}`
+            `Proposal ${proposalId} log`,
+            `${new Date(executedLog.timestamp * 1000).toLocaleString()} Proposal executed`
           );
         }
+        if (payloadSentLog) {
+          payloadSentLog.map((log) => {
+            logInfo(
+              `Proposal ${proposalId} log`,
+              `${new Date(log.timestamp * 1000).toLocaleString()} Payload ${log.args.payloadId}:${
+                log.args.payloadsController
+              } sent to chainId:${log.args.chainId}`
+            );
+          });
+        }
+        console.log(`\n`);
       }
     });
 
   /**
    *
    */
-  govV3.command('getRoots');
+  govV3
+    .command('getWarehouseRoots')
+    .description('generate the roots for the warehouse')
+    .requiredOption('--proposalId <number>', 'proposalId to generate the proof for')
+    .action(async (name, options) => {
+      const governance = getGovernance({
+        address: DEFAULT_GOVERNANCE,
+        publicClient: DEFAULT_CLIENT,
+      });
+      const proposalId = BigInt(options.getOptionValue('proposalId'));
+
+      const proofs = await governance.getRoots(proposalId);
+    });
 
   /**
-   * TODO: TODO
+   *
    */
   govV3
     .command('getVotingProofs')

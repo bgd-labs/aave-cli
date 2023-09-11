@@ -17,7 +17,7 @@ import { TenderlyRequest, TenderlySimulationResponse, tenderly } from '../../uti
 import { EOA } from '../../utils/constants';
 import { getSolidityStorageSlotAddress, getSolidityStorageSlotUint } from '../../utils/storageSlots';
 import { setBits } from './utils/solidityUtils';
-import { VOTING_SLOTS, getProof } from './proofs';
+import { VOTING_SLOTS, WAREHOUSE_SLOTS, getProof } from './proofs';
 
 type CreatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
 type QueuedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
@@ -84,6 +84,17 @@ export enum State {
   Cancelled, // got cancelled by guardian, or because proposition power of creator dropped below allowed minimum
   Expired,
 }
+
+export const HUMAN_READABLE_STATE = {
+  [State.Null]: 'Null',
+  [State.Created]: 'Created',
+  [State.Active]: 'Active',
+  [State.Queued]: 'Queued',
+  [State.Executed]: 'Executed',
+  [State.Failed]: 'Failed',
+  [State.Cancelled]: 'Cancelled',
+  [State.Expired]: 'Expired',
+};
 
 interface GetGovernanceParams {
   address: Hex;
@@ -236,17 +247,34 @@ export const getGovernance = ({
     async getVotingProofs(proposalId: bigint, voter: Hex) {
       const proposal = await governanceContract.read.getProposal([proposalId]);
 
-      const proofs = (await Promise.all(Object.keys(VOTING_SLOTS) as (keyof typeof VOTING_SLOTS)[])).map((key) => {
-        getProof(
-          publicClient,
-          key,
-          VOTING_SLOTS[key].map((slot) => getSolidityStorageSlotAddress(slot, voter)),
-          proposal.snapshotBlockHash
-        );
-      });
+      const proofs = await Promise.all(
+        (Object.keys(VOTING_SLOTS) as (keyof typeof VOTING_SLOTS)[]).map((key) =>
+          getProof(
+            publicClient,
+            key,
+            VOTING_SLOTS[key].map((slot) => getSolidityStorageSlotAddress(slot, voter)),
+            proposal.snapshotBlockHash
+          )
+        )
+      );
 
       return proofs;
     },
-    async getRoots(proposalId: bigint) {},
+    async getRoots(proposalId: bigint) {
+      const proposal = await governanceContract.read.getProposal([proposalId]);
+
+      const proofs = await Promise.all(
+        (Object.keys(WAREHOUSE_SLOTS) as (keyof typeof WAREHOUSE_SLOTS)[]).map((key) =>
+          getProof(
+            publicClient,
+            key,
+            WAREHOUSE_SLOTS[key].map((slot) => toHex(slot)),
+            proposal.snapshotBlockHash
+          )
+        )
+      );
+
+      return proofs;
+    },
   };
 };
