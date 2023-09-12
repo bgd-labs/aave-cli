@@ -3,7 +3,7 @@ import { simulateProposal } from '../govv3/simulate';
 import { GovernanceV3Goerli, IVotingMachineWithProofs_ABI, IVotingPortal_ABI } from '@bgd-labs/aave-address-book';
 import { HUMAN_READABLE_STATE, ProposalState, getGovernance } from '../govv3/governance';
 import { RPC_MAP, goerliClient } from '../utils/rpcClients';
-import { logError, logInfo } from '../utils/logger';
+import { logError, logInfo, logSuccess } from '../utils/logger';
 import {
   Hex,
   PublicClient,
@@ -149,10 +149,6 @@ export function addCommand(program: Command) {
 
       const proposal = await governance.governanceContract.read.getProposal([proposalId]);
 
-      if (proposal.state !== ProposalState.Active) {
-        // throw new Error('can only vote on active proposals');
-      }
-
       if ((voteFor && voteAgainst) || (!voteFor && !voteAgainst)) {
         throw new Error('you must either vote --for, or --against');
       }
@@ -189,16 +185,10 @@ export function addCommand(program: Command) {
             .flat(),
         ],
       });
-      console.log(
-        proofs
-          .map(({ proof, slots }) => {
-            return slots.map((slot, ix) => ({
-              underlyingAsset: proof.address,
-              slot,
-              proof: getAccountRPL(proof.storageProof[ix].proof),
-            }));
-          })
-          .flat()
-      );
+      logInfo('Voting', `Encoded data to be submitted on ${chainId}:${machine}`);
+      logSuccess('Encoded data', encodedData);
+      if (proposal.state !== ProposalState.Active) {
+        logError('ImpossibleToVote', 'You can only vote on active proposals');
+      }
     });
 }
