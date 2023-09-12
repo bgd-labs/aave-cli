@@ -22,7 +22,10 @@ export const VOTING_SLOTS = {
 
 export async function getProof(publicClient: PublicClient, address: Hex, slots: readonly Hex[], blockHash: Hex) {
   const block = await publicClient.getBlock({ blockHash });
-  return publicClient.request({ method: 'eth_getProof' as any, params: [address, slots, toHex(block.number)] as any });
+  return publicClient.request({
+    method: 'eth_getProof' as any,
+    params: [address, slots.map((slot) => toHex(slot, { size: 32 })), toHex(block.number)] as any,
+  });
 }
 
 // IMPORTANT valid only for post-Shapella blocks, as it includes `withdrawalsRoot`
