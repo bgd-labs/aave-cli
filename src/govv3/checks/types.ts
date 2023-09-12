@@ -8,10 +8,10 @@ export type CheckResult = {
   errors: string[];
 };
 
-export interface ProposalCheck {
+export interface ProposalCheck<T> {
   name: string;
   checkProposal(
-    proposalInfo: Awaited<ReturnType<PayloadsController['getPayload']>>,
+    proposalInfo: T,
     simulation: TenderlySimulationResponse,
     publicClient: PublicClient
   ): Promise<CheckResult>;

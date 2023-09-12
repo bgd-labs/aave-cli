@@ -6,7 +6,7 @@ import { getContractName } from '../utils/solidityUtils';
 /**
  * Reports all emitted events from the proposal
  */
-export const checkLogs: ProposalCheck = {
+export const checkLogs: ProposalCheck<Awaited<ReturnType<PayloadsController['getPayload']>>> = {
   name: 'Reports all events emitted from the proposal',
   async checkProposal(proposal, sim, deps) {
     let info = [];

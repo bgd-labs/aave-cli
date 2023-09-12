@@ -3,11 +3,12 @@
 import { Hex, PublicClient } from 'viem';
 import { ProposalCheck } from './types';
 import { toAddressLink } from '../utils/markdownUtils';
+import { PayloadsController } from '../payloadsController';
 
 /**
  * Check all targets with code if they contain selfdestruct.
  */
-export const checkTargetsNoSelfdestruct: ProposalCheck = {
+export const checkTargetsNoSelfdestruct: ProposalCheck<Awaited<ReturnType<PayloadsController['getPayload']>>> = {
   name: 'Check all targets do not contain selfdestruct',
   async checkProposal(proposal, sim, publicClient) {
     const allTargets = proposal.payload.actions.map((action) => action.target);
@@ -20,7 +21,7 @@ export const checkTargetsNoSelfdestruct: ProposalCheck = {
 /**
  * Check all touched contracts with code if they contain selfdestruct.
  */
-export const checkTouchedContractsNoSelfdestruct: ProposalCheck = {
+export const checkTouchedContractsNoSelfdestruct: ProposalCheck<undefined> = {
   name: 'Check all touched contracts do not contain selfdestruct',
   async checkProposal(proposal, sim, publicClient) {
     const { info, warn, error } = await checkNoSelfdestructs([], sim.transaction.addresses, publicClient);

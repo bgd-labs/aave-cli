@@ -1,11 +1,12 @@
 import { Hex, PublicClient } from 'viem';
 import { ProposalCheck } from './types';
 import { TenderlySimulationResponse } from '../../utils/tenderlyClient';
+import { PayloadsController } from '../../../dist';
 
 /**
  * Check all targets with code are verified on Etherscan
  */
-export const checkTargetsVerifiedEtherscan: ProposalCheck = {
+export const checkTargetsVerifiedEtherscan: ProposalCheck<Awaited<ReturnType<PayloadsController['getPayload']>>> = {
   name: 'Check all targets are verified on Etherscan',
   async checkProposal(proposal, sim, publicClient) {
     const allTargets = proposal.payload.actions.map((action) => action.target);
@@ -18,7 +19,7 @@ export const checkTargetsVerifiedEtherscan: ProposalCheck = {
 /**
  * Check all touched contracts with code are verified on Etherscan
  */
-export const checkTouchedContractsVerifiedEtherscan: ProposalCheck = {
+export const checkTouchedContractsVerifiedEtherscan: ProposalCheck<undefined> = {
   name: 'Check all touched contracts are verified on Etherscan',
   async checkProposal(proposal, sim, publicClient) {
     const info = await checkVerificationStatuses(sim, sim.transaction.addresses, publicClient);

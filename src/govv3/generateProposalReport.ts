@@ -9,29 +9,34 @@ import { checkTargetsNoSelfdestruct, checkTouchedContractsNoSelfdestruct } from 
 import { CheckResult, ProposalCheck } from './checks/types';
 import { checkLogs } from './checks/logs';
 import { checkTargetsVerifiedEtherscan, checkTouchedContractsVerifiedEtherscan } from './checks/targets-verified';
+import { Governance, HUMAN_READABLE_STATE } from './governance';
 
 type GenerateReportRequest = {
-  payloadId: number;
-  payloadInfo: Awaited<ReturnType<PayloadsController['getPayload']>>;
+  proposalId: bigint;
+  proposalInfo: Awaited<ReturnType<Governance['getProposal']>>;
   simulation: TenderlySimulationResponse;
   publicClient: PublicClient;
 };
 
-export async function generateReport({ payloadId, payloadInfo, simulation, publicClient }: GenerateReportRequest) {
-  const { payload, executedLog, queuedLog, createdLog } = payloadInfo;
+export async function generateReport({ proposalId, proposalInfo, simulation, publicClient }: GenerateReportRequest) {
+  const { proposal, executedLog, queuedLog, createdLog, payloadSentLog, votingActivatedLog } = proposalInfo;
   // generate file header
-  let report = `## Payload ${payloadId} on ${simulation.simulation.network_id}
+  let report = `## Proposal ${proposalId}
 
-- creator: ${payload.creator}
-- maximumAccessLevelRequired: ${payload.maximumAccessLevelRequired}
-- state: ${payload.state}
-- actions: ${JSON.stringify(payload.actions, (key, value) => (typeof value === 'bigint' ? value.toString() : value))}
-- createdAt: [${payload.createdAt}](${toTxLink(createdLog.transactionHash, false, publicClient)})\n`;
+- state: ${HUMAN_READABLE_STATE[proposal.state as keyof typeof HUMAN_READABLE_STATE]}
+- creator: ${proposal.creator}
+- maximumAccessLevelRequired: ${proposal.accessLevel}
+- payloads: ${JSON.stringify(proposal.payloads, (key, value) => (typeof value === 'bigint' ? value.toString() : value))}
+- createdAt: [${proposal.creationTime}](${toTxLink(createdLog.transactionHash, false, publicClient)})\n`;
   if (queuedLog) {
-    report += `- queuedAt: [${payload.queuedAt}](${toTxLink(queuedLog.transactionHash, false, publicClient)})\n`;
+    report += `- queuedAt: [${proposal.queuingTime}](${toTxLink(queuedLog.transactionHash, false, publicClient)})\n`;
   }
   if (executedLog) {
-    report += `- executedAt: [${payload.executedAt}](${toTxLink(executedLog.transactionHash, false, publicClient)})\n`;
+    report += `- executedAt: [${executedLog.timestamp}](${toTxLink(
+      executedLog.transactionHash,
+      false,
+      publicClient
+    )})\n`;
   }
   report += '\n';
 
@@ -127,16 +132,10 @@ export async function generateReport({ payloadId, payloadInfo, simulation, publi
       report += stateChanges;
     }
   }
-  const checks = [
-    checkLogs,
-    checkTargetsVerifiedEtherscan,
-    checkTouchedContractsVerifiedEtherscan,
-    checkTargetsNoSelfdestruct,
-    checkTouchedContractsNoSelfdestruct,
-  ];
+  const checks = [checkLogs, checkTouchedContractsVerifiedEtherscan, checkTouchedContractsNoSelfdestruct];
 
   for (const check of checks) {
-    const result = await check.checkProposal(payloadInfo, simulation, publicClient);
+    const result = await check.checkProposal(proposalInfo, simulation, publicClient);
     report += renderCheckResult(check, result);
   }
 
