@@ -14,19 +14,13 @@ export const WAREHOUSE_SLOTS = {
  * Slots that represent the balance of a single account
  */
 export const VOTING_SLOTS = {
-  ['0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec' /*AaveSafetyModule.STK_AAVE*/]: [
-    0n, // balance
-  ],
-  ['0xD1ff82609FB63A0eee6FE7D2896d80d29491cCCd' /*AaveV3Ethereum.ASSETS.AAVE.A_TOKEN*/]: [
-    52n, // balance
-    64n, // delegation
-  ],
-  ['0xb6D88BfC5b145a558b279cf7692e6F02064889d0' /*AaveV3Ethereum.ASSETS.AAVE.UNDERLYING*/]: [
-    0n, // balance
-  ],
-  [GovernanceV3Goerli.GOVERNANCE]: [
-    9n, // representative
-  ],
+  ['0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec' /*AaveSafetyModule.STK_AAVE*/]: { balance: 0n }, // balance
+  ['0xD1ff82609FB63A0eee6FE7D2896d80d29491cCCd' /*AaveV3Ethereum.ASSETS.AAVE.A_TOKEN*/]: {
+    balance: 52n, // balance
+    delegation: 64n,
+  }, // delegation
+  ['0xb6D88BfC5b145a558b279cf7692e6F02064889d0' /*AaveV3Ethereum.ASSETS.AAVE.UNDERLYING*/]: { balance: 0n }, // balance
+  [GovernanceV3Goerli.GOVERNANCE]: { representative: 9n }, // representative
 } as const;
 
 export interface Proof {

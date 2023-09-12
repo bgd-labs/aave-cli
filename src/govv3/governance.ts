@@ -7,6 +7,7 @@ import {
   encodeFunctionData,
   fromHex,
   getContract,
+  keccak256,
   parseEther,
   toHex,
 } from 'viem';
@@ -14,7 +15,11 @@ import { FilterLogWithTimestamp, getLogs } from '../utils/logs';
 import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book';
 import { TenderlyRequest, TenderlySimulationResponse, tenderly } from '../utils/tenderlyClient';
 import { EOA } from '../utils/constants';
-import { getSolidityStorageSlotAddress, getSolidityStorageSlotUint } from '../utils/storageSlots';
+import {
+  getSolidityStorageSlotAddress,
+  getSolidityStorageSlotBytes,
+  getSolidityStorageSlotUint,
+} from '../utils/storageSlots';
 import { setBits } from './utils/solidityUtils';
 import { Proof, VOTING_SLOTS, WAREHOUSE_SLOTS, getProof } from './proofs';
 
@@ -64,8 +69,13 @@ export interface Governance<T extends WalletClient | undefined> {
    * Returns the proofs that are non-zero for a specified address
    * @param proposalId
    * @param voter
+   * @param votingChainId
    */
-  getVotingProofs: (proposalId: bigint, voter: Hex) => Promise<{ proof: Proof; slots: readonly bigint[] }[]>;
+  getVotingProofs: (
+    proposalId: bigint,
+    voter: Hex,
+    votingChainId: bigint
+  ) => Promise<{ proof: Proof; slots: readonly bigint[] }[]>;
   getRoots: (proposalId: bigint) => any;
 }
 
@@ -232,24 +242,53 @@ export const getGovernance = ({
       const payload = await getSimulationPayloadForExecution(proposalId);
       return tenderly.simulate(payload);
     },
-    async getVotingProofs(proposalId: bigint, voter: Hex) {
+    async getVotingProofs(proposalId: bigint, voter: Hex, votingChainId: bigint) {
       const proposal = await governanceContract.read.getProposal([proposalId]);
 
-      const proofs = await Promise.all(
-        (Object.keys(VOTING_SLOTS) as (keyof typeof VOTING_SLOTS)[]).map(async (key) => {
-          return {
-            proof: await getProof(
-              publicClient,
-              key,
-              VOTING_SLOTS[key].map((slot) => getSolidityStorageSlotAddress(slot, voter)),
-              proposal.snapshotBlockHash
+      const [stkAaveProof, aaveProof, aAaveProof, representativeProof] = await Promise.all([
+        getProof(
+          publicClient,
+          '0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec',
+          [getSolidityStorageSlotAddress(VOTING_SLOTS['0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec'].balance, voter)],
+          proposal.snapshotBlockHash
+        ),
+        getProof(
+          publicClient,
+          '0xb6D88BfC5b145a558b279cf7692e6F02064889d0',
+          [getSolidityStorageSlotAddress(VOTING_SLOTS['0xb6D88BfC5b145a558b279cf7692e6F02064889d0'].balance, voter)],
+          proposal.snapshotBlockHash
+        ),
+        getProof(
+          publicClient,
+          '0xD1ff82609FB63A0eee6FE7D2896d80d29491cCCd',
+          [
+            getSolidityStorageSlotAddress(VOTING_SLOTS['0xD1ff82609FB63A0eee6FE7D2896d80d29491cCCd'].balance, voter),
+            getSolidityStorageSlotAddress(VOTING_SLOTS['0xD1ff82609FB63A0eee6FE7D2896d80d29491cCCd'].delegation, voter),
+          ],
+          proposal.snapshotBlockHash
+        ),
+        getProof(
+          publicClient,
+          '0x586207Df62c7D5D1c9dBb8F61EdF77cc30925C4F',
+          [
+            getSolidityStorageSlotBytes(
+              getSolidityStorageSlotAddress(
+                VOTING_SLOTS['0x586207Df62c7D5D1c9dBb8F61EdF77cc30925C4F'].representative,
+                voter
+              ),
+              toHex(votingChainId, { size: 32 })
             ),
-            slots: VOTING_SLOTS[key],
-          };
-        })
-      );
+          ],
+          proposal.snapshotBlockHash
+        ),
+      ]);
 
-      return proofs;
+      return [
+        { proof: stkAaveProof, slots: [0n] },
+        { proof: aaveProof, slots: [0n] },
+        { proof: aAaveProof, slots: [52n, 64n] },
+        { proof: representativeProof, slots: [9n] },
+      ];
     },
     async getRoots(proposalId: bigint) {
       const proposal = await governanceContract.read.getProposal([proposalId]);

@@ -14,6 +14,7 @@ import {
   http,
 } from 'viem';
 import { getAccountRPL } from '../govv3/proofs';
+import { bigint } from 'zod';
 
 const DEFAULT_GOVERNANCE = GovernanceV3Goerli.GOVERNANCE;
 const DEFAULT_CLIENT = goerliClient;
@@ -127,7 +128,7 @@ export function addCommand(program: Command) {
       const proposalId = BigInt(options.getOptionValue('proposalId'));
       const voter = options.getOptionValue('voter') as Hex;
 
-      const proofs = await governance.getVotingProofs(proposalId, voter);
+      // const proofs = await governance.getVotingProofs(proposalId, voter);
     });
 
   govV3
@@ -147,7 +148,7 @@ export function addCommand(program: Command) {
       const proposalId = BigInt(_proposalId);
 
       const proposal = await governance.governanceContract.read.getProposal([proposalId]);
-      console.log(await DEFAULT_CLIENT.getBlock({ blockHash: proposal.snapshotBlockHash }));
+
       if (proposal.state !== ProposalState.Active) {
         // throw new Error('can only vote on active proposals');
       }
@@ -170,7 +171,7 @@ export function addCommand(program: Command) {
         publicClient: RPC_MAP[Number(chainId) as keyof typeof RPC_MAP] as PublicClient,
         // walletClient: createWalletClient({ account: '0x0', chain: { id: Number(chainId) } as any, transport: http() }),
       });
-      const proofs = await governance.getVotingProofs(proposalId, voter as Hex);
+      const proofs = await governance.getVotingProofs(proposalId, voter as Hex, chainId);
       const encodedData = encodeFunctionData({
         abi: IVotingMachineWithProofs_ABI,
         functionName: 'submitVote',
