@@ -52,7 +52,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@bgd-labs/aave-address-book": "2.3.1-fe0b9ce3f66235f2d3eb88a09531c1afeb68dfbf.0",
+    "@bgd-labs/aave-address-book": "2.3.1-dfb6302aa92b55201141b7d43094327c4a646cf1.0",
     "@commander-js/extra-typings": "^11.0.0",
     "bs58": "^5.0.0",
     "chalk": "^4.1.2",

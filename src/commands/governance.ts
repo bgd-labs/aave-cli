@@ -1,10 +1,19 @@
 import { Command } from '@commander-js/extra-typings';
 import { simulateProposal } from '../govv3/simulate';
-import { GovernanceV3Goerli } from '@bgd-labs/aave-address-book';
+import { GovernanceV3Goerli, IVotingMachineWithProofs_ABI, IVotingPortal_ABI } from '@bgd-labs/aave-address-book';
 import { HUMAN_READABLE_STATE, ProposalState, getGovernance } from '../govv3/governance';
-import { goerliClient } from '../utils/rpcClients';
+import { RPC_MAP, goerliClient } from '../utils/rpcClients';
 import { logError, logInfo } from '../utils/logger';
-import { Hex, createWalletClient, encodeAbiParameters, getContract, http } from 'viem';
+import {
+  Hex,
+  PublicClient,
+  createWalletClient,
+  encodeAbiParameters,
+  encodeFunctionData,
+  getContract,
+  http,
+} from 'viem';
+import { getAccountRPL } from '../govv3/proofs';
 
 const DEFAULT_GOVERNANCE = GovernanceV3Goerli.GOVERNANCE;
 const DEFAULT_CLIENT = goerliClient;
@@ -125,25 +134,70 @@ export function addCommand(program: Command) {
     .command('vote')
     .description('vote for or against any given proposal')
     .requiredOption('--proposalId <number>', 'proposalId to vote for')
-    .option('--for', 'Vote in favour of the proposal')
-    .option('--against', 'vote against the proposal')
-    .action(async (name, options) => {
+    .requiredOption('--voter <string>', 'the address to vote')
+    .option('--voteFor', 'Vote in favour of the proposal')
+    .option('--voteAgainst', 'vote against the proposal')
+    .action(async ({ voter, proposalId: _proposalId, voteAgainst, voteFor }) => {
       const governance = getGovernance({
         address: DEFAULT_GOVERNANCE,
         publicClient: DEFAULT_CLIENT,
         walletClient: createWalletClient({ account: '0x0', chain: DEFAULT_CLIENT.chain, transport: http() }),
       });
-      const proposalId = BigInt(options.getOptionValue('proposalId'));
+
+      const proposalId = BigInt(_proposalId);
+
       const proposal = await governance.governanceContract.read.getProposal([proposalId]);
-      if (proposal.state !== State.Active) {
-        throw new Error('can only vote on active proposals');
+      console.log(await DEFAULT_CLIENT.getBlock({ blockHash: proposal.snapshotBlockHash }));
+      if (proposal.state !== ProposalState.Active) {
+        // throw new Error('can only vote on active proposals');
       }
-      const voteFor = options.getOptionValue('for');
-      const voteAgainst = options.getOptionValue('against');
-      if (voteFor && voteAgainst) {
+
+      if ((voteFor && voteAgainst) || (!voteFor && !voteAgainst)) {
         throw new Error('you must either vote --for, or --against');
       }
-      // perhaps makes sense to show encoded data to vote?
-      logError('TODO', 'not yet implemented');
+      const portal = getContract({
+        address: proposal.votingPortal,
+        abi: IVotingPortal_ABI,
+        publicClient: DEFAULT_CLIENT,
+      });
+      const [machine, chainId] = await Promise.all([
+        portal.read.VOTING_MACHINE(),
+        portal.read.VOTING_MACHINE_CHAIN_ID(),
+      ]);
+      const votingMachine = getContract({
+        address: machine,
+        abi: IVotingMachineWithProofs_ABI,
+        publicClient: RPC_MAP[Number(chainId) as keyof typeof RPC_MAP] as PublicClient,
+        // walletClient: createWalletClient({ account: '0x0', chain: { id: Number(chainId) } as any, transport: http() }),
+      });
+      const proofs = await governance.getVotingProofs(proposalId, voter as Hex);
+      const encodedData = encodeFunctionData({
+        abi: IVotingMachineWithProofs_ABI,
+        functionName: 'submitVote',
+        args: [
+          proposalId,
+          !!voteFor,
+          proofs
+            .map(({ proof, slots }) => {
+              return slots.map((slot, ix) => ({
+                underlyingAsset: proof.address,
+                slot,
+                proof: getAccountRPL(proof.storageProof[ix].proof),
+              }));
+            })
+            .flat(),
+        ],
+      });
+      console.log(
+        proofs
+          .map(({ proof, slots }) => {
+            return slots.map((slot, ix) => ({
+              underlyingAsset: proof.address,
+              slot,
+              proof: getAccountRPL(proof.storageProof[ix].proof),
+            }));
+          })
+          .flat()
+      );
     });
 }

@@ -16,7 +16,7 @@ import { TenderlyRequest, TenderlySimulationResponse, tenderly } from '../utils/
 import { EOA } from '../utils/constants';
 import { getSolidityStorageSlotAddress, getSolidityStorageSlotUint } from '../utils/storageSlots';
 import { setBits } from './utils/solidityUtils';
-import { VOTING_SLOTS, WAREHOUSE_SLOTS, getProof } from './proofs';
+import { Proof, VOTING_SLOTS, WAREHOUSE_SLOTS, getProof } from './proofs';
 
 type CreatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
 type QueuedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
@@ -65,7 +65,7 @@ export interface Governance<T extends WalletClient | undefined> {
    * @param proposalId
    * @param voter
    */
-  getVotingProofs: (proposalId: bigint, voter: Hex) => any;
+  getVotingProofs: (proposalId: bigint, voter: Hex) => Promise<{ proof: Proof; slots: readonly bigint[] }[]>;
   getRoots: (proposalId: bigint) => any;
 }
 
@@ -236,14 +236,17 @@ export const getGovernance = ({
       const proposal = await governanceContract.read.getProposal([proposalId]);
 
       const proofs = await Promise.all(
-        (Object.keys(VOTING_SLOTS) as (keyof typeof VOTING_SLOTS)[]).map((key) =>
-          getProof(
-            publicClient,
-            key,
-            VOTING_SLOTS[key].map((slot) => getSolidityStorageSlotAddress(slot, voter)),
-            proposal.snapshotBlockHash
-          )
-        )
+        (Object.keys(VOTING_SLOTS) as (keyof typeof VOTING_SLOTS)[]).map(async (key) => {
+          return {
+            proof: await getProof(
+              publicClient,
+              key,
+              VOTING_SLOTS[key].map((slot) => getSolidityStorageSlotAddress(slot, voter)),
+              proposal.snapshotBlockHash
+            ),
+            slots: VOTING_SLOTS[key],
+          };
+        })
       );
 
       return proofs;

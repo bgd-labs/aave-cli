@@ -1,35 +1,58 @@
-import { AaveSafetyModule, AaveV3Ethereum } from '@bgd-labs/aave-address-book';
-import { Block, Hex, PublicClient, toHex, toRlp } from 'viem';
+import { AaveSafetyModule, AaveV3Ethereum, GovernanceV3Goerli } from '@bgd-labs/aave-address-book';
+import { Block, Hex, PublicClient, fromRlp, toHex, toRlp } from 'viem';
 
+/**
+ * Slots that represent configuration values relevant for all accounts
+ */
 export const WAREHOUSE_SLOTS = {
   [AaveSafetyModule.STK_AAVE]: [
-    81, // exchangeRate
+    81n, // exchangeRate
   ],
 } as const;
 
+/**
+ * Slots that represent the balance of a single account
+ */
 export const VOTING_SLOTS = {
   ['0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec' /*AaveSafetyModule.STK_AAVE*/]: [
-    0, // balance
+    0n, // balance
   ],
   ['0xD1ff82609FB63A0eee6FE7D2896d80d29491cCCd' /*AaveV3Ethereum.ASSETS.AAVE.A_TOKEN*/]: [
-    52, // balance
-    64, // delegation
+    52n, // balance
+    64n, // delegation
   ],
   ['0xb6D88BfC5b145a558b279cf7692e6F02064889d0' /*AaveV3Ethereum.ASSETS.AAVE.UNDERLYING*/]: [
-    0, // balance
+    0n, // balance
+  ],
+  [GovernanceV3Goerli.GOVERNANCE]: [
+    9n, // representative
   ],
 } as const;
+
+export interface Proof {
+  address: Hex;
+  accountProof: Hex[];
+  balance: Hex;
+  codeHash: Hex;
+  nonce: Hex;
+  storageHash: Hex;
+  storageProof: {
+    key: Hex;
+    value: Hex;
+    proof: Hex[];
+  }[];
+}
 
 export async function getProof(publicClient: PublicClient, address: Hex, slots: readonly Hex[], blockHash: Hex) {
   const block = await publicClient.getBlock({ blockHash });
   return publicClient.request({
     method: 'eth_getProof' as any,
-    params: [address, slots.map((slot) => toHex(slot, { size: 32 })), toHex(block.number)] as any,
-  });
+    params: [address, slots.map((slot) => slot), toHex(block.number)] as any,
+  }) as Promise<Proof>;
 }
 
 // IMPORTANT valid only for post-Shapella blocks, as it includes `withdrawalsRoot`
-const prepareBLockRLP = (rawBlock: Block): Hex => {
+export const getBLockRLP = (rawBlock: Block): Hex => {
   const rawData = [
     rawBlock.parentHash,
     rawBlock.sha3Uncles,
@@ -51,4 +74,8 @@ const prepareBLockRLP = (rawBlock: Block): Hex => {
     rawBlock.withdrawalsRoot,
   ];
   return toRlp(rawData);
+};
+
+export const getAccountRPL = (proof: Hex[]) => {
+  return toRlp(proof.map((rpl) => fromRlp(rpl, 'hex')));
 };
