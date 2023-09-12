@@ -7,7 +7,7 @@ import { PayloadsController } from '../payloadsController';
 /**
  * Reports all emitted events from the proposal
  */
-export const checkLogs: ProposalCheck<Awaited<ReturnType<PayloadsController['getPayload']>>> = {
+export const checkLogs: ProposalCheck<any> = {
   name: 'Reports all events emitted from the proposal',
   async checkProposal(proposal, sim, deps) {
     let info = [];
