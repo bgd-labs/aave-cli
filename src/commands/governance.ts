@@ -2,7 +2,7 @@ import { Command } from '@commander-js/extra-typings';
 import { simulateProposal } from '../govv3/simulate';
 import { GovernanceV3Goerli, IVotingMachineWithProofs_ABI, IVotingPortal_ABI } from '@bgd-labs/aave-address-book';
 import { HUMAN_READABLE_STATE, ProposalState, getGovernance } from '../govv3/governance';
-import { RPC_MAP, goerliClient } from '../utils/rpcClients';
+import { CHAIN_ID_CLIENT_MAP, goerliClient } from '../utils/rpcClients';
 import { logError, logInfo, logSuccess } from '../utils/logger';
 import {
   Hex,
@@ -164,8 +164,7 @@ export function addCommand(program: Command) {
       const votingMachine = getContract({
         address: machine,
         abi: IVotingMachineWithProofs_ABI,
-        publicClient: RPC_MAP[Number(chainId) as keyof typeof RPC_MAP] as PublicClient,
-        // walletClient: createWalletClient({ account: '0x0', chain: { id: Number(chainId) } as any, transport: http() }),
+        publicClient: CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP] as PublicClient,
       });
       const proofs = await governance.getVotingProofs(proposalId, voter as Hex, chainId);
       const encodedData = encodeFunctionData({

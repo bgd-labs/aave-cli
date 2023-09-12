@@ -2,7 +2,7 @@ import { Command } from '@commander-js/extra-typings';
 import { tenderly } from '../utils/tenderlyClient';
 import { getGovernance } from '../govv3/governance';
 import { GovernanceV3Ethereum } from '@bgd-labs/aave-address-book';
-import { RPC_MAP, mainnetClient } from '../utils/rpcClients';
+import { CHAIN_ID_CLIENT_MAP, mainnetClient } from '../utils/rpcClients';
 import { getPayloadsController } from '../govv3/payloadsController';
 import { Hex, PublicClient } from 'viem';
 
@@ -54,7 +54,7 @@ export function addCommand(program: Command) {
         if (!payloadsControllerAddress) throw new Error('you need to provide a payloadsController');
         const payloadsController = getPayloadsController(
           payloadsControllerAddress as Hex,
-          RPC_MAP[forkConfig.chainId as keyof typeof RPC_MAP] as PublicClient
+          CHAIN_ID_CLIENT_MAP[forkConfig.chainId as keyof typeof CHAIN_ID_CLIENT_MAP] as PublicClient
         );
         const payload = await payloadsController.getSimulationPayloadForExecution(Number(payloadId));
         const fork = await tenderly.fork({

@@ -40,7 +40,7 @@ export enum ProposalState {
   Expired,
 }
 
-export interface Governance<T extends WalletClient | undefined> {
+export interface Governance<T extends WalletClient | undefined = undefined> {
   governanceContract: GetContractReturnType<typeof IGovernanceCore_ABI, PublicClient, WalletClient>;
   cacheLogs: () => Promise<{
     createdLogs: Array<CreatedLog>;

@@ -5,3 +5,4 @@ export * from './govv3/payloadsController';
 export * from './govv3/generatePayloadReport';
 export * from './utils/tenderlyClient';
 export * from './utils/logger';
+export * from './utils/rpcClients';

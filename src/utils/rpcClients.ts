@@ -36,7 +36,7 @@ export const sepoliaClient = createPublicClient({ chain: sepolia, transport: htt
 
 export const goerliClient = createPublicClient({ chain: goerli, transport: http(process.env.RPC_GOERLI) });
 
-export const RPC_MAP = {
+export const CHAIN_ID_CLIENT_MAP = {
   [mainnet.id]: mainnetClient,
   [arbitrum.id]: arbitrumClient,
   [polygon.id]: polygonClient,
