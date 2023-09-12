@@ -21,7 +21,7 @@ export const checkTargetsNoSelfdestruct: ProposalCheck<Awaited<ReturnType<Payloa
 /**
  * Check all touched contracts with code if they contain selfdestruct.
  */
-export const checkTouchedContractsNoSelfdestruct: ProposalCheck<undefined> = {
+export const checkTouchedContractsNoSelfdestruct: ProposalCheck<any> = {
   name: 'Check all touched contracts do not contain selfdestruct',
   async checkProposal(proposal, sim, publicClient) {
     const { info, warn, error } = await checkNoSelfdestructs([], sim.transaction.addresses, publicClient);

@@ -19,7 +19,7 @@ export const checkTargetsVerifiedEtherscan: ProposalCheck<Awaited<ReturnType<Pay
 /**
  * Check all touched contracts with code are verified on Etherscan
  */
-export const checkTouchedContractsVerifiedEtherscan: ProposalCheck<undefined> = {
+export const checkTouchedContractsVerifiedEtherscan: ProposalCheck<any> = {
   name: 'Check all touched contracts are verified on Etherscan',
   async checkProposal(proposal, sim, publicClient) {
     const info = await checkVerificationStatuses(sim, sim.transaction.addresses, publicClient);

@@ -2,6 +2,7 @@ import { getAddress } from 'viem';
 import { ProposalCheck } from './types';
 import { Log } from '../../utils/tenderlyClient';
 import { getContractName } from '../utils/solidityUtils';
+import { PayloadsController } from '../payloadsController';
 
 /**
  * Reports all emitted events from the proposal
