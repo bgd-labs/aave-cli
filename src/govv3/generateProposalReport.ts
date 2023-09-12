@@ -1,14 +1,12 @@
 import { Hex, PublicClient, getAddress } from 'viem';
 import { StateDiff, TenderlySimulationResponse } from '../utils/tenderlyClient';
-import { PayloadsController } from './payloadsController';
 import { tenderlyDeepDiff } from './utils/tenderlyDeepDiff';
 import { interpretStateChange } from './utils/stateDiffInterpreter';
 import { getContractName } from './utils/solidityUtils';
 import { boolToMarkdown, renderCheckResult, toTxLink } from './utils/markdownUtils';
-import { checkTargetsNoSelfdestruct, checkTouchedContractsNoSelfdestruct } from './checks/selfDestruct';
-import { CheckResult, ProposalCheck } from './checks/types';
+import { checkTouchedContractsNoSelfdestruct } from './checks/selfDestruct';
 import { checkLogs } from './checks/logs';
-import { checkTargetsVerifiedEtherscan, checkTouchedContractsVerifiedEtherscan } from './checks/targets-verified';
+import { checkTouchedContractsVerifiedEtherscan } from './checks/targets-verified';
 import { Governance, HUMAN_READABLE_STATE } from './governance';
 
 type GenerateReportRequest = {
@@ -18,7 +16,12 @@ type GenerateReportRequest = {
   publicClient: PublicClient;
 };
 
-export async function generateReport({ proposalId, proposalInfo, simulation, publicClient }: GenerateReportRequest) {
+export async function generateProposalReport({
+  proposalId,
+  proposalInfo,
+  simulation,
+  publicClient,
+}: GenerateReportRequest) {
   const { proposal, executedLog, queuedLog, createdLog, payloadSentLog, votingActivatedLog } = proposalInfo;
   // generate file header
   let report = `## Proposal ${proposalId}
