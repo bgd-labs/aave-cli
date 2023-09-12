@@ -24,14 +24,6 @@ export async function simulateProposal(governanceAddress: Hex, publicClient: Pub
     const logs = await controllerContract.cacheLogs();
     const config = await controllerContract.getPayload(payload.payloadId, logs);
     const result = await controllerContract.simulatePayloadExecutionOnTenderly(payload.payloadId, config);
-    console.log(
-      await generateReport({
-        payloadId: payload.payloadId,
-        payloadInfo: config,
-        simulation: result,
-        publicClient: CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP],
-      })
-    );
     payloads.push({ payload: config, simulation: result });
   }
   return { proposal, payloads };

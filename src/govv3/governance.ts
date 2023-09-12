@@ -9,6 +9,7 @@ import {
   getContract,
   keccak256,
   parseEther,
+  parseUnits,
   toHex,
 } from 'viem';
 import { FilterLogWithTimestamp, getLogs } from '../utils/logs';
@@ -116,13 +117,13 @@ export const getGovernance = ({
       address: governanceContract.address,
       slot: proposalSlot,
     });
-    let bigIntData = fromHex(data!, { to: 'bigint' });
+    let proposalSlot1 = fromHex(data!, { to: 'bigint' });
     // manipulate storage
     // set queued
-    bigIntData = setBits(bigIntData, 0n, 8n, ProposalState.Queued);
+    proposalSlot1 = setBits(proposalSlot1, 0n, 8n, ProposalState.Queued);
     // set creation time
-    bigIntData = setBits(
-      bigIntData,
+    proposalSlot1 = setBits(
+      proposalSlot1,
       16n,
       56n,
       currentBlock.timestamp - (await governanceContract.read.PROPOSAL_EXPIRATION_TIME())
@@ -136,12 +137,15 @@ export const getGovernance = ({
         functionName: 'executeProposal',
         args: [proposalId],
       }),
-      value: parseEther('0.5').toString(),
+      // value: parseEther('0.5').toString(),
       block_number: Number(currentBlock.number),
       state_objects: {
         [governanceContract.address]: {
           storage: {
-            [proposalSlot]: toHex(bigIntData),
+            [proposalSlot]: toHex(proposalSlot1), // state & time
+            // [toHex(fromHex(proposalSlot, { to: 'bigint' }) + 5n)]: toHex(parseUnits('340000000', 18), {
+            //   size: 32,
+            // }), // votes (not needed as there's no validation for this at this point)
           },
         },
       },
