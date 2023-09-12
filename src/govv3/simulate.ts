@@ -1,36 +1,17 @@
 import { logInfo } from '../utils/logger';
 import { TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { getGovernance } from './governance';
-import { Hex, createPublicClient, http } from 'viem';
-import { sepolia, polygonMumbai, bscTestnet, avalancheFuji } from 'viem/chains';
+import { Hex, PublicClient } from 'viem';
 import { PayloadsController, getPayloadsController } from './payloadsController';
 import { generateReport } from './generatePayloadReport';
-import { sepoliaClient } from '../utils/rpcClients';
+import { CHAIN_ID_CLIENT_MAP } from '../utils/rpcClients';
 
-const CHAIN_ID_CLIENT_MAP = {
-  [sepolia.id]: {
-    client: createPublicClient({ chain: sepolia, transport: http(process.env.RPC_SEPOLIA) }),
-    blockCreated: 3967960n,
-  },
-  [polygonMumbai.id]: {
-    client: createPublicClient({ chain: polygonMumbai, transport: http(process.env.RPC_POLYGON_MUMBAI) }),
-    blockCreated: 38318051n,
-  },
-  [bscTestnet.id]: {
-    client: createPublicClient({ chain: bscTestnet, transport: http(process.env.RPC_BSC_TESTNET) }),
-    blockCreated: 31893040n,
-  },
-  [avalancheFuji.id]: {
-    client: createPublicClient({ chain: avalancheFuji, transport: http(process.env.RPC_AVALANCHE_FUJI) }),
-    blockCreated: 24512916n,
-  },
-} as const;
-
-export async function simulateProposal(governanceAddress: Hex, proposalId: bigint) {
+export async function simulateProposal(governanceAddress: Hex, publicClient: PublicClient, proposalId: bigint) {
   logInfo('General', `Running simulation for ${proposalId}`);
-  const governance = getGovernance({ address: governanceAddress, publicClient: sepoliaClient, blockCreated: 3962575n });
+  const governance = getGovernance({ address: governanceAddress, publicClient });
   const logs = await governance.cacheLogs();
   const proposal = await governance.getProposal(proposalId, logs);
+  await governance.simulateProposalExecutionOnTenderly(proposalId, proposal);
   const payloads: {
     payload: Awaited<ReturnType<PayloadsController['getPayload']>>;
     simulation: TenderlySimulationResponse;
@@ -38,8 +19,7 @@ export async function simulateProposal(governanceAddress: Hex, proposalId: bigin
   for (const payload of proposal.proposal.payloads) {
     const controllerContract = getPayloadsController(
       payload.payloadsController,
-      CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP].client,
-      CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP].blockCreated
+      CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP]
     );
     const logs = await controllerContract.cacheLogs();
     const config = await controllerContract.getPayload(payload.payloadId, logs);
@@ -49,7 +29,7 @@ export async function simulateProposal(governanceAddress: Hex, proposalId: bigin
         payloadId: payload.payloadId,
         payloadInfo: config,
         simulation: result,
-        publicClient: CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP].client,
+        publicClient: CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP],
       })
     );
     payloads.push({ payload: config, simulation: result });
