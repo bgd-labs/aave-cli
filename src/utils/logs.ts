@@ -3,7 +3,14 @@ import type { Abi } from 'abitype';
 import fs from 'fs';
 import path from 'path';
 import { logInfo } from './logger';
-import { FilterLogWithTimestamp } from '../simulate/govv2/networks/types';
+
+type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly (infer ElementType)[]
+  ? ElementType
+  : never;
+
+export type FilterLogWithTimestamp<TAbi extends Abi, TEventName extends string> = ArrayElement<
+  GetFilterLogsReturnType<TAbi, TEventName>
+> & { timestamp: number };
 
 /**
  * Fetches the logs and stores them in a cache folder.

@@ -1,11 +1,11 @@
-import { logInfo } from '../../utils/logger';
-import { TenderlySimulationResponse } from '../../utils/tenderlyClient';
+import { logInfo } from '../utils/logger';
+import { TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { getGovernance } from './governance';
 import { Hex, createPublicClient, http } from 'viem';
 import { sepolia, polygonMumbai, bscTestnet, avalancheFuji } from 'viem/chains';
 import { PayloadsController, getPayloadsController } from './payloadsController';
 import { generateReport } from './generatePayloadReport';
-import { sepoliaClient } from '../../utils/rpcClients';
+import { sepoliaClient } from '../utils/rpcClients';
 
 const CHAIN_ID_CLIENT_MAP = {
   [sepolia.id]: {

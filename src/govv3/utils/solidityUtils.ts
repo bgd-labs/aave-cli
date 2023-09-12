@@ -1,5 +1,5 @@
 import { getAddress } from 'viem';
-import { TenderlySimulationResponse } from '../../../utils/tenderlyClient';
+import { TenderlySimulationResponse } from '../../utils/tenderlyClient';
 
 /**
  * Returns the selected bits of a uint256

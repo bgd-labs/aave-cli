@@ -1,6 +1,6 @@
 import { Hex, PublicClient } from 'viem';
 import { ProposalCheck } from './types';
-import { TenderlySimulationResponse } from '../../../utils/tenderlyClient';
+import { TenderlySimulationResponse } from '../../utils/tenderlyClient';
 
 /**
  * Check all targets with code are verified on Etherscan

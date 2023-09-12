@@ -1,5 +1,5 @@
 import { Hex, PublicClient, getAddress } from 'viem';
-import { StateDiff, TenderlySimulationResponse } from '../../utils/tenderlyClient';
+import { StateDiff, TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { PayloadsController } from './payloadsController';
 import { tenderlyDeepDiff } from './utils/tenderlyDeepDiff';
 import { interpretStateChange } from './utils/stateDiffInterpreter';

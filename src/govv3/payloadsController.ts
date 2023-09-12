@@ -7,11 +7,10 @@ import {
   encodePacked,
   getContract,
 } from 'viem';
-import { getLogs } from '../../utils/logs';
-import { FilterLogWithTimestamp } from '../govv2/networks/types';
-import { TenderlyRequest, tenderly, TenderlySimulationResponse } from '../../utils/tenderlyClient';
-import { EOA } from '../../utils/constants';
-import { getSolidityStorageSlotUint } from '../../utils/storageSlots';
+import { FilterLogWithTimestamp, getLogs } from '../utils/logs';
+import { TenderlyRequest, tenderly, TenderlySimulationResponse } from '../utils/tenderlyClient';
+import { EOA } from '../utils/constants';
+import { getSolidityStorageSlotUint } from '../utils/storageSlots';
 import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book';
 
 type PayloadCreatedLog = FilterLogWithTimestamp<typeof IPayloadsControllerCore_ABI, 'PayloadCreated'>;

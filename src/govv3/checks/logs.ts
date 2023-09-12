@@ -1,6 +1,6 @@
 import { getAddress } from 'viem';
 import { ProposalCheck } from './types';
-import { Log } from '../../../utils/tenderlyClient';
+import { Log } from '../../utils/tenderlyClient';
 import { getContractName } from '../utils/solidityUtils';
 
 /**

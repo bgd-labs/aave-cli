@@ -10,12 +10,11 @@ import {
   parseEther,
   toHex,
 } from 'viem';
-import { FilterLogWithTimestamp } from '../govv2/networks/types';
-import { getLogs } from '../../utils/logs';
+import { FilterLogWithTimestamp, getLogs } from '../utils/logs';
 import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book';
-import { TenderlyRequest, TenderlySimulationResponse, tenderly } from '../../utils/tenderlyClient';
-import { EOA } from '../../utils/constants';
-import { getSolidityStorageSlotAddress, getSolidityStorageSlotUint } from '../../utils/storageSlots';
+import { TenderlyRequest, TenderlySimulationResponse, tenderly } from '../utils/tenderlyClient';
+import { EOA } from '../utils/constants';
+import { getSolidityStorageSlotAddress, getSolidityStorageSlotUint } from '../utils/storageSlots';
 import { setBits } from './utils/solidityUtils';
 import { VOTING_SLOTS, WAREHOUSE_SLOTS, getProof } from './proofs';
 
@@ -74,26 +73,15 @@ const SLOTS = {
   PROPOSALS_MAPPING: 7n,
 };
 
-export enum State {
-  Null, // proposal does not exists
-  Created, // created, waiting for a cooldown to initiate the balances snapshot
-  Active, // balances snapshot set, voting in progress
-  Queued, // voting results submitted, but proposal is under grace period when guardian can cancel it
-  Executed, // results sent to the execution chain(s)
-  Failed, // voting was not successful
-  Cancelled, // got cancelled by guardian, or because proposition power of creator dropped below allowed minimum
-  Expired,
-}
-
 export const HUMAN_READABLE_STATE = {
-  [State.Null]: 'Null',
-  [State.Created]: 'Created',
-  [State.Active]: 'Active',
-  [State.Queued]: 'Queued',
-  [State.Executed]: 'Executed',
-  [State.Failed]: 'Failed',
-  [State.Cancelled]: 'Cancelled',
-  [State.Expired]: 'Expired',
+  [ProposalState.Null]: 'Null',
+  [ProposalState.Created]: 'Created',
+  [ProposalState.Active]: 'Active',
+  [ProposalState.Queued]: 'Queued',
+  [ProposalState.Executed]: 'Executed',
+  [ProposalState.Failed]: 'Failed',
+  [ProposalState.Cancelled]: 'Cancelled',
+  [ProposalState.Expired]: 'Expired',
 };
 
 interface GetGovernanceParams {
@@ -121,7 +109,7 @@ export const getGovernance = ({
     let bigIntData = fromHex(data!, { to: 'bigint' });
     // manipulate storage
     // set queued
-    bigIntData = setBits(bigIntData, 0n, 8n, State.Queued);
+    bigIntData = setBits(bigIntData, 0n, 8n, ProposalState.Queued);
     // set creation time
     bigIntData = setBits(
       bigIntData,

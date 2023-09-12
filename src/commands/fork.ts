@@ -1,9 +1,9 @@
 import { Command } from '@commander-js/extra-typings';
 import { tenderly } from '../utils/tenderlyClient';
-import { getGovernance } from '../simulate/govv3/governance';
+import { getGovernance } from '../govv3/governance';
 import { GovernanceV3Ethereum } from '@bgd-labs/aave-address-book';
 import { RPC_MAP, mainnetClient } from '../utils/rpcClients';
-import { getPayloadsController } from '../simulate/govv3/payloadsController';
+import { getPayloadsController } from '../govv3/payloadsController';
 import { Hex, PublicClient } from 'viem';
 
 export function addCommand(program: Command) {

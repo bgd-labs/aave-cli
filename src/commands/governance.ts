@@ -1,7 +1,7 @@
 import { Command } from '@commander-js/extra-typings';
-import { simulateProposal } from '../simulate/govv3/simulate';
+import { simulateProposal } from '../govv3/simulate';
 import { GovernanceV3Goerli } from '@bgd-labs/aave-address-book';
-import { HUMAN_READABLE_STATE, State, getGovernance } from '../simulate/govv3/governance';
+import { HUMAN_READABLE_STATE, ProposalState, getGovernance } from '../govv3/governance';
 import { goerliClient } from '../utils/rpcClients';
 import { logError, logInfo } from '../utils/logger';
 import { Hex, createWalletClient, encodeAbiParameters, getContract, http } from 'viem';
