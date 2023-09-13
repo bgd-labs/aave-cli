@@ -48,11 +48,11 @@ export async function generateProposalReport({
   const ipfsMeta = await getProposalMetadata(proposal.ipfsHash, process.env.IPFS_GATEWAY);
   report += `### Ipfs
 
-  <details>
-    <summary>Proposal text</summary>
+<details>
+  <summary>Proposal text</summary>
   
   ${ipfsMeta.description}
-  </details>`;
+</details>`;
 
   // check if simulation was successful
 
