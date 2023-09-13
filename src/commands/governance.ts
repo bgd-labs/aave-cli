@@ -4,17 +4,7 @@ import { GovernanceV3Goerli, IVotingMachineWithProofs_ABI, IVotingPortal_ABI } f
 import { HUMAN_READABLE_STATE, ProposalState, getGovernance } from '../govv3/governance';
 import { CHAIN_ID_CLIENT_MAP, goerliClient } from '../utils/rpcClients';
 import { logError, logInfo, logSuccess } from '../utils/logger';
-import {
-  Hex,
-  PublicClient,
-  createWalletClient,
-  encodeAbiParameters,
-  encodeFunctionData,
-  getContract,
-  http,
-} from 'viem';
-import { getAccountRPL } from '../govv3/proofs';
-import { bigint } from 'zod';
+import { Hex, PublicClient, createWalletClient, encodeFunctionData, getContract, http } from 'viem';
 
 const DEFAULT_GOVERNANCE = GovernanceV3Goerli.GOVERNANCE;
 const DEFAULT_CLIENT = goerliClient;
@@ -128,7 +118,16 @@ export function addCommand(program: Command) {
       const proposalId = BigInt(options.getOptionValue('proposalId'));
       const voter = options.getOptionValue('voter') as Hex;
 
-      // const proofs = await governance.getVotingProofs(proposalId, voter);
+      const proposal = await governance.governanceContract.read.getProposal([proposalId]);
+
+      const portal = getContract({
+        address: proposal.votingPortal,
+        abi: IVotingPortal_ABI,
+        publicClient: DEFAULT_CLIENT,
+      });
+      const chainId = await portal.read.VOTING_MACHINE_CHAIN_ID();
+      const proofs = await governance.getVotingProofs(proposalId, voter as Hex, chainId);
+      console.log(proofs); // TODO: format so foundry can consume it
     });
 
   govV3
@@ -170,19 +169,7 @@ export function addCommand(program: Command) {
       const encodedData = encodeFunctionData({
         abi: IVotingMachineWithProofs_ABI,
         functionName: 'submitVote',
-        args: [
-          proposalId,
-          !!voteFor,
-          proofs
-            .map(({ proof, slots }) => {
-              return slots.map((slot, ix) => ({
-                underlyingAsset: proof.address,
-                slot,
-                proof: getAccountRPL(proof.storageProof[ix].proof),
-              }));
-            })
-            .flat(),
-        ],
+        args: [proposalId, !!voteFor, proofs],
       });
       logInfo('Voting', `Encoded data to be submitted on ${chainId}:${machine}`);
       logSuccess('Encoded data', encodedData);

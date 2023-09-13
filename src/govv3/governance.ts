@@ -22,7 +22,7 @@ import {
   getSolidityStorageSlotUint,
 } from '../utils/storageSlots';
 import { setBits } from './utils/solidityUtils';
-import { Proof, VOTING_SLOTS, WAREHOUSE_SLOTS, getProof } from './proofs';
+import { Proof, VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof } from './proofs';
 
 type CreatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
 type QueuedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
@@ -76,7 +76,7 @@ export interface Governance<T extends WalletClient | undefined = undefined> {
     proposalId: bigint,
     voter: Hex,
     votingChainId: bigint
-  ) => Promise<{ proof: Proof; slots: readonly bigint[] }[]>;
+  ) => Promise<{ proof: Hex; slot: bigint; underlyingAsset: Hex }[]>;
   getRoots: (proposalId: bigint) => any;
 }
 
@@ -292,7 +292,15 @@ export const getGovernance = ({
         { proof: aaveProof, slots: [0n] },
         { proof: aAaveProof, slots: [52n, 64n] },
         { proof: representativeProof, slots: [9n] },
-      ];
+      ]
+        .map(({ proof, slots }) => {
+          return slots.map((slot, ix) => ({
+            underlyingAsset: proof.address,
+            slot,
+            proof: getAccountRPL(proof.storageProof[ix].proof),
+          }));
+        })
+        .flat();
     },
     async getRoots(proposalId: bigint) {
       const proposal = await governanceContract.read.getProposal([proposalId]);
