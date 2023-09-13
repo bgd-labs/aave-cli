@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import Hash from 'ipfs-only-hash';
 import bs58 from 'bs58';
-import { validateAIPHeader } from '../ipfs/aip-validation';
+import { validateAIPHeader } from '../ipfs/aipValidation';
 import { Command } from '@commander-js/extra-typings';
 
 // https://ethereum.stackexchange.com/questions/44506/ipfs-hash-algorithm

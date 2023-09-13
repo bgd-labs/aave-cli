@@ -3,9 +3,15 @@ import { TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { getGovernance } from './governance';
 import { Hex, PublicClient } from 'viem';
 import { PayloadsController, getPayloadsController } from './payloadsController';
-import { generateReport } from './generatePayloadReport';
 import { CHAIN_ID_CLIENT_MAP } from '../utils/rpcClients';
 
+/**
+ * Reference implementation, unused
+ * @param governanceAddress
+ * @param publicClient
+ * @param proposalId
+ * @returns
+ */
 export async function simulateProposal(governanceAddress: Hex, publicClient: PublicClient, proposalId: bigint) {
   logInfo('General', `Running simulation for ${proposalId}`);
   const governance = getGovernance({ address: governanceAddress, publicClient });
@@ -19,7 +25,7 @@ export async function simulateProposal(governanceAddress: Hex, publicClient: Pub
   for (const payload of proposal.proposal.payloads) {
     const controllerContract = getPayloadsController(
       payload.payloadsController,
-      CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP]
+      CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP] as PublicClient
     );
     const logs = await controllerContract.cacheLogs();
     const config = await controllerContract.getPayload(payload.payloadId, logs);
