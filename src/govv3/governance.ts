@@ -294,11 +294,16 @@ export const getGovernance = ({
         { proof: representativeProof, slots: [9n] },
       ]
         .map(({ proof, slots }) => {
-          return slots.map((slot, ix) => ({
-            underlyingAsset: proof.address,
-            slot,
-            proof: getAccountRPL(proof.storageProof[ix].proof),
-          }));
+          return (
+            slots
+              // filter out zero proofs as they don't add any value
+              .filter((slot, ix) => proof.storageProof[ix].value !== '0x0')
+              .map((slot, ix) => ({
+                underlyingAsset: proof.address,
+                slot,
+                proof: getAccountRPL(proof.storageProof[ix].proof),
+              }))
+          );
         })
         .flat();
     },
