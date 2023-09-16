@@ -11,8 +11,10 @@ export function boolToMarkdown(value: boolean) {
  * @param address to be linked
  * @param code whether to link to the code tab
  */
-export function toAddressLink(address: Hex, code: boolean = false, client: PublicClient): string {
-  return `[${address}](${client.chain?.blockExplorers?.default.url}/address/${address}${code ? '#code' : ''})`;
+export function toAddressLink(address: Hex, md: boolean, client: PublicClient): string {
+  const link = `${client.chain?.blockExplorers?.default.url}/address/${address}`;
+  if (md) return `[${address}](${link})`;
+  return link;
 }
 
 /**

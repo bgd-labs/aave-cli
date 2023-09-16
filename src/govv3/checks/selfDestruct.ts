@@ -42,7 +42,7 @@ async function checkNoSelfdestructs(
   const error: string[] = [];
   for (const addr of addresses) {
     const status = await checkNoSelfdestruct(trustedAddrs, addr, provider);
-    const address = toAddressLink(addr, false, provider);
+    const address = toAddressLink(addr, true, provider);
     if (status === 'eoa') info.push(`- ${address}: EOA`);
     else if (status === 'empty') warn.push(`- ${address}: EOA (may have code later)`);
     else if (status === 'safe') info.push(`- ${address}: Contract (looks safe)`);

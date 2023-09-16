@@ -5,7 +5,7 @@ import { HUMAN_READABLE_STATE, ProposalState, getGovernance } from '../govv3/gov
 import { CHAIN_ID_CLIENT_MAP, goerliClient } from '../utils/rpcClients';
 import { logError, logInfo, logSuccess } from '../utils/logger';
 import { Hex, PublicClient, createWalletClient, encodeFunctionData, getContract, http } from 'viem';
-import { input, select } from '@inquirer/prompts';
+import { confirm, input, select } from '@inquirer/prompts';
 import { getCachedIpfs } from '../ipfs/getCachedProposalMetaData';
 import { toAddressLink, toTxLink } from '../govv3/utils/markdownUtils';
 
@@ -109,10 +109,6 @@ export function addCommand(program: Command) {
             logInfo('QueuedLog', toTxLink(proposalLogs.queuedLog.transactionHash, false, DEFAULT_CLIENT));
           if (proposalLogs.executedLog)
             logInfo('ExecutedLog', toTxLink(proposalLogs.executedLog.transactionHash, false, DEFAULT_CLIENT));
-          if (proposalLogs.payloadSentLog)
-            proposalLogs.payloadSentLog.map((psLog) =>
-              logInfo('ExecutedLog', toTxLink(psLog.transactionHash, false, DEFAULT_CLIENT))
-            );
         }
 
         if (moreInfo == DialogOptions.DETAILS) {
@@ -136,6 +132,7 @@ export function addCommand(program: Command) {
           const address = (await input({
             message: 'Enter the address you would like to vote with',
           })) as Hex;
+          const support = await confirm({ message: 'Are you in Support of the proposal?' });
           const portal = getContract({
             address: proposal.votingPortal,
             abi: IVotingPortal_ABI,
@@ -158,10 +155,19 @@ export function addCommand(program: Command) {
             );
             logInfo('Method', 'submitVote');
             logInfo('parameter proposalId', selectedProposalId);
-            logInfo('parameter support', 'true if in support, false if against');
+            logInfo('parameter support', String(support));
             logInfo(
               'parameter votingBalanceProofs',
               JSON.stringify(proofs.map((p) => [p.underlyingAsset, p.slot.toString(), p.proof]))
+            );
+
+            logInfo(
+              'encoded calldata',
+              encodeFunctionData({
+                abi: IVotingMachineWithProofs_ABI,
+                functionName: 'submitVote',
+                args: [BigInt(selectedProposalId), support, proofs],
+              })
             );
           }
         }
@@ -211,53 +217,5 @@ export function addCommand(program: Command) {
       const chainId = await portal.read.VOTING_MACHINE_CHAIN_ID();
       const proofs = await governance.getVotingProofs(proposalId, voter as Hex, chainId);
       console.log(proofs); // TODO: format so foundry can consume it
-    });
-
-  govV3
-    .command('vote')
-    .description('vote for or against any given proposal')
-    .requiredOption('--proposalId <number>', 'proposalId to vote for')
-    .requiredOption('--voter <string>', 'the address to vote')
-    .option('--voteFor', 'Vote in favour of the proposal')
-    .option('--voteAgainst', 'vote against the proposal')
-    .action(async ({ voter, proposalId: _proposalId, voteAgainst, voteFor }) => {
-      const governance = getGovernance({
-        address: DEFAULT_GOVERNANCE,
-        publicClient: DEFAULT_CLIENT,
-        walletClient: createWalletClient({ account: '0x0', chain: DEFAULT_CLIENT.chain, transport: http() }),
-      });
-
-      const proposalId = BigInt(_proposalId);
-
-      const proposal = await governance.governanceContract.read.getProposal([proposalId]);
-
-      if ((voteFor && voteAgainst) || (!voteFor && !voteAgainst)) {
-        throw new Error('you must either vote --for, or --against');
-      }
-      const portal = getContract({
-        address: proposal.votingPortal,
-        abi: IVotingPortal_ABI,
-        publicClient: DEFAULT_CLIENT,
-      });
-      const [machine, chainId] = await Promise.all([
-        portal.read.VOTING_MACHINE(),
-        portal.read.VOTING_MACHINE_CHAIN_ID(),
-      ]);
-      const votingMachine = getContract({
-        address: machine,
-        abi: IVotingMachineWithProofs_ABI,
-        publicClient: CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP] as PublicClient,
-      });
-      const proofs = await governance.getVotingProofs(proposalId, voter as Hex, chainId);
-      const encodedData = encodeFunctionData({
-        abi: IVotingMachineWithProofs_ABI,
-        functionName: 'submitVote',
-        args: [proposalId, !!voteFor, proofs],
-      });
-      logInfo('Voting', `Encoded data to be submitted on ${chainId}:${machine}`);
-      logSuccess('Encoded data', encodedData);
-      if (proposal.state !== ProposalState.Active) {
-        logError('ImpossibleToVote', 'You can only vote on active proposals');
-      }
     });
 }
