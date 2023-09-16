@@ -5,6 +5,17 @@ import { HUMAN_READABLE_STATE, ProposalState, getGovernance } from '../govv3/gov
 import { CHAIN_ID_CLIENT_MAP, goerliClient } from '../utils/rpcClients';
 import { logError, logInfo, logSuccess } from '../utils/logger';
 import { Hex, PublicClient, createWalletClient, encodeFunctionData, getContract, http } from 'viem';
+import { input, select } from '@inquirer/prompts';
+import { getCachedIpfs } from '../ipfs/getCachedProposalMetaData';
+import { toAddressLink, toTxLink } from '../govv3/utils/markdownUtils';
+
+enum DialogOptions {
+  DETAILS,
+  IPFS_TEXT,
+  TRANSACTIONS,
+  HOW_TO_VOTE,
+  EXIT,
+}
 
 const DEFAULT_GOVERNANCE = GovernanceV3Goerli.GOVERNANCE;
 const DEFAULT_CLIENT = goerliClient;
@@ -32,56 +43,128 @@ export function addCommand(program: Command) {
       });
       const logs = await governance.cacheLogs();
       const count = await governance.governanceContract.read.getProposalsCount();
-      const proposalIds = [...Array(Number(count)).keys()];
-      for (const proposalId of proposalIds) {
-        const { createdLog, executedLog, payloadSentLog, votingActivatedLog, queuedLog, proposal } =
-          await governance.getProposal(BigInt(proposalId), logs);
-        logInfo(
-          `Proposal ${proposalId}`,
-          `### Proposal ${proposalId} Summary ###\n` +
-            `State: ${HUMAN_READABLE_STATE[proposal.state as keyof typeof HUMAN_READABLE_STATE]}\n` +
-            `For Votes: ${proposal.forVotes}\n` +
-            `Against Votes: ${proposal.againstVotes}\n` +
-            `Creator: ${proposal.creator}\n` +
-            `Payloads: ${JSON.stringify(
-              proposal.payloads,
-              (key, value) => (typeof value === 'bigint' ? value.toString() : value),
-              2
-            )}`
-        );
-        logInfo(
-          `Proposal ${proposalId} log`,
-          `${new Date(createdLog.timestamp * 1000).toLocaleString()} Proposal created`
-        );
-        if (votingActivatedLog) {
-          logInfo(
-            `Proposal ${proposalId} log`,
-            `${new Date(votingActivatedLog.timestamp * 1000).toLocaleString()} Voting activated`
-          );
+      const proposalIds = [...Array(Number(count)).keys()].reverse();
+      const selectedProposalId = await select({
+        message: 'Select a proposal to get more information',
+        choices: await Promise.all(
+          proposalIds.map(async (id) => {
+            const proposal = await governance.getProposal(BigInt(id));
+            const ipfs = await getCachedIpfs(proposal.ipfsHash);
+            const title = `${id} - ${HUMAN_READABLE_STATE[proposal.state as keyof typeof HUMAN_READABLE_STATE]} | ${
+              ipfs.title
+            }`;
+            return { name: title, value: id };
+          })
+        ),
+      });
+      const { proposal, ...proposalLogs } = await governance.getProposalAndLogs(BigInt(selectedProposalId), logs);
+      let exitLvl2 = false;
+      while (!exitLvl2) {
+        const moreInfo = await select({
+          message: 'What do you want to do?',
+          choices: [
+            {
+              name: 'Show details',
+              value: DialogOptions.DETAILS,
+            },
+            {
+              name: 'Show ipfs details',
+              value: DialogOptions.IPFS_TEXT,
+            },
+            {
+              name: 'Show transactions',
+              value: DialogOptions.TRANSACTIONS,
+            },
+            {
+              name: 'Show me How to vote',
+              value: DialogOptions.HOW_TO_VOTE,
+            },
+            {
+              name: 'Exit',
+              value: DialogOptions.EXIT,
+            },
+          ],
+        });
+
+        if (moreInfo == DialogOptions.EXIT) {
+          exitLvl2 = true;
         }
-        if (queuedLog) {
-          logInfo(
-            `Proposal ${proposalId} log`,
-            `${new Date(queuedLog.timestamp * 1000).toLocaleString()} Proposal queued`
-          );
+
+        if (moreInfo == DialogOptions.IPFS_TEXT) {
+          const ipfs = await getCachedIpfs(proposal.ipfsHash);
+          logInfo('title', ipfs.title);
+          logInfo('author', ipfs.author);
+          logInfo('discussion', ipfs.discussions);
+          logInfo('description', ipfs.description);
         }
-        if (executedLog) {
-          logInfo(
-            `Proposal ${proposalId} log`,
-            `${new Date(executedLog.timestamp * 1000).toLocaleString()} Proposal executed`
-          );
-        }
-        if (payloadSentLog) {
-          payloadSentLog.map((log) => {
+
+        if (moreInfo == DialogOptions.TRANSACTIONS) {
+          logInfo('CreatedLog', toTxLink(proposalLogs.createdLog.transactionHash, false, DEFAULT_CLIENT));
+          if (proposalLogs.votingActivatedLog)
             logInfo(
-              `Proposal ${proposalId} log`,
-              `${new Date(log.timestamp * 1000).toLocaleString()} Payload ${log.args.payloadId}:${
-                log.args.payloadsController
-              } sent to chainId:${log.args.chainId}`
+              'VotingActicated',
+              toTxLink(proposalLogs.votingActivatedLog.transactionHash, false, DEFAULT_CLIENT)
             );
+          if (proposalLogs.queuedLog)
+            logInfo('QueuedLog', toTxLink(proposalLogs.queuedLog.transactionHash, false, DEFAULT_CLIENT));
+          if (proposalLogs.executedLog)
+            logInfo('ExecutedLog', toTxLink(proposalLogs.executedLog.transactionHash, false, DEFAULT_CLIENT));
+          if (proposalLogs.payloadSentLog)
+            proposalLogs.payloadSentLog.map((psLog) =>
+              logInfo('ExecutedLog', toTxLink(psLog.transactionHash, false, DEFAULT_CLIENT))
+            );
+        }
+
+        if (moreInfo == DialogOptions.DETAILS) {
+          logInfo('Creator', proposal.creator);
+          logInfo('ForVotes', proposal.forVotes);
+          logInfo('AgainstVotes', proposal.againstVotes);
+          logInfo('AccessLevel', proposal.accessLevel);
+          logInfo('VotingPortal', proposal.votingPortal);
+          proposal.payloads.map((payload, ix) => {
+            logInfo(`Payload.${ix}.accessLevel`, payload.accessLevel);
+            logInfo(
+              `Payload.${ix}.chain`,
+              CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP].chain.name
+            );
+            logInfo(`Payload.${ix}.payloadId`, payload.payloadId);
+            logInfo(`Payload.${ix}.payloadsController`, payload.payloadsController);
           });
         }
-        console.log(`\n`);
+
+        if (moreInfo == DialogOptions.HOW_TO_VOTE) {
+          const address = (await input({
+            message: 'Enter the address you would like to vote with',
+          })) as Hex;
+          const portal = getContract({
+            address: proposal.votingPortal,
+            abi: IVotingPortal_ABI,
+            publicClient: DEFAULT_CLIENT,
+          });
+          const [machine, chainId] = await Promise.all([
+            portal.read.VOTING_MACHINE(),
+            portal.read.VOTING_MACHINE_CHAIN_ID(),
+          ]);
+          const proofs = await governance.getVotingProofs(BigInt(selectedProposalId), address, chainId);
+          if (proofs.length == 0) logError('Voting Error', 'You need voting power to vote');
+          else {
+            logInfo(
+              'Explorer',
+              toAddressLink(
+                machine,
+                false,
+                CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP] as PublicClient
+              )
+            );
+            logInfo('Method', 'submitVote');
+            logInfo('parameter proposalId', selectedProposalId);
+            logInfo('parameter support', 'true if in support, false if against');
+            logInfo(
+              'parameter votingBalanceProofs',
+              JSON.stringify(proofs.map((p) => [p.underlyingAsset, p.slot.toString(), p.proof]))
+            );
+          }
+        }
       }
     });
 

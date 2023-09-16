@@ -1,8 +1,8 @@
 import { GetFilterLogsParameters, GetFilterLogsReturnType, PublicClient } from 'viem';
 import type { Abi } from 'abitype';
-import fs from 'fs';
 import path from 'path';
 import { logInfo } from './logger';
+import { readJSONCache, writeJSONCache } from './cache';
 
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly (infer ElementType)[]
   ? ElementType
@@ -23,18 +23,12 @@ export async function getLogs<TAbi extends Abi, TEventName extends string>(
   filterFn: (from: bigint, to?: bigint) => Promise<GetFilterLogsParameters<TAbi, TEventName>['filter']>,
   fromBlock?: bigint
 ): Promise<Array<FilterLogWithTimestamp<TAbi, TEventName>>> {
-  // create cache folder if doesn't exist yet
-  const cachePath = path.join(process.cwd(), 'cache', client.chain!.id.toString());
   const currentBlock = await client.getBlockNumber();
   const filter = await filterFn(fromBlock || 0n);
-  const filePath = path.join(cachePath, filter.eventName + '.json');
-  if (!fs.existsSync(cachePath)) {
-    fs.mkdirSync(cachePath, { recursive: true });
-  }
+  const filePath = client.chain!.id.toString();
+  const fileName = filter.eventName!;
   // read stale cache if it exists
-  const cache: Array<FilterLogWithTimestamp<TAbi, TEventName>> = fs.existsSync(filePath)
-    ? JSON.parse(fs.readFileSync(filePath, 'utf8'))
-    : [];
+  const cache: Array<FilterLogWithTimestamp<TAbi, TEventName>> = readJSONCache(filePath, fileName) || [];
   const logs = await getPastLogsRecursive(
     client,
     cache.length > 0 ? BigInt(cache[cache.length - 1].blockNumber as bigint) + 1n : filter.fromBlock || fromBlock || 0n,
@@ -61,10 +55,7 @@ export async function getLogs<TAbi extends Abi, TEventName extends string>(
       client.chain?.name!,
       `Store ${newLogs.length} logs for event: ${filter.eventName} on chainId: ${client.chain!.id}`
     );
-    fs.writeFileSync(
-      filePath,
-      JSON.stringify(combinedCache, (key, value) => (typeof value === 'bigint' ? value.toString() : value), 2)
-    );
+    writeJSONCache(filePath, fileName, combinedCache);
     return combinedCache;
   }
   return cache;

@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-export function logInfo(topic: string, text: string) {
+export function logInfo(topic: string, text: string | number | bigint) {
   console.log(chalk.blue(`Info[${topic}]: ${text}`));
 }
 

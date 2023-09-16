@@ -7,9 +7,6 @@ import {
   encodeFunctionData,
   fromHex,
   getContract,
-  keccak256,
-  parseEther,
-  parseUnits,
   toHex,
 } from 'viem';
 import { FilterLogWithTimestamp, getLogs } from '../utils/logs';
@@ -22,10 +19,13 @@ import {
   getSolidityStorageSlotUint,
 } from '../utils/storageSlots';
 import { setBits } from './utils/solidityUtils';
-import { Proof, VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof } from './proofs';
+import { VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof } from './proofs';
+import { readJSONCache, writeJSONCache } from '../utils/cache';
+import path from 'path';
 
 type CreatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
 type QueuedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
+type CanceledLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCanceled'>;
 type ExecutedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalExecuted'>;
 type PayloadSentLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'PayloadSent'>;
 type VotingActivatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'VotingActivated'>;
@@ -41,6 +41,10 @@ export enum ProposalState {
   Expired,
 }
 
+function isStateFinal(state: ProposalState) {
+  return [ProposalState.Executed, ProposalState.Failed, ProposalState.Cancelled, ProposalState.Expired].includes(state);
+}
+
 export interface Governance<T extends WalletClient | undefined = undefined> {
   governanceContract: GetContractReturnType<typeof IGovernanceCore_ABI, PublicClient, WalletClient>;
   cacheLogs: () => Promise<{
@@ -49,8 +53,16 @@ export interface Governance<T extends WalletClient | undefined = undefined> {
     executedLogs: Array<ExecutedLog>;
     payloadSentLogs: Array<PayloadSentLog>;
     votingActivatedLogs: Array<VotingActivatedLog>;
+    canceledLogs: Array<CanceledLog>;
   }>;
-  getProposal: (
+  /**
+   * Thin caching wrapper on top of getProposal.
+   * If the proposal state is final, the proposal will be stored in json and fetched from there.
+   * @param proposalId
+   * @returns Proposal struct
+   */
+  getProposal: (proposalId: bigint) => Promise<ContractFunctionResult<typeof IGovernanceCore_ABI, 'getProposal'>>;
+  getProposalAndLogs: (
     proposalId: bigint,
     logs: Awaited<ReturnType<Governance<T>['cacheLogs']>>
   ) => Promise<{
@@ -109,6 +121,16 @@ export const getGovernance = ({
   walletClient,
 }: GetGovernanceParams): Governance<typeof walletClient> => {
   const governanceContract = getContract({ abi: IGovernanceCore_ABI, address, publicClient, walletClient });
+
+  async function getProposal(proposalId: bigint) {
+    const filePath = publicClient.chain!.id.toString() + `/proposals`;
+    const fileName = proposalId;
+    const cache = readJSONCache(filePath, fileName.toString());
+    if (cache) return cache;
+    const proposal = await governanceContract.read.getProposal([proposalId]);
+    if (isStateFinal(proposal.state)) writeJSONCache(filePath, fileName.toString(), proposal);
+    return proposal;
+  }
 
   async function getSimulationPayloadForExecution(proposalId: bigint) {
     const currentBlock = await publicClient.getBlock();
@@ -221,10 +243,24 @@ export const getGovernance = ({
         },
         blockCreated
       );
-      return { createdLogs, queuedLogs, executedLogs, payloadSentLogs, votingActivatedLogs };
+      const canceledLogs = await getLogs(
+        publicClient,
+        (fromBlock, toBlock) => {
+          return governanceContract.createEventFilter.ProposalCanceled(
+            {},
+            {
+              fromBlock: fromBlock,
+              toBlock,
+            }
+          );
+        },
+        blockCreated
+      );
+      return { createdLogs, queuedLogs, executedLogs, payloadSentLogs, votingActivatedLogs, canceledLogs };
     },
-    async getProposal(proposalId, logs) {
-      const proposal = await governanceContract.read.getProposal([proposalId]);
+    getProposal,
+    async getProposalAndLogs(proposalId, logs) {
+      const proposal = await getProposal(proposalId);
       const createdLog = logs.createdLogs.find((log) => String(log.args.proposalId) === proposalId.toString())!;
       const votingActivatedLog = logs.votingActivatedLogs.find(
         (log) => String(log.args.proposalId) === proposalId.toString()
@@ -247,7 +283,7 @@ export const getGovernance = ({
       return tenderly.simulate(payload);
     },
     async getVotingProofs(proposalId: bigint, voter: Hex, votingChainId: bigint) {
-      const proposal = await governanceContract.read.getProposal([proposalId]);
+      const proposal = await getProposal(proposalId);
 
       const [stkAaveProof, aaveProof, aAaveProof, representativeProof] = await Promise.all([
         getProof(
@@ -308,7 +344,7 @@ export const getGovernance = ({
         .flat();
     },
     async getRoots(proposalId: bigint) {
-      const proposal = await governanceContract.read.getProposal([proposalId]);
+      const proposal = await getProposal(proposalId);
 
       const proofs = await Promise.all(
         (Object.keys(WAREHOUSE_SLOTS) as (keyof typeof WAREHOUSE_SLOTS)[]).map((key) =>
