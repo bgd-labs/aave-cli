@@ -19,9 +19,11 @@ import {
   getSolidityStorageSlotUint,
 } from '../utils/storageSlots';
 import { setBits } from './utils/solidityUtils';
-import { VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof } from './proofs';
+import { VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getBLockRLP, getProof } from './proofs';
 import { readJSONCache, writeJSONCache } from '../utils/cache';
-import path from 'path';
+
+// TODO remove once final
+const AaveSafetyModule = { STK_AAVE: '0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec' } as const;
 
 type CreatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
 type QueuedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
@@ -78,6 +80,7 @@ export interface Governance<T extends WalletClient | undefined = undefined> {
     proposalId: bigint,
     params: { executedLog?: ExecutedLog }
   ) => Promise<TenderlySimulationResponse>;
+  getStorageRoots(proposalId: bigint): Promise<any>;
   /**
    * Returns the proofs that are non-zero for a specified address
    * @param proposalId
@@ -282,14 +285,28 @@ export const getGovernance = ({
       const payload = await getSimulationPayloadForExecution(proposalId);
       return tenderly.simulate(payload);
     },
+    async getStorageRoots(proposalId: bigint) {
+      const proposal = await getProposal(proposalId);
+      const block = await publicClient.getBlock({ blockHash: proposal.snapshotBlockHash });
+      const blockHeaderRPL = getBLockRLP(block);
+      const [] = await Promise.all([
+        getProof(
+          publicClient,
+          AaveSafetyModule.STK_AAVE,
+          WAREHOUSE_SLOTS[AaveSafetyModule.STK_AAVE].map((v) => toHex(v)),
+          proposal.snapshotBlockHash
+        ),
+      ]);
+    },
     async getVotingProofs(proposalId: bigint, voter: Hex, votingChainId: bigint) {
       const proposal = await getProposal(proposalId);
 
+      // TODO: replace with real addresses
       const [stkAaveProof, aaveProof, aAaveProof, representativeProof] = await Promise.all([
         getProof(
           publicClient,
-          '0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec',
-          [getSolidityStorageSlotAddress(VOTING_SLOTS['0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec'].balance, voter)],
+          AaveSafetyModule.STK_AAVE,
+          [getSolidityStorageSlotAddress(VOTING_SLOTS[AaveSafetyModule.STK_AAVE].balance, voter)],
           proposal.snapshotBlockHash
         ),
         getProof(

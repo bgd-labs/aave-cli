@@ -1,11 +1,15 @@
-import { AaveSafetyModule, AaveV3Ethereum, GovernanceV3Goerli } from '@bgd-labs/aave-address-book';
+import { GovernanceV3Goerli } from '@bgd-labs/aave-address-book';
 import { Block, Hex, PublicClient, fromRlp, toHex, toRlp } from 'viem';
+
+// TODO remove once final
+const AaveSafetyModule = { STK_AAVE: '0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec' } as const;
 
 /**
  * Slots that represent configuration values relevant for all accounts
  */
 export const WAREHOUSE_SLOTS = {
   [AaveSafetyModule.STK_AAVE]: [
+    0n, // balance
     81n, // exchangeRate
   ],
 } as const;
