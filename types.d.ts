@@ -5,5 +5,8 @@ declare namespace NodeJS {
     TENDERLY_PROJECT_SLUG: string;
 
     RPC_SEPOLIA: string;
+
+    // CLI OPTIONS
+    VERBOSE: string;
   }
 }

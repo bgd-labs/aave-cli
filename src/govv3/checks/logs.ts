@@ -1,8 +1,9 @@
+// Based on https://github.com/Uniswap/governance-seatbelt/blob/main/checks/check-logs.ts
+// adjusted for viem & aave governance v3
 import { getAddress } from 'viem';
 import { ProposalCheck } from './types';
 import { Log } from '../../utils/tenderlyClient';
 import { getContractName } from '../utils/solidityUtils';
-import { PayloadsController } from '../payloadsController';
 
 /**
  * Reports all emitted events from the proposal

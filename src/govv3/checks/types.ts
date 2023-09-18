@@ -1,5 +1,4 @@
 import { PublicClient } from 'viem';
-import { PayloadsController } from '../payloadsController';
 import { TenderlySimulationResponse } from '../../utils/tenderlyClient';
 
 export type CheckResult = {

@@ -1,3 +1,5 @@
+// Based on https://github.com/Uniswap/governance-seatbelt/blob/main/checks/check-targets-verified-etherscan.ts
+// adjusted for viem & aave governance v3
 import { Hex, PublicClient } from 'viem';
 import { ProposalCheck } from './types';
 import { TenderlySimulationResponse } from '../../utils/tenderlyClient';

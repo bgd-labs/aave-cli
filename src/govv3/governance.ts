@@ -9,6 +9,7 @@ import {
   getContract,
   toHex,
 } from 'viem';
+import merge from 'deepmerge';
 import { FilterLogWithTimestamp, getLogs } from '../utils/logs';
 import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book';
 import { TenderlyRequest, TenderlySimulationResponse, tenderly } from '../utils/tenderlyClient';
@@ -19,8 +20,9 @@ import {
   getSolidityStorageSlotUint,
 } from '../utils/storageSlots';
 import { setBits } from './utils/solidityUtils';
-import { VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getBLockRLP, getProof } from './proofs';
+import { Proof, VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getBLockRLP, getProof } from './proofs';
 import { readJSONCache, writeJSONCache } from '../utils/cache';
+import { logInfo } from '../utils/logger';
 
 // TODO remove once final
 const AaveSafetyModule = { STK_AAVE: '0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec' } as const;
@@ -80,7 +82,7 @@ export interface Governance<T extends WalletClient | undefined = undefined> {
     proposalId: bigint,
     params: { executedLog?: ExecutedLog }
   ) => Promise<TenderlySimulationResponse>;
-  getStorageRoots(proposalId: bigint): Promise<any>;
+  getStorageRoots(proposalId: bigint): Promise<Proof[]>;
   /**
    * Returns the proofs that are non-zero for a specified address
    * @param proposalId
@@ -92,7 +94,6 @@ export interface Governance<T extends WalletClient | undefined = undefined> {
     voter: Hex,
     votingChainId: bigint
   ) => Promise<{ proof: Hex; slot: bigint; underlyingAsset: Hex }[]>;
-  getRoots: (proposalId: bigint) => any;
 }
 
 const SLOTS = {
@@ -285,19 +286,6 @@ export const getGovernance = ({
       const payload = await getSimulationPayloadForExecution(proposalId);
       return tenderly.simulate(payload);
     },
-    async getStorageRoots(proposalId: bigint) {
-      const proposal = await getProposal(proposalId);
-      const block = await publicClient.getBlock({ blockHash: proposal.snapshotBlockHash });
-      const blockHeaderRPL = getBLockRLP(block);
-      const [] = await Promise.all([
-        getProof(
-          publicClient,
-          AaveSafetyModule.STK_AAVE,
-          WAREHOUSE_SLOTS[AaveSafetyModule.STK_AAVE].map((v) => toHex(v)),
-          proposal.snapshotBlockHash
-        ),
-      ]);
-    },
     async getVotingProofs(proposalId: bigint, voter: Hex, votingChainId: bigint) {
       const proposal = await getProposal(proposalId);
 
@@ -350,7 +338,12 @@ export const getGovernance = ({
           return (
             slots
               // filter out zero proofs as they don't add any value
-              .filter((slot, ix) => proof.storageProof[ix].value !== '0x0')
+              .filter((slot, ix) => {
+                const shouldSubmitProof = proof.storageProof[ix].value !== '0x0';
+                if (!shouldSubmitProof)
+                  logInfo('Proof', `Skipping slot ${slot} on ${proof.address} as value is zero for voter ${voter}`);
+                return shouldSubmitProof;
+              })
               .map((slot, ix) => ({
                 underlyingAsset: proof.address,
                 slot,
@@ -360,15 +353,16 @@ export const getGovernance = ({
         })
         .flat();
     },
-    async getRoots(proposalId: bigint) {
+    async getStorageRoots(proposalId: bigint) {
       const proposal = await getProposal(proposalId);
+      const addresses = merge(VOTING_SLOTS, WAREHOUSE_SLOTS);
 
       const proofs = await Promise.all(
-        (Object.keys(WAREHOUSE_SLOTS) as (keyof typeof WAREHOUSE_SLOTS)[]).map((key) =>
+        (Object.keys(addresses) as (keyof typeof addresses)[]).map((address) =>
           getProof(
             publicClient,
-            key,
-            WAREHOUSE_SLOTS[key].map((slot) => toHex(slot)),
+            address,
+            Object.keys(addresses[address]).map((slotKey) => toHex((addresses[address] as any)[slotKey])),
             proposal.snapshotBlockHash
           )
         )

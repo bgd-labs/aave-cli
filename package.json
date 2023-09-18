@@ -58,6 +58,7 @@
     "bs58": "^5.0.0",
     "chalk": "^4.1.2",
     "commander": "^11.0.0",
+    "deepmerge": "^4.3.1",
     "dotenv": "^16.3.1",
     "gray-matter": "^4.0.3",
     "ipfs-only-hash": "^4.0.0",

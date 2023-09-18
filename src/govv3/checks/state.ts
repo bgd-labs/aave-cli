@@ -1,3 +1,5 @@
+// Based on https://github.com/Uniswap/governance-seatbelt/blob/main/checks/check-state-changes.ts
+// adjusted for viem & aave governance v3
 import { Hex, getAddress } from 'viem';
 import { ProposalCheck } from './types';
 import { getContractName } from '../utils/solidityUtils';

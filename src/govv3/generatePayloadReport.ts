@@ -8,7 +8,7 @@ import { boolToMarkdown, renderCheckResult, toTxLink } from './utils/markdownUti
 import { checkTargetsNoSelfdestruct, checkTouchedContractsNoSelfdestruct } from './checks/selfDestruct';
 import { CheckResult, ProposalCheck } from './checks/types';
 import { checkLogs } from './checks/logs';
-import { checkTargetsVerifiedEtherscan, checkTouchedContractsVerifiedEtherscan } from './checks/targets-verified';
+import { checkTargetsVerifiedEtherscan, checkTouchedContractsVerifiedEtherscan } from './checks/targetsVerified';
 import { checkStateChanges } from './checks/state';
 
 type GenerateReportRequest = {

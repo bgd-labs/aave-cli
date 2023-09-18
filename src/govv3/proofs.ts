@@ -8,17 +8,16 @@ const AaveSafetyModule = { STK_AAVE: '0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec
  * Slots that represent configuration values relevant for all accounts
  */
 export const WAREHOUSE_SLOTS = {
-  [AaveSafetyModule.STK_AAVE]: [
-    0n, // balance
-    81n, // exchangeRate
-  ],
+  [AaveSafetyModule.STK_AAVE]: {
+    exchangeRate: 81n, // exchangeRate
+  },
 } as const;
 
 /**
  * Slots that represent the balance of a single account
  */
 export const VOTING_SLOTS = {
-  ['0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec' /*AaveSafetyModule.STK_AAVE*/]: { balance: 0n }, // balance
+  [AaveSafetyModule.STK_AAVE]: { balance: 0n }, // balance
   ['0xD1ff82609FB63A0eee6FE7D2896d80d29491cCCd' /*AaveV3Ethereum.ASSETS.AAVE.A_TOKEN*/]: {
     balance: 52n, // balance
     delegation: 64n,

@@ -1,14 +1,28 @@
 #!/usr/bin/env node
 import 'dotenv/config';
-import { Command } from '@commander-js/extra-typings';
-import { addCommand as addIpfsCommand } from './commands/ipfs-upload';
-import { addCommand as addDiffSnapshots } from './commands/diff-snaphots';
+import { Command, Option } from '@commander-js/extra-typings';
+import { addCommand as addIpfsCommand } from './commands/ipfsUpload';
+import { addCommand as addDiffSnapshots } from './commands/diffSnaphots';
 import { addCommand as addGovernance } from './commands/governance';
 import { addCommand as addFork } from './commands/fork';
 
 const program = new Command();
 
-program.name('aave-cli').description('CLI to interact with the aave ecosystem').version('0.0.0').showHelpAfterError();
+program
+  .name('aave-cli')
+  .description('CLI to interact with the aave ecosystem')
+  .option('-v, --verbose', 'Showing logs for all the taken steps')
+  .on('option:verbose', function () {
+    process.env.VERBOSE = 'true';
+  })
+  .addOption(
+    new Option('--output <format>', 'Set preferred output format').default('raw').choices(['raw', 'encoded'] as const)
+  )
+  .on('option:output', function (format) {
+    process.env.FORMAT = format;
+  })
+  .version('0.0.0')
+  .showHelpAfterError();
 addGovernance(program);
 addDiffSnapshots(program);
 addFork(program);

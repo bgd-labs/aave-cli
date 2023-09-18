@@ -6,7 +6,7 @@ import { getContractName } from './utils/solidityUtils';
 import { boolToMarkdown, renderCheckResult, toTxLink } from './utils/markdownUtils';
 import { checkTouchedContractsNoSelfdestruct } from './checks/selfDestruct';
 import { checkLogs } from './checks/logs';
-import { checkTouchedContractsVerifiedEtherscan } from './checks/targets-verified';
+import { checkTouchedContractsVerifiedEtherscan } from './checks/targetsVerified';
 import { Governance, HUMAN_READABLE_STATE } from './governance';
 import { checkStateChanges } from './checks/state';
 import { getProposalMetadata } from '../ipfs/parseIpfs';
