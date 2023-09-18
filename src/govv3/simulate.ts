@@ -16,7 +16,7 @@ export async function simulateProposal(governanceAddress: Hex, publicClient: Pub
   logInfo('General', `Running simulation for ${proposalId}`);
   const governance = getGovernance({ address: governanceAddress, publicClient });
   const logs = await governance.cacheLogs();
-  const proposal = await governance.getProposal(proposalId, logs);
+  const proposal = await governance.getProposalAndLogs(proposalId, logs);
   await governance.simulateProposalExecutionOnTenderly(proposalId, proposal);
   const payloads: {
     payload: Awaited<ReturnType<PayloadsController['getPayload']>>;

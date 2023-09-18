@@ -8,5 +8,6 @@ declare namespace NodeJS {
 
     // CLI OPTIONS
     VERBOSE: string;
+    FORMAT: string;
   }
 }

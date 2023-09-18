@@ -16,9 +16,11 @@ program
     process.env.VERBOSE = 'true';
   })
   .addOption(
-    new Option('--output <format>', 'Set preferred output format').default('raw').choices(['raw', 'encoded'] as const)
+    new Option('--format <format>', 'Set preferred output format')
+      .default('raw')
+      .choices(['raw', 'encoded', 'foundry'] as const)
   )
-  .on('option:output', function (format) {
+  .on('option:format', function (format) {
     process.env.FORMAT = format;
   })
   .version('0.0.0')

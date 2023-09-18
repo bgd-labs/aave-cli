@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { setBits } from './solidityUtils';
+import { setBits } from './storageSlots';
 
 describe('solidityUtils', () => {
   it('setBits', async () => {

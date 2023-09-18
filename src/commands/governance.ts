@@ -6,10 +6,10 @@ import {
   IVotingMachineWithProofs_ABI,
   IVotingPortal_ABI,
 } from '@bgd-labs/aave-address-book';
-import { HUMAN_READABLE_STATE, ProposalState, getGovernance } from '../govv3/governance';
+import { HUMAN_READABLE_STATE, getGovernance } from '../govv3/governance';
 import { CHAIN_ID_CLIENT_MAP, goerliClient } from '../utils/rpcClients';
-import { logError, logInfo, logSuccess } from '../utils/logger';
-import { Hex, PublicClient, createWalletClient, encodeFunctionData, getContract, http } from 'viem';
+import { logError, logInfo } from '../utils/logger';
+import { Hex, PublicClient, encodeFunctionData, getContract } from 'viem';
 import { confirm, input, select } from '@inquirer/prompts';
 import { getCachedIpfs } from '../ipfs/getCachedProposalMetaData';
 import { toAddressLink, toTxLink } from '../govv3/utils/markdownUtils';

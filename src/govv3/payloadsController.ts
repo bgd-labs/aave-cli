@@ -57,11 +57,7 @@ const SLOTS = {
   PAYLOADS_MAPPING: 3n,
 };
 
-export const getPayloadsController = (
-  address: Hex,
-  publicClient: PublicClient,
-  blockCreated?: bigint
-): PayloadsController => {
+export const getPayloadsController = (address: Hex, publicClient: PublicClient): PayloadsController => {
   const controllerContract = getContract({ abi: IPayloadsControllerCore_ABI, address, publicClient });
 
   const getSimulationPayloadForExecution = async (id: number) => {
@@ -111,7 +107,7 @@ export const getPayloadsController = (
             }
           );
         },
-        blockCreated
+        address
       );
       const queuedLogs = await getLogs(
         publicClient,
@@ -121,7 +117,7 @@ export const getPayloadsController = (
             toBlock: toBlock,
           });
         },
-        blockCreated
+        address
       );
       const executedLogs = await getLogs(
         publicClient,
@@ -131,7 +127,7 @@ export const getPayloadsController = (
             toBlock: toBlock,
           });
         },
-        blockCreated
+        address
       );
       return { createdLogs, queuedLogs, executedLogs };
     },

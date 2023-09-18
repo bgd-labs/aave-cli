@@ -13,7 +13,7 @@ import { getProposalMetadata } from '../ipfs/parseIpfs';
 
 type GenerateReportRequest = {
   proposalId: bigint;
-  proposalInfo: Awaited<ReturnType<Governance['getProposal']>>;
+  proposalInfo: Awaited<ReturnType<Governance['getProposalAndLogs']>>;
   simulation: TenderlySimulationResponse;
   publicClient: PublicClient;
 };

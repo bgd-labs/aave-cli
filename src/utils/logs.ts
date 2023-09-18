@@ -1,6 +1,5 @@
-import { GetFilterLogsParameters, GetFilterLogsReturnType, PublicClient } from 'viem';
+import { Block, GetFilterLogsParameters, GetFilterLogsReturnType, Hex, PublicClient } from 'viem';
 import type { Abi } from 'abitype';
-import path from 'path';
 import { logInfo } from './logger';
 import { readJSONCache, writeJSONCache } from './cache';
 
@@ -21,20 +20,19 @@ export type FilterLogWithTimestamp<TAbi extends Abi, TEventName extends string> 
 export async function getLogs<TAbi extends Abi, TEventName extends string>(
   client: PublicClient,
   filterFn: (from: bigint, to?: bigint) => Promise<GetFilterLogsParameters<TAbi, TEventName>['filter']>,
-  fromBlock?: bigint
+  address: Hex
 ): Promise<Array<FilterLogWithTimestamp<TAbi, TEventName>>> {
   const currentBlock = await client.getBlockNumber();
-  const filter = await filterFn(fromBlock || 0n);
+  const filter = await filterFn(0n, 1n);
   const filePath = client.chain!.id.toString();
   const fileName = filter.eventName!;
   // read stale cache if it exists
   const cache: Array<FilterLogWithTimestamp<TAbi, TEventName>> = readJSONCache(filePath, fileName) || [];
-  const logs = await getPastLogsRecursive(
-    client,
-    cache.length > 0 ? BigInt(cache[cache.length - 1].blockNumber as bigint) + 1n : filter.fromBlock || fromBlock || 0n,
-    currentBlock,
-    filterFn
-  );
+  const startBlock =
+    cache.length > 0
+      ? BigInt(cache[cache.length - 1].blockNumber as bigint) + 1n
+      : (await findContractDeploymentBlock(client, 0n, currentBlock, address)) || 0n;
+  const logs = await getPastLogsRecursive(client, startBlock, currentBlock, filterFn);
   const newLogs = await Promise.all(
     logs
       .filter(
@@ -86,4 +84,31 @@ export async function getPastLogsRecursive<
     }
   }
   return [];
+}
+
+/**
+ * some rpcs are having problems fetching logs from 0, therefore this methods helps finding a block close to contract deployment
+ * 200k block error is allowed
+ * @param client
+ * @param address
+ */
+export async function findContractDeploymentBlock(
+  client: PublicClient,
+  fromBlock: bigint,
+  toBlock: bigint,
+  address: Hex
+) {
+  if (fromBlock <= toBlock) {
+    const midBlock = BigInt(fromBlock + toBlock) >> BigInt(1);
+    const codeMid = await client.getBytecode({ blockNumber: midBlock, address });
+    if (!codeMid) {
+      if (toBlock - midBlock > 200000n) {
+        return findContractDeploymentBlock(client, midBlock, toBlock, address);
+      } else {
+        return midBlock;
+      }
+    }
+    return findContractDeploymentBlock(client, fromBlock, midBlock, address);
+  }
+  throw new Error('Could not find contract deployment block');
 }

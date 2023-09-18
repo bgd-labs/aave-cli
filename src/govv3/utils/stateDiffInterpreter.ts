@@ -2,7 +2,7 @@ import { Hex, PublicClient, getContract } from 'viem';
 import { tenderlyDeepDiff } from './tenderlyDeepDiff';
 import { ERC20_ABI } from '../abis/ERC20';
 import * as pools from '@bgd-labs/aave-address-book';
-import { getBits } from './solidityUtils';
+import { getBits } from '../../utils/storageSlots';
 
 export async function interpretStateChange(
   contractAddress: string,

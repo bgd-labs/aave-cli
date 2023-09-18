@@ -19,8 +19,8 @@ import {
   getSolidityStorageSlotBytes,
   getSolidityStorageSlotUint,
 } from '../utils/storageSlots';
-import { setBits } from './utils/solidityUtils';
-import { Proof, VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getBLockRLP, getProof } from './proofs';
+import { setBits } from '../utils/storageSlots';
+import { Proof, VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof } from './proofs';
 import { readJSONCache, writeJSONCache } from '../utils/cache';
 import { logInfo } from '../utils/logger';
 
@@ -121,7 +121,6 @@ interface GetGovernanceParams {
 export const getGovernance = ({
   address,
   publicClient,
-  blockCreated,
   walletClient,
 }: GetGovernanceParams): Governance<typeof walletClient> => {
   const governanceContract = getContract({ abi: IGovernanceCore_ABI, address, publicClient, walletClient });
@@ -193,7 +192,7 @@ export const getGovernance = ({
             }
           );
         },
-        blockCreated
+        address
       );
       const queuedLogs = await getLogs(
         publicClient,
@@ -206,7 +205,7 @@ export const getGovernance = ({
             }
           );
         },
-        blockCreated
+        address
       );
       const executedLogs = await getLogs(
         publicClient,
@@ -219,7 +218,7 @@ export const getGovernance = ({
             }
           );
         },
-        blockCreated
+        address
       );
       const payloadSentLogs = await getLogs(
         publicClient,
@@ -232,7 +231,7 @@ export const getGovernance = ({
             }
           );
         },
-        blockCreated
+        address
       );
       const votingActivatedLogs = await getLogs(
         publicClient,
@@ -245,7 +244,7 @@ export const getGovernance = ({
             }
           );
         },
-        blockCreated
+        address
       );
       const canceledLogs = await getLogs(
         publicClient,
@@ -258,7 +257,7 @@ export const getGovernance = ({
             }
           );
         },
-        blockCreated
+        address
       );
       return { createdLogs, queuedLogs, executedLogs, payloadSentLogs, votingActivatedLogs, canceledLogs };
     },
