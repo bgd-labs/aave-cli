@@ -6,8 +6,12 @@ export const getBlockExplorerLink: {
 } = {
   [CHAIN_ID.MAINNET]: (address) =>
     `[${address}](https://etherscan.io/address/${address})`,
+  [CHAIN_ID.GOERLI]: (address) =>
+    `[${address}](https://goerli.etherscan.io/address/${address})`,
   [CHAIN_ID.OPTIMISM]: (address) =>
     `[${address}](https://optimistic.etherscan.io/address/${address})`,
+  [CHAIN_ID.GNOSIS]: (address) =>
+    `[${address}](https://gnosisscan.io/address/${address})`,
   [CHAIN_ID.POLYGON]: (address) =>
     `[${address}](https://polygonscan.com/address/${address})`,
   [CHAIN_ID.FANTOM]: (address) =>
