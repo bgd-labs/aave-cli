@@ -78,7 +78,9 @@ export type AaveV3Emode = z.infer<typeof aaveV3EmodeSchema>;
 
 export const CHAIN_ID = {
   MAINNET: 1,
+  GOERLI: 5,
   OPTIMISM: 10,
+  GNOSIS: 100,
   POLYGON: 137,
   FANTOM: 250,
   ARBITRUM: 42161,
