@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { diff } from './diff';
-import { AaveV3Reserve } from './snapshot-types';
-import { renderReserve, renderReserveDiff, renderReserveValue } from './reserve';
+import { AaveV3Reserve, CHAIN_ID } from './snapshot-types';
+import { getBlockExplorerLink, renderReserve, renderReserveDiff, renderReserveValue } from './reserve';
 
 const WBTC_MOCK = {
   aToken: '0x078f358208685046a11C85e8ad32895DED33A249',
@@ -62,4 +62,33 @@ describe('reserve', () => {
       expect(renderReserveDiff(out as any, 1)).toMatchSnapshot();
     });
   });
+  describe('getBlockExplorerLink', () => {
+    const testAddress = '0x4a7Af6e1F93a2499BfC53dA3C5b59643301456cf';
+    describe('should print a proper link for', () => {
+      const expectedOutputs = {
+        [CHAIN_ID.MAINNET]: `[${testAddress}](https://etherscan.io/address/${testAddress})`,
+        [CHAIN_ID.GOERLI]: `[${testAddress}](https://goerli.etherscan.io/address/${testAddress})`,
+        [CHAIN_ID.OPTIMISM]: `[${testAddress}](https://optimistic.etherscan.io/address/${testAddress})`,
+        [CHAIN_ID.GNOSIS]: `[${testAddress}](https://gnosisscan.io/address/${testAddress})`,
+        [CHAIN_ID.POLYGON]: `[${testAddress}](https://polygonscan.com/address/${testAddress})`,
+        [CHAIN_ID.FANTOM]: `[${testAddress}](https://ftmscan.com/address/${testAddress})`,
+        [CHAIN_ID.ARBITRUM]: `[${testAddress}](https://arbiscan.io/address/${testAddress})`,
+        [CHAIN_ID.AVALANCHE]: `[${testAddress}](https://snowtrace.io/address/${testAddress})`,
+        [CHAIN_ID.METIS]: `[${testAddress}](https://andromeda-explorer.metis.io/address/${testAddress})`,
+        [CHAIN_ID.BASE]: `[${testAddress}](https://basescan.org/address/${testAddress})`,
+      };
+      const testFor = (chain_id: CHAIN_ID) => {
+        it(`chain ID ${chain_id}`, () => {
+          expect(getBlockExplorerLink(chain_id)(testAddress))
+          .toBe(expectedOutputs[chain_id])
+        })
+      };
+      Object.values(CHAIN_ID).forEach((chain_id) => testFor(chain_id))
+    })
+    it('should gracefully handle unknown chain ID', () => {
+      expect(getBlockExplorerLink(123456789)(testAddress))
+      .toBe(`[${testAddress}](Blockchain explorer address is undefined)`)
+    })
+
+  })
 });
