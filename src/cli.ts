@@ -16,9 +16,7 @@ program
     process.env.VERBOSE = 'true';
   })
   .addOption(
-    new Option('--format <format>', 'Set preferred output format')
-      .default('raw')
-      .choices(['raw', 'encoded', 'foundry'] as const)
+    new Option('--format <format>', 'Set preferred output format').default('raw').choices(['raw', 'encoded'] as const)
   )
   .on('option:format', function (format) {
     process.env.FORMAT = format;

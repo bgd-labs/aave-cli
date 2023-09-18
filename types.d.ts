@@ -7,6 +7,7 @@ declare namespace NodeJS {
     RPC_SEPOLIA: string;
 
     // CLI OPTIONS
+    FOUNDRY: string;
     VERBOSE: string;
     FORMAT: string;
   }

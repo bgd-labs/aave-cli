@@ -23,6 +23,9 @@ export async function getLogs<TAbi extends Abi, TEventName extends string>(
   address: Hex
 ): Promise<Array<FilterLogWithTimestamp<TAbi, TEventName>>> {
   const currentBlock = await client.getBlockNumber();
+  /**
+   * need to specify range as some node prividers (e.g. default on base) throw range error on filter creation
+   */
   const filter = await filterFn(0n, 1n);
   const filePath = client.chain!.id.toString();
   const fileName = filter.eventName!;

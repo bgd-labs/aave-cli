@@ -8,12 +8,13 @@ import {
 } from '@bgd-labs/aave-address-book';
 import { HUMAN_READABLE_STATE, getGovernance } from '../govv3/governance';
 import { CHAIN_ID_CLIENT_MAP, goerliClient } from '../utils/rpcClients';
-import { logError, logInfo } from '../utils/logger';
+import { logError, logInfo, logSuccess } from '../utils/logger';
 import { Hex, PublicClient, encodeFunctionData, getContract } from 'viem';
 import { confirm, input, select } from '@inquirer/prompts';
 import { getCachedIpfs } from '../ipfs/getCachedProposalMetaData';
 import { toAddressLink, toTxLink } from '../govv3/utils/markdownUtils';
 import { getAccountRPL, getBLockRLP } from '../govv3/proofs';
+import { FORMAT } from '../utils/constants';
 
 enum DialogOptions {
   DETAILS,
@@ -158,30 +159,32 @@ export function addCommand(program: Command) {
           const proofs = await governance.getVotingProofs(selectedProposalId, address, chainId);
           if (proofs.length == 0) logError('Voting Error', 'You need voting power to vote');
           else {
-            logInfo(
-              'Explorer link',
+            logSuccess(
+              'VotingMachine',
               toAddressLink(
                 machine,
                 false,
                 CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP] as PublicClient
               )
             );
-            logInfo('Method', 'submitVote');
-            logInfo('parameter proposalId', selectedProposalId);
-            logInfo('parameter support', String(support));
-            logInfo(
-              'parameter votingBalanceProofs',
-              JSON.stringify(proofs.map((p) => [p.underlyingAsset, p.slot.toString(), p.proof]))
-            );
-
-            logInfo(
-              'encoded calldata',
-              encodeFunctionData({
-                abi: IVotingMachineWithProofs_ABI,
-                functionName: 'submitVote',
-                args: [BigInt(selectedProposalId), support, proofs],
-              })
-            );
+            if (FORMAT === 'raw') {
+              logSuccess('Method', 'submitVote');
+              logSuccess('parameter proposalId', selectedProposalId);
+              logSuccess('parameter support', String(support));
+              logSuccess(
+                'parameter votingBalanceProofs',
+                JSON.stringify(proofs.map((p) => [p.underlyingAsset, p.slot.toString(), p.proof]))
+              );
+            } else {
+              logSuccess(
+                'encoded calldata',
+                encodeFunctionData({
+                  abi: IVotingMachineWithProofs_ABI,
+                  functionName: 'submitVote',
+                  args: [selectedProposalId, support, proofs],
+                })
+              );
+            }
           }
         }
 
@@ -201,14 +204,9 @@ export function addCommand(program: Command) {
             publicClient: CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP] as PublicClient,
           });
           const dataWarehouse = await machineContract.read.DATA_WAREHOUSE();
-          const dataWarehouseContracts = getContract({
-            address: dataWarehouse,
-            abi: IDataWarehouse_ABI,
-            publicClient: CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP] as PublicClient,
-          });
           const roots = await governance.getStorageRoots(selectedProposalId);
-          logInfo(
-            'Explorer link',
+          logSuccess(
+            'DataWarehouse',
             toAddressLink(
               dataWarehouse,
               false,
@@ -217,13 +215,28 @@ export function addCommand(program: Command) {
           );
           const block = await DEFAULT_CLIENT.getBlock({ blockHash: proposal.snapshotBlockHash });
           const blockRPL = getBLockRLP(block);
-          logInfo('Method', 'processStorageRoot');
-          roots.map((root, ix) => {
-            logInfo(`account.${ix}`, root.address);
-            logInfo(`blockHash.${ix}`, proposal.snapshotBlockHash);
-            logInfo(`blockHeaderRPL.${ix}`, blockRPL);
-            logInfo(`accountStateProofRPL.${ix}`, getAccountRPL(root.accountProof));
-          });
+          if (FORMAT === 'raw') {
+            logSuccess('Method', 'processStorageRoot');
+            roots.map((root, ix) => {
+              const accountRPL = getAccountRPL(root.accountProof);
+              logSuccess(`account.${ix}`, root.address);
+              logSuccess(`blockHash.${ix}`, proposal.snapshotBlockHash);
+              logSuccess(`blockHeaderRPL.${ix}`, blockRPL);
+              logSuccess(`accountStateProofRPL.${ix}`, accountRPL);
+            });
+          } else {
+            roots.map((root, ix) => {
+              const accountRPL = getAccountRPL(root.accountProof);
+              logSuccess(
+                'Encoded callData',
+                encodeFunctionData({
+                  abi: IDataWarehouse_ABI,
+                  functionName: 'processStorageRoot',
+                  args: [root.address, proposal.snapshotBlockHash, blockRPL, accountRPL],
+                })
+              );
+            });
+          }
         }
       }
     });
@@ -241,8 +254,12 @@ export function addCommand(program: Command) {
         publicClient: DEFAULT_CLIENT,
       });
       const proposalId = BigInt(options.getOptionValue('proposalId'));
+      const proposal = await governance.getProposal(proposalId);
 
-      const proofs = await governance.getRoots(proposalId);
+      const proofs = await governance.getStorageRoots(proposalId);
+      const block = await DEFAULT_CLIENT.getBlock({ blockHash: proposal.snapshotBlockHash });
+      const blockRPL = getBLockRLP(block);
+      console.log(proofs);
     });
 
   /**
