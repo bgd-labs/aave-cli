@@ -322,7 +322,7 @@ export function addCommand(program: Command) {
               type: 'tuple[]',
               components: [
                 { name: 'underlyingAsset', type: 'address' },
-                { name: 'slot', type: 'uin128' },
+                { name: 'slot', type: 'uint128' },
                 { name: 'proof', type: 'bytes' },
               ],
             },
