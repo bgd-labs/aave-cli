@@ -6,4 +6,4 @@ export const VERBOSE = process.env.VERBOSE;
 
 // determines what type of format to output
 // foundry will consume everything on stdOut so in foundry mode we essentially don't log
-export const FORMAT = process.env.FORMAT as 'raw' | 'encoded';
+export const FORMAT = (process.env.FORMAT || 'raw') as 'raw' | 'encoded';

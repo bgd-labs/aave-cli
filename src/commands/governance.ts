@@ -9,7 +9,7 @@ import {
 import { HUMAN_READABLE_STATE, getGovernance } from '../govv3/governance';
 import { CHAIN_ID_CLIENT_MAP, goerliClient } from '../utils/rpcClients';
 import { logError, logInfo, logSuccess } from '../utils/logger';
-import { Hex, PublicClient, encodeFunctionData, getContract } from 'viem';
+import { Hex, PublicClient, encodeAbiParameters, encodeFunctionData, getContract, parseAbiParameters } from 'viem';
 import { confirm, input, select } from '@inquirer/prompts';
 import { getCachedIpfs } from '../ipfs/getCachedProposalMetaData';
 import { toAddressLink, toTxLink } from '../govv3/utils/markdownUtils';
@@ -215,6 +215,7 @@ export function addCommand(program: Command) {
           );
           const block = await DEFAULT_CLIENT.getBlock({ blockHash: proposal.snapshotBlockHash });
           const blockRPL = getBLockRLP(block);
+          console.log(FORMAT);
           if (FORMAT === 'raw') {
             logSuccess('Method', 'processStorageRoot');
             roots.map((root, ix) => {
@@ -245,8 +246,8 @@ export function addCommand(program: Command) {
    *
    */
   govV3
-    .command('getWarehouseRoots')
-    .description('generate the roots for the warehouse')
+    .command('getStorageRoots')
+    .description('generate the storage roots for the warehouse')
     .requiredOption('--proposalId <number>', 'proposalId to generate the proof for')
     .action(async (name, options) => {
       const governance = getGovernance({
@@ -256,10 +257,36 @@ export function addCommand(program: Command) {
       const proposalId = BigInt(options.getOptionValue('proposalId'));
       const proposal = await governance.getProposal(proposalId);
 
-      const proofs = await governance.getStorageRoots(proposalId);
+      const roots = await governance.getStorageRoots(proposalId);
       const block = await DEFAULT_CLIENT.getBlock({ blockHash: proposal.snapshotBlockHash });
       const blockRPL = getBLockRLP(block);
-      console.log(proofs);
+      const params = roots.map((root) => {
+        const accountRPL = getAccountRPL(root.accountProof);
+        return {
+          account: root.address,
+          blockHash: proposal.snapshotBlockHash,
+          blockHeaderRPL: blockRPL,
+          accountStateProofRPL: accountRPL,
+        };
+      });
+
+      console.log(
+        encodeAbiParameters(
+          [
+            {
+              name: 'params',
+              type: 'tuple[]',
+              components: [
+                { name: 'account', type: 'address' },
+                { name: 'blockHash', type: 'bytes32' },
+                { name: 'blockHeaderRPL', type: 'bytes' },
+                { name: 'accountStateProofRPL', type: 'bytes' },
+              ],
+            },
+          ],
+          [params]
+        )
+      );
     });
 
   /**
@@ -287,6 +314,21 @@ export function addCommand(program: Command) {
       });
       const chainId = await portal.read.VOTING_MACHINE_CHAIN_ID();
       const proofs = await governance.getVotingProofs(proposalId, voter as Hex, chainId);
-      console.log(proofs); // TODO: format so foundry can consume it
+      console.log(
+        encodeAbiParameters(
+          [
+            {
+              name: 'proofs',
+              type: 'tuple[]',
+              components: [
+                { name: 'underlyingAsset', type: 'address' },
+                { name: 'slot', type: 'uin128' },
+                { name: 'proof', type: 'bytes' },
+              ],
+            },
+          ],
+          [proofs]
+        )
+      );
     });
 }
