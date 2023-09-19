@@ -9,7 +9,7 @@ import {
   fromHex,
 } from 'viem';
 import { EOA } from './constants';
-import { logInfo, logWarning } from './logger';
+import { logError, logInfo, logSuccess, logWarning } from './logger';
 export type StateObject = {
   balance?: string;
   code?: string;
@@ -272,15 +272,19 @@ class Tenderly {
       request.state_objects[request.from].balance = String(parseEther('3'));
     }
 
+    const fullRequest = JSON.stringify({
+      generate_access_list: true,
+      save: true,
+      gas_price: '0',
+      gas: 30_000_000,
+      ...request,
+    });
+
+    logInfo('tenderly', `request: ${JSON.stringify(fullRequest)}`);
+
     const response = await fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/simulate`, {
       method: 'POST',
-      body: JSON.stringify({
-        generate_access_list: true,
-        save: true,
-        gas_price: '0',
-        gas: 30_000_000,
-        ...request,
-      }),
+      body: fullRequest,
       headers: new Headers({
         'Content-Type': 'application/json',
         'X-Access-Key': this.ACCESS_TOKEN,
@@ -327,6 +331,10 @@ class Tenderly {
     });
 
     const result = await response.json();
+    if (result.error) {
+      logError('tenderly', 'fork could not be created');
+      throw new Error(result.error.message);
+    }
     const fork = {
       id: result.simulation_fork.id,
       chainId: result.simulation_fork.network_id,
@@ -334,7 +342,7 @@ class Tenderly {
       forkNetworkId: result.simulation_fork.chain_config.chain_id,
       forkUrl: `https://rpc.tenderly.co/fork/${result.simulation_fork.id}`,
     };
-    logInfo(
+    logSuccess(
       'tenderly',
       `Fork created! To use in aave interface you need to run the following commands:\n\n---\nlocalStorage.setItem('forkEnabled', 'true');\nlocalStorage.setItem('forkBaseChainId', ${fork.chainId});\nlocalStorage.setItem('forkNetworkId', ${fork.forkNetworkId});\nlocalStorage.setItem("forkRPCUrl", "${fork.forkUrl}");\n---\n`
     );
@@ -436,6 +444,7 @@ class Tenderly {
         to: request.to,
         value: 0n,
       } as any);
+      logSuccess('tenderly', 'transaction successfully executed');
     }
   };
 

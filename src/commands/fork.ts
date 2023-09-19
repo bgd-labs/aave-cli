@@ -1,10 +1,10 @@
 import { Command } from '@commander-js/extra-typings';
 import { tenderly } from '../utils/tenderlyClient';
 import { getGovernance } from '../govv3/governance';
-import { GovernanceV3Ethereum } from '@bgd-labs/aave-address-book';
-import { CHAIN_ID_CLIENT_MAP, mainnetClient } from '../utils/rpcClients';
+import { CHAIN_ID_CLIENT_MAP } from '../utils/rpcClients';
 import { getPayloadsController } from '../govv3/payloadsController';
 import { Hex, PublicClient } from 'viem';
+import { DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT } from '../utils/constants';
 
 export function addCommand(program: Command) {
   program
@@ -27,8 +27,8 @@ export function addCommand(program: Command) {
       } = options;
       function getAlias() {
         const unix = Math.floor(new Date().getTime() / 1000);
-        if (options.alias) {
-          return `${unix}-${options.alias}`;
+        if (alias) {
+          return `${unix}-${alias}`;
         } else if (options.proposalId) {
           return `${unix}-proposalId-${options.proposalId}`;
         } else if (options.payloadId) {
@@ -42,7 +42,7 @@ export function addCommand(program: Command) {
         alias: getAlias(),
         blockNumber: Number(blockNumber),
       };
-      const governance = getGovernance({ address: GovernanceV3Ethereum.GOVERNANCE, publicClient: mainnetClient });
+      const governance = getGovernance({ address: DEFAULT_GOVERNANCE, publicClient: DEFAULT_GOVERNANCE_CLIENT });
       if (proposalId) {
         const payload = await governance.getSimulationPayloadForExecution(BigInt(proposalId));
         const fork = await tenderly.fork({

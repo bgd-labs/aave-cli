@@ -1,20 +1,15 @@
 import { Command } from '@commander-js/extra-typings';
 import { simulateProposal } from '../govv3/simulate';
-import {
-  GovernanceV3Goerli,
-  IDataWarehouse_ABI,
-  IVotingMachineWithProofs_ABI,
-  IVotingPortal_ABI,
-} from '@bgd-labs/aave-address-book';
+import { IDataWarehouse_ABI, IVotingMachineWithProofs_ABI, IVotingPortal_ABI } from '@bgd-labs/aave-address-book';
 import { HUMAN_READABLE_STATE, getGovernance } from '../govv3/governance';
-import { CHAIN_ID_CLIENT_MAP, goerliClient } from '../utils/rpcClients';
+import { CHAIN_ID_CLIENT_MAP } from '../utils/rpcClients';
 import { logError, logInfo, logSuccess } from '../utils/logger';
-import { Hex, PublicClient, encodeAbiParameters, encodeFunctionData, getContract, parseAbiParameters } from 'viem';
+import { Hex, PublicClient, encodeAbiParameters, encodeFunctionData, getContract } from 'viem';
 import { confirm, input, select } from '@inquirer/prompts';
 import { getCachedIpfs } from '../ipfs/getCachedProposalMetaData';
 import { toAddressLink, toTxLink } from '../govv3/utils/markdownUtils';
 import { getAccountRPL, getBLockRLP } from '../govv3/proofs';
-import { FORMAT } from '../utils/constants';
+import { DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT, FORMAT } from '../utils/constants';
 
 enum DialogOptions {
   DETAILS,
@@ -24,9 +19,6 @@ enum DialogOptions {
   HOW_TO_REGISTER_STORAGE_ROOTS,
   EXIT,
 }
-
-const DEFAULT_GOVERNANCE = GovernanceV3Goerli.GOVERNANCE;
-const DEFAULT_CLIENT = goerliClient;
 
 export function addCommand(program: Command) {
   const govV3 = program.command('governance').description('interact with governance v3 contracts');
@@ -46,7 +38,7 @@ export function addCommand(program: Command) {
     .action(async (opts) => {
       const governance = getGovernance({
         address: DEFAULT_GOVERNANCE,
-        publicClient: DEFAULT_CLIENT,
+        publicClient: DEFAULT_GOVERNANCE_CLIENT,
         blockCreated: 9640498n,
       });
       const logs = await governance.cacheLogs();
@@ -113,16 +105,19 @@ export function addCommand(program: Command) {
         }
 
         if (moreInfo == DialogOptions.TRANSACTIONS) {
-          logInfo('CreatedLog', toTxLink(proposalLogs.createdLog.transactionHash, false, DEFAULT_CLIENT));
+          logInfo('CreatedLog', toTxLink(proposalLogs.createdLog.transactionHash, false, DEFAULT_GOVERNANCE_CLIENT));
           if (proposalLogs.votingActivatedLog)
             logInfo(
               'VotingActicated',
-              toTxLink(proposalLogs.votingActivatedLog.transactionHash, false, DEFAULT_CLIENT)
+              toTxLink(proposalLogs.votingActivatedLog.transactionHash, false, DEFAULT_GOVERNANCE_CLIENT)
             );
           if (proposalLogs.queuedLog)
-            logInfo('QueuedLog', toTxLink(proposalLogs.queuedLog.transactionHash, false, DEFAULT_CLIENT));
+            logInfo('QueuedLog', toTxLink(proposalLogs.queuedLog.transactionHash, false, DEFAULT_GOVERNANCE_CLIENT));
           if (proposalLogs.executedLog)
-            logInfo('ExecutedLog', toTxLink(proposalLogs.executedLog.transactionHash, false, DEFAULT_CLIENT));
+            logInfo(
+              'ExecutedLog',
+              toTxLink(proposalLogs.executedLog.transactionHash, false, DEFAULT_GOVERNANCE_CLIENT)
+            );
         }
 
         if (moreInfo == DialogOptions.DETAILS) {
@@ -150,7 +145,7 @@ export function addCommand(program: Command) {
           const portal = getContract({
             address: proposal.votingPortal,
             abi: IVotingPortal_ABI,
-            publicClient: DEFAULT_CLIENT,
+            publicClient: DEFAULT_GOVERNANCE_CLIENT,
           });
           const [machine, chainId] = await Promise.all([
             portal.read.VOTING_MACHINE(),
@@ -192,7 +187,7 @@ export function addCommand(program: Command) {
           const portalContract = getContract({
             address: proposal.votingPortal,
             abi: IVotingPortal_ABI,
-            publicClient: DEFAULT_CLIENT,
+            publicClient: DEFAULT_GOVERNANCE_CLIENT,
           });
           const [machine, chainId] = await Promise.all([
             portalContract.read.VOTING_MACHINE(),
@@ -213,7 +208,7 @@ export function addCommand(program: Command) {
               CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP] as PublicClient
             )
           );
-          const block = await DEFAULT_CLIENT.getBlock({ blockHash: proposal.snapshotBlockHash });
+          const block = await DEFAULT_GOVERNANCE_CLIENT.getBlock({ blockHash: proposal.snapshotBlockHash });
           const blockRPL = getBLockRLP(block);
           console.log(FORMAT);
           if (FORMAT === 'raw') {
@@ -252,13 +247,13 @@ export function addCommand(program: Command) {
     .action(async (name, options) => {
       const governance = getGovernance({
         address: DEFAULT_GOVERNANCE,
-        publicClient: DEFAULT_CLIENT,
+        publicClient: DEFAULT_GOVERNANCE_CLIENT,
       });
       const proposalId = BigInt(options.getOptionValue('proposalId'));
       const proposal = await governance.getProposal(proposalId);
 
       const roots = await governance.getStorageRoots(proposalId);
-      const block = await DEFAULT_CLIENT.getBlock({ blockHash: proposal.snapshotBlockHash });
+      const block = await DEFAULT_GOVERNANCE_CLIENT.getBlock({ blockHash: proposal.snapshotBlockHash });
       const blockRPL = getBLockRLP(block);
       const params = roots.map((root) => {
         const accountRPL = getAccountRPL(root.accountProof);
@@ -300,7 +295,7 @@ export function addCommand(program: Command) {
     .action(async (name, options) => {
       const governance = getGovernance({
         address: DEFAULT_GOVERNANCE,
-        publicClient: DEFAULT_CLIENT,
+        publicClient: DEFAULT_GOVERNANCE_CLIENT,
       });
       const proposalId = BigInt(options.getOptionValue('proposalId'));
       const voter = options.getOptionValue('voter') as Hex;
@@ -310,7 +305,7 @@ export function addCommand(program: Command) {
       const portal = getContract({
         address: proposal.votingPortal,
         abi: IVotingPortal_ABI,
-        publicClient: DEFAULT_CLIENT,
+        publicClient: DEFAULT_GOVERNANCE_CLIENT,
       });
       const chainId = await portal.read.VOTING_MACHINE_CHAIN_ID();
       const proofs = await governance.getVotingProofs(proposalId, voter as Hex, chainId);

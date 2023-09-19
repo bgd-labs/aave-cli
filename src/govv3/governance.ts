@@ -167,7 +167,7 @@ export const getGovernance = ({
       state_objects: {
         [governanceContract.address]: {
           storage: {
-            [proposalSlot]: toHex(proposalSlot1), // state & time
+            [proposalSlot]: toHex(proposalSlot1, { size: 32 }), // state & time
             // [toHex(fromHex(proposalSlot, { to: 'bigint' }) + 5n)]: toHex(parseUnits('340000000', 18), {
             //   size: 32,
             // }), // votes (not needed as there's no validation for this at this point)
