@@ -357,6 +357,7 @@ class Tenderly {
     });
 
     const artifact = require(filePath);
+    logInfo('tenderly', `deploying ${filePath}`);
 
     return walletProvider.deployContract({
       abi: artifact.abi,
@@ -373,13 +374,16 @@ class Tenderly {
     const currentBlock = await publicProvider.getBlock();
     // warping forward in time
     if (timestamp > currentBlock.timestamp) {
-      logInfo('tenderly', 'warping time');
+      logInfo('tenderly', `warping time from ${currentBlock.timestamp} to ${timestamp}`);
       await publicProvider.request({
         method: 'evm_increaseTime' as any,
         params: [toHex(timestamp - currentBlock.timestamp)],
       });
     } else {
-      logWarning('tenderly', 'skipping time warp as tenderly forks do not support traveling back in time');
+      logWarning(
+        'tenderly',
+        `skipping time warp as tenderly forks do not support traveling back in time (from ${currentBlock.timestamp} to ${timestamp})`
+      );
     }
   };
 
