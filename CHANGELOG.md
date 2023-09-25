@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.25](https://github.com/bgd-labs/report-engine/compare/v0.0.24...v0.0.25) (2023-09-25)
+
+
+### Bug Fixes
+
+* return result from unwrap ([c0d5087](https://github.com/bgd-labs/report-engine/commit/c0d50879bd76474fd2291c56073e2dbfb13fc295))
+
 ### [0.0.24](https://github.com/bgd-labs/report-engine/compare/v0.0.23...v0.0.24) (2023-09-25)
 
 
