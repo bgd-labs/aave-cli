@@ -464,6 +464,17 @@ class Tenderly {
       }),
     });
   };
+
+  replaceCode = (fork: any, address: Hex, code: Hex) => {
+    const publicProvider = createPublicClient({
+      chain: { id: 3030 } as any,
+      transport: http(fork.forkUrl),
+    });
+    return publicProvider.request({
+      method: 'tenderly_setCode' as any,
+      params: [address, code],
+    });
+  };
 }
 
 export const tenderly = new Tenderly(
