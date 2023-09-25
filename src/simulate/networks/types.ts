@@ -28,7 +28,7 @@ export type FilterLogWithTimestamp<TAbi extends Abi, TEventName extends string> 
 > & { timestamp: number };
 
 export interface L2NetworkModule<TAbi extends Abi, TQueuedEventName extends string, TExecutedEventName extends string> {
-  name: 'Optimism' | 'Polygon' | 'Arbitrum' | 'Metis' | 'Arc';
+  name: 'Optimism' | 'Polygon' | 'Arbitrum' | 'Metis' | 'Arc' | 'Base';
   cacheLogs: () => Promise<{
     queuedLogs: Array<FilterLogWithTimestamp<TAbi, TQueuedEventName>>;
     executedLogs: Array<FilterLogWithTimestamp<TAbi, TExecutedEventName>>;
