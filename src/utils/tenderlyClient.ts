@@ -247,20 +247,20 @@ class Tenderly {
     this.PROJECT = project;
   }
 
-  // trace = async (chainId: number, txHash: string): Promise<TenderlyTraceResponse> => {
-  //   const response = await fetch(`${this.TENDERLY_BASE}/public-contract/${chainId}/trace/${txHash}`, {
-  //     method: 'GET',
-  //     headers: new Headers({
-  //       'Content-Type': 'application/json',
-  //       'X-Access-Key': this.ACCESS_TOKEN,
-  //     }),
-  //   });
-  //   const result: TenderlyTraceResponse = await response.json();
-  //   // Post-processing to ensure addresses we use are checksummed (since ethers returns checksummed addresses)
-  //   result.transaction.addresses = result.transaction.addresses.map(getAddress);
-  //   result.contracts.forEach((contract) => (contract.address = getAddress(contract.address)));
-  //   return result;
-  // };
+  trace = async (chainId: number, txHash: string): Promise<TenderlyTraceResponse> => {
+    const response = await fetch(`${this.TENDERLY_BASE}/public-contract/${chainId}/trace/${txHash}`, {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'X-Access-Key': this.ACCESS_TOKEN,
+      }),
+    });
+    const result: TenderlyTraceResponse = await response.json();
+    // Post-processing to ensure addresses we use are checksummed (since ethers returns checksummed addresses)
+    // result.transaction.addresses = result.transaction.addresses.map(getAddress);
+    // result.contracts.forEach((contract) => (contract.address = getAddress(contract.address)));
+    return result;
+  };
 
   simulate = async (request: TenderlyRequest): Promise<TenderlySimulationResponse> => {
     if (!request.state_objects) {
@@ -443,12 +443,13 @@ class Tenderly {
         chain: { id: 3030, name: 'tenderly' } as any,
         transport: http(fork.forkUrl),
       });
-      await walletProvider.sendTransaction({
+      const hash = await walletProvider.sendTransaction({
         data: request.input,
         to: request.to,
-        value: 0n,
+        value: request.value || 0n,
       } as any);
       logSuccess('tenderly', 'transaction successfully executed');
+      return hash;
     }
   };
 
