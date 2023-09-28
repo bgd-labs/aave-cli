@@ -27,7 +27,7 @@ For a full overview of commands please run `aave-cli fork --help`
 
 ### View
 
-`aave-cli goverannce view` will start a command line ui for the aave governance.
+`aave-cli governance view` will start a command line ui for the aave governance.
 The command line ui, explains how to vote and generates the proofs needed for voting or registering roots.
 
 ### GetStorageRoots
