@@ -52,8 +52,5 @@ export function getDynamicArraySlot(baseSlot: bigint, arrayIndex: number, itemSi
 export function getBytesValue(value: string | Hex) {
   const bytesString = toBytes(value);
   if (bytesString.length > 31) throw new Error('Error: strings > 31 bytes are not implemented');
-  return pad(
-    concat([toHex(pad(bytesString, { size: 31, dir: 'right' })), toHex(bytesString.length * 2, { size: 1 })]),
-    { size: 32 }
-  );
+  return concat([toHex(pad(bytesString, { size: 31, dir: 'right' })), toHex(bytesString.length * 2, { size: 1 })]);
 }

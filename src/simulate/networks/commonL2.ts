@@ -255,34 +255,36 @@ export async function getTenderlyActionSetCreationPayload(
    */
   const proposalStorage: { [key: `0x${string}`]: number | string | boolean } = {};
   // targets
-  proposalStorage[toHex(actionSetHash)] = pad(toHex(args.targets.length), { size: 32 });
+  proposalStorage[toHex(actionSetHash, { size: 32 })] = pad(toHex(args.targets.length), { size: 32 });
   args.targets.map((target, index) => {
     proposalStorage[getDynamicArraySlot(actionSetHash, index, 1)] = pad(target, { size: 32 }) as Hex;
   });
   // values
-  proposalStorage[toHex(actionSetHash + 1n)] = pad(toHex(args.values.length), { size: 32 });
+  proposalStorage[toHex(actionSetHash + 1n, { size: 32 })] = pad(toHex(args.values.length), { size: 32 });
   args.values.map((value, index) => {
     proposalStorage[getDynamicArraySlot(actionSetHash + 1n, index, 1)] = pad(toHex(value), { size: 32 });
   });
   // signatures
-  proposalStorage[toHex(actionSetHash + 2n)] = pad(toHex(args.signatures.length), { size: 32 });
+  proposalStorage[toHex(actionSetHash + 2n, { size: 32 })] = pad(toHex(args.signatures.length), { size: 32 });
   args.signatures.map((signature, index) => {
     proposalStorage[getDynamicArraySlot(actionSetHash + 2n, index, 1)] = getBytesValue(signature);
   });
   // calldatas
-  proposalStorage[toHex(actionSetHash + 3n)] = pad(toHex(args.calldatas.length), { size: 32 });
+  proposalStorage[toHex(actionSetHash + 3n, { size: 32 })] = pad(toHex(args.calldatas.length), { size: 32 });
   args.calldatas.map((calldata, index) => {
     proposalStorage[getDynamicArraySlot(actionSetHash + 3n, index, 1)] = getBytesValue(calldata);
   });
   // withDelegateCalls
-  proposalStorage[toHex(actionSetHash + 4n)] = pad(toHex(args.withDelegatecalls.length), { size: 32 });
+  proposalStorage[toHex(actionSetHash + 4n, { size: 32 })] = pad(toHex(args.withDelegatecalls.length), { size: 32 });
   args.withDelegatecalls.map((withDelegateCalls, index) => {
     proposalStorage[getDynamicArraySlot(actionSetHash + 4n, index, 1)] = pad(toHex(withDelegateCalls), {
       size: 32,
     });
   });
   // executionTime
-  proposalStorage[pad(toHex(actionSetHash + 5n), { size: 32 })] = pad(toHex(latestBlock.timestamp), { size: 32 });
+  proposalStorage[pad(toHex(actionSetHash + 5n, { size: 32 }), { size: 32 })] = pad(toHex(latestBlock.timestamp), {
+    size: 32,
+  });
   // queued hashes
   const hashes = args.targets.reduce((acc, target, index) => {
     const actionHash = keccak256(
