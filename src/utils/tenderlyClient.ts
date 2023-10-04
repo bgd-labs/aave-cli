@@ -7,6 +7,7 @@ import {
   toHex,
   parseEther,
   fromHex,
+  pad,
 } from 'viem';
 import { EOA } from './constants';
 import { logError, logInfo, logSuccess, logWarning } from './logger';
@@ -420,7 +421,11 @@ class Tenderly {
           for (const slot of Object.keys(request.state_objects[address].storage!) as Hex[]) {
             await publicProvider.request({
               method: 'tenderly_setStorageAt' as any,
-              params: [address as Hex, slot as Hex, request.state_objects[address].storage![slot] as Hex],
+              params: [
+                address as Hex,
+                pad(slot as Hex, { size: 32 }),
+                pad(request.state_objects[address].storage![slot] as Hex, { size: 32 }),
+              ],
             });
           }
         }
