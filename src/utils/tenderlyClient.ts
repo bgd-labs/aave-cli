@@ -8,6 +8,7 @@ import {
   parseEther,
   fromHex,
   pad,
+  zeroAddress,
 } from 'viem';
 import { EOA } from './constants';
 import { logError, logInfo, logSuccess, logWarning } from './logger';
@@ -367,6 +368,11 @@ class Tenderly {
   };
 
   warpTime = async (fork: any, timestamp: bigint) => {
+    const walletProvider = createWalletClient({
+      account: EOA,
+      chain: { id: 3030, name: 'tenderly' } as any,
+      transport: http(fork.forkUrl),
+    });
     const publicProvider = createPublicClient({
       chain: { id: 3030 } as any,
       transport: http(fork.forkUrl),
@@ -380,6 +386,10 @@ class Tenderly {
         method: 'evm_increaseTime' as any,
         params: [toHex(timestamp - currentBlock.timestamp)],
       });
+      await walletProvider.sendTransaction({
+        to: zeroAddress,
+        value: 1n,
+      } as any);
     } else {
       logWarning(
         'tenderly',
@@ -389,6 +399,11 @@ class Tenderly {
   };
 
   warpBlocks = async (fork: any, blockNumber: bigint) => {
+    const walletProvider = createWalletClient({
+      account: EOA,
+      chain: { id: 3030, name: 'tenderly' } as any,
+      transport: http(fork.forkUrl),
+    });
     const publicProvider = createPublicClient({
       chain: { id: 3030 } as any,
       transport: http(fork.forkUrl),
@@ -400,6 +415,10 @@ class Tenderly {
         method: 'evm_increaseBlocks' as any,
         params: [toHex(blockNumber - currentBlock.number)],
       });
+      await walletProvider.sendTransaction({
+        to: zeroAddress,
+        value: 1n,
+      } as any);
     } else {
       logWarning('tenderly', 'skipping block warp as tenderly forks do not support traveling back in time');
     }
