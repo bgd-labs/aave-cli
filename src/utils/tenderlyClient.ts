@@ -368,11 +368,6 @@ class Tenderly {
   };
 
   warpTime = async (fork: any, timestamp: bigint) => {
-    const walletProvider = createWalletClient({
-      account: EOA,
-      chain: { id: 3030, name: 'tenderly' } as any,
-      transport: http(fork.forkUrl),
-    });
     const publicProvider = createPublicClient({
       chain: { id: 3030 } as any,
       transport: http(fork.forkUrl),
@@ -386,10 +381,6 @@ class Tenderly {
         method: 'evm_increaseTime' as any,
         params: [toHex(timestamp - currentBlock.timestamp)],
       });
-      await walletProvider.sendTransaction({
-        to: zeroAddress,
-        value: 1n,
-      } as any);
     } else {
       logWarning(
         'tenderly',
@@ -399,11 +390,6 @@ class Tenderly {
   };
 
   warpBlocks = async (fork: any, blockNumber: bigint) => {
-    const walletProvider = createWalletClient({
-      account: EOA,
-      chain: { id: 3030, name: 'tenderly' } as any,
-      transport: http(fork.forkUrl),
-    });
     const publicProvider = createPublicClient({
       chain: { id: 3030 } as any,
       transport: http(fork.forkUrl),
@@ -415,10 +401,6 @@ class Tenderly {
         method: 'evm_increaseBlocks' as any,
         params: [toHex(blockNumber - currentBlock.number)],
       });
-      await walletProvider.sendTransaction({
-        to: zeroAddress,
-        value: 1n,
-      } as any);
     } else {
       logWarning('tenderly', 'skipping block warp as tenderly forks do not support traveling back in time');
     }
@@ -472,8 +454,12 @@ class Tenderly {
         to: request.to,
         value: request.value || 0n,
       } as any);
-      // TODO: improve error handling as receiving a hash doesn't mean success
-      logSuccess('tenderly', 'transaction successfully executed');
+      const receipt = await publicProvider.getTransactionReceipt({ hash });
+      if (receipt.status === 'success') {
+        logSuccess('tenderly', 'transaction successfully executed');
+      } else {
+        logError('tenderly', 'transaction reverted');
+      }
       return hash;
     }
   };
