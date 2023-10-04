@@ -394,7 +394,7 @@ class Tenderly {
     });
     const currentBlock = await publicProvider.getBlock();
     if (blockNumber > currentBlock.number) {
-      logInfo('tenderly', 'warping blocks');
+      logInfo('tenderly', `warping blocks from ${currentBlock.number} to ${blockNumber}`);
       await publicProvider.request({
         method: 'evm_increaseBlocks' as any,
         params: [toHex(blockNumber - currentBlock.number)],
@@ -448,6 +448,7 @@ class Tenderly {
         to: request.to,
         value: request.value || 0n,
       } as any);
+      // TODO: improve error handling as receiving a hash doesn't mean success
       logSuccess('tenderly', 'transaction successfully executed');
       return hash;
     }
