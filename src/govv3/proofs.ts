@@ -26,26 +26,13 @@ export const VOTING_SLOTS = {
   [GovernanceV3Goerli.GOVERNANCE]: { representative: 9n }, // representative
 } as const;
 
-export interface Proof {
-  address: Hex;
-  accountProof: Hex[];
-  balance: Hex;
-  codeHash: Hex;
-  nonce: Hex;
-  storageHash: Hex;
-  storageProof: {
-    key: Hex;
-    value: Hex;
-    proof: Hex[];
-  }[];
-}
-
-export async function getProof(publicClient: PublicClient, address: Hex, slots: readonly Hex[], blockHash: Hex) {
+export async function getProof(publicClient: PublicClient, address: Hex, slots: Hex[], blockHash: Hex) {
   const block = await publicClient.getBlock({ blockHash });
-  return publicClient.request({
-    method: 'eth_getProof' as any,
-    params: [address, slots.map((slot) => slot), toHex(block.number)] as any,
-  }) as Promise<Proof>;
+  return publicClient.getProof({
+    address,
+    storageKeys: slots,
+    blockNumber: block.number,
+  });
 }
 
 // IMPORTANT valid only for post-Shapella blocks, as it includes `withdrawalsRoot`

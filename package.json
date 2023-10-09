@@ -20,13 +20,12 @@
   },
   "homepage": "https://github.com/bgd-labs/report-engine#readme",
   "devDependencies": {
-    "@types/node-fetch": "^2.6.4",
-    "@types/object-hash": "^3.0.3",
-    "@types/yargs": "^17.0.24",
+    "@types/node-fetch": "^2.6.6",
+    "@types/object-hash": "^3.0.4",
     "tsup": "^7.2.0",
     "tsx": "^3.13.0",
     "typescript": "^5.2.2",
-    "vitest": "^0.34.3"
+    "vitest": "^0.34.6"
   },
   "type": "module",
   "main": "./dist/index.cjs",
@@ -65,7 +64,7 @@
     "json-bigint": "^1.0.0",
     "node-fetch": "^2.6.9",
     "object-hash": "^3.0.0",
-    "viem": "^1.15.1",
-    "zod": "^3.22.3"
+    "viem": "^1.16.0",
+    "zod": "^3.22.4"
   }
 }
