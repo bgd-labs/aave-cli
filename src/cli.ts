@@ -5,6 +5,7 @@ import { addCommand as addIpfsCommand } from './commands/ipfsUpload';
 import { addCommand as addDiffSnapshots } from './commands/diffSnaphots';
 import { addCommand as addGovernance } from './commands/governance';
 import { addCommand as addFork } from './commands/fork';
+import packageJson from '../package.json';
 
 const program = new Command();
 
@@ -21,7 +22,7 @@ program
   .on('option:format', function (format) {
     process.env.FORMAT = format;
   })
-  .version('0.0.0')
+  .version(packageJson.version)
   .showHelpAfterError();
 addGovernance(program);
 addDiffSnapshots(program);
