@@ -11,7 +11,12 @@ import {
 } from 'viem';
 import merge from 'deepmerge';
 import { FilterLogWithTimestamp, getLogs } from '../utils/logs';
-import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book';
+import {
+  AaveSafetyModule,
+  AaveV3Ethereum,
+  GovernanceV3Ethereum,
+  IGovernanceCore_ABI,
+} from '@bgd-labs/aave-address-book';
 import { TenderlyRequest, TenderlySimulationResponse, tenderly } from '../utils/tenderlyClient';
 import { EOA } from '../utils/constants';
 import {
@@ -23,9 +28,6 @@ import { setBits } from '../utils/storageSlots';
 import { Proof, VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof } from './proofs';
 import { readJSONCache, writeJSONCache } from '../utils/cache';
 import { logInfo } from '../utils/logger';
-
-// TODO remove once final
-const AaveSafetyModule = { STK_AAVE: '0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec' } as const;
 
 type CreatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
 type QueuedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
@@ -288,7 +290,6 @@ export const getGovernance = ({
     async getVotingProofs(proposalId: bigint, voter: Hex, votingChainId: bigint) {
       const proposal = await getProposal(proposalId);
 
-      // TODO: replace with real addresses
       const [stkAaveProof, aaveProof, aAaveProof, representativeProof] = await Promise.all([
         getProof(
           publicClient,
@@ -298,28 +299,25 @@ export const getGovernance = ({
         ),
         getProof(
           publicClient,
-          '0xb6D88BfC5b145a558b279cf7692e6F02064889d0',
-          [getSolidityStorageSlotAddress(VOTING_SLOTS['0xb6D88BfC5b145a558b279cf7692e6F02064889d0'].balance, voter)],
+          AaveV3Ethereum.ASSETS.AAVE.UNDERLYING,
+          [getSolidityStorageSlotAddress(VOTING_SLOTS[AaveV3Ethereum.ASSETS.AAVE.UNDERLYING].balance, voter)],
           proposal.snapshotBlockHash
         ),
         getProof(
           publicClient,
-          '0xD1ff82609FB63A0eee6FE7D2896d80d29491cCCd',
+          AaveV3Ethereum.ASSETS.AAVE.A_TOKEN,
           [
-            getSolidityStorageSlotAddress(VOTING_SLOTS['0xD1ff82609FB63A0eee6FE7D2896d80d29491cCCd'].balance, voter),
-            getSolidityStorageSlotAddress(VOTING_SLOTS['0xD1ff82609FB63A0eee6FE7D2896d80d29491cCCd'].delegation, voter),
+            getSolidityStorageSlotAddress(VOTING_SLOTS[AaveV3Ethereum.ASSETS.AAVE.A_TOKEN].balance, voter),
+            getSolidityStorageSlotAddress(VOTING_SLOTS[AaveV3Ethereum.ASSETS.AAVE.A_TOKEN].delegation, voter),
           ],
           proposal.snapshotBlockHash
         ),
         getProof(
           publicClient,
-          '0x586207Df62c7D5D1c9dBb8F61EdF77cc30925C4F',
+          GovernanceV3Ethereum.GOVERNANCE,
           [
             getSolidityStorageSlotBytes(
-              getSolidityStorageSlotAddress(
-                VOTING_SLOTS['0x586207Df62c7D5D1c9dBb8F61EdF77cc30925C4F'].representative,
-                voter
-              ),
+              getSolidityStorageSlotAddress(VOTING_SLOTS[GovernanceV3Ethereum.GOVERNANCE].representative, voter),
               toHex(votingChainId, { size: 32 })
             ),
           ],

@@ -1,8 +1,5 @@
-import { GovernanceV3Goerli } from '@bgd-labs/aave-address-book';
+import { AaveSafetyModule, AaveV3Ethereum, GovernanceV3Ethereum } from '@bgd-labs/aave-address-book';
 import { Block, Hex, PublicClient, fromRlp, toHex, toRlp } from 'viem';
-
-// TODO remove once final
-const AaveSafetyModule = { STK_AAVE: '0x1406A9Ea2B0ec8FD4bCa4F876DAae2a70a9856Ec' } as const;
 
 /**
  * Slots that represent configuration values relevant for all accounts
@@ -18,12 +15,12 @@ export const WAREHOUSE_SLOTS = {
  */
 export const VOTING_SLOTS = {
   [AaveSafetyModule.STK_AAVE]: { balance: 0n }, // balance
-  ['0xD1ff82609FB63A0eee6FE7D2896d80d29491cCCd' /*AaveV3Ethereum.ASSETS.AAVE.A_TOKEN*/]: {
+  [AaveV3Ethereum.ASSETS.AAVE.A_TOKEN]: {
     balance: 52n, // balance
     delegation: 64n,
   }, // delegation
-  ['0xb6D88BfC5b145a558b279cf7692e6F02064889d0' /*AaveV3Ethereum.ASSETS.AAVE.UNDERLYING*/]: { balance: 0n }, // balance
-  [GovernanceV3Goerli.GOVERNANCE]: { representative: 9n }, // representative
+  [AaveV3Ethereum.ASSETS.AAVE.UNDERLYING]: { balance: 0n }, // balance
+  [GovernanceV3Ethereum.GOVERNANCE]: { representative: 9n }, // representative
 } as const;
 
 export interface Proof {
