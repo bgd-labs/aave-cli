@@ -29,7 +29,7 @@ export function addCommand(program: Command) {
     .requiredOption('--proposalId <number>', 'proposalId to simulate via tenderly')
     .action(async (name, options) => {
       const proposalId = BigInt(options.getOptionValue('proposalId'));
-      await simulateProposal(DEFAULT_GOVERNANCE, DEFAULT_CLIENT, proposalId);
+      await simulateProposal(DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT, proposalId);
     });
 
   govV3
