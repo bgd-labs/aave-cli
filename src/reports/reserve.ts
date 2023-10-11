@@ -1,26 +1,19 @@
 import { formatUnits } from 'viem';
 import { AaveV3Reserve, CHAIN_ID } from './snapshot-types';
 
-export const getBlockExplorerLink: {
-  [key in CHAIN_ID]: (address: string) => string;
-} = {
-  [CHAIN_ID.MAINNET]: (address) =>
-    `[${address}](https://etherscan.io/address/${address})`,
-  [CHAIN_ID.OPTIMISM]: (address) =>
-    `[${address}](https://optimistic.etherscan.io/address/${address})`,
-  [CHAIN_ID.POLYGON]: (address) =>
-    `[${address}](https://polygonscan.com/address/${address})`,
-  [CHAIN_ID.FANTOM]: (address) =>
-    `[${address}](https://ftmscan.com/address/${address})`,
-  [CHAIN_ID.ARBITRUM]: (address) =>
-    `[${address}](https://arbiscan.io/address/${address})`,
-  [CHAIN_ID.AVALANCHE]: (address) =>
-    `[${address}](https://snowtrace.io/address/${address})`,
-  [CHAIN_ID.METIS]: (address) =>
-    `[${address}](https://andromeda-explorer.metis.io/address/${address})`,
-  [CHAIN_ID.BASE]: (address) =>
-    `[${address}](https://basescan.org/address/${address})`,
-};
+export const getBlockExplorerLink = (chain: number, address: string): string => {
+  switch (chain) {
+    case CHAIN_ID.MAINNET: return `[${address}](https://etherscan.io/address/${address})`;
+    case CHAIN_ID.OPTIMISM: return `[${address}](https://optimistic.etherscan.io/address/${address})`;
+    case CHAIN_ID.POLYGON: return `[${address}](https://polygonscan.com/address/${address})`;
+    case CHAIN_ID.FANTOM: return `[${address}](https://ftmscan.com/address/${address})`;
+    case CHAIN_ID.ARBITRUM: return `[${address}](https://arbiscan.io/address/${address})`;
+    case CHAIN_ID.AVALANCHE: return `[${address}](https://snowtrace.io/address/${address})`;
+    case CHAIN_ID.METIS: return `[${address}](https://andromeda-explorer.metis.io/address/${address})`;
+    case CHAIN_ID.BASE: return `[${address}](https://basescan.org/address/${address})`;
+    default: return address;
+  };
+}
 
 export function renderReserveValue<T extends keyof AaveV3Reserve>(
   key: T,
@@ -47,18 +40,18 @@ export function renderReserveValue<T extends keyof AaveV3Reserve>(
       ? '0 %'
       : `${((reserve[key] as number) - 10000) / 100} %`;
   if (key === 'interestRateStrategy')
-    return getBlockExplorerLink[chainId](reserve[key] as string);
+    return getBlockExplorerLink(chainId, reserve[key] as string);
   if (key === 'oracleLatestAnswer' && reserve.oracleDecimals)
     return formatUnits(BigInt(reserve[key]), reserve.oracleDecimals);
   if (typeof reserve[key] === 'number')
     return reserve[key].toLocaleString('en-US');
   if (typeof reserve[key] === 'string' && /0x.+/.test(reserve[key] as string))
-    return getBlockExplorerLink[chainId](reserve[key] as string);
+    return getBlockExplorerLink(chainId, reserve[key] as string);
   return reserve[key];
 }
 
 function renderReserveHeadline(reserve: AaveV3Reserve, chainId: CHAIN_ID) {
-  return `#### ${reserve.symbol} (${getBlockExplorerLink[chainId](
+  return `#### ${reserve.symbol} (${getBlockExplorerLink(chainId,
     reserve.underlying
   )})\n\n`;
 }

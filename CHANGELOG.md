@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.26](https://github.com/bgd-labs/report-engine/compare/v0.0.25...v0.0.26) (2023-10-03)
+
+
+### Features
+
+* expose tenderly setCode ([e45aff4](https://github.com/bgd-labs/report-engine/commit/e45aff413ef831434b38e330d1bbe451fa84509e))
+
+
+### Bug Fixes
+
+* work around concat bug ([6bfb027](https://github.com/bgd-labs/report-engine/commit/6bfb0275b59a19cbe944b2976ae5c3e7167e96b5))
+
 ### [0.0.25](https://github.com/bgd-labs/report-engine/compare/v0.0.24...v0.0.25) (2023-09-25)
 
 
