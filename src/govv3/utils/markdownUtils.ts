@@ -11,9 +11,10 @@ export function boolToMarkdown(value: boolean) {
  * @param address to be linked
  * @param code whether to link to the code tab
  */
-export function toAddressLink(address: Hex, md: boolean, client: PublicClient): string {
+export function toAddressLink(address: Hex, md: boolean, client?: PublicClient): string {
+  if (!client) return address;
   const link = `${client.chain?.blockExplorers?.default.url}/address/${address}`;
-  if (md) return `[${address}](${link})`;
+  if (md) return toMarkdownLink(link, address);
   return link;
 }
 
@@ -22,10 +23,15 @@ export function toAddressLink(address: Hex, md: boolean, client: PublicClient): 
  * @param address to be linked
  * @param code whether to link to the code tab
  */
-export function toTxLink(txn: Hex, md: boolean, client: PublicClient): string {
+export function toTxLink(txn: Hex, md: boolean, client?: PublicClient): string {
+  if (!client) return txn;
   const link = `${client.chain?.blockExplorers?.default.url}/tx/${txn}`;
-  if (md) return `[${txn}](${link})`;
+  if (md) return toMarkdownLink(link, txn);
   return link;
+}
+
+export function toMarkdownLink(link: string, title?: any) {
+  return `[${title || link}](${link})`;
 }
 
 export function renderCheckResult(check: { name: string }, result: CheckResult) {

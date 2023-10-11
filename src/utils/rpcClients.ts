@@ -1,5 +1,17 @@
-import { createPublicClient, http, fallback } from 'viem';
-import { mainnet, arbitrum, polygon, optimism, metis, base, sepolia, goerli, bsc } from 'viem/chains';
+import { createPublicClient, http, fallback, PublicClient } from 'viem';
+import {
+  mainnet,
+  arbitrum,
+  polygon,
+  optimism,
+  metis,
+  base,
+  sepolia,
+  goerli,
+  bsc,
+  fantom,
+  avalanche,
+} from 'viem/chains';
 
 export const mainnetClient = createPublicClient({
   chain: mainnet,
@@ -31,22 +43,35 @@ export const baseClient = createPublicClient({
   transport: http(process.env.RPC_BASE),
 });
 
-export const bscClient = createPublicClient({
+export const fantomClient = createPublicClient({
+  chain: fantom,
+  transport: http(process.env.RPC_FANTOM),
+});
+
+export const bnbClient = createPublicClient({
   chain: bsc,
-  transport: http(process.env.RPC_BSC),
+  transport: http(process.env.RPC_BNB),
+});
+
+export const avalancheClient = createPublicClient({
+  chain: avalanche,
+  transport: http(process.env.RPC_AVALANCHE),
 });
 
 export const sepoliaClient = createPublicClient({ chain: sepolia, transport: http(process.env.RPC_SEPOLIA) });
 
 export const goerliClient = createPublicClient({ chain: goerli, transport: http(process.env.RPC_GOERLI) });
 
-export const CHAIN_ID_CLIENT_MAP = {
+export const CHAIN_ID_CLIENT_MAP: Record<number, PublicClient> = {
   [mainnet.id]: mainnetClient,
   [arbitrum.id]: arbitrumClient,
   [polygon.id]: polygonClient,
-  [optimism.id]: optimismClient,
+  [optimism.id]: optimismClient as PublicClient,
   [metis.id]: metisClient,
-  [base.id]: baseClient,
+  [base.id]: baseClient as PublicClient,
   [sepolia.id]: sepoliaClient,
   [goerli.id]: goerliClient,
+  [fantom.id]: fantomClient,
+  [bsc.id]: bnbClient,
+  [avalanche.id]: avalancheClient,
 } as const;
