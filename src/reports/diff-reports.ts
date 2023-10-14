@@ -5,6 +5,8 @@ import { renderStrategy, renderStrategyDiff } from './strategy';
 import { AaveV3Snapshot, AaveV3Reserve } from './snapshot-types';
 import { diff } from './diff';
 import { renderEmode, renderEmodeDiff } from './emode';
+import { checkPlausibility } from './plausibility';
+import { wanchain } from 'viem/chains';
 
 export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snapshot>(pre: A, post: B) {
   const chainId = pre.chainId;
@@ -104,6 +106,11 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
       content += reservesRemoved.join('\n\n');
       content += '\n\n';
     }
+  }
+
+  const warnings = checkPlausibility(post);
+  if (warnings.length > 0) {
+    content += `## Warnings\n\n${warnings.join('  \n')}\n\n`;
   }
 
   content += `## Raw diff\n\n\`\`\`json\n${JSON.stringify(diff(pre, post, true), null, 2)}\n\`\`\``;
