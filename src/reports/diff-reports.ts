@@ -6,7 +6,6 @@ import { AaveV3Snapshot, AaveV3Reserve } from './snapshot-types';
 import { diff } from './diff';
 import { renderEmode, renderEmodeDiff } from './emode';
 import { checkPlausibility } from './plausibility';
-import { wanchain } from 'viem/chains';
 
 export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snapshot>(pre: A, post: B) {
   const chainId = pre.chainId;
