@@ -25,9 +25,10 @@ import {
   getSolidityStorageSlotUint,
 } from '../utils/storageSlots';
 import { setBits } from '../utils/storageSlots';
-import { Proof, VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof } from './proofs';
+import { VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof } from './proofs';
 import { readJSONCache, writeJSONCache } from '../utils/cache';
 import { logInfo } from '../utils/logger';
+import { GetProofReturnType } from 'viem/_types/actions/public/getProof';
 
 type CreatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
 type QueuedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
@@ -84,7 +85,7 @@ export interface Governance<T extends WalletClient | undefined = undefined> {
     proposalId: bigint,
     params: { executedLog?: ExecutedLog }
   ) => Promise<TenderlySimulationResponse>;
-  getStorageRoots(proposalId: bigint): Promise<Proof[]>;
+  getStorageRoots(proposalId: bigint): Promise<GetProofReturnType[]>;
   /**
    * Returns the proofs that are non-zero for a specified address
    * @param proposalId
@@ -336,7 +337,7 @@ export const getGovernance = ({
             slots
               // filter out zero proofs as they don't add any value
               .filter((slot, ix) => {
-                const shouldSubmitProof = proof.storageProof[ix].value !== '0x0';
+                const shouldSubmitProof = proof.storageProof[ix].value !== 0n;
                 if (!shouldSubmitProof)
                   logInfo('Proof', `Skipping slot ${slot} on ${proof.address} as value is zero for voter ${voter}`);
                 return shouldSubmitProof;

@@ -23,49 +23,36 @@ export const VOTING_SLOTS = {
   [GovernanceV3Ethereum.GOVERNANCE]: { representative: 9n }, // representative
 } as const;
 
-export interface Proof {
-  address: Hex;
-  accountProof: Hex[];
-  balance: Hex;
-  codeHash: Hex;
-  nonce: Hex;
-  storageHash: Hex;
-  storageProof: {
-    key: Hex;
-    value: Hex;
-    proof: Hex[];
-  }[];
-}
-
 export async function getProof(publicClient: PublicClient, address: Hex, slots: readonly Hex[], blockHash: Hex) {
   const block = await publicClient.getBlock({ blockHash });
-  return publicClient.request({
-    method: 'eth_getProof' as any,
-    params: [address, slots.map((slot) => slot), toHex(block.number)] as any,
-  }) as Promise<Proof>;
+  return publicClient.getProof({
+    address,
+    storageKeys: slots.map((slot) => slot),
+    blockNumber: block.number,
+  });
 }
 
 // IMPORTANT valid only for post-Shapella blocks, as it includes `withdrawalsRoot`
 export const getBLockRLP = (rawBlock: Block): Hex => {
-  const rawData = [
+  const rawData: Hex[] = [
     rawBlock.parentHash,
     rawBlock.sha3Uncles,
     rawBlock.miner,
     rawBlock.stateRoot,
     rawBlock.transactionsRoot,
     rawBlock.receiptsRoot,
-    rawBlock.logsBloom,
-    '0x', //toHex(rawBlock.difficulty),
+    rawBlock.logsBloom!,
+    '0x0', //toHex(rawBlock.difficulty),
     toHex(rawBlock.number || 0), // 0 to account for type null
     toHex(rawBlock.gasLimit),
     toHex(rawBlock.gasUsed),
     toHex(rawBlock.timestamp),
     rawBlock.extraData,
     rawBlock.mixHash,
-    rawBlock.nonce,
+    rawBlock.nonce!,
     toHex(rawBlock.baseFeePerGas || 0), // 0 to account for type null
     // @ts-ignore looks like this field is not yet added into the type
-    rawBlock.withdrawalsRoot,
+    rawBlock.withdrawalsRoot!,
   ];
   return toRlp(rawData);
 };
