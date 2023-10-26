@@ -85,6 +85,8 @@ export const CHAIN_ID = {
   AVALANCHE: 43114,
   METIS: 1088,
   BASE: 8453,
+  GNOSIS: 100,
+  BNB: 56,
 } as const;
 
 const zodChainId = z.nativeEnum(CHAIN_ID);

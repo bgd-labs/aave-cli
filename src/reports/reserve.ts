@@ -20,6 +20,10 @@ export const getBlockExplorerLink: {
     `[${address}](https://andromeda-explorer.metis.io/address/${address})`,
   [CHAIN_ID.BASE]: (address) =>
     `[${address}](https://basescan.org/address/${address})`,
+  [CHAIN_ID.GNOSIS]: (address) =>
+  `[${address}](https://gnosisscan.io/address/${address})`,
+  [CHAIN_ID.BNB]: (address) =>
+  `[${address}](https://bscscan.com/address/${address})`,
 };
 
 export function renderReserveValue<T extends keyof AaveV3Reserve>(
