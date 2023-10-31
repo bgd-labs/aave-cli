@@ -16,7 +16,7 @@ import {
 
 export const mainnetClient = createPublicClient({
   chain: mainnet,
-  transport: fallback([http(), http(process.env.RPC_MAINNET)]),
+  transport: http(process.env.RPC_MAINNET),
 });
 
 export const arbitrumClient = createPublicClient({
