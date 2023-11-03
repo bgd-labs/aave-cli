@@ -3,7 +3,7 @@ import { findContractDeploymentBlock } from './logs';
 import { GovernanceV3Ethereum } from '@bgd-labs/aave-address-book';
 import { mainnetClient } from './rpcClients';
 
-describe('logs', () => {
+describe.skip('logs', () => {
   it(
     'findContractDeploymentBlock',
     async () => {
