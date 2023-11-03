@@ -32,7 +32,7 @@ export function addCommand(program: Command) {
         } else if (options.proposalId) {
           return `${unix}-proposalId-${options.proposalId}`;
         } else if (options.payloadId) {
-          return `${unix}-payloadAddress-${options.payloadId}`;
+          return `${unix}-payloadId-${options.payloadId}`;
         }
         return 'vanilla-fork';
       }
@@ -50,7 +50,7 @@ export function addCommand(program: Command) {
           blockNumber: forkConfig.blockNumber || payload.block_number,
         });
         await tenderly.unwrapAndExecuteSimulationPayloadOnFork(fork, payload);
-      } else if (payloadId) {
+      } else if (payloadId != undefined) {
         if (!payloadsControllerAddress) throw new Error('you need to provide a payloadsController');
         const payloadsController = getPayloadsController(
           payloadsControllerAddress as Hex,
