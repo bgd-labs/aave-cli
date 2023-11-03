@@ -5,17 +5,23 @@ import {
   PublicClient,
   encodeFunctionData,
   encodePacked,
+  getAbiItem,
   getContract,
 } from 'viem';
-import { FilterLogWithTimestamp, getLogs } from '../utils/logs';
+import { LogWithTimestamp, getLogs } from '../utils/logs';
 import { TenderlyRequest, tenderly, TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { EOA } from '../utils/constants';
 import { getSolidityStorageSlotUint } from '../utils/storageSlots';
 import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book';
+import type { ExtractAbiEvent } from 'abitype';
 
-type PayloadCreatedLog = FilterLogWithTimestamp<typeof IPayloadsControllerCore_ABI, 'PayloadCreated'>;
-type PayloadQueuedLog = FilterLogWithTimestamp<typeof IPayloadsControllerCore_ABI, 'PayloadQueued'>;
-type PayloadExecutedLog = FilterLogWithTimestamp<typeof IPayloadsControllerCore_ABI, 'PayloadExecuted'>;
+type PayloadCreatedEvent = ExtractAbiEvent<typeof IPayloadsControllerCore_ABI, 'PayloadCreated'>;
+type PayloadQueuedEvent = ExtractAbiEvent<typeof IPayloadsControllerCore_ABI, 'PayloadQueued'>;
+type PayloadExecutedEvent = ExtractAbiEvent<typeof IPayloadsControllerCore_ABI, 'PayloadExecuted'>;
+
+type PayloadCreatedLog = LogWithTimestamp<PayloadCreatedEvent>;
+type PayloadQueuedLog = LogWithTimestamp<PayloadQueuedEvent>;
+type PayloadExecutedLog = LogWithTimestamp<PayloadExecutedEvent>;
 
 export enum PayloadState {
   None,
@@ -29,10 +35,10 @@ export enum PayloadState {
 export interface PayloadsController {
   controllerContract: GetContractReturnType<typeof IPayloadsControllerCore_ABI, PublicClient>;
   // cache created / queued / Executed logs
-  cacheLogs: () => Promise<{
-    createdLogs: Array<PayloadCreatedLog>;
-    queuedLogs: Array<PayloadQueuedLog>;
-    executedLogs: Array<PayloadExecutedLog>;
+  cacheLogs: (searchStartBlock?: bigint) => Promise<{
+    createdLogs: PayloadCreatedLog[];
+    queuedLogs: PayloadQueuedLog[];
+    executedLogs: PayloadExecutedLog[];
   }>;
   // executes an existing payload
   getPayload: (
@@ -95,41 +101,26 @@ export const getPayloadsController = (address: Hex, publicClient: PublicClient):
 
   return {
     controllerContract,
-    cacheLogs: async () => {
-      const createdLogs = await getLogs(
+    cacheLogs: async (searchStartBlock) => {
+      const logs = await getLogs(
         publicClient,
-        (fromBlock, toBlock) => {
-          return controllerContract.createEventFilter.PayloadCreated(
-            {},
-            {
-              fromBlock: fromBlock,
-              toBlock: toBlock,
-            }
-          );
-        },
-        address
+        [
+          getAbiItem({ abi: IPayloadsControllerCore_ABI, name: 'PayloadCreated' }),
+          getAbiItem({ abi: IPayloadsControllerCore_ABI, name: 'PayloadQueued' }),
+          getAbiItem({ abi: IPayloadsControllerCore_ABI, name: 'PayloadExecuted' }),
+        ],
+        address,
+        searchStartBlock
       );
-      const queuedLogs = await getLogs(
-        publicClient,
-        (fromBlock, toBlock) => {
-          return controllerContract.createEventFilter.PayloadQueued({
-            fromBlock: fromBlock,
-            toBlock: toBlock,
-          });
-        },
-        address
-      );
-      const executedLogs = await getLogs(
-        publicClient,
-        (fromBlock, toBlock) => {
-          return controllerContract.createEventFilter.PayloadExecuted({
-            fromBlock: fromBlock,
-            toBlock: toBlock,
-          });
-        },
-        address
-      );
-      return { createdLogs, queuedLogs, executedLogs };
+      const createdLogs = logs.filter((log) => log.eventName === 'PayloadCreated') as PayloadCreatedLog[];
+      const queuedLogs = logs.filter((log) => log.eventName === 'PayloadQueued') as PayloadQueuedLog[];
+      const executedLogs = logs.filter((log) => log.eventName === 'PayloadQueued') as PayloadExecutedLog[];
+
+      return {
+        createdLogs,
+        queuedLogs,
+        executedLogs,
+      };
     },
     getPayload: async (id, logs) => {
       const createdLog = logs.createdLogs.find((l) => l.args.payloadId === id)!;

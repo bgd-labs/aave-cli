@@ -6,11 +6,12 @@ import {
   WalletClient,
   encodeFunctionData,
   fromHex,
+  getAbiItem,
   getContract,
   toHex,
 } from 'viem';
 import merge from 'deepmerge';
-import { FilterLogWithTimestamp, getLogs } from '../utils/logs';
+import { LogWithTimestamp, getLogs } from '../utils/logs';
 import {
   AaveSafetyModule,
   AaveV3Ethereum,
@@ -29,13 +30,21 @@ import { VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof } from './proofs
 import { readJSONCache, writeJSONCache } from '../utils/cache';
 import { logInfo } from '../utils/logger';
 import { GetProofReturnType } from 'viem/_types/actions/public/getProof';
+import type { ExtractAbiEvent } from 'abitype';
 
-type CreatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
-type QueuedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
-type CanceledLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalCanceled'>;
-type ExecutedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'ProposalExecuted'>;
-type PayloadSentLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'PayloadSent'>;
-type VotingActivatedLog = FilterLogWithTimestamp<typeof IGovernanceCore_ABI, 'VotingActivated'>;
+type CreatedEvent = ExtractAbiEvent<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
+type QueuedEvent = ExtractAbiEvent<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
+type CanceledEvent = ExtractAbiEvent<typeof IGovernanceCore_ABI, 'ProposalCanceled'>;
+type ExecutedEvent = ExtractAbiEvent<typeof IGovernanceCore_ABI, 'ProposalExecuted'>;
+type PayloadSentEvent = ExtractAbiEvent<typeof IGovernanceCore_ABI, 'PayloadSent'>;
+type VotingActivatedEvent = ExtractAbiEvent<typeof IGovernanceCore_ABI, 'VotingActivated'>;
+
+type CreatedLog = LogWithTimestamp<CreatedEvent>;
+type QueuedLog = LogWithTimestamp<QueuedEvent>;
+type CanceledLog = LogWithTimestamp<CanceledEvent>;
+type ExecutedLog = LogWithTimestamp<ExecutedEvent>;
+type PayloadSentLog = LogWithTimestamp<PayloadSentEvent>;
+type VotingActivatedLog = LogWithTimestamp<VotingActivatedEvent>;
 
 export enum ProposalState {
   Null, // proposal does not exists
@@ -54,13 +63,13 @@ function isStateFinal(state: ProposalState) {
 
 export interface Governance<T extends WalletClient | undefined = undefined> {
   governanceContract: GetContractReturnType<typeof IGovernanceCore_ABI, PublicClient, WalletClient>;
-  cacheLogs: () => Promise<{
-    createdLogs: Array<CreatedLog>;
-    queuedLogs: Array<QueuedLog>;
-    executedLogs: Array<ExecutedLog>;
-    payloadSentLogs: Array<PayloadSentLog>;
-    votingActivatedLogs: Array<VotingActivatedLog>;
-    canceledLogs: Array<CanceledLog>;
+  cacheLogs: (searchStartBlock?: bigint) => Promise<{
+    createdLogs: CreatedLog[];
+    queuedLogs: QueuedLog[];
+    executedLogs: ExecutedLog[];
+    payloadSentLogs: PayloadSentLog[];
+    votingActivatedLogs: VotingActivatedLog[];
+    canceledLogs: CanceledLog[];
   }>;
   /**
    * Thin caching wrapper on top of getProposal.
@@ -183,86 +192,28 @@ export const getGovernance = ({
 
   return {
     governanceContract,
-    async cacheLogs() {
-      const createdLogs = await getLogs(
+    async cacheLogs(searchStartBlock) {
+      const logs = await getLogs(
         publicClient,
-        (fromBlock, toBlock) => {
-          return governanceContract.createEventFilter.ProposalCreated(
-            {},
-            {
-              fromBlock: fromBlock,
-              toBlock,
-            }
-          );
-        },
-        address
+        [
+          getAbiItem({ abi: IGovernanceCore_ABI, name: 'ProposalCreated' }),
+          getAbiItem({ abi: IGovernanceCore_ABI, name: 'ProposalQueued' }),
+          getAbiItem({ abi: IGovernanceCore_ABI, name: 'ProposalExecuted' }),
+          getAbiItem({ abi: IGovernanceCore_ABI, name: 'PayloadSent' }),
+          getAbiItem({ abi: IGovernanceCore_ABI, name: 'VotingActivated' }),
+          getAbiItem({ abi: IGovernanceCore_ABI, name: 'ProposalCanceled' }),
+        ],
+        address,
+        searchStartBlock
       );
-      const queuedLogs = await getLogs(
-        publicClient,
-        (fromBlock, toBlock) => {
-          return governanceContract.createEventFilter.ProposalQueued(
-            {},
-            {
-              fromBlock: fromBlock,
-              toBlock,
-            }
-          );
-        },
-        address
-      );
-      const executedLogs = await getLogs(
-        publicClient,
-        (fromBlock, toBlock) => {
-          return governanceContract.createEventFilter.ProposalExecuted(
-            {},
-            {
-              fromBlock: fromBlock,
-              toBlock,
-            }
-          );
-        },
-        address
-      );
-      const payloadSentLogs = await getLogs(
-        publicClient,
-        (fromBlock, toBlock) => {
-          return governanceContract.createEventFilter.PayloadSent(
-            {},
-            {
-              fromBlock: fromBlock,
-              toBlock,
-            }
-          );
-        },
-        address
-      );
-      const votingActivatedLogs = await getLogs(
-        publicClient,
-        (fromBlock, toBlock) => {
-          return governanceContract.createEventFilter.VotingActivated(
-            {},
-            {
-              fromBlock: fromBlock,
-              toBlock,
-            }
-          );
-        },
-        address
-      );
-      const canceledLogs = await getLogs(
-        publicClient,
-        (fromBlock, toBlock) => {
-          return governanceContract.createEventFilter.ProposalCanceled(
-            {},
-            {
-              fromBlock: fromBlock,
-              toBlock,
-            }
-          );
-        },
-        address
-      );
-      return { createdLogs, queuedLogs, executedLogs, payloadSentLogs, votingActivatedLogs, canceledLogs };
+      const createdLogs = logs.filter((log) => log.eventName === 'ProposalCreated');
+      const queuedLogs = logs.filter((log) => log.eventName === 'ProposalQueued');
+      const executedLogs = logs.filter((log) => log.eventName === 'ProposalExecuted');
+      const payloadSentLogs = logs.filter((log) => log.eventName === 'PayloadSent');
+      const votingActivatedLogs = logs.filter((log) => log.eventName === 'VotingActivated');
+      const canceledLogs = logs.filter((log) => log.eventName === 'ProposalCanceled');
+
+      return { createdLogs, queuedLogs, executedLogs, payloadSentLogs, votingActivatedLogs, canceledLogs } as any;
     },
     getProposal,
     async getProposalAndLogs(proposalId, logs) {
