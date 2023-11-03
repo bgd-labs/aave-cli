@@ -58,6 +58,8 @@ export async function getLogs<TAbi extends Abi, TEventName extends string>(
     );
     writeJSONCache(filePath, fileName, combinedCache);
     return combinedCache;
+  } else {
+    logInfo(client.chain?.name!, 'no new logs found');
   }
   return cache;
 }
@@ -74,6 +76,7 @@ export async function getPastLogsRecursive<
   toBlock: bigint,
   filterFn: (from: bigint, to?: bigint) => Promise<GetFilterLogsParameters<TAbi, TEventName>['filter']>
 ): Promise<GetFilterLogsReturnType<TAbi, TEventName>> {
+  logInfo(client.chain?.name!, `looking for logs between ${fromBlock} to ${toBlock}`);
   if (fromBlock <= toBlock) {
     try {
       return await client.getFilterLogs({
