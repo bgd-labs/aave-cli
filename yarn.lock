@@ -33,10 +33,10 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@bgd-labs/aave-address-book@2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.7.0.tgz#ae26abb1a340fe795b9a2febd87f842c2ed06a99"
-  integrity sha512-TYErogNQIecHnnr7NXxGSnr1d/QuXNP9o5L8wRzx0+GIJiCi7Dmy9dlJxQO/nEky/Nq512l09xYKjRVnTz37Tg==
+"@bgd-labs/aave-address-book@2.10.0":
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.10.0.tgz#19873ec0edf9ee1f1a5539162e6092b0a2b2c4b4"
+  integrity sha512-DVglkDCYUf7etb6mnCziIY2HPgap4X3AnC/1tC0ZqpXFrhO0lQzWBiMeWy20r1x/b81iHMQa02ULaco3LhdeVw==
 
 "@commander-js/extra-typings@^11.1.0":
   version "11.1.0"
@@ -2530,10 +2530,10 @@ varint@^6.0.0:
   resolved "https://registry.npmjs.org/varint/-/varint-6.0.0.tgz"
   integrity sha512-cXEIW6cfr15lFv563k4GuVuW/fiwjknytD37jIOLSdSWuOI6WnO/oKwmP2FQTU2l01LP8/M5TSAJpzUaGe3uWg==
 
-viem@^1.16.6:
-  version "1.16.6"
-  resolved "https://registry.yarnpkg.com/viem/-/viem-1.16.6.tgz#78118c9269506a59e2bc4deab13f1646e113d3fc"
-  integrity sha512-jcWcFQ+xzIfDwexwPJRvCuCRJKEkK9iHTStG7mpU5MmuSBpACs4nATBDyXNFtUiyYTFzLlVEwWkt68K0nCSImg==
+viem@^1.18.4:
+  version "1.18.4"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-1.18.4.tgz#2bb17c6e7c4082f06cd8a6ed8a34eedf6e4a3bc9"
+  integrity sha512-im+y30k+IGT6VtfD/q1V0RX5PaiHPsFTHkKqvTjTqV+ZT8RgJXzOGPXr5E0uPIm2cbJAJp6A9nR9BCHY7BKR2Q==
   dependencies:
     "@adraffy/ens-normalize" "1.9.4"
     "@noble/curves" "1.2.0"
