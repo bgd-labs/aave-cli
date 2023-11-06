@@ -114,7 +114,7 @@ export const getPayloadsController = (address: Hex, publicClient: PublicClient):
       );
       const createdLogs = logs.filter((log) => log.eventName === 'PayloadCreated') as PayloadCreatedLog[];
       const queuedLogs = logs.filter((log) => log.eventName === 'PayloadQueued') as PayloadQueuedLog[];
-      const executedLogs = logs.filter((log) => log.eventName === 'PayloadQueued') as PayloadExecutedLog[];
+      const executedLogs = logs.filter((log) => log.eventName === 'PayloadExecuted') as PayloadExecutedLog[];
 
       return {
         createdLogs,
