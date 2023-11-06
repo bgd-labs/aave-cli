@@ -41,3 +41,7 @@ export function renderCheckResult(check: { name: string }, result: CheckResult) 
   if (result.info.length) response += `#### Info\n\n${result.info.join('\n')}\n\n`;
   return response;
 }
+
+export function renderUnixTime(time: number) {
+  return new Date(time * 1000).toLocaleString('en-GB', { timeZone: 'UTC' });
+}

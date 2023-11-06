@@ -3,7 +3,7 @@ import { StateDiff, TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { tenderlyDeepDiff } from './utils/tenderlyDeepDiff';
 import { interpretStateChange } from './utils/stateDiffInterpreter';
 import { getContractName } from './utils/solidityUtils';
-import { boolToMarkdown, renderCheckResult, toTxLink } from './utils/markdownUtils';
+import { boolToMarkdown, renderCheckResult, renderUnixTime, toTxLink } from './utils/markdownUtils';
 import { checkTouchedContractsNoSelfdestruct } from './checks/selfDestruct';
 import { checkLogs } from './checks/logs';
 import { checkTouchedContractsVerifiedEtherscan } from './checks/targetsVerified';
@@ -32,12 +32,20 @@ export async function generateProposalReport({
 - creator: ${proposal.creator}
 - maximumAccessLevelRequired: ${proposal.accessLevel}
 - payloads: ${JSON.stringify(proposal.payloads, (key, value) => (typeof value === 'bigint' ? value.toString() : value))}
-- createdAt: [${proposal.creationTime}](${toTxLink(createdLog.transactionHash, false, publicClient)})\n`;
+- createdAt: [${renderUnixTime(proposal.creationTime)}](${toTxLink(
+    createdLog.transactionHash,
+    false,
+    publicClient
+  )})\n`;
   if (queuedLog) {
-    report += `- queuedAt: [${proposal.queuingTime}](${toTxLink(queuedLog.transactionHash, false, publicClient)})\n`;
+    report += `- queuedAt: [${renderUnixTime(proposal.queuingTime)}](${toTxLink(
+      queuedLog.transactionHash,
+      false,
+      publicClient
+    )})\n`;
   }
   if (executedLog) {
-    report += `- executedAt: [${executedLog.timestamp}](${toTxLink(
+    report += `- executedAt: [${renderUnixTime(executedLog.timestamp)}](${toTxLink(
       executedLog.transactionHash,
       false,
       publicClient
