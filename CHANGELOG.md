@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/bgd-labs/aave-cli/compare/v0.0.26...v0.1.0) (2023-11-08)
+
+
+### Features
+
+* initial support for gov v3 ([#54](https://github.com/bgd-labs/aave-cli/issues/54)) ([a2d7fd2](https://github.com/bgd-labs/aave-cli/commit/a2d7fd211275d28c6cd575081039fea23b57b8fb))
+
+
+### Bug Fixes
+
+* chore update deps ([2fd8366](https://github.com/bgd-labs/aave-cli/commit/2fd836632bb269e7553717c2970b315331b77c56))
+* fix lockfile ([6f54b88](https://github.com/bgd-labs/aave-cli/commit/6f54b88c3f2b6d123dc070beef952143e1b35f79))
+
 ### [0.0.26](https://github.com/bgd-labs/report-engine/compare/v0.0.25...v0.0.26) (2023-10-03)
 
 
