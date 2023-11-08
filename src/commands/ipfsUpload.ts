@@ -4,6 +4,7 @@ import Hash from 'ipfs-only-hash';
 import bs58 from 'bs58';
 import { validateAIPHeader } from '../ipfs/aipValidation';
 import { Command } from '@commander-js/extra-typings';
+import { logError } from '../utils/logger';
 
 // https://ethereum.stackexchange.com/questions/44506/ipfs-hash-algorithm
 async function getHash(data: string) {
@@ -55,6 +56,10 @@ export function addCommand(program: Command) {
     .option('--verbose')
     .action(async (source, { upload, verbose }) => {
       const filePath = path.join(process.cwd(), source);
+      if (!fs.existsSync(filePath)) {
+        logError('Upload', `Cannot find file at: ${filePath}`);
+        throw new Error('FILE_NOT_FOUND');
+      }
       const content = fs.readFileSync(filePath, 'utf8');
       validateAIPHeader(content);
 

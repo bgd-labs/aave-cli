@@ -1,5 +1,6 @@
-import { z } from "zod";
-import matter from "gray-matter";
+import { ZodError, z } from 'zod';
+import matter from 'gray-matter';
+import { logError } from '../utils/logger';
 
 const aipType = z.object({
   discussions: z.string(),
@@ -14,6 +15,12 @@ const aipType = z.object({
  */
 export function validateAIPHeader(content: string) {
   const fm = matter(content);
-  aipType.parse(fm.data);
+  try {
+    aipType.parse(fm.data);
+  } catch (e) {
+    logError('AIP', 'AIP validation failed');
+    (e as ZodError).issues.map((issue) => logError(`AIP`, `${issue.path[0]} is ${issue.message}`));
+    throw e;
+  }
   return fm.data.title;
 }
