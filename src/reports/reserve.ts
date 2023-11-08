@@ -1,66 +1,25 @@
-import { formatUnits } from 'viem';
+import { Hex, formatUnits } from 'viem';
 import { AaveV3Reserve, CHAIN_ID } from './snapshot-types';
+import { toAddressLink } from '../govv3/utils/markdownUtils';
+import { CHAIN_ID_CLIENT_MAP } from '../utils/rpcClients';
 
-export const getBlockExplorerLink: {
-  [key in CHAIN_ID]: (address: string) => string;
-} = {
-  [CHAIN_ID.MAINNET]: (address) =>
-    `[${address}](https://etherscan.io/address/${address})`,
-  [CHAIN_ID.OPTIMISM]: (address) =>
-    `[${address}](https://optimistic.etherscan.io/address/${address})`,
-  [CHAIN_ID.POLYGON]: (address) =>
-    `[${address}](https://polygonscan.com/address/${address})`,
-  [CHAIN_ID.FANTOM]: (address) =>
-    `[${address}](https://ftmscan.com/address/${address})`,
-  [CHAIN_ID.ARBITRUM]: (address) =>
-    `[${address}](https://arbiscan.io/address/${address})`,
-  [CHAIN_ID.AVALANCHE]: (address) =>
-    `[${address}](https://snowtrace.io/address/${address})`,
-  [CHAIN_ID.METIS]: (address) =>
-    `[${address}](https://andromeda-explorer.metis.io/address/${address})`,
-  [CHAIN_ID.BASE]: (address) =>
-    `[${address}](https://basescan.org/address/${address})`,
-};
-
-export function renderReserveValue<T extends keyof AaveV3Reserve>(
-  key: T,
-  reserve: AaveV3Reserve,
-  chainId: CHAIN_ID
-) {
-  if (
-    [
-      'reserveFactor',
-      'liquidationProtocolFee',
-      'liquidationThreshold',
-      'ltv',
-    ].includes(key)
-  )
+export function renderReserveValue<T extends keyof AaveV3Reserve>(key: T, reserve: AaveV3Reserve, chainId: CHAIN_ID) {
+  if (['reserveFactor', 'liquidationProtocolFee', 'liquidationThreshold', 'ltv'].includes(key))
     return `${formatUnits(BigInt(reserve[key]), 2)} %`;
-  if (['supplyCap', 'borrowCap'].includes(key))
-    return `${reserve[key].toLocaleString('en-US')} ${reserve.symbol}`;
-  if (key === 'debtCeiling')
-    return `${Number(formatUnits(BigInt(reserve[key]), 2)).toLocaleString(
-      'en-US'
-    )} $`;
-  if (key === 'liquidationBonus')
-    return reserve[key] === 0
-      ? '0 %'
-      : `${((reserve[key] as number) - 10000) / 100} %`;
-  if (key === 'interestRateStrategy')
-    return getBlockExplorerLink[chainId](reserve[key] as string);
+  if (['supplyCap', 'borrowCap'].includes(key)) return `${reserve[key].toLocaleString('en-US')} ${reserve.symbol}`;
+  if (key === 'debtCeiling') return `${Number(formatUnits(BigInt(reserve[key]), 2)).toLocaleString('en-US')} $`;
+  if (key === 'liquidationBonus') return reserve[key] === 0 ? '0 %' : `${((reserve[key] as number) - 10000) / 100} %`;
+  if (key === 'interestRateStrategy') return toAddressLink(reserve[key] as Hex, true, CHAIN_ID_CLIENT_MAP[chainId]);
   if (key === 'oracleLatestAnswer' && reserve.oracleDecimals)
     return formatUnits(BigInt(reserve[key]), reserve.oracleDecimals);
-  if (typeof reserve[key] === 'number')
-    return reserve[key].toLocaleString('en-US');
+  if (typeof reserve[key] === 'number') return reserve[key].toLocaleString('en-US');
   if (typeof reserve[key] === 'string' && /0x.+/.test(reserve[key] as string))
-    return getBlockExplorerLink[chainId](reserve[key] as string);
+    return toAddressLink(reserve[key] as Hex, true, CHAIN_ID_CLIENT_MAP[chainId]);
   return reserve[key];
 }
 
 function renderReserveHeadline(reserve: AaveV3Reserve, chainId: CHAIN_ID) {
-  return `#### ${reserve.symbol} (${getBlockExplorerLink[chainId](
-    reserve.underlying
-  )})\n\n`;
+  return `#### ${reserve.symbol} (${toAddressLink(reserve.underlying as Hex, true, CHAIN_ID_CLIENT_MAP[chainId])})\n\n`;
 }
 
 const ORDER: (keyof AaveV3Reserve)[] = [
@@ -131,8 +90,7 @@ export type ReserveDiff<A extends AaveV3Reserve = AaveV3Reserve> = {
 
 export function renderReserveDiff(diff: ReserveDiff, chainId: CHAIN_ID) {
   let content = renderReserveHeadline(diff as AaveV3Reserve, chainId);
-  content +=
-    '| description | value before | value after |\n| --- | --- | --- |\n';
+  content += '| description | value before | value after |\n| --- | --- | --- |\n';
   (Object.keys(diff) as (keyof AaveV3Reserve)[])
     .filter((key) => diff[key].hasOwnProperty('from'))
     .sort(sortReserveKeys)
@@ -141,11 +99,7 @@ export function renderReserveDiff(diff: ReserveDiff, chainId: CHAIN_ID) {
         key,
         { ...diff, [key]: diff[key].from },
         chainId
-      )} | ${renderReserveValue(
-        key,
-        { ...diff, [key]: diff[key].to },
-        chainId
-      )} |\n`;
+      )} | ${renderReserveValue(key, { ...diff, [key]: diff[key].to }, chainId)} |\n`;
     });
   return content;
 }

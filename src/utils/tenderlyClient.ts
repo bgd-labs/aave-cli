@@ -1,19 +1,17 @@
 import {
   Hex,
-  PublicClient,
   Transaction as ViemTransaction,
-  WalletClient,
   createPublicClient,
   createWalletClient,
-  getAddress,
   http,
-  pad,
   toHex,
   parseEther,
   fromHex,
+  pad,
+  zeroAddress,
 } from 'viem';
 import { EOA } from './constants';
-import { logInfo, logWarning } from './logger';
+import { logError, logInfo, logSuccess, logWarning } from './logger';
 export type StateObject = {
   balance?: string;
   code?: string;
@@ -70,7 +68,7 @@ export type TenderlyRequest = {
   state_objects?: Record<Hex, StateObject>;
   contracts?: ContractObject[];
   block_header?: {
-    number?: string;
+    number?: Hex;
     timestamp?: Hex;
   };
   generate_access_list?: boolean;
@@ -128,6 +126,19 @@ export interface SoltypeElement {
 export interface Input {
   soltype: SoltypeElement | null;
   value: boolean | string;
+}
+
+export interface Log {
+  name: string | null;
+  anonymous: boolean;
+  inputs: Input[];
+  raw: LogRaw;
+}
+
+export interface LogRaw {
+  address: string;
+  topics: string[];
+  data: string;
 }
 
 export interface Trace {
@@ -262,15 +273,20 @@ class Tenderly {
     } else {
       request.state_objects[request.from].balance = String(parseEther('3'));
     }
+
+    const fullRequest = JSON.stringify({
+      generate_access_list: true,
+      save: true,
+      gas_price: '0',
+      gas: 30_000_000,
+      ...request,
+    });
+
+    logInfo('tenderly', `request: ${JSON.stringify(fullRequest)}`);
+
     const response = await fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/simulate`, {
       method: 'POST',
-      body: JSON.stringify({
-        generate_access_list: true,
-        save: true,
-        gas_price: '0',
-        gas: 30_000_000,
-        ...request,
-      }),
+      body: fullRequest,
       headers: new Headers({
         'Content-Type': 'application/json',
         'X-Access-Key': this.ACCESS_TOKEN,
@@ -317,6 +333,10 @@ class Tenderly {
     });
 
     const result = await response.json();
+    if (result.error) {
+      logError('tenderly', 'fork could not be created');
+      throw new Error(result.error.message);
+    }
     const fork = {
       id: result.simulation_fork.id,
       chainId: result.simulation_fork.network_id,
@@ -324,16 +344,71 @@ class Tenderly {
       forkNetworkId: result.simulation_fork.chain_config.chain_id,
       forkUrl: `https://rpc.tenderly.co/fork/${result.simulation_fork.id}`,
     };
-    logInfo(
+    logSuccess(
       'tenderly',
       `Fork created! To use in aave interface you need to run the following commands:\n\n---\nlocalStorage.setItem('forkEnabled', 'true');\nlocalStorage.setItem('forkBaseChainId', ${fork.chainId});\nlocalStorage.setItem('forkNetworkId', ${fork.forkNetworkId});\nlocalStorage.setItem("forkRPCUrl", "${fork.forkUrl}");\n---\n`
     );
     return fork;
   };
 
+  deployCode = (fork: any, filePath: string, from?: Hex) => {
+    const walletProvider = createWalletClient({
+      account: from || EOA,
+      chain: { id: 3030, name: 'tenderly' } as any,
+      transport: http(fork.forkUrl),
+    });
+
+    const artifact = require(filePath);
+    logInfo('tenderly', `deploying ${filePath}`);
+
+    return walletProvider.deployContract({
+      abi: artifact.abi,
+      bytecode: artifact.bytecode,
+    } as any);
+  };
+
+  warpTime = async (fork: any, timestamp: bigint) => {
+    const publicProvider = createPublicClient({
+      chain: { id: 3030 } as any,
+      transport: http(fork.forkUrl),
+    });
+
+    const currentBlock = await publicProvider.getBlock();
+    // warping forward in time
+    if (timestamp > currentBlock.timestamp) {
+      logInfo('tenderly', `warping time from ${currentBlock.timestamp} to ${timestamp}`);
+      await publicProvider.request({
+        method: 'evm_increaseTime' as any,
+        params: [toHex(timestamp - currentBlock.timestamp)],
+      });
+    } else {
+      logWarning(
+        'tenderly',
+        `skipping time warp as tenderly forks do not support traveling back in time (from ${currentBlock.timestamp} to ${timestamp})`
+      );
+    }
+  };
+
+  warpBlocks = async (fork: any, blockNumber: bigint) => {
+    const publicProvider = createPublicClient({
+      chain: { id: 3030 } as any,
+      transport: http(fork.forkUrl),
+    });
+    const currentBlock = await publicProvider.getBlock();
+    if (blockNumber > currentBlock.number) {
+      logInfo('tenderly', `warping blocks from ${currentBlock.number} to ${blockNumber}`);
+      await publicProvider.request({
+        method: 'evm_increaseBlocks' as any,
+        params: [toHex(blockNumber - currentBlock.number)],
+      });
+    } else {
+      logWarning('tenderly', 'skipping block warp as tenderly forks do not support traveling back in time');
+    }
+  };
+
   unwrapAndExecuteSimulationPayloadOnFork = async (fork: any, request: TenderlyRequest) => {
     // 0. fund account
-    await this.fundAccount(fork, EOA);
+    await this.fundAccount(fork, request.from);
 
     const publicProvider = createPublicClient({
       chain: { id: 3030 } as any,
@@ -347,7 +422,11 @@ class Tenderly {
           for (const slot of Object.keys(request.state_objects[address].storage!) as Hex[]) {
             await publicProvider.request({
               method: 'tenderly_setStorageAt' as any,
-              params: [address as Hex, slot as Hex, request.state_objects[address].storage![slot] as Hex],
+              params: [
+                address as Hex,
+                pad(slot as Hex, { size: 32 }),
+                pad(request.state_objects[address].storage![slot] as Hex, { size: 32 }),
+              ],
             });
           }
         }
@@ -356,31 +435,32 @@ class Tenderly {
 
     // 2. warp time
     if (request.block_header?.timestamp) {
-      const currentBlock = await publicProvider.getBlock();
-      // warping back in time
-      if (fromHex(request.block_header?.timestamp, 'bigint') > currentBlock.timestamp) {
-        await publicProvider.request({
-          method: 'evm_increaseTime' as any,
-          params: [toHex(fromHex(request.block_header?.timestamp, 'bigint') - currentBlock.timestamp)],
-        });
-      } else {
-        logWarning('tenderly', 'skipping time warp as tenderly forks do not support traveling back in time');
-      }
+      await this.warpTime(fork, fromHex(request.block_header?.timestamp, 'bigint'));
+    }
+    if (request.block_header?.number) {
+      await this.warpBlocks(fork, fromHex(request.block_header?.number, 'bigint'));
     }
 
     // 3. execute txn
     if (request.input) {
       logInfo('tenderly', 'execute transaction');
       const walletProvider = createWalletClient({
-        account: EOA,
+        account: request.from,
         chain: { id: 3030, name: 'tenderly' } as any,
         transport: http(fork.forkUrl),
       });
-      return await walletProvider.sendTransaction({
+      const hash = await walletProvider.sendTransaction({
         data: request.input,
         to: request.to,
-        value: 0n,
+        value: request.value || 0n,
       } as any);
+      const receipt = await publicProvider.getTransactionReceipt({ hash });
+      if (receipt.status === 'success') {
+        logSuccess('tenderly', 'transaction successfully executed');
+      } else {
+        logError('tenderly', 'transaction reverted');
+      }
+      return hash;
     }
   };
 

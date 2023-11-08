@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { diff } from './diff';
-import { AaveV3Reserve } from './snapshot-types';
+import { AaveV3Reserve, CHAIN_ID } from './snapshot-types';
 import { renderReserve, renderReserveDiff, renderReserveValue } from './reserve';
 
 const WBTC_MOCK = {
@@ -49,10 +49,20 @@ describe('reserve', () => {
     it('lt', () => {
       expect(renderReserveValue('liquidationThreshold', WBTC_MOCK, 1)).toBe('75.55 %');
     });
+    it('address with block explorer', () => {
+      expect(renderReserveValue('aToken', WBTC_MOCK, 1)).toBe(`[${WBTC_MOCK.aToken}](https://etherscan.io/address/${WBTC_MOCK.aToken})`);
+    });
+    it('address without block explorer', () => {
+      expect(renderReserveValue('aToken', WBTC_MOCK, 31337 as CHAIN_ID)).toBe(WBTC_MOCK.aToken);
+    });
   });
   describe('renderReserve', () => {
     it('should properly render new reserve', () => {
       const out = renderReserve(WBTC_MOCK, 1);
+      expect(out).toMatchSnapshot();
+    });
+    it('should properly render new reserve with local chain id', () => {
+      const out = renderReserve(WBTC_MOCK, 31337 as CHAIN_ID);
       expect(out).toMatchSnapshot();
     });
     it('should properly render altered reserve', () => {
