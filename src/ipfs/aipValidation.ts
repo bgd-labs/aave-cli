@@ -19,7 +19,12 @@ export function validateAIPHeader(content: string) {
     aipType.parse(fm.data);
   } catch (e) {
     logError('AIP', 'AIP validation failed');
-    (e as ZodError).issues.map((issue) => logError(`AIP`, `${issue.path[0]} is ${issue.message}`));
+    (e as ZodError).issues.map((issue) =>
+      logError(
+        `AIP`,
+        `On field ${issue.path[0]} received ${(issue as any).received} but expected ${(issue as any).expected}`
+      )
+    );
     throw e;
   }
   return fm.data.title;
