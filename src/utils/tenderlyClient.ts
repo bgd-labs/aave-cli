@@ -300,6 +300,37 @@ class Tenderly {
   };
 
   /**
+   * Fork api to get fork information from an existing fork id
+   * @param project name of the Tenderly project where the fork was created
+   * @param forkId id of the fork created in tenderly
+   * @returns fork object
+   */
+  getForkInfo = async (project: string, forkId: string) => {
+    const response =await fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${project}/fork/${forkId}`,
+      {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'X-Access-Key': this.ACCESS_TOKEN,
+        }),
+      }
+    );
+    if (response.status !== 200) {
+      console.log(await response.text());
+      throw new Error(`TenderlyError: ${response.statusText}`);
+    }
+    const result = await response.json();
+    const fork = {
+      id: result.simulation_fork.id,
+      chainId: result.simulation_fork.network_id,
+      block_number: result.simulation_fork.block_number,
+      forkNetworkId: result.simulation_fork.chain_config.chain_id,
+      forkUrl: `https://rpc.tenderly.co/fork/${result.simulation_fork.id}`,
+    };
+
+    return fork;
+  };
+  /**
    * Trace api lacks most information we need, so simulateTx uses the simulation api to replicate the trace.
    * @param chainId
    * @param tx
