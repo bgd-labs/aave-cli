@@ -5,6 +5,7 @@ import { addCommand as addIpfsCommand } from './commands/ipfsUpload';
 import { addCommand as addDiffSnapshots } from './commands/diffSnaphots';
 import { addCommand as addGovernance } from './commands/governance';
 import { addCommand as addFork } from './commands/fork';
+import { addCommand as addAribtrumBridgeProof } from './commands/arbitrumBridgeExit';
 import packageJson from '../package.json';
 
 const program = new Command();
@@ -28,5 +29,6 @@ addGovernance(program);
 addDiffSnapshots(program);
 addFork(program);
 addIpfsCommand(program);
+addAribtrumBridgeProof(program);
 
 program.parse();
