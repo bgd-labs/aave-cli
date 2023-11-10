@@ -236,6 +236,14 @@ export type TenderlySimulationResponse = {
 
 export type TenderlyTraceResponse = TransactionInfo;
 
+export type Fork = {
+  id: string;
+  chainId: string;
+  block_number: number;
+  forkNetworkId: string;
+  forkUrl: string;
+};
+
 class Tenderly {
   TENDERLY_BASE: string = `https://api.tenderly.co/api/v1`;
 
@@ -305,8 +313,9 @@ class Tenderly {
    * @param forkId id of the fork created in tenderly
    * @returns fork object
    */
-  getForkInfo = async (project: string, forkId: string) => {
-    const response: Response = await fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${project}/fork/${forkId}`,
+  getForkInfo = async (forkId: string): Promise<Fork> => {
+    const response: Response = await fetch(
+      `${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/fork/${forkId}`,
       {
         method: 'GET',
         headers: new Headers({
@@ -327,7 +336,6 @@ class Tenderly {
       forkNetworkId: result.simulation_fork.chain_config.chain_id,
       forkUrl: `https://rpc.tenderly.co/fork/${result.simulation_fork.id}`,
     };
-
     return fork;
   };
   /**
@@ -347,7 +355,15 @@ class Tenderly {
     return this.simulate(simulationPayload);
   };
 
-  fork = async ({ chainId, blockNumber, alias }: { chainId: number; blockNumber?: number; alias?: string }) => {
+  fork = async ({
+    chainId,
+    blockNumber,
+    alias,
+  }: {
+    chainId: number;
+    blockNumber?: number;
+    alias?: string;
+  }): Promise<Fork> => {
     const forkingPoint = {
       network_id: chainId,
       chain_config: { chain_id: 3030 },
@@ -382,7 +398,7 @@ class Tenderly {
     return fork;
   };
 
-  deployCode = (fork: any, filePath: string, from?: Hex) => {
+  deployCode = (fork: Fork, filePath: string, from?: Hex) => {
     const walletProvider = createWalletClient({
       account: from || EOA,
       chain: { id: 3030, name: 'tenderly' } as any,
@@ -398,7 +414,7 @@ class Tenderly {
     } as any);
   };
 
-  warpTime = async (fork: any, timestamp: bigint) => {
+  warpTime = async (fork: Fork, timestamp: bigint) => {
     const publicProvider = createPublicClient({
       chain: { id: 3030 } as any,
       transport: http(fork.forkUrl),
@@ -420,7 +436,7 @@ class Tenderly {
     }
   };
 
-  warpBlocks = async (fork: any, blockNumber: bigint) => {
+  warpBlocks = async (fork: Fork, blockNumber: bigint) => {
     const publicProvider = createPublicClient({
       chain: { id: 3030 } as any,
       transport: http(fork.forkUrl),
@@ -437,7 +453,7 @@ class Tenderly {
     }
   };
 
-  unwrapAndExecuteSimulationPayloadOnFork = async (fork: any, request: TenderlyRequest) => {
+  unwrapAndExecuteSimulationPayloadOnFork = async (fork: Fork, request: TenderlyRequest) => {
     // 0. fund account
     await this.fundAccount(fork, request.from);
 
@@ -495,7 +511,7 @@ class Tenderly {
     }
   };
 
-  fundAccount = (fork: { id: string }, address: Hex) => {
+  fundAccount = (fork: Fork, address: Hex) => {
     logInfo('tenderly', 'fund account');
     return fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/fork/${fork.id}/balance`, {
       method: 'POST',
@@ -507,7 +523,7 @@ class Tenderly {
     });
   };
 
-  replaceCode = (fork: any, address: Hex, code: Hex) => {
+  replaceCode = (fork: Fork, address: Hex, code: Hex) => {
     const publicProvider = createPublicClient({
       chain: { id: 3030 } as any,
       transport: http(fork.forkUrl),
