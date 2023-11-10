@@ -1,9 +1,6 @@
-import { Hex, PublicClient, getAddress } from 'viem';
-import { StateDiff, TenderlySimulationResponse } from '../utils/tenderlyClient';
-import { tenderlyDeepDiff } from './utils/tenderlyDeepDiff';
-import { interpretStateChange } from './utils/stateDiffInterpreter';
-import { getContractName } from './utils/solidityUtils';
-import { boolToMarkdown, renderCheckResult, renderUnixTime, toTxLink } from './utils/markdownUtils';
+import { PublicClient } from 'viem';
+import { TenderlySimulationResponse } from '../utils/tenderlyClient';
+import { renderCheckResult, renderUnixTime, toTxLink } from './utils/markdownUtils';
 import { checkTouchedContractsNoSelfdestruct } from './checks/selfDestruct';
 import { checkLogs } from './checks/logs';
 import { checkTouchedContractsVerifiedEtherscan } from './checks/targetsVerified';

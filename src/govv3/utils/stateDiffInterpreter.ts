@@ -55,6 +55,7 @@ function decodeReserveDataV2(data: bigint) {
   const active = Number(getBits(data, 56n, 56n));
   const frozen = Number(getBits(data, 57n, 57n));
   const borrowingEnabled = Number(getBits(data, 58n, 58n));
+  const stableBorrowingEnabled = Number(getBits(data, 59n, 59n));
   const reserveFactor = getBits(data, 64n, 79n);
   return {
     ltv,
@@ -64,6 +65,7 @@ function decodeReserveDataV2(data: bigint) {
     active: !!active,
     frozen: !!frozen,
     borrowingEnabled: !!borrowingEnabled,
+    stableBorrowingEnabled: !!stableBorrowingEnabled,
     reserveFactor,
   };
 }
