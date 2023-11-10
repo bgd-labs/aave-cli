@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.1](https://github.com/bgd-labs/aave-cli/compare/v0.1.0...v0.1.1) (2023-11-10)
+
+
+### Bug Fixes
+
+* added tenderly cli new method ([#67](https://github.com/bgd-labs/aave-cli/issues/67)) ([f3917e0](https://github.com/bgd-labs/aave-cli/commit/f3917e0f95cd155f0cb385785fd73bef8f4ad6a9))
+* improve state decoder ([#68](https://github.com/bgd-labs/aave-cli/issues/68)) ([f6a40b6](https://github.com/bgd-labs/aave-cli/commit/f6a40b63fe2c198e4200d7c513331d70fa3bc750))
+
 ## [0.1.0](https://github.com/bgd-labs/aave-cli/compare/v0.0.26...v0.1.0) (2023-11-08)
 
 
