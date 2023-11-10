@@ -313,9 +313,9 @@ class Tenderly {
    * @param forkId id of the fork created in tenderly
    * @returns fork object
    */
-  getForkInfo = async (forkId: string): Promise<Fork> => {
+  getForkInfo = async (forkId: string, project?: string): Promise<Fork> => {
     const response: Response = await fetch(
-      `${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/fork/${forkId}`,
+      `${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${project || this.PROJECT}/fork/${forkId}`,
       {
         method: 'GET',
         headers: new Headers({
