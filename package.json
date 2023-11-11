@@ -54,6 +54,7 @@
     "@arbitrum/sdk": "^3.1.13",
     "@bgd-labs/aave-address-book": "2.10.0",
     "@commander-js/extra-typings": "^11.1.0",
+    "@eth-optimism/sdk": "^3.1.4",
     "@inquirer/prompts": "^3.3.0",
     "bs58": "^5.0.0",
     "chalk": "^4.1.2",
