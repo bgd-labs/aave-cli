@@ -1,6 +1,6 @@
 import { Command } from '@commander-js/extra-typings';
-import { providers } from 'ethers';
-import { L2TransactionReceipt } from '@arbitrum/sdk';
+import { providers, Wallet } from 'ethers';
+import { L2ToL1MessageStatus, L2TransactionReceipt } from '@arbitrum/sdk';
 // require('dotenv').config()
 
 export function addCommand(program: Command) {
@@ -21,28 +21,25 @@ export function addCommand(program: Command) {
             }
 
             const idx = log_index ? parseInt(log_index) : 0;
+
+            const l1Provider = new providers.JsonRpcProvider(process.env.RPC_MAINNET);
             const l2Provider = new providers.JsonRpcProvider(process.env.RPC_ARBITRUM);
+            const walletPrivateKey = process.env.PRIVATE_KEY ?? '';
+            const l1Wallet = new Wallet(walletPrivateKey, l1Provider)
 
             const receipt = await l2Provider.getTransactionReceipt(tx_hash);
             const l2Receipt = new L2TransactionReceipt(receipt);
 
-            const messages = await l2Receipt.getL2ToL1Messages(l2Provider);
+            const messages = await l2Receipt.getL2ToL1Messages(l1Wallet);
             const l2ToL1Msg = messages[idx];
 
-            // if ((await l2ToL1Msg.status(l2Provider)) == L2ToL1MessageStatus.EXECUTED) {
-            //     console.log(`Message already executed! Nothing else to do here`);
-            //     process.exit(1);
-            // }
+            if ((await l2ToL1Msg.status(l2Provider)) == L2ToL1MessageStatus.EXECUTED) {
+                console.log(`Message already executed! Nothing else to do here`);
+                process.exit(1);
+            }
 
-            const proof = await l2ToL1Msg.getOutboxProof(l2Provider);
-            console.log("Proof:", proof);
-            console.log("Index:", l2ToL1Msg.event.position);
-            console.log("Caller:", l2ToL1Msg.event.caller);
-            console.log("Destination:", l2ToL1Msg.event.destination);
-            console.log("Arbitrum Block Number:", l2ToL1Msg.event.arbBlockNum);
-            console.log("Mainnet Block Number:", l2ToL1Msg.event.ethBlockNum);
-            console.log("Timestamp:", l2ToL1Msg.event.timestamp);
-            console.log("Value:", l2ToL1Msg.event.callvalue);
-            console.log("Data:", l2ToL1Msg.event.data);
+            const res = await l2ToL1Msg.execute(l2Provider);
+            const rec = await res.wait();
+            console.log('Transaction executed', rec);
         });
 }
