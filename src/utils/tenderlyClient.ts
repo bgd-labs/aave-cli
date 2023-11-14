@@ -324,8 +324,8 @@ class Tenderly {
         }),
       }
     );
-    console.log('status', response.status);
-    if (response.status !== 200) {
+    
+    if (response.status >= 400) {
       console.log(await response.text());
       throw new Error(`TenderlyError: ${response.statusText}`);
     }
