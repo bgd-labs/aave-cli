@@ -324,7 +324,7 @@ class Tenderly {
         }),
       }
     );
-    
+
     if (response.status >= 400) {
       console.log(await response.text());
       throw new Error(`TenderlyError: ${response.statusText}`);
@@ -360,14 +360,16 @@ class Tenderly {
     chainId,
     blockNumber,
     alias,
+    forkChainId = 3030,
   }: {
     chainId: number;
     blockNumber?: number;
     alias?: string;
+    forkChainId?: number
   }): Promise<Fork> => {
     const forkingPoint = {
       network_id: chainId,
-      chain_config: { chain_id: 3030 },
+      chain_config: { chain_id: forkChainId },
     };
     if (blockNumber) (forkingPoint as any).block_number = blockNumber;
     if (alias) (forkingPoint as any).alias = alias;
@@ -402,7 +404,7 @@ class Tenderly {
   deployCode = (fork: Fork, filePath: string, from?: Hex) => {
     const walletProvider = createWalletClient({
       account: from || EOA,
-      chain: { id: 3030, name: 'tenderly' } as any,
+      chain: { id: fork.forkNetworkId, name: 'tenderly' } as any,
       transport: http(fork.forkUrl),
     });
 
@@ -417,7 +419,7 @@ class Tenderly {
 
   warpTime = async (fork: Fork, timestamp: bigint) => {
     const publicProvider = createPublicClient({
-      chain: { id: 3030 } as any,
+      chain: { id: fork.forkNetworkId } as any,
       transport: http(fork.forkUrl),
     });
 
@@ -439,7 +441,7 @@ class Tenderly {
 
   warpBlocks = async (fork: Fork, blockNumber: bigint) => {
     const publicProvider = createPublicClient({
-      chain: { id: 3030 } as any,
+      chain: { id: fork.forkNetworkId } as any,
       transport: http(fork.forkUrl),
     });
     const currentBlock = await publicProvider.getBlock();
@@ -459,7 +461,7 @@ class Tenderly {
     await this.fundAccount(fork, request.from);
 
     const publicProvider = createPublicClient({
-      chain: { id: 3030 } as any,
+      chain: { id: fork.forkNetworkId } as any,
       transport: http(fork.forkUrl),
     });
     // 1. apply storage changes
@@ -494,7 +496,7 @@ class Tenderly {
       logInfo('tenderly', 'execute transaction');
       const walletProvider = createWalletClient({
         account: request.from,
-        chain: { id: 3030, name: 'tenderly' } as any,
+        chain: { id: fork.forkNetworkId, name: 'tenderly' } as any,
         transport: http(fork.forkUrl),
       });
       const hash = await walletProvider.sendTransaction({
@@ -526,7 +528,7 @@ class Tenderly {
 
   replaceCode = (fork: Fork, address: Hex, code: Hex) => {
     const publicProvider = createPublicClient({
-      chain: { id: 3030 } as any,
+      chain: { id: fork.forkNetworkId } as any,
       transport: http(fork.forkUrl),
     });
     return publicProvider.request({
