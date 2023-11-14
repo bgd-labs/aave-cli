@@ -8,7 +8,6 @@ import {
   parseEther,
   fromHex,
   pad,
-  zeroAddress,
 } from 'viem';
 import { EOA } from './constants';
 import { logError, logInfo, logSuccess, logWarning } from './logger';
@@ -359,14 +358,16 @@ class Tenderly {
     chainId,
     blockNumber,
     alias,
+    forkChainId = 3030,
   }: {
     chainId: number;
     blockNumber?: number;
     alias?: string;
+    forkChainId?: number;
   }): Promise<Fork> => {
     const forkingPoint = {
       network_id: chainId,
-      chain_config: { chain_id: 3030 },
+      chain_config: { chain_id: forkChainId },
     };
     if (blockNumber) (forkingPoint as any).block_number = blockNumber;
     if (alias) (forkingPoint as any).alias = alias;
