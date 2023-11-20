@@ -7,7 +7,8 @@
     "start": "tsx src/cli.ts",
     "build": "tsup",
     "test": "vitest",
-    "ci:publish": "npm run build && npm publish --access=public"
+    "ci:publish": "npm run build && npm publish --access=public",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
