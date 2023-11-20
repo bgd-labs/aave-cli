@@ -45,18 +45,33 @@ export async function simulateProposal(proposalId: bigint) {
       for (const trace of moduleBridgeTraces) {
         logInfo(module.name, 'Fetching latest known proposal state');
         // any casts needed as types are slightly different on polygon vs others
-        const moduleState = await module.getProposalState({
-          trace: trace,
-          fromTimestamp: mainnetState.log.timestamp,
-          ...moduleCache,
-        } as any);
-        if (module.simulateOnTenderly) {
-          logInfo(module.name, 'Simulate on tenderly');
-          const simulation = await module.simulateOnTenderly(moduleState as any);
-          logSuccess(module.name, 'Simulation finished');
-          subResults.push({ name: module.name, simulation, state: moduleState.state, args: moduleState.args });
-        } else {
-          logError(module.name, 'Simulation on tenderly not supported');
+        try {
+          const moduleState = await module.getProposalState({
+            trace: trace,
+            fromTimestamp: mainnetState.log.timestamp,
+            ...moduleCache,
+          } as any);
+          if (module.simulateOnTenderly) {
+            logInfo(module.name, 'Simulate on tenderly');
+            const simulation = await module.simulateOnTenderly(moduleState as any);
+            logSuccess(module.name, 'Simulation finished');
+            subResults.push({ name: module.name, simulation, state: moduleState.state, args: moduleState.args });
+          } else {
+            logError(module.name, 'Simulation on tenderly not supported');
+            subResults.push({
+              name: module.name,
+              simulation: {
+                transaction: {
+                  status: false,
+                  transaction_info: { stack_trace: [{ error_reason: 'could not decode governancev2 style message' }] },
+                },
+              } as any,
+              state: moduleState.state,
+              args: moduleState.args,
+            });
+          }
+        } catch (e) {
+          logError(module.name, 'Could not decode bridged message');
         }
       }
     } else {
