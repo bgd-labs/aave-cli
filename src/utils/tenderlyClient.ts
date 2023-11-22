@@ -470,11 +470,13 @@ class Tenderly {
       for (const address of Object.keys(request.state_objects) as Hex[]) {
         if (request.state_objects[address].storage) {
           for (const slot of Object.keys(request.state_objects[address].storage!) as Hex[]) {
+            console.log('slot: ', slot);
             await publicProvider.request({
               method: 'tenderly_setStorageAt' as any,
               params: [
                 address as Hex,
-                pad(slot as Hex, { size: 32 }),
+                // @ts-ignore
+                pad((0xfe & parseInt(slot, 16)).toString(), { size: 32 }),
                 pad(request.state_objects[address].storage![slot] as Hex, { size: 32 }),
               ],
             });
