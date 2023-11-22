@@ -476,7 +476,7 @@ class Tenderly {
               params: [
                 address as Hex,
                 // @ts-ignore
-                pad((0xfe & parseInt(slot, 16)).toString(), { size: 32 }),
+                0xfe & pad(slot as Hex, { size: 32 }),
                 pad(request.state_objects[address].storage![slot] as Hex, { size: 32 }),
               ],
             });
