@@ -134,7 +134,7 @@ export const getGovernance = ({
   address,
   publicClient,
   walletClient,
-}: GetGovernanceParams): Governance<typeof walletClient> => {
+}: GetGovernanceParams): Governance<WalletClient> => {
   const governanceContract = getContract({ abi: IGovernanceCore_ABI, address, publicClient, walletClient });
 
   async function getProposal(proposalId: bigint) {

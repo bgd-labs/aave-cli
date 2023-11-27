@@ -3,7 +3,7 @@
 import { Hex, PublicClient } from 'viem';
 import { ProposalCheck } from './types';
 import { TenderlySimulationResponse } from '../../utils/tenderlyClient';
-import { PayloadsController } from '../../../dist';
+import { PayloadsController } from '../payloadsController';
 
 /**
  * Check all targets with code are verified on Etherscan

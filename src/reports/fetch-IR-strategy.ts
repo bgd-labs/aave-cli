@@ -13,7 +13,7 @@ const streamPipeline = promisify(pipeline);
  * @param {*} rate
  * @param fileName the fileName to store the ir to
  */
-export async function fetchRateStrategyImage(rate) {
+export async function fetchRateStrategyImage(rate: any) {
   const fileHash = hash(rate);
   const relativePath = path.join(process.cwd(), '.assets');
   const pathWithFile = path.join(relativePath, `${fileHash}.svg`);

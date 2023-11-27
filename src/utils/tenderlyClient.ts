@@ -365,7 +365,7 @@ class Tenderly {
     chainId: number;
     blockNumber?: number;
     alias?: string;
-    forkChainId?: number
+    forkChainId?: number;
   }): Promise<Fork> => {
     const forkingPoint = {
       network_id: chainId,
@@ -539,7 +539,7 @@ class Tenderly {
 }
 
 export const tenderly = new Tenderly(
-  process.env.TENDERLY_ACCESS_TOKEN,
-  process.env.TENDERLY_ACCOUNT,
-  process.env.TENDERLY_PROJECT_SLUG
+  process.env.TENDERLY_ACCESS_TOKEN!,
+  process.env.TENDERLY_ACCOUNT!,
+  process.env.TENDERLY_PROJECT_SLUG!
 );
