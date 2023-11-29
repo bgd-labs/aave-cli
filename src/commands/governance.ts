@@ -130,7 +130,7 @@ export function addCommand(program: Command) {
             logInfo(`Payload.${ix}.accessLevel`, payload.accessLevel);
             logInfo(
               `Payload.${ix}.chain`,
-              CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP].chain.name
+              CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP].chain!.name
             );
             logInfo(`Payload.${ix}.payloadId`, payload.payloadId);
             logInfo(`Payload.${ix}.payloadsController`, payload.payloadsController);

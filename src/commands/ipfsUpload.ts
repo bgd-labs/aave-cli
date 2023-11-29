@@ -7,7 +7,7 @@ import { Command } from '@commander-js/extra-typings';
 import { logError } from '../utils/logger';
 
 // https://ethereum.stackexchange.com/questions/44506/ipfs-hash-algorithm
-async function getHash(data: string) {
+async function getHash(data: string): Promise<string> {
   return Hash.of(data);
 }
 

@@ -365,7 +365,7 @@ class Tenderly {
     chainId: number;
     blockNumber?: number;
     alias?: string;
-    forkChainId?: number
+    forkChainId?: number;
   }): Promise<Fork> => {
     const forkingPoint = {
       network_id: chainId,
