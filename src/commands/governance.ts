@@ -36,7 +36,7 @@ export function addCommand(program: Command) {
   govV3
     .command('simulate-payload')
     .description('simulates a payloadId on tenderly')
-    .requiredOption('--chainId <number>', 'the chainId to fork offs')
+    .requiredOption('--chainId <number>', 'the chainId to fork of')
     .requiredOption('--payloadId <number>', 'payloadId to simulate via tenderly')
     .option('--payloadsController <string>', 'PayloadsController address')
     .action(async ({ payloadId: _payloadId, payloadsController: payloadsControllerAddress, chainId }, options) => {
