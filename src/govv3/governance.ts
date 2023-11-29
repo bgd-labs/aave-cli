@@ -237,7 +237,7 @@ export const getGovernance = ({
         return tenderly.simulateTx(publicClient.chain!.id, tx);
       }
       const payload = await getSimulationPayloadForExecution(proposalId);
-      return tenderly.simulate(payload);
+      return tenderly.simulate(payload, publicClient);
     },
     async getVotingProofs(proposalId: bigint, voter: Hex, votingChainId: bigint) {
       const proposal = await getProposal(proposalId);

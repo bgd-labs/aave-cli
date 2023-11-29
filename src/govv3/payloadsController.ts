@@ -139,7 +139,7 @@ export const getPayloadsController = (address: Hex, publicClient: PublicClient):
       }
       const payload = await getSimulationPayloadForExecution(id);
 
-      return tenderly.simulate(payload);
+      return tenderly.simulate(payload, publicClient);
     },
   };
 };
