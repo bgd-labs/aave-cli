@@ -412,6 +412,7 @@ class Tenderly {
       block_number: result.simulation_fork.block_number,
       forkNetworkId: result.simulation_fork.chain_config.chain_id,
       forkUrl: `https://rpc.tenderly.co/fork/${result.simulation_fork.id}`,
+      global_head: result.simulation_fork.global_head,
     };
     logSuccess(
       'tenderly',
