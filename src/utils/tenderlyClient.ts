@@ -9,6 +9,7 @@ import {
   fromHex,
   pad,
   zeroAddress,
+  PublicClient,
 } from 'viem';
 import { EOA } from './constants';
 import { logError, logInfo, logSuccess, logWarning } from './logger';
@@ -242,6 +243,7 @@ export type Fork = {
   block_number: number;
   forkNetworkId: string;
   forkUrl: string;
+  global_head: string;
 };
 
 class Tenderly {
@@ -272,7 +274,7 @@ class Tenderly {
     return result;
   };
 
-  simulate = async (request: TenderlyRequest): Promise<TenderlySimulationResponse> => {
+  simulate = async (request: TenderlyRequest, publicClient?: PublicClient): Promise<TenderlySimulationResponse> => {
     if (!request.state_objects) {
       request.state_objects = {};
     }
@@ -280,6 +282,22 @@ class Tenderly {
       request.state_objects[request.from] = { balance: String(parseEther('3')) };
     } else {
       request.state_objects[request.from].balance = String(parseEther('3'));
+    }
+
+    let apiUrl = `${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/simulate`;
+
+    if (publicClient) {
+      const url = publicClient.transport.url! as string;
+      const tenderlyForkRegex = new RegExp(/https:\/\/rpc.tenderly.co\/fork\/(.*)/);
+      if (tenderlyForkRegex.test(url)) {
+        const matches = url.match(tenderlyForkRegex);
+        if (matches) {
+          const fork = await this.getForkInfo(matches[1]);
+          request.root = fork.global_head;
+          delete (request as any).network_id;
+          apiUrl = `${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/fork/${matches[1]}/simulate`;
+        }
+      }
     }
 
     const fullRequest = JSON.stringify({
@@ -292,7 +310,7 @@ class Tenderly {
 
     logInfo('tenderly', `request: ${JSON.stringify(fullRequest)}`);
 
-    const response = await fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/simulate`, {
+    const response = await fetch(apiUrl, {
       method: 'POST',
       body: fullRequest,
       headers: new Headers({
@@ -336,6 +354,7 @@ class Tenderly {
       block_number: result.simulation_fork.block_number,
       forkNetworkId: result.simulation_fork.chain_config.chain_id,
       forkUrl: `https://rpc.tenderly.co/fork/${result.simulation_fork.id}`,
+      global_head: result.simulation_fork.global_head,
     };
     return fork;
   };
@@ -393,6 +412,7 @@ class Tenderly {
       block_number: result.simulation_fork.block_number,
       forkNetworkId: result.simulation_fork.chain_config.chain_id,
       forkUrl: `https://rpc.tenderly.co/fork/${result.simulation_fork.id}`,
+      global_head: result.simulation_fork.global_head,
     };
     logSuccess(
       'tenderly',

@@ -10,6 +10,7 @@ import { getCachedIpfs } from '../ipfs/getCachedProposalMetaData';
 import { toAddressLink, toTxLink } from '../govv3/utils/markdownUtils';
 import { getAccountRPL, getBLockRLP } from '../govv3/proofs';
 import { DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT, FORMAT } from '../utils/constants';
+import { getPayloadsController } from '../govv3/payloadsController';
 
 enum DialogOptions {
   DETAILS,
@@ -30,6 +31,23 @@ export function addCommand(program: Command) {
     .action(async (name, options) => {
       const proposalId = BigInt(options.getOptionValue('proposalId'));
       await simulateProposal(DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT, proposalId);
+    });
+
+  govV3
+    .command('simulate-payload')
+    .description('simulates a payloadId on tenderly')
+    .requiredOption('--chainId <number>', 'the chainId to fork of')
+    .requiredOption('--payloadId <number>', 'payloadId to simulate via tenderly')
+    .option('--payloadsController <string>', 'PayloadsController address')
+    .action(async ({ payloadId: _payloadId, payloadsController: payloadsControllerAddress, chainId }, options) => {
+      const payloadId = Number(_payloadId);
+      const payloadsController = getPayloadsController(
+        payloadsControllerAddress as Hex,
+        CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP] as PublicClient
+      );
+      const logs = await payloadsController.cacheLogs();
+      const config = await payloadsController.getPayload(payloadId, logs);
+      await payloadsController.simulatePayloadExecutionOnTenderly(Number(payloadId), config);
     });
 
   govV3
