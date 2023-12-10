@@ -32,6 +32,15 @@ export enum PayloadState {
   Expired,
 }
 
+export const HUMAN_READABLE_PAYLOAD_STATE = {
+  [PayloadState.None]: 'None',
+  [PayloadState.Created]: 'Created',
+  [PayloadState.Queued]: 'Queued',
+  [PayloadState.Executed]: 'Executed',
+  [PayloadState.Cancelled]: 'Cancelled',
+  [PayloadState.Expired]: 'Expired',
+};
+
 export interface PayloadsController {
   controllerContract: GetContractReturnType<typeof IPayloadsControllerCore_ABI, PublicClient>;
   // cache created / queued / Executed logs

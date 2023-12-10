@@ -25,6 +25,9 @@ export async function generateProposalReport({
   // generate file header
   let report = `## Proposal ${proposalId}
 
+- Simulation: [https://dashboard.tenderly.co/me/simulator/${
+    simulation.simulation.id
+  }](https://dashboard.tenderly.co/me/simulator/${simulation.simulation.id})
 - state: ${HUMAN_READABLE_STATE[proposal.state as keyof typeof HUMAN_READABLE_STATE]}
 - creator: ${proposal.creator}
 - maximumAccessLevelRequired: ${proposal.accessLevel}
