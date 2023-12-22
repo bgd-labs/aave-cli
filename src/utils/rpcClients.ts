@@ -12,6 +12,7 @@ import {
   fantom,
   avalanche,
   gnosis,
+  harmonyOne,
 } from 'viem/chains';
 
 export const mainnetClient = createPublicClient({
@@ -62,6 +63,11 @@ export const avalancheClient = createPublicClient({
 export const gnosisClient = createPublicClient({
   chain: gnosis,
   transport: http(process.env.RPC_GNOSIS),
+});
+
+export const harmonyClient = createPublicClient({
+  chain: harmonyOne,
+  transport: http(process.env.RPC_HARMONY),
 });
 
 export const sepoliaClient = createPublicClient({ chain: sepolia, transport: http(process.env.RPC_SEPOLIA) });
