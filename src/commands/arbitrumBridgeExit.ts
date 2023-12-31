@@ -27,10 +27,10 @@ export function addCommand(program: Command) {
             const messages = await l2Receipt.getL2ToL1Messages(l1Wallet);
             const l2ToL1Msg = messages[idx];
 
-            // if ((await l2ToL1Msg.status(l2Provider)) == L2ToL1MessageStatus.EXECUTED) {
-            //     console.log(`Message already executed! Nothing else to do here`);
-            //     process.exit(1);
-            // }
+            if ((await l2ToL1Msg.status(l2Provider)) == L2ToL1MessageStatus.EXECUTED) {
+                console.log(`Message already executed! Nothing else to do here`);
+                process.exit(1);
+            }
 
             const proof = await l2ToL1Msg.getOutboxProof(l2Provider);
             console.log("Proof:", proof);

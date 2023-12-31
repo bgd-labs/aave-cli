@@ -6,7 +6,6 @@ import { addCommand as addDiffSnapshots } from './commands/diffSnaphots';
 import { addCommand as addGovernance } from './commands/governance';
 import { addCommand as addFork } from './commands/fork';
 import { addCommand as addAribtrumBridgeExit } from './commands/arbitrumBridgeExit';
-import { addCommand as addOptimismBridgeExit } from './commands/optimismBridgeExit';
 import packageJson from '../package.json';
 
 const program = new Command();
@@ -31,6 +30,5 @@ addDiffSnapshots(program);
 addFork(program);
 addIpfsCommand(program);
 addAribtrumBridgeExit(program);
-addOptimismBridgeExit(program);
 
 program.parse();
