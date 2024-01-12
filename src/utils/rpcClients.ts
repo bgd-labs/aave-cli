@@ -12,6 +12,7 @@ import {
   fantom,
   avalanche,
   gnosis,
+  polygonZkEvm
 } from 'viem/chains';
 
 export const mainnetClient = createPublicClient({
@@ -64,6 +65,11 @@ export const gnosisClient = createPublicClient({
   transport: http(process.env.RPC_GNOSIS),
 });
 
+export const polygonZkEvmClient = createPublicClient({
+  chain: polygonZkEvm,
+  transport: http(process.env.RPC_ZKEVM),
+});
+
 export const sepoliaClient = createPublicClient({ chain: sepolia, transport: http(process.env.RPC_SEPOLIA) });
 
 export const goerliClient = createPublicClient({ chain: goerli, transport: http(process.env.RPC_GOERLI) });
@@ -81,4 +87,5 @@ export const CHAIN_ID_CLIENT_MAP: Record<number, PublicClient> = {
   [bsc.id]: bnbClient,
   [avalanche.id]: avalancheClient,
   [gnosis.id]: gnosisClient,
+  [polygonZkEvm.id]: polygonZkEvmClient,
 } as const;
