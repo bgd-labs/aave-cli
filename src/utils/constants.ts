@@ -1,5 +1,5 @@
 import { GovernanceV3Ethereum } from '@bgd-labs/aave-address-book';
-import { mainnetClient } from './rpcClients';
+import { mainnetClient } from '@bgd-labs/js-utils';
 
 // arbitrary from EOA for proposal executions
 export const EOA = '0xD73a92Be73EfbFcF3854433A5FcbAbF9c1316073' as const;

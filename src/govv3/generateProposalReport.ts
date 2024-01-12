@@ -6,7 +6,7 @@ import { checkLogs } from './checks/logs';
 import { checkTouchedContractsVerifiedEtherscan } from './checks/targetsVerified';
 import { Governance, HUMAN_READABLE_STATE } from './governance';
 import { checkStateChanges } from './checks/state';
-import { getProposalMetadata } from '../ipfs/parseIpfs';
+import { getProposalMetadata } from '@bgd-labs/js-utils';
 
 type GenerateReportRequest = {
   proposalId: bigint;
@@ -60,7 +60,7 @@ export async function generateProposalReport({
   <summary>Proposal text</summary>
   
   ${ipfsMeta.description}
-</details>`;
+</details>\n\n`;
 
   // check if simulation was successful
 

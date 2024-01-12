@@ -8,7 +8,7 @@ import {
   getAbiItem,
   getContract,
 } from 'viem';
-import { LogWithTimestamp, getLogs } from '../utils/logs';
+import { LogWithTimestamp, getAndCacheLogs } from '../utils/logs';
 import { TenderlyRequest, tenderly, TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { EOA } from '../utils/constants';
 import { getSolidityStorageSlotUint } from '../utils/storageSlots';
@@ -111,7 +111,7 @@ export const getPayloadsController = (address: Hex, publicClient: PublicClient):
   return {
     controllerContract,
     cacheLogs: async (searchStartBlock) => {
-      const logs = await getLogs(
+      const logs = await getAndCacheLogs(
         publicClient,
         [
           getAbiItem({ abi: IPayloadsControllerCore_ABI, name: 'PayloadCreated' }),

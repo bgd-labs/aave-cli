@@ -2,7 +2,7 @@ import { Command } from '@commander-js/extra-typings';
 import { simulateProposal } from '../govv3/simulate';
 import { IDataWarehouse_ABI, IVotingMachineWithProofs_ABI, IVotingPortal_ABI } from '@bgd-labs/aave-address-book';
 import { HUMAN_READABLE_STATE, getGovernance } from '../govv3/governance';
-import { CHAIN_ID_CLIENT_MAP } from '../utils/rpcClients';
+import { CHAIN_ID_CLIENT_MAP } from '@bgd-labs/js-utils';
 import { logError, logInfo, logSuccess } from '../utils/logger';
 import { Hex, PublicClient, encodeAbiParameters, encodeFunctionData, getContract } from 'viem';
 import { confirm, input, select } from '@inquirer/prompts';
