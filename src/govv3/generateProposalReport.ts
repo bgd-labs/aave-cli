@@ -6,7 +6,7 @@ import { checkLogs } from './checks/logs';
 import { checkTouchedContractsVerifiedEtherscan } from './checks/targetsVerified';
 import { Governance, HUMAN_READABLE_STATE } from './governance';
 import { checkStateChanges } from './checks/state';
-import { getProposalMetadata } from '@bgd-labs/js-utils';
+import { getCachedIpfs } from '../ipfs/getCachedProposalMetaData';
 
 type GenerateReportRequest = {
   proposalId: bigint;
@@ -53,7 +53,8 @@ export async function generateProposalReport({
   }
   report += '\n';
 
-  const ipfsMeta = await getProposalMetadata(proposal.ipfsHash, process.env.IPFS_GATEWAY);
+  const ipfsMeta = await getCachedIpfs(proposal.ipfsHash);
+  console.log(ipfsMeta);
   report += `### Ipfs
 
 <details>
