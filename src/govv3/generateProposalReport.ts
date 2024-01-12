@@ -54,7 +54,6 @@ export async function generateProposalReport({
   report += '\n';
 
   const ipfsMeta = await getCachedIpfs(proposal.ipfsHash);
-  console.log(ipfsMeta);
   report += `### Ipfs
 
 <details>
