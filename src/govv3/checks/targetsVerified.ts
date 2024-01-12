@@ -37,7 +37,7 @@ async function checkVerificationStatuses(
   addresses: Hex[],
   provider: PublicClient
 ): Promise<string[]> {
-  let info = []; // prepare output
+  let info: string[] = []; // prepare output
   for (const addr of addresses) {
     const status = await checkVerificationStatus(sim, addr, provider);
     if (status === 'eoa') {

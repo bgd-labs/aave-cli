@@ -1,5 +1,5 @@
 import { AaveSafetyModule, AaveV3Ethereum, GovernanceV3Ethereum } from '@bgd-labs/aave-address-book';
-import { Block, Hex, PublicClient, fromRlp, toHex, toRlp } from 'viem';
+import { Block, Chain, GetBlockReturnType, Hex, PublicClient, fromRlp, toHex, toRlp } from 'viem';
 
 /**
  * Slots that represent configuration values relevant for all accounts
@@ -33,7 +33,7 @@ export async function getProof(publicClient: PublicClient, address: Hex, slots: 
 }
 
 // IMPORTANT valid only for post-Shapella blocks, as it includes `withdrawalsRoot`
-export const getBLockRLP = (rawBlock: Block): Hex => {
+export const getBlockRLP = (rawBlock: GetBlockReturnType<Chain | undefined, false, 'latest'>): Hex => {
   const rawData: Hex[] = [
     rawBlock.parentHash,
     rawBlock.sha3Uncles,

@@ -8,7 +8,7 @@ import { Hex, PublicClient, encodeAbiParameters, encodeFunctionData, getContract
 import { confirm, input, select } from '@inquirer/prompts';
 import { getCachedIpfs } from '../ipfs/getCachedProposalMetaData';
 import { toAddressLink, toTxLink } from '../govv3/utils/markdownUtils';
-import { getAccountRPL, getBLockRLP } from '../govv3/proofs';
+import { getAccountRPL, getBlockRLP } from '../govv3/proofs';
 import { DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT, FORMAT } from '../utils/constants';
 import { getPayloadsController } from '../govv3/payloadsController';
 
@@ -163,7 +163,7 @@ export function addCommand(program: Command) {
           const portal = getContract({
             address: proposal.votingPortal,
             abi: IVotingPortal_ABI,
-            publicClient: DEFAULT_GOVERNANCE_CLIENT,
+            client: DEFAULT_GOVERNANCE_CLIENT,
           });
           const [machine, chainId] = await Promise.all([
             portal.read.VOTING_MACHINE(),
@@ -205,7 +205,7 @@ export function addCommand(program: Command) {
           const portalContract = getContract({
             address: proposal.votingPortal,
             abi: IVotingPortal_ABI,
-            publicClient: DEFAULT_GOVERNANCE_CLIENT,
+            client: DEFAULT_GOVERNANCE_CLIENT,
           });
           const [machine, chainId] = await Promise.all([
             portalContract.read.VOTING_MACHINE(),
@@ -214,7 +214,7 @@ export function addCommand(program: Command) {
           const machineContract = getContract({
             address: machine,
             abi: IVotingMachineWithProofs_ABI,
-            publicClient: CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP] as PublicClient,
+            client: CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP] as PublicClient,
           });
           const dataWarehouse = await machineContract.read.DATA_WAREHOUSE();
           const roots = await governance.getStorageRoots(selectedProposalId);
@@ -227,7 +227,7 @@ export function addCommand(program: Command) {
             )
           );
           const block = await DEFAULT_GOVERNANCE_CLIENT.getBlock({ blockHash: proposal.snapshotBlockHash });
-          const blockRPL = getBLockRLP(block);
+          const blockRPL = getBlockRLP(block);
           console.log(FORMAT);
           if (FORMAT === 'raw') {
             logSuccess('Method', 'processStorageRoot');
@@ -272,7 +272,7 @@ export function addCommand(program: Command) {
 
       const roots = await governance.getStorageRoots(proposalId);
       const block = await DEFAULT_GOVERNANCE_CLIENT.getBlock({ blockHash: proposal.snapshotBlockHash });
-      const blockRPL = getBLockRLP(block);
+      const blockRPL = getBlockRLP(block);
       const params = roots.map((root) => {
         const accountRPL = getAccountRPL(root.accountProof);
         return {
@@ -323,7 +323,7 @@ export function addCommand(program: Command) {
       const portal = getContract({
         address: proposal.votingPortal,
         abi: IVotingPortal_ABI,
-        publicClient: DEFAULT_GOVERNANCE_CLIENT,
+        client: DEFAULT_GOVERNANCE_CLIENT,
       });
       const chainId = await portal.read.VOTING_MACHINE_CHAIN_ID();
       const proofs = await governance.getVotingProofs(proposalId, voter as Hex, chainId);

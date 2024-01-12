@@ -28,7 +28,7 @@ async function reserveConfigurationChanged(
   const configurationAfter = getDecodedReserveData(contractAddress, dirty.configuration.data);
   let symbol = 'unknown';
   try {
-    const erc20Contract = getContract({ publicClient, address: key, abi: ERC20_ABI });
+    const erc20Contract = getContract({ client: publicClient, address: key, abi: ERC20_ABI });
     symbol = await erc20Contract.read.symbol();
   } catch (e) {}
   // const symbol =
