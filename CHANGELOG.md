@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.5](https://github.com/bgd-labs/aave-cli/compare/v0.2.4...v0.2.5) (2024-01-12)
+
+
+### Bug Fixes
+
+* use ipfs cache ([#89](https://github.com/bgd-labs/aave-cli/issues/89)) ([e8da9d2](https://github.com/bgd-labs/aave-cli/commit/e8da9d26c989ee5a602cac8dca1cd65003c7ac93))
+
 ## [0.2.4](https://github.com/bgd-labs/aave-cli/compare/v0.2.3...v0.2.4) (2024-01-12)
 
 
