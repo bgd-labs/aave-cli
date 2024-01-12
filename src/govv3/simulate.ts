@@ -28,7 +28,6 @@ export async function simulateProposal(governanceAddress: Hex, publicClient: Pub
       publicClient: publicClient,
     })
   );
-  return;
   const payloads: {
     payload: Awaited<ReturnType<PayloadsController['getPayload']>>;
     simulation: TenderlySimulationResponse;
