@@ -87,7 +87,7 @@ export const getPayloadsController = (address: Hex, publicClient: PublicClient):
         functionName: 'executePayload',
         args: [id],
       }),
-      block_number: Number(currentBlock.number),
+      block_number: -1,
       state_objects: {
         [controllerContract.address]: {
           storage: {
