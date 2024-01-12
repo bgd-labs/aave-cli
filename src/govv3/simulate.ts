@@ -3,7 +3,7 @@ import { TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { getGovernance } from './governance';
 import { Hex, PublicClient } from 'viem';
 import { PayloadsController, getPayloadsController } from './payloadsController';
-import { CHAIN_ID_CLIENT_MAP } from '../utils/rpcClients';
+import { CHAIN_ID_CLIENT_MAP } from '@bgd-labs/js-utils';
 
 /**
  * Reference implementation, unused
@@ -29,8 +29,12 @@ export async function simulateProposal(governanceAddress: Hex, publicClient: Pub
     );
     const logs = await controllerContract.cacheLogs();
     const config = await controllerContract.getPayload(payload.payloadId, logs);
-    const result = await controllerContract.simulatePayloadExecutionOnTenderly(payload.payloadId, config);
-    payloads.push({ payload: config, simulation: result });
+    try {
+      const result = await controllerContract.simulatePayloadExecutionOnTenderly(payload.payloadId, config);
+      payloads.push({ payload: config, simulation: result });
+    } catch (e) {
+      console.log('error simulating payload');
+    }
   }
   return { proposal, payloads };
 }

@@ -1,10 +1,8 @@
 export * from './reports/diff-reports';
 export { simulateProposal } from './govv3/simulate';
-export { getProposalMetadata } from './ipfs/parseIpfs';
 export * from './govv3/governance';
 export * from './govv3/payloadsController';
 export * from './govv3/generatePayloadReport';
 export * from './govv3/generateProposalReport';
 export * from './utils/tenderlyClient';
 export * from './utils/logger';
-export * from './utils/rpcClients';

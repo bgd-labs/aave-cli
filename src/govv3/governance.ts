@@ -11,7 +11,7 @@ import {
   toHex,
 } from 'viem';
 import merge from 'deepmerge';
-import { LogWithTimestamp, getLogs } from '../utils/logs';
+import { LogWithTimestamp, getAndCacheLogs } from '../utils/logs';
 import {
   AaveSafetyModule,
   AaveV3Ethereum,
@@ -27,10 +27,10 @@ import {
 } from '../utils/storageSlots';
 import { setBits } from '../utils/storageSlots';
 import { VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof } from './proofs';
-import { readJSONCache, writeJSONCache } from '../utils/cache';
 import { logInfo } from '../utils/logger';
 import { GetProofReturnType } from 'viem/_types/actions/public/getProof';
 import type { ExtractAbiEvent } from 'abitype';
+import { readJSONCache, writeJSONCache } from '@bgd-labs/js-utils';
 
 type CreatedEvent = ExtractAbiEvent<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
 type QueuedEvent = ExtractAbiEvent<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
@@ -193,7 +193,7 @@ export const getGovernance = ({
   return {
     governanceContract,
     async cacheLogs(searchStartBlock) {
-      const logs = await getLogs(
+      const logs = await getAndCacheLogs(
         publicClient,
         [
           getAbiItem({ abi: IGovernanceCore_ABI, name: 'ProposalCreated' }),

@@ -1,10 +1,10 @@
 import { Command } from '@commander-js/extra-typings';
 import { tenderly } from '../utils/tenderlyClient';
 import { getGovernance } from '../govv3/governance';
-import { CHAIN_ID_CLIENT_MAP } from '../utils/rpcClients';
 import { getPayloadsController } from '../govv3/payloadsController';
 import { Hex, PublicClient } from 'viem';
 import { DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT } from '../utils/constants';
+import { CHAIN_ID_CLIENT_MAP } from '@bgd-labs/js-utils';
 
 export function addCommand(program: Command) {
   program

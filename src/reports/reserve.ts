@@ -1,7 +1,7 @@
 import { Hex, formatUnits } from 'viem';
 import { AaveV3Reserve, CHAIN_ID } from './snapshot-types';
 import { toAddressLink } from '../govv3/utils/markdownUtils';
-import { CHAIN_ID_CLIENT_MAP } from '../utils/rpcClients';
+import { CHAIN_ID_CLIENT_MAP } from '@bgd-labs/js-utils';
 
 export function renderReserveValue<T extends keyof AaveV3Reserve>(key: T, reserve: AaveV3Reserve, chainId: CHAIN_ID) {
   if (['reserveFactor', 'liquidationProtocolFee', 'liquidationThreshold', 'ltv'].includes(key))
