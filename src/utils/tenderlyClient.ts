@@ -10,9 +10,11 @@ import {
   pad,
   zeroAddress,
   PublicClient,
+  Chain,
 } from 'viem';
 import { EOA } from './constants';
 import { logError, logInfo, logSuccess, logWarning } from './logger';
+import { GetTransactionReturnType } from 'viem';
 export type StateObject = {
   balance?: string;
   code?: string;
@@ -364,7 +366,10 @@ class Tenderly {
    * @param tx
    * @returns
    */
-  simulateTx = async (chainId: number, tx: ViemTransaction): Promise<TenderlySimulationResponse> => {
+  simulateTx = async (
+    chainId: number,
+    tx: GetTransactionReturnType<Chain, 'latest'>
+  ): Promise<TenderlySimulationResponse> => {
     const simulationPayload = {
       network_id: String(chainId),
       from: tx.from!,

@@ -1,5 +1,6 @@
 import {
-  ContractFunctionResult,
+  AbiStateMutability,
+  ContractFunctionReturnType,
   GetContractReturnType,
   Hex,
   PublicClient,
@@ -54,7 +55,7 @@ export interface PayloadsController {
     id: number,
     logs: Awaited<ReturnType<PayloadsController['cacheLogs']>>
   ) => Promise<{
-    payload: ContractFunctionResult<typeof IPayloadsControllerCore_ABI, 'getPayloadById'>;
+    payload: ContractFunctionReturnType<typeof IPayloadsControllerCore_ABI, AbiStateMutability, 'getPayloadById'>;
     createdLog: PayloadCreatedLog;
     queuedLog?: PayloadQueuedLog;
     executedLog?: PayloadExecutedLog;
@@ -73,7 +74,7 @@ const SLOTS = {
 };
 
 export const getPayloadsController = (address: Hex, publicClient: PublicClient): PayloadsController => {
-  const controllerContract = getContract({ abi: IPayloadsControllerCore_ABI, address, publicClient });
+  const controllerContract = getContract({ abi: IPayloadsControllerCore_ABI, address, client: publicClient });
 
   const getSimulationPayloadForExecution = async (id: number) => {
     const payload = await controllerContract.read.getPayloadById([id]);

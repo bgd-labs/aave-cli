@@ -1,9 +1,9 @@
 import {
-  ContractFunctionResult,
+  AbiStateMutability,
+  ContractFunctionReturnType,
   GetContractReturnType,
   Hex,
   PublicClient,
-  WalletClient,
   encodeFunctionData,
   fromHex,
   getAbiItem,
@@ -61,8 +61,8 @@ function isStateFinal(state: ProposalState) {
   return [ProposalState.Executed, ProposalState.Failed, ProposalState.Cancelled, ProposalState.Expired].includes(state);
 }
 
-export interface Governance<T extends WalletClient | undefined = undefined> {
-  governanceContract: GetContractReturnType<typeof IGovernanceCore_ABI, PublicClient, WalletClient>;
+export interface Governance {
+  governanceContract: GetContractReturnType<typeof IGovernanceCore_ABI, PublicClient>;
   cacheLogs: (searchStartBlock?: bigint) => Promise<{
     createdLogs: CreatedLog[];
     queuedLogs: QueuedLog[];
@@ -77,12 +77,14 @@ export interface Governance<T extends WalletClient | undefined = undefined> {
    * @param proposalId
    * @returns Proposal struct
    */
-  getProposal: (proposalId: bigint) => Promise<ContractFunctionResult<typeof IGovernanceCore_ABI, 'getProposal'>>;
+  getProposal: (
+    proposalId: bigint
+  ) => Promise<ContractFunctionReturnType<typeof IGovernanceCore_ABI, AbiStateMutability, 'getProposal'>>;
   getProposalAndLogs: (
     proposalId: bigint,
-    logs: Awaited<ReturnType<Governance<T>['cacheLogs']>>
+    logs: Awaited<ReturnType<Governance['cacheLogs']>>
   ) => Promise<{
-    proposal: ContractFunctionResult<typeof IGovernanceCore_ABI, 'getProposal'>;
+    proposal: ContractFunctionReturnType<typeof IGovernanceCore_ABI, AbiStateMutability, 'getProposal'>;
     createdLog: CreatedLog;
     queuedLog?: QueuedLog;
     executedLog?: ExecutedLog;
@@ -126,16 +128,15 @@ export const HUMAN_READABLE_STATE = {
 interface GetGovernanceParams {
   address: Hex;
   publicClient: PublicClient;
-  walletClient?: WalletClient;
   blockCreated?: bigint;
 }
 
-export const getGovernance = ({
-  address,
-  publicClient,
-  walletClient,
-}: GetGovernanceParams): Governance<WalletClient> => {
-  const governanceContract = getContract({ abi: IGovernanceCore_ABI, address, publicClient, walletClient });
+export const getGovernance = ({ address, publicClient }: GetGovernanceParams): Governance => {
+  const governanceContract = getContract({
+    abi: IGovernanceCore_ABI,
+    address,
+    client: publicClient,
+  });
 
   async function getProposal(proposalId: bigint) {
     const filePath = publicClient.chain!.id.toString() + `/proposals`;
