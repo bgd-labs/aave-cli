@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.4](https://github.com/bgd-labs/aave-cli/compare/v0.2.3...v0.2.4) (2024-01-12)
+
+
+### Bug Fixes
+
+* patch issues created by viem alignment ([#87](https://github.com/bgd-labs/aave-cli/issues/87)) ([6e2ee02](https://github.com/bgd-labs/aave-cli/commit/6e2ee027b6fe641b25c61a6e2d10a4a2e2c04802))
+
 ## [0.2.3](https://github.com/bgd-labs/aave-cli/compare/v0.2.2...v0.2.3) (2024-01-12)
 
 
