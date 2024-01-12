@@ -62,7 +62,7 @@
     "ipfs-only-hash": "^4.0.0",
     "json-bigint": "^1.0.0",
     "object-hash": "^3.0.0",
-    "viem": "^1.18.9",
+    "viem": "^2.0.6",
     "zod": "^3.22.4"
   }
 }
