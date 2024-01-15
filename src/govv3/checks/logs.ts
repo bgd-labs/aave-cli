@@ -32,11 +32,11 @@ export const checkLogs: ProposalCheck<any> = {
         if (Boolean(log.name)) {
           // Log is decoded, format data as: VotingDelaySet(oldVotingDelay: value, newVotingDelay: value)
           const parsedInputs = log.inputs?.map((i) => `${i.soltype!.name}: ${i.value}`).join(', ');
-          info.push(`- \`${log.name}(${parsedInputs || ''})\``);
+          info.push(`  - \`${log.name}(${parsedInputs || ''})\``);
         } else {
           // Log is not decoded, report the raw data
           // TODO find a transaction with undecoded logs to know how topics/data are formatted in simulation response
-          info.push(`- Undecoded log: \`${JSON.stringify(log)}\``);
+          info.push(`  - Undecoded log: \`${JSON.stringify(log)}\``);
         }
       });
     }
