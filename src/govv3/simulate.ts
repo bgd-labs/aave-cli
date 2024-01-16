@@ -52,6 +52,7 @@ export async function simulateProposal(governanceAddress: Hex, publicClient: Pub
       payloads.push({ payload: config, simulation: result });
     } catch (e) {
       console.log('error simulating payload');
+      console.log(e);
     }
   }
   return { proposal, payloads };

@@ -2,8 +2,9 @@
 // adjusted for viem & aave governance v3
 import { Hex, PublicClient } from 'viem';
 import { ProposalCheck } from './types';
-import { toAddressLink } from '../utils/markdownUtils';
+import { flagKnownAddress, toAddressLink } from '../utils/markdownUtils';
 import { PayloadsController } from '../payloadsController';
+import { isKnownAddress } from '../utils/checkAddress';
 
 /**
  * Check all targets with code if they contain selfdestruct.
@@ -42,13 +43,16 @@ async function checkNoSelfdestructs(
   const error: string[] = [];
   for (const addr of addresses) {
     const status = await checkNoSelfdestruct(trustedAddrs, addr, provider);
+    const isAddrKnown = isKnownAddress(addr, provider.chain!.id);
     const address = toAddressLink(addr, true, provider);
-    if (status === 'eoa') info.push(`- ${address}: EOA`);
-    else if (status === 'empty') warn.push(`- ${address}: EOA (may have code later)`);
-    else if (status === 'safe') info.push(`- ${address}: Contract (looks safe)`);
-    else if (status === 'delegatecall') warn.push(`- ${address}: Contract (with DELEGATECALL)`);
-    else if (status === 'trusted') info.push(`- ${address}: Trusted contract (not checked)`);
-    else error.push(`- ${address}: Contract (with SELFDESTRUCT)`);
+    if (status === 'eoa') info.push(`- ${address}: EOA${flagKnownAddress(isAddrKnown)}`);
+    else if (status === 'empty') warn.push(`- ${address}: EOA (may have code later)${flagKnownAddress(isAddrKnown)}`);
+    else if (status === 'safe') info.push(`- ${address}: Contract (looks safe)${flagKnownAddress(isAddrKnown)}`);
+    else if (status === 'delegatecall')
+      warn.push(`- ${address}: Contract (with DELEGATECALL)${flagKnownAddress(isAddrKnown)}`);
+    else if (status === 'trusted')
+      info.push(`- ${address}: Trusted contract (not checked)${flagKnownAddress(isAddrKnown)}`);
+    else error.push(`- ${address}: Contract (with SELFDESTRUCT)${flagKnownAddress(isAddrKnown)}`);
   }
   return { info, warn, error };
 }

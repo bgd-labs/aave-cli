@@ -45,3 +45,8 @@ export function renderCheckResult(check: { name: string }, result: CheckResult) 
 export function renderUnixTime(time: number) {
   return new Date(time * 1000).toLocaleString('en-GB', { timeZone: 'UTC' });
 }
+
+export function flagKnownAddress(isKnown: string[] | void) {
+  if (isKnown == undefined || isKnown.length == 0) return '';
+  return `[:ghost:](https://github.com/bgd-labs/aave-address-book "${isKnown.join(', ')}")`;
+}

@@ -4,6 +4,8 @@ import { Hex, PublicClient } from 'viem';
 import { ProposalCheck } from './types';
 import { TenderlySimulationResponse } from '../../utils/tenderlyClient';
 import { PayloadsController } from '../payloadsController';
+import { isKnownAddress } from '../utils/checkAddress';
+import { flagKnownAddress } from '../utils/markdownUtils';
 
 /**
  * Check all targets with code are verified on Etherscan
@@ -39,14 +41,15 @@ async function checkVerificationStatuses(
 ): Promise<string[]> {
   let info: string[] = []; // prepare output
   for (const addr of addresses) {
+    const isAddrKnown = isKnownAddress(addr, provider.chain!.id);
     const status = await checkVerificationStatus(sim, addr, provider);
     if (status === 'eoa') {
       info.push(`- ${addr}: EOA (verification not applicable)`);
     } else if (status === 'verified') {
       const contract = getContract(sim, addr);
-      info.push(`- ${addr}: Contract (verified) (${contract?.contract_name})`);
+      info.push(`- ${addr}: Contract (verified) (${contract?.contract_name}) ${flagKnownAddress(isAddrKnown)}`);
     } else {
-      info.push(`- ${addr}: Contract (not verified)`);
+      info.push(`- ${addr}: Contract (not verified) ${flagKnownAddress(isAddrKnown)}`);
     }
   }
   return info;
