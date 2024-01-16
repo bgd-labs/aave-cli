@@ -42,7 +42,6 @@ async function checkVerificationStatuses(
   let info: string[] = []; // prepare output
   for (const addr of addresses) {
     const isAddrKnown = isKnownAddress(addr, provider.chain!.id);
-    console.log(addr, isAddrKnown);
     const status = await checkVerificationStatus(sim, addr, provider);
     if (status === 'eoa') {
       info.push(`- ${addr}: EOA (verification not applicable)`);
