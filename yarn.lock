@@ -33,10 +33,10 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@bgd-labs/aave-address-book@2.15.0":
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.15.0.tgz#d083d749d0ae9b052b5a4b7c6ce5f418bc1180e2"
-  integrity sha512-VKFmRHPZ+bckubh242PGoiZbGzV7OzygWvr8O9qv+TSgrdhJrDxbVJjCTZKSCGRG3PZQFvZdok345fArGsp+rw==
+"@bgd-labs/aave-address-book@2.15.3-89c77b1d7ee3574250b9bef36599806dd7a3bb94.0":
+  version "2.15.3-89c77b1d7ee3574250b9bef36599806dd7a3bb94.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.15.3-89c77b1d7ee3574250b9bef36599806dd7a3bb94.0.tgz#bf60390fcd003a38dbcce1f4e5267f4e80198fda"
+  integrity sha512-XaHIcMFt2dbAVjD2oJGYY7EGhh+iumQWhmmZjRwERsBadWJtYfMlfsHw+nShPFuHp1AR0F8Xvb3phRVlicRibg==
 
 "@bgd-labs/js-utils@^1.0.3":
   version "1.0.3"
@@ -1222,6 +1222,11 @@ fill-range@^7.0.1:
   integrity sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==
   dependencies:
     to-regex-range "^5.0.1"
+
+find-object-paths@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/find-object-paths/-/find-object-paths-1.0.2.tgz#93148ebfda10aa1a4f44fa81f8c12d2b64d26754"
+  integrity sha512-V6gO/vcQnimA/1H1XqYyfJEn+QxEkQqnUwc0WZJ1TJcNVOYD5JNfMTmEHKGUB93iMgebRXBi0WjsPITzK0HIWA==
 
 find-up@^4.1.0:
   version "4.1.0"
