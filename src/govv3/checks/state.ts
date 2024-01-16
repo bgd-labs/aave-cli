@@ -36,7 +36,7 @@ export const checkStateChanges: ProposalCheck<any> = {
         // Parse state changes at each address
         for (const [address, diffs] of Object.entries(stateDiffs)) {
           // Use contracts array to get contract name of address
-          stateChanges += `\n### ${getContractName(
+          stateChanges += `\n${getContractName(
             simulation.contracts,
             address as Address,
             publicClient.chain!.id

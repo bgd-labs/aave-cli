@@ -20,14 +20,14 @@ export async function simulateProposal(governanceAddress: Hex, publicClient: Pub
   const logs = await governance.cacheLogs();
   const proposal = await governance.getProposalAndLogs(proposalId, logs);
   const result = await governance.simulateProposalExecutionOnTenderly(proposalId, proposal);
-  // console.log(
-  //   await generateProposalReport({
-  //     simulation: result,
-  //     proposalId: proposalId,
-  //     proposalInfo: proposal,
-  //     publicClient: publicClient,
-  //   })
-  // );
+  console.log(
+    await generateProposalReport({
+      simulation: result,
+      proposalId: proposalId,
+      proposalInfo: proposal,
+      publicClient: publicClient,
+    })
+  );
   const payloads: {
     payload: Awaited<ReturnType<PayloadsController['getPayload']>>;
     simulation: TenderlySimulationResponse;
@@ -42,23 +42,13 @@ export async function simulateProposal(governanceAddress: Hex, publicClient: Pub
     try {
       const result = await controllerContract.simulatePayloadExecutionOnTenderly(payload.payloadId, config);
       console.log(
-        JSON.stringify(
-          {
-            simulation: result,
-            payloadId: payload.payloadId,
-            payloadInfo: config,
-          },
-          (key, value) => (typeof value === 'bigint' ? value.toString() : value)
-        )
+        await generateReport({
+          simulation: result,
+          payloadId: payload.payloadId,
+          payloadInfo: config,
+          publicClient: CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP],
+        })
       );
-      // console.log(
-      //   await generateReport({
-      //     simulation: result,
-      //     payloadId: payload.payloadId,
-      //     payloadInfo: config,
-      //     publicClient: CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP],
-      //   })
-      // );
       payloads.push({ payload: config, simulation: result });
     } catch (e) {
       console.log('error simulating payload');
