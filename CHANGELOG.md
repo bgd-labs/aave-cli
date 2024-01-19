@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/bgd-labs/aave-cli/compare/v0.2.7...v0.3.0) (2024-01-19)
+
+
+### Features
+
+* introduce trusted addresses on report ([#95](https://github.com/bgd-labs/aave-cli/issues/95)) ([3fa38bd](https://github.com/bgd-labs/aave-cli/commit/3fa38bd451ceca84ae017d465dbe8fe52cd03a36))
+* tenderly pinging ([#97](https://github.com/bgd-labs/aave-cli/issues/97)) ([7310c04](https://github.com/bgd-labs/aave-cli/commit/7310c04e8274ac2e66568ea24ab1c54ad29e971c))
+
 ## [0.2.7](https://github.com/bgd-labs/aave-cli/compare/v0.2.6...v0.2.7) (2024-01-15)
 
 
