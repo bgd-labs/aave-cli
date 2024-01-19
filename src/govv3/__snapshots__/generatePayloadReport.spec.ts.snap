@@ -342,8 +342,8 @@ TetherToken (Tether) at \`0xdAC17F958D2ee523a2206206994597C13D831ec7\`[:ghost:](
 - [0xe91d55ab2240594855abd11b3faae801fd4c4687](https://etherscan.io/address/0xe91d55ab2240594855abd11b3faae801fd4c4687): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.ASSETS.USDT.S_TOKEN")
 - [0x3ed3b47dd13ec9a98b44e6204a523e766b225811](https://etherscan.io/address/0x3ed3b47dd13ec9a98b44e6204a523e766b225811): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.ASSETS.USDT.A_TOKEN")
 - [0x3ea64b1c0194524b48f9118462c8e9cd61a243c7](https://etherscan.io/address/0x3ea64b1c0194524b48f9118462c8e9cd61a243c7): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "MiscEthereum.AAVE_SWAPPER")
-- [0x9ce312c09ab6ca0cc4cb7d7ceca975729f1ffb6a](https://etherscan.io/address/0x9ce312c09ab6ca0cc4cb7d7ceca975729f1ffb6a): EOA (may have code later)
-- [0x9d53cefcd5fbeb850b053a23ec6f59eb3dc76e33](https://etherscan.io/address/0x9d53cefcd5fbeb850b053a23ec6f59eb3dc76e33): EOA (may have code later)
+- [0x9ce312c09ab6ca0cc4cb7d7ceca975729f1ffb6a](https://etherscan.io/address/0x9ce312c09ab6ca0cc4cb7d7ceca975729f1ffb6a): Contract (with DELEGATECALL)
+- [0x9d53cefcd5fbeb850b053a23ec6f59eb3dc76e33](https://etherscan.io/address/0x9d53cefcd5fbeb850b053a23ec6f59eb3dc76e33): Contract (with DELEGATECALL)
 
 #### Info
 
