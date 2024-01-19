@@ -2,7 +2,7 @@
 // adjusted for viem & aave governance v3
 import { Hex, PublicClient } from 'viem';
 import { ProposalCheck } from './types';
-import { TenderlySimulationResponse } from '../../utils/tenderlyClient';
+import { TenderlySimulationResponse, tenderly } from '../../utils/tenderlyClient';
 import { PayloadsController } from '../payloadsController';
 import { isKnownAddress } from '../utils/checkAddress';
 import { flagKnownAddress } from '../utils/markdownUtils';
@@ -49,6 +49,13 @@ async function checkVerificationStatuses(
       const contract = getContract(sim, addr);
       info.push(`- ${addr}: Contract (verified) (${contract?.contract_name}) ${flagKnownAddress(isAddrKnown)}`);
     } else {
+      try {
+        if (isAddrKnown && isAddrKnown.length > 0) {
+          await tenderly.pingAddress(addr);
+        }
+      } catch (e) {
+        console.log('error pinging tenderly');
+      }
       info.push(`- ${addr}: Contract (not verified) ${flagKnownAddress(isAddrKnown)}`);
     }
   }
