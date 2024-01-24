@@ -22,7 +22,6 @@ export async function cacheGovernance(
     ContractFunctionReturnType<typeof IGovernanceCore_ABI, AbiStateMutability, 'getProposal'>
   >;
   eventsCache: Awaited<ReturnType<typeof getGovernanceEvents>>;
-  ipfsCache: Record<string, ProposalMetadata>;
 }> {
   const bookKeepingCacheId = 'governance';
   const currentBlockOnGovernanceChain = await getBlockNumber(client);
@@ -37,7 +36,6 @@ export async function cacheGovernance(
     return {
       proposalsCache: {},
       eventsCache: [],
-      ipfsCache: {},
     };
   }
   // cache data
@@ -53,15 +51,6 @@ export async function cacheGovernance(
     }
   }
   writeJSONCache(proposalsPath, governanceAddress, proposalsCache);
-
-  // cache ipfs
-  const ipfsCache: Record<string, ProposalMetadata> = readJSONCache('web3', 'ipfs') || {};
-  for (const key of Object.keys(proposalsCache)) {
-    if (!ipfsCache[proposalsCache[key].ipfsHash]) {
-      ipfsCache[proposalsCache[key].ipfsHash] = await getProposalMetadata(proposalsCache[key].ipfsHash);
-    }
-  }
-  writeJSONCache('web3', 'ipfs', ipfsCache);
 
   // cache events
   const eventsPath = `${client.chain!.id.toString()}/events`;
@@ -87,7 +76,7 @@ export async function cacheGovernance(
   const eventsCache = [...governanceEvents, ...logs];
   writeJSONCache(eventsPath, governanceAddress, eventsCache);
   bookKeepingCache[bookKeepingCacheId] = currentBlockOnGovernanceChain.toString();
-  return { proposalsCache, eventsCache, ipfsCache };
+  return { proposalsCache, eventsCache };
 }
 
 export async function cachePayloadsController(
