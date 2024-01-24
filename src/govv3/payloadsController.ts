@@ -6,23 +6,19 @@ import {
   PublicClient,
   encodeFunctionData,
   encodePacked,
-  getAbiItem,
   getContract,
 } from 'viem';
-import { LogWithTimestamp, getAndCacheLogs } from '../utils/logs';
 import { TenderlyRequest, tenderly, TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { EOA } from '../utils/constants';
 import { getSolidityStorageSlotUint } from '../utils/storageSlots';
 import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book';
-import type { ExtractAbiEvent } from 'abitype';
-
-type PayloadCreatedEvent = ExtractAbiEvent<typeof IPayloadsControllerCore_ABI, 'PayloadCreated'>;
-type PayloadQueuedEvent = ExtractAbiEvent<typeof IPayloadsControllerCore_ABI, 'PayloadQueued'>;
-type PayloadExecutedEvent = ExtractAbiEvent<typeof IPayloadsControllerCore_ABI, 'PayloadExecuted'>;
-
-type PayloadCreatedLog = LogWithTimestamp<PayloadCreatedEvent>;
-type PayloadQueuedLog = LogWithTimestamp<PayloadQueuedEvent>;
-type PayloadExecutedLog = LogWithTimestamp<PayloadExecutedEvent>;
+import {
+  PayloadCreatedEvent,
+  PayloadExecutedEvent,
+  PayloadQueuedEvent,
+  findPayloadLogs,
+  getPayloadsControllerEvents,
+} from './cache/modules/payloadsController';
 
 export enum PayloadState {
   None,
@@ -44,21 +40,15 @@ export const HUMAN_READABLE_PAYLOAD_STATE = {
 
 export interface PayloadsController {
   controllerContract: GetContractReturnType<typeof IPayloadsControllerCore_ABI, PublicClient>;
-  // cache created / queued / Executed logs
-  cacheLogs: (searchStartBlock?: bigint) => Promise<{
-    createdLogs: PayloadCreatedLog[];
-    queuedLogs: PayloadQueuedLog[];
-    executedLogs: PayloadExecutedLog[];
-  }>;
   // executes an existing payload
   getPayload: (
     id: number,
-    logs: Awaited<ReturnType<PayloadsController['cacheLogs']>>
+    logs: Awaited<ReturnType<typeof getPayloadsControllerEvents>>
   ) => Promise<{
     payload: ContractFunctionReturnType<typeof IPayloadsControllerCore_ABI, AbiStateMutability, 'getPayloadById'>;
-    createdLog: PayloadCreatedLog;
-    queuedLog?: PayloadQueuedLog;
-    executedLog?: PayloadExecutedLog;
+    createdLog: PayloadCreatedEvent;
+    queuedLog?: PayloadQueuedEvent;
+    executedLog?: PayloadExecutedEvent;
   }>;
   getSimulationPayloadForExecution: (id: number) => Promise<TenderlyRequest>;
   simulatePayloadExecutionOnTenderly: (
@@ -113,34 +103,10 @@ export const getPayloadsController = (address: Hex, publicClient: PublicClient):
 
   return {
     controllerContract,
-    cacheLogs: async (searchStartBlock) => {
-      const logs = await getAndCacheLogs(
-        publicClient,
-        [
-          getAbiItem({ abi: IPayloadsControllerCore_ABI, name: 'PayloadCreated' }),
-          getAbiItem({ abi: IPayloadsControllerCore_ABI, name: 'PayloadQueued' }),
-          getAbiItem({ abi: IPayloadsControllerCore_ABI, name: 'PayloadExecuted' }),
-        ],
-        address,
-        searchStartBlock
-      );
-      const createdLogs = logs.filter((log) => log.eventName === 'PayloadCreated') as PayloadCreatedLog[];
-      const queuedLogs = logs.filter((log) => log.eventName === 'PayloadQueued') as PayloadQueuedLog[];
-      const executedLogs = logs.filter((log) => log.eventName === 'PayloadExecuted') as PayloadExecutedLog[];
-
-      return {
-        createdLogs,
-        queuedLogs,
-        executedLogs,
-      };
-    },
     getPayload: async (id, logs) => {
-      const createdLog = logs.createdLogs.find((l) => l.args.payloadId === id)!;
-      if (!createdLog) throw new Error(`Could not find payload ${id} on ${publicClient.chain!.id}`);
-      const queuedLog = logs.queuedLogs.find((l) => l.args.payloadId === id);
-      const executedLog = logs.executedLogs.find((l) => l.args.payloadId === id);
       const payload = await controllerContract.read.getPayloadById([id]);
-      return { createdLog, queuedLog, executedLog, payload };
+      const payloadLogs = await findPayloadLogs(logs, id);
+      return { ...payloadLogs, payload };
     },
     getSimulationPayloadForExecution,
     simulatePayloadExecutionOnTenderly: async (id, { executedLog }) => {

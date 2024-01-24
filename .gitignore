@@ -5,5 +5,5 @@ node_modules
 yarn-error.log
 
 # proposal cache
-cache
+/cache
 .idea

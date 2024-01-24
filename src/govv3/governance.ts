@@ -29,22 +29,16 @@ import { setBits } from '../utils/storageSlots';
 import { VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof } from './proofs';
 import { logInfo } from '../utils/logger';
 import { GetProofReturnType } from 'viem/_types/actions/public/getProof';
-import type { ExtractAbiEvent } from 'abitype';
 import { readJSONCache, writeJSONCache } from '@bgd-labs/js-utils';
-
-type CreatedEvent = ExtractAbiEvent<typeof IGovernanceCore_ABI, 'ProposalCreated'>;
-type QueuedEvent = ExtractAbiEvent<typeof IGovernanceCore_ABI, 'ProposalQueued'>;
-type CanceledEvent = ExtractAbiEvent<typeof IGovernanceCore_ABI, 'ProposalCanceled'>;
-type ExecutedEvent = ExtractAbiEvent<typeof IGovernanceCore_ABI, 'ProposalExecuted'>;
-type PayloadSentEvent = ExtractAbiEvent<typeof IGovernanceCore_ABI, 'PayloadSent'>;
-type VotingActivatedEvent = ExtractAbiEvent<typeof IGovernanceCore_ABI, 'VotingActivated'>;
-
-type CreatedLog = LogWithTimestamp<CreatedEvent>;
-type QueuedLog = LogWithTimestamp<QueuedEvent>;
-type CanceledLog = LogWithTimestamp<CanceledEvent>;
-type ExecutedLog = LogWithTimestamp<ExecutedEvent>;
-type PayloadSentLog = LogWithTimestamp<PayloadSentEvent>;
-type VotingActivatedLog = LogWithTimestamp<VotingActivatedEvent>;
+import {
+  ProposalCreatedEvent,
+  ProposalExecutedEvent,
+  ProposalPayloadSentEvent,
+  ProposalQueuedEvent,
+  ProposalVotingActivatedEvent,
+  findProposalLogs,
+  getGovernanceEvents,
+} from './cache/modules/governance';
 
 export enum ProposalState {
   Null, // proposal does not exists
@@ -63,14 +57,6 @@ function isStateFinal(state: ProposalState) {
 
 export interface Governance {
   governanceContract: GetContractReturnType<typeof IGovernanceCore_ABI, PublicClient>;
-  cacheLogs: (searchStartBlock?: bigint) => Promise<{
-    createdLogs: CreatedLog[];
-    queuedLogs: QueuedLog[];
-    executedLogs: ExecutedLog[];
-    payloadSentLogs: PayloadSentLog[];
-    votingActivatedLogs: VotingActivatedLog[];
-    canceledLogs: CanceledLog[];
-  }>;
   /**
    * Thin caching wrapper on top of getProposal.
    * If the proposal state is final, the proposal will be stored in json and fetched from there.
@@ -82,19 +68,19 @@ export interface Governance {
   ) => Promise<ContractFunctionReturnType<typeof IGovernanceCore_ABI, AbiStateMutability, 'getProposal'>>;
   getProposalAndLogs: (
     proposalId: bigint,
-    logs: Awaited<ReturnType<Governance['cacheLogs']>>
+    logs: Awaited<ReturnType<typeof getGovernanceEvents>>
   ) => Promise<{
     proposal: ContractFunctionReturnType<typeof IGovernanceCore_ABI, AbiStateMutability, 'getProposal'>;
-    createdLog: CreatedLog;
-    queuedLog?: QueuedLog;
-    executedLog?: ExecutedLog;
-    votingActivatedLog?: VotingActivatedLog;
-    payloadSentLog: PayloadSentLog[];
+    createdLog: ProposalCreatedEvent;
+    queuedLog?: ProposalQueuedEvent;
+    executedLog?: ProposalExecutedEvent;
+    votingActivatedLog?: ProposalVotingActivatedEvent;
+    payloadSentLog: ProposalPayloadSentEvent[];
   }>;
   getSimulationPayloadForExecution: (proposalId: bigint) => Promise<TenderlyRequest>;
   simulateProposalExecutionOnTenderly: (
     proposalId: bigint,
-    params: { executedLog?: ExecutedLog }
+    params: { executedLog?: ProposalExecutedEvent }
   ) => Promise<TenderlySimulationResponse>;
   getStorageRoots(proposalId: bigint): Promise<GetProofReturnType[]>;
   /**
@@ -193,42 +179,11 @@ export const getGovernance = ({ address, publicClient }: GetGovernanceParams): G
 
   return {
     governanceContract,
-    async cacheLogs(searchStartBlock) {
-      const logs = await getAndCacheLogs(
-        publicClient,
-        [
-          getAbiItem({ abi: IGovernanceCore_ABI, name: 'ProposalCreated' }),
-          getAbiItem({ abi: IGovernanceCore_ABI, name: 'ProposalQueued' }),
-          getAbiItem({ abi: IGovernanceCore_ABI, name: 'ProposalExecuted' }),
-          getAbiItem({ abi: IGovernanceCore_ABI, name: 'PayloadSent' }),
-          getAbiItem({ abi: IGovernanceCore_ABI, name: 'VotingActivated' }),
-          getAbiItem({ abi: IGovernanceCore_ABI, name: 'ProposalCanceled' }),
-        ],
-        address,
-        searchStartBlock
-      );
-      const createdLogs = logs.filter((log) => log.eventName === 'ProposalCreated');
-      const queuedLogs = logs.filter((log) => log.eventName === 'ProposalQueued');
-      const executedLogs = logs.filter((log) => log.eventName === 'ProposalExecuted');
-      const payloadSentLogs = logs.filter((log) => log.eventName === 'PayloadSent');
-      const votingActivatedLogs = logs.filter((log) => log.eventName === 'VotingActivated');
-      const canceledLogs = logs.filter((log) => log.eventName === 'ProposalCanceled');
-
-      return { createdLogs, queuedLogs, executedLogs, payloadSentLogs, votingActivatedLogs, canceledLogs } as any;
-    },
     getProposal,
     async getProposalAndLogs(proposalId, logs) {
       const proposal = await getProposal(proposalId);
-      const createdLog = logs.createdLogs.find((log) => String(log.args.proposalId) === proposalId.toString())!;
-      const votingActivatedLog = logs.votingActivatedLogs.find(
-        (log) => String(log.args.proposalId) === proposalId.toString()
-      )!;
-      const queuedLog = logs.queuedLogs.find((log) => String(log.args.proposalId) === proposalId.toString());
-      const executedLog = logs.executedLogs.find((log) => String(log.args.proposalId) === proposalId.toString());
-      const payloadSentLog = logs.payloadSentLogs.filter(
-        (log) => String(log.args.proposalId) === proposalId.toString()
-      );
-      return { proposal, createdLog, votingActivatedLog, queuedLog, executedLog, payloadSentLog };
+      const proposalLogs = await findProposalLogs(logs, proposalId);
+      return { proposal, ...proposalLogs };
     },
     getSimulationPayloadForExecution,
     async simulateProposalExecutionOnTenderly(proposalId, { executedLog }) {
