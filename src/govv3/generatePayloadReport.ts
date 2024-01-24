@@ -1,6 +1,6 @@
-import { PublicClient } from 'viem';
+import { Client } from 'viem';
 import { TenderlySimulationResponse } from '../utils/tenderlyClient';
-import { HUMAN_READABLE_PAYLOAD_STATE, PayloadsController, getPayloadsController } from './payloadsController';
+import { HUMAN_READABLE_PAYLOAD_STATE, PayloadsController } from './payloadsController';
 import { renderCheckResult, renderUnixTime, toTxLink } from './utils/markdownUtils';
 import { checkTargetsNoSelfdestruct, checkTouchedContractsNoSelfdestruct } from './checks/selfDestruct';
 import { checkLogs } from './checks/logs';
@@ -11,13 +11,13 @@ type GenerateReportRequest = {
   payloadId: number;
   payloadInfo: Awaited<ReturnType<PayloadsController['getPayload']>>;
   simulation: TenderlySimulationResponse;
-  publicClient: PublicClient;
+  client: Client;
 };
 
-export async function generateReport({ payloadId, payloadInfo, simulation, publicClient }: GenerateReportRequest) {
+export async function generateReport({ payloadId, payloadInfo, simulation, client }: GenerateReportRequest) {
   const { payload, executedLog, queuedLog, createdLog } = payloadInfo;
   // generate file header
-  let report = `## Payload ${payloadId} on ${publicClient.chain!.name}
+  let report = `## Payload ${payloadId} on ${client.chain!.name}
 
 - Simulation: [https://dashboard.tenderly.co/me/simulator/${
     simulation.simulation.id
@@ -26,18 +26,18 @@ export async function generateReport({ payloadId, payloadInfo, simulation, publi
 - maximumAccessLevelRequired: ${payload.maximumAccessLevelRequired}
 - state: ${payload.state}(${(HUMAN_READABLE_PAYLOAD_STATE as any)[payload.state]})
 - actions: ${JSON.stringify(payload.actions, (key, value) => (typeof value === 'bigint' ? value.toString() : value))}
-- createdAt: [${renderUnixTime(payload.createdAt)}](${toTxLink(createdLog.transactionHash, false, publicClient)})\n`;
+- createdAt: [${renderUnixTime(payload.createdAt)}](${toTxLink(createdLog.transactionHash, false, client)})\n`;
   if (queuedLog) {
     report += `- queuedAt: [${renderUnixTime(payload.queuedAt)}](${toTxLink(
       queuedLog.transactionHash,
       false,
-      publicClient
+      client
     )})\n`;
     if (executedLog) {
       report += `- executedAt: [${renderUnixTime(payload.executedAt)}](${toTxLink(
         executedLog.transactionHash,
         false,
-        publicClient
+        client
       )})\n`;
     } else {
       report += `- earliest execution at: [${renderUnixTime(
@@ -58,7 +58,7 @@ export async function generateReport({ payloadId, payloadInfo, simulation, publi
   ];
 
   for (const check of checks) {
-    const result = await check.checkProposal(payloadInfo, simulation, publicClient);
+    const result = await check.checkProposal(payloadInfo, simulation, client);
     report += renderCheckResult(check, result);
   }
 

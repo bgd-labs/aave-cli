@@ -6,3 +6,4 @@ export * from './govv3/generatePayloadReport';
 export * from './govv3/generateProposalReport';
 export * from './utils/tenderlyClient';
 export * from './utils/logger';
+export * from './govv3/cache/updateCache';

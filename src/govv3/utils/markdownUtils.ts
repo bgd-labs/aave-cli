@@ -1,4 +1,4 @@
-import { Hex, PublicClient } from 'viem';
+import { Client, Hex } from 'viem';
 import { CheckResult } from '../checks/types';
 
 export function boolToMarkdown(value: boolean) {
@@ -11,7 +11,7 @@ export function boolToMarkdown(value: boolean) {
  * @param address to be linked
  * @param code whether to link to the code tab
  */
-export function toAddressLink(address: Hex, md: boolean, client?: PublicClient): string {
+export function toAddressLink(address: Hex, md: boolean, client?: Client): string {
   if (!client) return address;
   const link = `${client.chain?.blockExplorers?.default.url}/address/${address}`;
   if (md) return toMarkdownLink(link, address);
@@ -23,7 +23,7 @@ export function toAddressLink(address: Hex, md: boolean, client?: PublicClient):
  * @param address to be linked
  * @param code whether to link to the code tab
  */
-export function toTxLink(txn: Hex, md: boolean, client?: PublicClient): string {
+export function toTxLink(txn: Hex, md: boolean, client?: Client): string {
   if (!client) return txn;
   const link = `${client.chain?.blockExplorers?.default.url}/tx/${txn}`;
   if (md) return toMarkdownLink(link, txn);

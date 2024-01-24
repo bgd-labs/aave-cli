@@ -1,4 +1,4 @@
-import { PublicClient } from 'viem';
+import { Client } from 'viem';
 import { TenderlySimulationResponse } from '../../utils/tenderlyClient';
 
 export type CheckResult = {
@@ -9,9 +9,5 @@ export type CheckResult = {
 
 export interface ProposalCheck<T> {
   name: string;
-  checkProposal(
-    proposalInfo: T,
-    simulation: TenderlySimulationResponse,
-    publicClient: PublicClient
-  ): Promise<CheckResult>;
+  checkProposal(proposalInfo: T, simulation: TenderlySimulationResponse, client: Client): Promise<CheckResult>;
 }

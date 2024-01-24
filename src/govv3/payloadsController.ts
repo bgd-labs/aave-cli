@@ -3,26 +3,23 @@ import {
   ContractFunctionReturnType,
   GetContractReturnType,
   Hex,
-  PublicClient,
+  Client,
   encodeFunctionData,
   encodePacked,
-  getAbiItem,
   getContract,
 } from 'viem';
-import { LogWithTimestamp, getAndCacheLogs } from '../utils/logs';
 import { TenderlyRequest, tenderly, TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { EOA } from '../utils/constants';
 import { getSolidityStorageSlotUint } from '../utils/storageSlots';
 import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book';
-import type { ExtractAbiEvent } from 'abitype';
-
-type PayloadCreatedEvent = ExtractAbiEvent<typeof IPayloadsControllerCore_ABI, 'PayloadCreated'>;
-type PayloadQueuedEvent = ExtractAbiEvent<typeof IPayloadsControllerCore_ABI, 'PayloadQueued'>;
-type PayloadExecutedEvent = ExtractAbiEvent<typeof IPayloadsControllerCore_ABI, 'PayloadExecuted'>;
-
-type PayloadCreatedLog = LogWithTimestamp<PayloadCreatedEvent>;
-type PayloadQueuedLog = LogWithTimestamp<PayloadQueuedEvent>;
-type PayloadExecutedLog = LogWithTimestamp<PayloadExecutedEvent>;
+import {
+  PayloadCreatedEvent,
+  PayloadExecutedEvent,
+  PayloadQueuedEvent,
+  findPayloadLogs,
+  getPayloadsControllerEvents,
+} from './cache/modules/payloadsController';
+import { getBlock, getTransaction } from 'viem/actions';
 
 export enum PayloadState {
   None,
@@ -43,22 +40,16 @@ export const HUMAN_READABLE_PAYLOAD_STATE = {
 };
 
 export interface PayloadsController {
-  controllerContract: GetContractReturnType<typeof IPayloadsControllerCore_ABI, PublicClient>;
-  // cache created / queued / Executed logs
-  cacheLogs: (searchStartBlock?: bigint) => Promise<{
-    createdLogs: PayloadCreatedLog[];
-    queuedLogs: PayloadQueuedLog[];
-    executedLogs: PayloadExecutedLog[];
-  }>;
+  controllerContract: GetContractReturnType<typeof IPayloadsControllerCore_ABI, Client>;
   // executes an existing payload
   getPayload: (
     id: number,
-    logs: Awaited<ReturnType<PayloadsController['cacheLogs']>>
+    logs: Awaited<ReturnType<typeof getPayloadsControllerEvents>>
   ) => Promise<{
     payload: ContractFunctionReturnType<typeof IPayloadsControllerCore_ABI, AbiStateMutability, 'getPayloadById'>;
-    createdLog: PayloadCreatedLog;
-    queuedLog?: PayloadQueuedLog;
-    executedLog?: PayloadExecutedLog;
+    createdLog: PayloadCreatedEvent;
+    queuedLog?: PayloadQueuedEvent;
+    executedLog?: PayloadExecutedEvent;
   }>;
   getSimulationPayloadForExecution: (id: number) => Promise<TenderlyRequest>;
   simulatePayloadExecutionOnTenderly: (
@@ -73,14 +64,14 @@ const SLOTS = {
   PAYLOADS_MAPPING: 3n,
 };
 
-export const getPayloadsController = (address: Hex, publicClient: PublicClient): PayloadsController => {
-  const controllerContract = getContract({ abi: IPayloadsControllerCore_ABI, address, client: publicClient });
+export const getPayloadsController = (address: Hex, client: Client): PayloadsController => {
+  const controllerContract = getContract({ abi: IPayloadsControllerCore_ABI, address, client });
 
   const getSimulationPayloadForExecution = async (id: number) => {
     const payload = await controllerContract.read.getPayloadById([id]);
-    const currentBlock = await publicClient.getBlock();
+    const currentBlock = await getBlock(client);
     const simulationPayload: TenderlyRequest = {
-      network_id: String(publicClient.chain!.id),
+      network_id: String(client.chain!.id),
       from: EOA,
       to: controllerContract.address,
       input: encodeFunctionData({
@@ -113,45 +104,21 @@ export const getPayloadsController = (address: Hex, publicClient: PublicClient):
 
   return {
     controllerContract,
-    cacheLogs: async (searchStartBlock) => {
-      const logs = await getAndCacheLogs(
-        publicClient,
-        [
-          getAbiItem({ abi: IPayloadsControllerCore_ABI, name: 'PayloadCreated' }),
-          getAbiItem({ abi: IPayloadsControllerCore_ABI, name: 'PayloadQueued' }),
-          getAbiItem({ abi: IPayloadsControllerCore_ABI, name: 'PayloadExecuted' }),
-        ],
-        address,
-        searchStartBlock
-      );
-      const createdLogs = logs.filter((log) => log.eventName === 'PayloadCreated') as PayloadCreatedLog[];
-      const queuedLogs = logs.filter((log) => log.eventName === 'PayloadQueued') as PayloadQueuedLog[];
-      const executedLogs = logs.filter((log) => log.eventName === 'PayloadExecuted') as PayloadExecutedLog[];
-
-      return {
-        createdLogs,
-        queuedLogs,
-        executedLogs,
-      };
-    },
     getPayload: async (id, logs) => {
-      const createdLog = logs.createdLogs.find((l) => l.args.payloadId === id)!;
-      if (!createdLog) throw new Error(`Could not find payload ${id} on ${publicClient.chain!.id}`);
-      const queuedLog = logs.queuedLogs.find((l) => l.args.payloadId === id);
-      const executedLog = logs.executedLogs.find((l) => l.args.payloadId === id);
       const payload = await controllerContract.read.getPayloadById([id]);
-      return { createdLog, queuedLog, executedLog, payload };
+      const payloadLogs = await findPayloadLogs(logs, id);
+      return { ...payloadLogs, payload };
     },
     getSimulationPayloadForExecution,
     simulatePayloadExecutionOnTenderly: async (id, { executedLog }) => {
       // if successfully executed just replay the txn
       if (executedLog) {
-        const tx = await publicClient.getTransaction({ hash: executedLog.transactionHash! });
-        return tenderly.simulateTx(publicClient.chain!.id, tx);
+        const tx = await getTransaction(client, { hash: executedLog.transactionHash! });
+        return tenderly.simulateTx(client.chain!.id, tx);
       }
       const payload = await getSimulationPayloadForExecution(id);
 
-      return tenderly.simulate(payload, publicClient);
+      return tenderly.simulate(payload, client);
     },
   };
 };

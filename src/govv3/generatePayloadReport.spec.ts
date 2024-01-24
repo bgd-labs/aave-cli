@@ -9,7 +9,7 @@ describe('generatePayloadReport', () => {
     async () => {
       const report = await generateReport({
         ...(MOCK_PAYLOAD as any),
-        publicClient: CHAIN_ID_CLIENT_MAP[MOCK_PAYLOAD.simulation.transaction.network_id],
+        client: CHAIN_ID_CLIENT_MAP[MOCK_PAYLOAD.simulation.transaction.network_id],
       });
       expect(report).toMatchSnapshot();
     },

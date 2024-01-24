@@ -1,7 +1,6 @@
 import { findObjectPaths } from 'find-object-paths';
 import { Address, getAddress } from 'viem';
 import * as addresses from '@bgd-labs/aave-address-book';
-import { ChainId } from '@bgd-labs/js-utils';
 
 /**
  * Checks if address is listed on address-book
@@ -9,7 +8,7 @@ import { ChainId } from '@bgd-labs/js-utils';
  * @param chainId
  * @returns string[] found paths to address-book addresses
  */
-export function isKnownAddress(value: Address, chainId: ChainId): string[] | void {
+export function isKnownAddress(value: Address, chainId: number): string[] | void {
   // glob imports have no object properties
   // therefore we recreate the object via spread & remove addresses unrelated to the chain we are checking
   const transformedAddresses = Object.keys(addresses).reduce((acc, key) => {
