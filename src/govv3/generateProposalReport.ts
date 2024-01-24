@@ -1,4 +1,4 @@
-import { PublicClient } from 'viem';
+import { Client } from 'viem';
 import { TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { renderCheckResult, renderUnixTime, toTxLink } from './utils/markdownUtils';
 import { checkTouchedContractsNoSelfdestruct } from './checks/selfDestruct';
@@ -12,15 +12,10 @@ type GenerateReportRequest = {
   proposalId: bigint;
   proposalInfo: Awaited<ReturnType<Governance['getProposalAndLogs']>>;
   simulation: TenderlySimulationResponse;
-  publicClient: PublicClient;
+  client: Client;
 };
 
-export async function generateProposalReport({
-  proposalId,
-  proposalInfo,
-  simulation,
-  publicClient,
-}: GenerateReportRequest) {
+export async function generateProposalReport({ proposalId, proposalInfo, simulation, client }: GenerateReportRequest) {
   const { proposal, executedLog, queuedLog, createdLog, payloadSentLog, votingActivatedLog } = proposalInfo;
   // generate file header
   let report = `## Proposal ${proposalId}
@@ -32,23 +27,19 @@ export async function generateProposalReport({
 - creator: ${proposal.creator}
 - maximumAccessLevelRequired: ${proposal.accessLevel}
 - payloads: ${JSON.stringify(proposal.payloads, (key, value) => (typeof value === 'bigint' ? value.toString() : value))}
-- createdAt: [${renderUnixTime(proposal.creationTime)}](${toTxLink(
-    createdLog.transactionHash,
-    false,
-    publicClient
-  )})\n`;
+- createdAt: [${renderUnixTime(proposal.creationTime)}](${toTxLink(createdLog.transactionHash, false, client)})\n`;
   if (queuedLog) {
     report += `- queuedAt: [${renderUnixTime(proposal.queuingTime)}](${toTxLink(
       queuedLog.transactionHash,
       false,
-      publicClient
+      client
     )})\n`;
   }
   if (executedLog) {
     report += `- executedAt: [${renderUnixTime(executedLog.timestamp)}](${toTxLink(
       executedLog.transactionHash,
       false,
-      publicClient
+      client
     )})\n`;
   }
   report += '\n';
@@ -72,7 +63,7 @@ export async function generateProposalReport({
   ];
 
   for (const check of checks) {
-    const result = await check.checkProposal(proposalInfo, simulation, publicClient);
+    const result = await check.checkProposal(proposalInfo, simulation, client);
     report += renderCheckResult(check, result);
   }
 

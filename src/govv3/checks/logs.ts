@@ -10,7 +10,7 @@ import { getContractName } from '../utils/solidityUtils';
  */
 export const checkLogs: ProposalCheck<any> = {
   name: 'Reports all events emitted from the proposal',
-  async checkProposal(proposal, sim, publicClient) {
+  async checkProposal(proposal, sim, client) {
     let info = [];
     const events = sim.transaction.transaction_info.logs?.reduce((logs, log) => {
       const addr = getAddress(log.raw.address);
@@ -25,7 +25,7 @@ export const checkLogs: ProposalCheck<any> = {
     // Parse each event
     for (const [address, logs] of Object.entries(events)) {
       // Use contracts array to get contract name of address
-      info.push(`- ${getContractName(sim.contracts, address as Address, publicClient.chain!.id)}`);
+      info.push(`- ${getContractName(sim.contracts, address as Address, client.chain!.id)}`);
 
       // Format log data for report
       logs.forEach((log) => {

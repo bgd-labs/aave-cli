@@ -1,4 +1,4 @@
-import { Hex, PublicClient, getContract } from 'viem';
+import { Client, Hex, getContract } from 'viem';
 import { tenderlyDeepDiff } from './tenderlyDeepDiff';
 import { ERC20_ABI } from '../abis/ERC20';
 import * as pools from '@bgd-labs/aave-address-book';
@@ -10,10 +10,10 @@ export async function interpretStateChange(
   original: Record<string, any>,
   dirty: Record<string, any>,
   key: Hex,
-  publicClient: PublicClient
+  client: Client
 ) {
   if (name === '_reserves' && (original.configuration.data || dirty.configuration.data))
-    return await reserveConfigurationChanged(contractAddress, original, dirty, key, publicClient);
+    return await reserveConfigurationChanged(contractAddress, original, dirty, key, client);
   return undefined;
 }
 
@@ -22,13 +22,13 @@ async function reserveConfigurationChanged(
   original: Record<string, any>,
   dirty: Record<string, any>,
   key: Hex,
-  publicClient: PublicClient
+  client: Client
 ) {
   const configurationBefore = getDecodedReserveData(contractAddress, original.configuration.data);
   const configurationAfter = getDecodedReserveData(contractAddress, dirty.configuration.data);
   let symbol = 'unknown';
   try {
-    const erc20Contract = getContract({ client: publicClient, address: key, abi: ERC20_ABI });
+    const erc20Contract = getContract({ client, address: key, abi: ERC20_ABI });
     symbol = await erc20Contract.read.symbol();
   } catch (e) {}
   // const symbol =

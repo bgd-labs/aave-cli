@@ -8,14 +8,14 @@ import {
   parseEther,
   fromHex,
   pad,
-  zeroAddress,
-  PublicClient,
   Chain,
   Address,
+  Client,
 } from 'viem';
 import { EOA } from './constants';
 import { logError, logInfo, logSuccess, logWarning } from './logger';
 import { GetTransactionReturnType } from 'viem';
+import { getBlock } from 'viem/actions';
 export type StateObject = {
   balance?: string;
   code?: string;
@@ -295,7 +295,7 @@ class Tenderly {
     return result;
   };
 
-  simulate = async (request: TenderlyRequest, publicClient?: PublicClient): Promise<TenderlySimulationResponse> => {
+  simulate = async (request: TenderlyRequest, client?: Client): Promise<TenderlySimulationResponse> => {
     if (!request.state_objects) {
       request.state_objects = {};
     }
@@ -307,8 +307,8 @@ class Tenderly {
 
     let apiUrl = `${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/simulate`;
 
-    if (publicClient) {
-      const url = publicClient.transport.url! as string;
+    if (client) {
+      const url = client.transport.url! as string;
       const tenderlyForkRegex = new RegExp(/https:\/\/rpc.tenderly.co\/fork\/(.*)/);
       if (tenderlyForkRegex.test(url)) {
         const matches = url.match(tenderlyForkRegex);
@@ -462,16 +462,16 @@ class Tenderly {
   };
 
   warpTime = async (fork: Fork, timestamp: bigint) => {
-    const publicProvider = createPublicClient({
+    const client = createPublicClient({
       chain: { id: fork.forkNetworkId } as any,
       transport: http(fork.forkUrl),
     });
 
-    const currentBlock = await publicProvider.getBlock();
+    const currentBlock = await getBlock(client);
     // warping forward in time
     if (timestamp > currentBlock.timestamp) {
       logInfo('tenderly', `warping time from ${currentBlock.timestamp} to ${timestamp}`);
-      await publicProvider.request({
+      await client.request({
         method: 'evm_increaseTime' as any,
         params: [toHex(timestamp - currentBlock.timestamp)],
       });
@@ -484,14 +484,14 @@ class Tenderly {
   };
 
   warpBlocks = async (fork: Fork, blockNumber: bigint) => {
-    const publicProvider = createPublicClient({
+    const client = createPublicClient({
       chain: { id: fork.forkNetworkId } as any,
       transport: http(fork.forkUrl),
     });
-    const currentBlock = await publicProvider.getBlock();
+    const currentBlock = await getBlock(client);
     if (blockNumber > currentBlock.number) {
       logInfo('tenderly', `warping blocks from ${currentBlock.number} to ${blockNumber}`);
-      await publicProvider.request({
+      await client.request({
         method: 'evm_increaseBlocks' as any,
         params: [toHex(blockNumber - currentBlock.number)],
       });

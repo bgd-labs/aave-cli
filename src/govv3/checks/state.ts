@@ -9,7 +9,7 @@ import { interpretStateChange } from '../utils/stateDiffInterpreter';
 
 export const checkStateChanges: ProposalCheck<any> = {
   name: 'Reports all state changes',
-  async checkProposal(proposal, simulation, publicClient) {
+  async checkProposal(proposal, simulation, client) {
     const info: string[] = [];
     const warnings: string[] = [];
     const errors: string[] = [];
@@ -39,7 +39,7 @@ export const checkStateChanges: ProposalCheck<any> = {
           stateChanges += `\n${getContractName(
             simulation.contracts,
             address as Address,
-            publicClient.chain!.id
+            client.chain!.id
           )}\n\`\`\`diff\n`;
 
           // Parse each diff. A single diff may involve multiple storage changes, e.g. a proposal that
@@ -77,7 +77,7 @@ export const checkStateChanges: ProposalCheck<any> = {
                   original[k],
                   dirty[k],
                   k,
-                  publicClient
+                  client
                 );
                 if (interpretation) stateChanges += `\n${interpretation}`;
                 stateChanges += '\n';

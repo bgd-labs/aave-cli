@@ -42,7 +42,7 @@ export function addCommand(program: Command) {
         alias: getAlias(),
         blockNumber: Number(blockNumber),
       };
-      const governance = getGovernance({ address: DEFAULT_GOVERNANCE, publicClient: DEFAULT_GOVERNANCE_CLIENT });
+      const governance = getGovernance({ address: DEFAULT_GOVERNANCE, client: DEFAULT_GOVERNANCE_CLIENT });
       if (proposalId) {
         const payload = await governance.getSimulationPayloadForExecution(BigInt(proposalId));
         const fork = await tenderly.fork({
@@ -54,7 +54,7 @@ export function addCommand(program: Command) {
         if (!payloadsControllerAddress) throw new Error('you need to provide a payloadsController');
         const payloadsController = getPayloadsController(
           payloadsControllerAddress as Hex,
-          CHAIN_ID_CLIENT_MAP[forkConfig.chainId as keyof typeof CHAIN_ID_CLIENT_MAP] as PublicClient
+          CHAIN_ID_CLIENT_MAP[forkConfig.chainId as keyof typeof CHAIN_ID_CLIENT_MAP]
         );
         const payload = await payloadsController.getSimulationPayloadForExecution(Number(payloadId));
         const fork = await tenderly.fork({

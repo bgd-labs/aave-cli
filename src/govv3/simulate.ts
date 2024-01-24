@@ -1,7 +1,7 @@
 import { logInfo } from '../utils/logger';
 import { TenderlySimulationResponse } from '../utils/tenderlyClient';
 import { getGovernance } from './governance';
-import { Hex, PublicClient } from 'viem';
+import { Client, Hex } from 'viem';
 import { PayloadsController, getPayloadsController } from './payloadsController';
 import { CHAIN_ID_CLIENT_MAP } from '@bgd-labs/js-utils';
 import { generateReport } from './generatePayloadReport';
@@ -11,15 +11,15 @@ import { cacheGovernance, cachePayloadsController, readBookKeepingCache } from '
 /**
  * Reference implementation, unused
  * @param governanceAddress
- * @param publicClient
+ * @param client
  * @param proposalId
  * @returns
  */
-export async function simulateProposal(governanceAddress: Hex, publicClient: PublicClient, proposalId: bigint) {
+export async function simulateProposal(governanceAddress: Hex, client: Client, proposalId: bigint) {
   const cache = readBookKeepingCache();
   logInfo('General', `Running simulation for ${proposalId}`);
-  const governance = getGovernance({ address: governanceAddress, publicClient });
-  const { eventsCache } = await cacheGovernance(publicClient, governanceAddress, cache);
+  const governance = getGovernance({ address: governanceAddress, client });
+  const { eventsCache } = await cacheGovernance(client, governanceAddress, cache);
   const proposal = await governance.getProposalAndLogs(proposalId, eventsCache);
   const result = await governance.simulateProposalExecutionOnTenderly(proposalId, proposal);
   console.log(
@@ -27,7 +27,7 @@ export async function simulateProposal(governanceAddress: Hex, publicClient: Pub
       simulation: result,
       proposalId: proposalId,
       proposalInfo: proposal,
-      publicClient: publicClient,
+      client,
     })
   );
   const payloads: {
@@ -46,7 +46,7 @@ export async function simulateProposal(governanceAddress: Hex, publicClient: Pub
           simulation: result,
           payloadId: payload.payloadId,
           payloadInfo: config,
-          publicClient: CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP],
+          client: CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP],
         })
       );
       payloads.push({ payload: config, simulation: result });

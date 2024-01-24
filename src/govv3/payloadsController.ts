@@ -3,7 +3,7 @@ import {
   ContractFunctionReturnType,
   GetContractReturnType,
   Hex,
-  PublicClient,
+  Client,
   encodeFunctionData,
   encodePacked,
   getContract,
@@ -19,6 +19,7 @@ import {
   findPayloadLogs,
   getPayloadsControllerEvents,
 } from './cache/modules/payloadsController';
+import { getBlock, getTransaction } from 'viem/actions';
 
 export enum PayloadState {
   None,
@@ -39,7 +40,7 @@ export const HUMAN_READABLE_PAYLOAD_STATE = {
 };
 
 export interface PayloadsController {
-  controllerContract: GetContractReturnType<typeof IPayloadsControllerCore_ABI, PublicClient>;
+  controllerContract: GetContractReturnType<typeof IPayloadsControllerCore_ABI, Client>;
   // executes an existing payload
   getPayload: (
     id: number,
@@ -63,14 +64,14 @@ const SLOTS = {
   PAYLOADS_MAPPING: 3n,
 };
 
-export const getPayloadsController = (address: Hex, publicClient: PublicClient): PayloadsController => {
-  const controllerContract = getContract({ abi: IPayloadsControllerCore_ABI, address, client: publicClient });
+export const getPayloadsController = (address: Hex, client: Client): PayloadsController => {
+  const controllerContract = getContract({ abi: IPayloadsControllerCore_ABI, address, client });
 
   const getSimulationPayloadForExecution = async (id: number) => {
     const payload = await controllerContract.read.getPayloadById([id]);
-    const currentBlock = await publicClient.getBlock();
+    const currentBlock = await getBlock(client);
     const simulationPayload: TenderlyRequest = {
-      network_id: String(publicClient.chain!.id),
+      network_id: String(client.chain!.id),
       from: EOA,
       to: controllerContract.address,
       input: encodeFunctionData({
@@ -112,12 +113,12 @@ export const getPayloadsController = (address: Hex, publicClient: PublicClient):
     simulatePayloadExecutionOnTenderly: async (id, { executedLog }) => {
       // if successfully executed just replay the txn
       if (executedLog) {
-        const tx = await publicClient.getTransaction({ hash: executedLog.transactionHash! });
-        return tenderly.simulateTx(publicClient.chain!.id, tx);
+        const tx = await getTransaction(client, { hash: executedLog.transactionHash! });
+        return tenderly.simulateTx(client.chain!.id, tx);
       }
       const payload = await getSimulationPayloadForExecution(id);
 
-      return tenderly.simulate(payload, publicClient);
+      return tenderly.simulate(payload, client);
     },
   };
 };
