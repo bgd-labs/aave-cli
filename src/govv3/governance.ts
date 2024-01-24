@@ -6,12 +6,10 @@ import {
   PublicClient,
   encodeFunctionData,
   fromHex,
-  getAbiItem,
   getContract,
   toHex,
 } from 'viem';
 import merge from 'deepmerge';
-import { LogWithTimestamp, getAndCacheLogs } from '../utils/logs';
 import {
   AaveSafetyModule,
   AaveV3Ethereum,

@@ -9,7 +9,7 @@ import { ChainId } from '@bgd-labs/js-utils';
  * @param chainId
  * @returns string[] found paths to address-book addresses
  */
-export function isKnownAddress(value: Address, chainId: ChainId): string[] | void {
+export function isKnownAddress(value: Address, chainId: keyof typeof ChainId): string[] | void {
   // glob imports have no object properties
   // therefore we recreate the object via spread & remove addresses unrelated to the chain we are checking
   const transformedAddresses = Object.keys(addresses).reduce((acc, key) => {
