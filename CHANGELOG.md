@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/bgd-labs/aave-cli/compare/v0.4.0...v0.5.0) (2024-01-25)
+
+
+### Features
+
+* add storage diff ([#104](https://github.com/bgd-labs/aave-cli/issues/104)) ([cf8d917](https://github.com/bgd-labs/aave-cli/commit/cf8d91747260cb1970fce856147ef6836f4a81ae))
+
 ## [0.4.0](https://github.com/bgd-labs/aave-cli/compare/v0.3.3...v0.4.0) (2024-01-25)
 
 
