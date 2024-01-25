@@ -8,6 +8,7 @@ import { CHAIN_ID_CLIENT_MAP } from '@bgd-labs/js-utils';
 import { findPayloadsController } from '../govv3/utils/checkAddress';
 import path from 'path';
 import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book';
+import { getTransactionReceipt } from 'viem/actions';
 
 export function addCommand(program: Command) {
   program
@@ -38,8 +39,8 @@ export function addCommand(program: Command) {
         alias: getAlias(),
         blockNumber: Number(blockNumber),
       };
-      const governance = getGovernance({ address: DEFAULT_GOVERNANCE, client: DEFAULT_GOVERNANCE_CLIENT });
       if (proposalId) {
+        const governance = getGovernance({ address: DEFAULT_GOVERNANCE, client: DEFAULT_GOVERNANCE_CLIENT });
         const payload = await governance.getSimulationPayloadForExecution(BigInt(proposalId));
         const fork = await tenderly.fork({
           ...forkConfig,
@@ -51,10 +52,7 @@ export function addCommand(program: Command) {
       if (payloadId == undefined && artifactPath == undefined) throw new Error('you need to specify an id or artifact');
       const payloadsControllerAddress = findPayloadsController(forkConfig.chainId);
       if (!payloadsControllerAddress) throw new Error('payloadscontroller not found on specified chain');
-      const payloadsController = getPayloadsController(
-        payloadsControllerAddress as Hex,
-        CHAIN_ID_CLIENT_MAP[forkConfig.chainId]
-      );
+
       if (!payloadId) {
         const fork = await tenderly.fork({
           ...forkConfig,
@@ -66,12 +64,8 @@ export function addCommand(program: Command) {
           chain: { id: fork.forkNetworkId, name: 'tenderly' } as any,
           transport: http(fork.forkUrl),
         });
-        const pc = getContract({
-          abi: IPayloadsControllerCore_ABI,
-          address: payloadsControllerAddress,
-          client: { wallet: walletProvider },
-        });
-        const payloadId = await pc.write.createPayload(
+        const payloadsController = getPayloadsController(payloadsControllerAddress as Hex, walletProvider);
+        const hash = await payloadsController.controllerContract.write.createPayload(
           [
             [
               {
@@ -86,11 +80,17 @@ export function addCommand(program: Command) {
           ],
           {} as any
         );
-        const tenderlyPayload = await payloadsController.getSimulationPayloadForExecution(Number(payloadId));
+        const tenderlyPayload = await payloadsController.getSimulationPayloadForExecution(
+          Number((await payloadsController.controllerContract.read.getPayloadsCount()) - 1)
+        );
         await tenderly.unwrapAndExecuteSimulationPayloadOnFork(fork, tenderlyPayload);
         return;
       }
       if (payloadId != undefined) {
+        const payloadsController = getPayloadsController(
+          payloadsControllerAddress as Hex,
+          CHAIN_ID_CLIENT_MAP[chainId]
+        );
         const payload = await payloadsController.getSimulationPayloadForExecution(Number(payloadId));
         const fork = await tenderly.fork({
           ...forkConfig,

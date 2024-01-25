@@ -1,8 +1,5 @@
 import {
   Hex,
-  Transaction as ViemTransaction,
-  createPublicClient,
-  createWalletClient,
   http,
   toHex,
   parseEther,
@@ -11,11 +8,13 @@ import {
   Chain,
   Address,
   Client,
+  createClient,
+  getContractAddress,
 } from 'viem';
 import { EOA } from './constants';
 import { logError, logInfo, logSuccess, logWarning } from './logger';
 import { GetTransactionReturnType } from 'viem';
-import { getBlock } from 'viem/actions';
+import { deployContract, getBlock, getTransactionReceipt, sendTransaction } from 'viem/actions';
 export type StateObject = {
   balance?: string;
   code?: string;
@@ -445,8 +444,8 @@ class Tenderly {
     return fork;
   };
 
-  deployCode = (fork: Fork, filePath: string, from?: Hex) => {
-    const walletProvider = createWalletClient({
+  deployCode = async (fork: Fork, filePath: string, from?: Hex) => {
+    const walletProvider = createClient({
       account: from || EOA,
       chain: { id: fork.forkNetworkId, name: 'tenderly' } as any,
       transport: http(fork.forkUrl),
@@ -455,14 +454,18 @@ class Tenderly {
     const artifact = require(filePath);
     logInfo('tenderly', `deploying ${filePath}`);
 
-    return walletProvider.deployContract({
+    const hash = await deployContract(walletProvider, {
       abi: artifact.abi,
-      bytecode: artifact.bytecode,
+      bytecode: artifact.bytecode.object,
+      account: walletProvider.account,
     } as any);
+
+    const receipt = await getTransactionReceipt(walletProvider, { hash });
+    return getContractAddress({ from: receipt.from, nonce: receipt.nonce });
   };
 
   warpTime = async (fork: Fork, timestamp: bigint) => {
-    const client = createPublicClient({
+    const client = createClient({
       chain: { id: fork.forkNetworkId } as any,
       transport: http(fork.forkUrl),
     });
@@ -484,7 +487,7 @@ class Tenderly {
   };
 
   warpBlocks = async (fork: Fork, blockNumber: bigint) => {
-    const client = createPublicClient({
+    const client = createClient({
       chain: { id: fork.forkNetworkId } as any,
       transport: http(fork.forkUrl),
     });
@@ -504,7 +507,7 @@ class Tenderly {
     // 0. fund account
     await this.fundAccount(fork, request.from);
 
-    const publicProvider = createPublicClient({
+    const publicProvider = createClient({
       chain: { id: fork.forkNetworkId } as any,
       transport: http(fork.forkUrl),
     });
@@ -538,17 +541,17 @@ class Tenderly {
     // 3. execute txn
     if (request.input) {
       logInfo('tenderly', 'execute transaction');
-      const walletProvider = createWalletClient({
+      const walletProvider = createClient({
         account: request.from,
         chain: { id: fork.forkNetworkId, name: 'tenderly' } as any,
         transport: http(fork.forkUrl),
       });
-      const hash = await walletProvider.sendTransaction({
+      const hash = await sendTransaction(walletProvider, {
         data: request.input,
         to: request.to,
         value: request.value || 0n,
       } as any);
-      const receipt = await publicProvider.getTransactionReceipt({ hash });
+      const receipt = await getTransactionReceipt(walletProvider, { hash });
       if (receipt.status === 'success') {
         logSuccess('tenderly', 'transaction successfully executed');
       } else {
@@ -571,7 +574,7 @@ class Tenderly {
   };
 
   replaceCode = (fork: Fork, address: Hex, code: Hex) => {
-    const publicProvider = createPublicClient({
+    const publicProvider = createClient({
       chain: { id: fork.forkNetworkId } as any,
       transport: http(fork.forkUrl),
     });
