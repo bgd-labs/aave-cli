@@ -21,3 +21,10 @@ export function isKnownAddress(value: Address, chainId: number): string[] | void
   if (typeof results === 'string') return [results];
   return results;
 }
+
+export function findPayloadsController(chainId: number): Address | void {
+  const key = Object.keys(addresses).find(
+    (key) => addresses[key].CHAIN_ID === chainId && addresses[key].PAYLOADS_CONTROLLER
+  );
+  if (key) return addresses[key].PAYLOADS_CONTROLLER;
+}
