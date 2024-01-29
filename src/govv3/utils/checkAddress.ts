@@ -24,7 +24,9 @@ export function isKnownAddress(value: Address, chainId: number): string[] | void
 
 export function findPayloadsController(chainId: number): Address | void {
   const key = Object.keys(addresses).find(
-    (key) => addresses[key].CHAIN_ID === chainId && addresses[key].PAYLOADS_CONTROLLER
+    (key) =>
+      (addresses[key as keyof typeof addresses] as any).CHAIN_ID === chainId &&
+      (addresses[key as keyof typeof addresses] as any).PAYLOADS_CONTROLLER
   );
-  if (key) return addresses[key].PAYLOADS_CONTROLLER;
+  if (key) return (addresses[key as keyof typeof addresses] as any).PAYLOADS_CONTROLLER;
 }
