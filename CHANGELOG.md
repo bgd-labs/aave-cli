@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0](https://github.com/bgd-labs/aave-cli/compare/v0.5.0...v0.6.0) (2024-01-29)
+
+
+### Features
+
+* allow simulation of local payload ([#73](https://github.com/bgd-labs/aave-cli/issues/73)) ([84f7bed](https://github.com/bgd-labs/aave-cli/commit/84f7bedbf59ec39268e91b597b410339b298631f))
+
 ## [0.5.0](https://github.com/bgd-labs/aave-cli/compare/v0.4.0...v0.5.0) (2024-01-25)
 
 
