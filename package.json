@@ -26,7 +26,6 @@
     "typescript": "^5.3.3",
     "vitest": "^1.2.1"
   },
-  "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "exports": {
