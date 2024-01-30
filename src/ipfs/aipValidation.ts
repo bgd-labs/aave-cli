@@ -6,6 +6,7 @@ const aipType = z.object({
   discussions: z.string(),
   title: z.string(),
   author: z.string(),
+  snapshot: z.string().optional(),
 });
 
 /**
