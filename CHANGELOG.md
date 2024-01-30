@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.2](https://github.com/bgd-labs/aave-cli/compare/v0.6.1...v0.6.2) (2024-01-30)
+
+
+### Bug Fixes
+
+* allow snapshot string ([a0e5c04](https://github.com/bgd-labs/aave-cli/commit/a0e5c04f402f2acbf6ce0b2fd53ae6ccdb947f82))
+* also use secrets when merging to main ([c808456](https://github.com/bgd-labs/aave-cli/commit/c8084566f8dcddfe4a561a74c59208064260ff76))
+* expose find payloadscontroller ([b3b855c](https://github.com/bgd-labs/aave-cli/commit/b3b855cd92c3f9b01dccf8a4ff14cace6d788ee6))
+* inherit secrets on ci ([e727aa5](https://github.com/bgd-labs/aave-cli/commit/e727aa5fb69f08709752ac764f98f40b520ef308))
+
 ## [0.6.1](https://github.com/bgd-labs/aave-cli/compare/v0.6.0...v0.6.1) (2024-01-29)
 
 
