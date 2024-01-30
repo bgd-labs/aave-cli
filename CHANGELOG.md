@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.4](https://github.com/bgd-labs/aave-cli/compare/v0.6.3...v0.6.4) (2024-01-30)
+
+
+### Bug Fixes
+
+* remove node-fetch ([f7f2678](https://github.com/bgd-labs/aave-cli/commit/f7f2678b4880cb76532f6c753cb4eed47bc6d348))
+
 ## [0.6.3](https://github.com/bgd-labs/aave-cli/compare/v0.6.2...v0.6.3) (2024-01-30)
 
 
