@@ -1,8 +1,9 @@
 import path from 'path';
 import { existsSync, mkdirSync, createWriteStream } from 'fs';
+import { Readable } from 'stream';
+import { finished } from 'stream/promises';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
-import fetch from 'node-fetch';
 import hash from 'object-hash';
 import { AaveV3Strategy } from './snapshot-types';
 
@@ -34,7 +35,8 @@ export async function fetchRateStrategyImage(rate: AaveV3Strategy) {
   };
   if (rate.baseStableBorrowRate != undefined) paramsObj.baseStableBorrowRate = rate.baseStableBorrowRate;
   const searchParams = new URLSearchParams(paramsObj);
+  const writeStream = createWriteStream(pathWithFile);
   const { body } = await fetch(`https://rate-strategy-explorer.vercel.app/api/static?${searchParams.toString()}`);
-  if (!body) throw Error('Error fetchign the image');
-  await streamPipeline(body, createWriteStream(pathWithFile));
+  if (!body) throw Error('Error fetching the image');
+  await finished(Readable.fromWeb(body as any).pipe(writeStream));
 }
