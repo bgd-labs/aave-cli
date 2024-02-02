@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/bgd-labs/aave-cli/compare/v0.6.4...v0.7.0) (2024-02-02)
+
+
+### Features
+
+* force fetch contracts ([2ced77c](https://github.com/bgd-labs/aave-cli/commit/2ced77cc9168f394c646d56a910087d00e8fe4ce))
+
 ## [0.6.4](https://github.com/bgd-labs/aave-cli/compare/v0.6.3...v0.6.4) (2024-01-30)
 
 
