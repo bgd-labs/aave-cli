@@ -261,24 +261,6 @@ class Tenderly {
     this.PROJECT = project;
   }
 
-  /**
-   * Tenderly does a quite bad job with contract verification & simulation.
-   * When you simulate sth, touching a contract noone ever accessed via the dashboard it will not be available for state decoding.
-   * This method simply pings the dashboard to fetch the code from etherscan etc. so it will be available in the **next** simulation.
-   * @param chainId
-   * @param address
-   * @returns
-   */
-  pingAddress = async (address: Address) => {
-    return fetch(`${this.TENDERLY_BASE}/search?query=${address}&quickSearch=true`, {
-      method: 'GET',
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        'X-Access-Key': this.ACCESS_TOKEN,
-      }),
-    });
-  };
-
   trace = async (chainId: number, txHash: string): Promise<TenderlyTraceResponse> => {
     const response = await fetch(`${this.TENDERLY_BASE}/public-contract/${chainId}/trace/${txHash}`, {
       method: 'GET',
@@ -325,6 +307,7 @@ class Tenderly {
       save: true,
       gas_price: '0',
       gas: 30_000_000,
+      force_import_contracts: true,
       ...request,
     });
 

@@ -50,13 +50,6 @@ async function checkVerificationStatuses(
       const contract = getContract(sim, addr);
       info.push(`- ${addr}: Contract (verified) (${contract?.contract_name}) ${flagKnownAddress(isAddrKnown)}`);
     } else {
-      try {
-        if (isAddrKnown && isAddrKnown.length > 0) {
-          await tenderly.pingAddress(addr);
-        }
-      } catch (e) {
-        console.log('error pinging tenderly');
-      }
       info.push(`- ${addr}: Contract (not verified) ${flagKnownAddress(isAddrKnown)}`);
     }
   }

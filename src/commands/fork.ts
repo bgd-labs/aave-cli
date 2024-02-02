@@ -19,9 +19,10 @@ export function addCommand(program: Command) {
     .option('--alias <string>', 'Set a custom alias')
     .option('--proposalId <number>', 'ProposalId to execute')
     .option('--payloadId <number>', 'PayloadId to execute')
+    .option('--payloadAddress <string>', 'Payload address')
     .option('--artifactPath <string>', 'path to the local payload')
     .action(async (options) => {
-      const { chainId, blockNumber, alias, payloadId, proposalId, artifactPath } = options;
+      const { chainId, blockNumber, alias, payloadId, proposalId, artifactPath, payloadAddress } = options;
       function getAlias() {
         const unix = Math.floor(new Date().getTime() / 1000);
         if (alias) {
@@ -49,11 +50,10 @@ export function addCommand(program: Command) {
         await tenderly.unwrapAndExecuteSimulationPayloadOnFork(fork, payload);
         return;
       }
-      if (payloadId == undefined && artifactPath == undefined) throw new Error('you need to specify an id or artifact');
       const payloadsControllerAddress = findPayloadsController(forkConfig.chainId);
       if (!payloadsControllerAddress) throw new Error('payloadscontroller not found on specified chain');
 
-      if (!payloadId) {
+      if (artifactPath) {
         const fork = await tenderly.fork({
           ...forkConfig,
           blockNumber: forkConfig.blockNumber,
@@ -65,7 +65,7 @@ export function addCommand(program: Command) {
           transport: http(fork.forkUrl),
         });
         const payloadsController = getPayloadsController(payloadsControllerAddress as Hex, walletProvider);
-        const hash = await payloadsController.controllerContract.write.createPayload(
+        await payloadsController.controllerContract.write.createPayload(
           [
             [
               {
@@ -86,7 +86,7 @@ export function addCommand(program: Command) {
         await tenderly.unwrapAndExecuteSimulationPayloadOnFork(fork, tenderlyPayload);
         return;
       }
-      if (payloadId != undefined) {
+      if (payloadId) {
         const payloadsController = getPayloadsController(
           payloadsControllerAddress as Hex,
           CHAIN_ID_CLIENT_MAP[chainId]
@@ -98,6 +98,37 @@ export function addCommand(program: Command) {
         });
         await tenderly.unwrapAndExecuteSimulationPayloadOnFork(fork, payload);
         return;
+      }
+      if (payloadAddress) {
+        const fork = await tenderly.fork({
+          ...forkConfig,
+          blockNumber: forkConfig.blockNumber,
+        });
+        const walletProvider = createWalletClient({
+          account: EOA,
+          chain: { id: fork.forkNetworkId, name: 'tenderly' } as any,
+          transport: http(fork.forkUrl),
+        });
+        const payloadsController = getPayloadsController(payloadsControllerAddress as Hex, walletProvider);
+        await payloadsController.controllerContract.write.createPayload(
+          [
+            [
+              {
+                target: payloadAddress as Hex,
+                withDelegateCall: true,
+                accessLevel: 1,
+                value: 0n,
+                signature: 'execute()',
+                callData: '0x0',
+              },
+            ],
+          ],
+          {} as any
+        );
+        const tenderlyPayload = await payloadsController.getSimulationPayloadForExecution(
+          Number((await payloadsController.controllerContract.read.getPayloadsCount()) - 1)
+        );
+        await tenderly.unwrapAndExecuteSimulationPayloadOnFork(fork, tenderlyPayload);
       }
     });
 }
