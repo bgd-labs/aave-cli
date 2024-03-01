@@ -79,7 +79,7 @@ export const getPayloadsController = (address: Hex, client: Client): PayloadsCon
         functionName: 'executePayload',
         args: [id],
       }),
-      block_number: -1,
+      block_number: -2,
       state_objects: {
         [controllerContract.address]: {
           storage: {
