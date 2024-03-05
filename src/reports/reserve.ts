@@ -91,15 +91,21 @@ export type ReserveDiff<A extends AaveV3Reserve = AaveV3Reserve> = {
 export function renderReserveDiff(diff: ReserveDiff, chainId: CHAIN_ID) {
   let content = renderReserveHeadline(diff as AaveV3Reserve, chainId);
   content += '| description | value before | value after |\n| --- | --- | --- |\n';
+  const from = Object.keys(diff).reduce((acc, _key) => {
+    const key = _key as keyof AaveV3Reserve;
+    (acc as any)[key] = typeof diff[key] === 'object' ? diff[key].from : diff[key];
+    return acc;
+  }, {} as AaveV3Reserve);
+  const to = Object.keys(diff).reduce((acc, _key) => {
+    const key = _key as keyof AaveV3Reserve;
+    (acc as any)[key] = typeof diff[key] === 'object' ? diff[key].to : diff[key];
+    return acc;
+  }, {} as AaveV3Reserve);
   (Object.keys(diff) as (keyof AaveV3Reserve)[])
     .filter((key) => diff[key].hasOwnProperty('from'))
     .sort(sortReserveKeys)
     .map((key) => {
-      content += `| ${key} | ${renderReserveValue(
-        key,
-        { ...diff, [key]: diff[key].from },
-        chainId
-      )} | ${renderReserveValue(key, { ...diff, [key]: diff[key].to }, chainId)} |\n`;
+      content += `| ${key} | ${renderReserveValue(key, from, chainId)} | ${renderReserveValue(key, to, chainId)} |\n`;
     });
   return content;
 }
