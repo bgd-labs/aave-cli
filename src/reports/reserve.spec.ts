@@ -50,7 +50,9 @@ describe('reserve', () => {
       expect(renderReserveValue('liquidationThreshold', WBTC_MOCK, 1)).toBe('75.55 %');
     });
     it('address with block explorer', () => {
-      expect(renderReserveValue('aToken', WBTC_MOCK, 1)).toBe(`[${WBTC_MOCK.aToken}](https://etherscan.io/address/${WBTC_MOCK.aToken})`);
+      expect(renderReserveValue('aToken', WBTC_MOCK, 1)).toBe(
+        `[${WBTC_MOCK.aToken}](https://etherscan.io/address/${WBTC_MOCK.aToken})`
+      );
     });
     it('address without block explorer', () => {
       expect(renderReserveValue('aToken', WBTC_MOCK, 31337 as CHAIN_ID)).toBe(WBTC_MOCK.aToken);
@@ -69,6 +71,11 @@ describe('reserve', () => {
       const input: AaveV3Reserve = { ...WBTC_MOCK, borrowCap: 100 };
       const out = diff(WBTC_MOCK, { ...input });
 
+      expect(renderReserveDiff(out as any, 1)).toMatchSnapshot();
+    });
+    it('should render decimals', () => {
+      const { oracleDecimals, ...subDecimals } = WBTC_MOCK;
+      const out = diff(subDecimals, { ...subDecimals, oracleDecimals, oracleLatestAnswer: '123456789' });
       expect(renderReserveDiff(out as any, 1)).toMatchSnapshot();
     });
   });
