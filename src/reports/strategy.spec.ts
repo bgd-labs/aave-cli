@@ -35,7 +35,7 @@ describe('strategy', () => {
   it('should properly render new strategy', () => {
     const out = renderStrategy(STRATEGY_1);
     expect(out).eq(`| optimalUsageRatio | 80 % |
-| maxExcessUsageRatio | 20 % |
+| maxVariableBorrowRate | 20 % |
 | baseVariableBorrowRate | 1 % |
 | variableRateSlope1 | 4 % |
 | variableRateSlope2 | 75 % |
@@ -45,7 +45,7 @@ describe('strategy', () => {
   it('should properly render strategy diff', () => {
     const result = diff(STRATEGY_1, STRATEGY_2);
     expect(renderStrategyDiff(result as any)).eq(`| optimalUsageRatio | 80 % | 90 % |
-| maxExcessUsageRatio | 20 % | 10 % |
+| maxVariableBorrowRate | 20 % | 10 % |
 | baseVariableBorrowRate | 1 % | 0 % |
 | variableRateSlope2 | 75 % | 60 % |
 `);
