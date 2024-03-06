@@ -5,28 +5,18 @@ import { fetchRateStrategyImage } from './fetch-IR-strategy';
 
 const STRATEGY_1 = {
   address: '0xfab05a6aF585da2F96e21452F91E812452996BD3',
-  baseStableBorrowRate: '50000000000000000000000000',
   baseVariableBorrowRate: '10000000000000000000000000',
-  maxExcessStableToTotalDebtRatio: '800000000000000000000000000',
   maxExcessUsageRatio: '200000000000000000000000000',
-  optimalStableToTotalDebtRatio: '200000000000000000000000000',
   optimalUsageRatio: '800000000000000000000000000',
-  stableRateSlope1: '5000000000000000000000000',
-  stableRateSlope2: '750000000000000000000000000',
   variableRateSlope1: '40000000000000000000000000',
   variableRateSlope2: '750000000000000000000000000',
 };
 
 const STRATEGY_2 = {
   address: '0xf4a0039F2d4a2EaD5216AbB6Ae4C4C3AA2dB9b82',
-  baseStableBorrowRate: '50000000000000000000000000',
   baseVariableBorrowRate: '0',
-  maxExcessStableToTotalDebtRatio: '800000000000000000000000000',
   maxExcessUsageRatio: '100000000000000000000000000',
-  optimalStableToTotalDebtRatio: '200000000000000000000000000',
   optimalUsageRatio: '900000000000000000000000000',
-  stableRateSlope1: '5000000000000000000000000',
-  stableRateSlope2: '600000000000000000000000000',
   variableRateSlope1: '40000000000000000000000000',
   variableRateSlope2: '600000000000000000000000000',
 };
@@ -36,8 +26,6 @@ const STRATEGY_V2 = {
   baseVariableBorrowRate: '0',
   maxExcessUsageRatio: '310000000000000000000000000',
   optimalUsageRatio: '690000000000000000000000000',
-  stableRateSlope1: '690000000000000000000000000',
-  stableRateSlope2: '600000000000000000000000000',
   variableRateSlope1: '420000000000000000000000000',
   variableRateSlope2: '600000000000000000000000000',
 };
@@ -50,11 +38,6 @@ describe('strategy', () => {
 | baseVariableBorrowRate | 1 % |
 | variableRateSlope1 | 4 % |
 | variableRateSlope2 | 75 % |
-| baseStableBorrowRate | 5 % |
-| stableRateSlope1 | 0.5 % |
-| stableRateSlope2 | 75 % |
-| optimalStableToTotalDebtRatio | 20 % |
-| maxExcessStableToTotalDebtRatio | 80 % |
 `);
   });
 
@@ -64,7 +47,6 @@ describe('strategy', () => {
 | maxExcessUsageRatio | 20 % | 10 % |
 | baseVariableBorrowRate | 1 % | 0 % |
 | variableRateSlope2 | 75 % | 60 % |
-| stableRateSlope2 | 75 % | 60 % |
 `);
   });
 

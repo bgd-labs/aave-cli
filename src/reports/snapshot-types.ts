@@ -50,16 +50,11 @@ export const aaveV3ReserveSchema = z.object({
 export type AaveV3Reserve = z.infer<typeof aaveV3ReserveSchema>;
 
 export const aaveV3StrategySchema = z.object({
-  baseStableBorrowRate: z.string(),
-  maxExcessStableToTotalDebtRatio: z.string(),
   address: z.string(),
   baseVariableBorrowRate: z.string(),
-  stableRateSlope2: z.string(),
   optimalUsageRatio: z.string(),
   variableRateSlope2: z.string(),
-  optimalStableToTotalDebtRatio: z.string(),
   maxExcessUsageRatio: z.string(),
-  stableRateSlope1: z.string(),
   variableRateSlope1: z.string(),
 });
 
