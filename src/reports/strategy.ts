@@ -2,6 +2,7 @@ import { AaveV3Strategy } from './snapshot-types';
 import { formatUnits } from 'viem';
 
 export function renderStrategyValue<T extends keyof AaveV3Strategy>(key: T, reserve: AaveV3Strategy) {
+  if (reserve[key] === undefined || reserve[key] === null) return '/';
   return `${formatUnits(BigInt(reserve[key]), 25)} %`;
 }
 
