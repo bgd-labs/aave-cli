@@ -26,6 +26,7 @@ export async function fetchRateStrategyImage(rate: AaveV3Strategy) {
     variableRateSlope2: rate.variableRateSlope2,
     optimalUsageRatio: rate.optimalUsageRatio,
     baseVariableBorrowRate: rate.baseVariableBorrowRate,
+    maxVariableBorrowRate: rate.maxVariableBorrowRate,
   };
   const searchParams = new URLSearchParams(paramsObj);
   const writeStream = createWriteStream(pathWithFile);

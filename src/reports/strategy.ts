@@ -7,7 +7,7 @@ export function renderStrategyValue<T extends keyof AaveV3Strategy>(key: T, rese
 
 const ORDER: (keyof AaveV3Strategy)[] = [
   'optimalUsageRatio',
-  'maxExcessUsageRatio',
+  'maxVariableBorrowRate',
   'baseVariableBorrowRate',
   'variableRateSlope1',
   'variableRateSlope2',

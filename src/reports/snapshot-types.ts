@@ -53,9 +53,9 @@ export const aaveV3StrategySchema = z.object({
   address: z.string(),
   baseVariableBorrowRate: z.string(),
   optimalUsageRatio: z.string(),
-  variableRateSlope2: z.string(),
-  maxExcessUsageRatio: z.string(),
   variableRateSlope1: z.string(),
+  variableRateSlope2: z.string(),
+  maxVariableBorrowRate: z.string(),
 });
 
 export type AaveV3Strategy = z.infer<typeof aaveV3StrategySchema>;
