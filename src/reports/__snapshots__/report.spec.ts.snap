@@ -38,16 +38,16 @@ exports[`report > should generate a well formatted report 1`] = `
 | stableBorrowRateEnabled | false |
 | isBorrowableInIsolation | false |
 | interestRateStrategy | [0x03733F4E008d36f2e37F0080fF1c8DF756622E6F](https://polygonscan.com/address/0x03733F4E008d36f2e37F0080fF1c8DF756622E6F) |
+| stableRateSlope1 | 0 % |
+| stableRateSlope2 | 0 % |
 | optimalUsageRatio | 45 % |
+| optimalStableToTotalDebtRatio | 20 % |
 | maxExcessUsageRatio | 55 % |
+| maxExcessStableToTotalDebtRatio | 80 % |
 | baseVariableBorrowRate | 0 % |
 | variableRateSlope1 | 7 % |
 | variableRateSlope2 | 300 % |
 | baseStableBorrowRate | 9 % |
-| stableRateSlope1 | 0 % |
-| stableRateSlope2 | 0 % |
-| optimalStableToTotalDebtRatio | 20 % |
-| maxExcessStableToTotalDebtRatio | 80 % |
 | interestRate | ![ir](/.assets/4ab0dbcff3f330539d66319942d38435e45137bf.svg) |
 | eMode.label | Stablecoins |
 | eMode.ltv | 97 % |
