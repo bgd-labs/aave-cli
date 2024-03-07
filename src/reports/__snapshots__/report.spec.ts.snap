@@ -10,7 +10,7 @@ exports[`report > should generate a well formatted report 1`] = `
 | description | value before | value after |
 | --- | --- | --- |
 | reserveFactor | 20 % | 35 % |
-| interestRate | ![before](/.assets/4ab0dbcff3f330539d66319942d38435e45137bf.svg) | ![after](/.assets/4ab0dbcff3f330539d66319942d38435e45137bf.svg) |
+
 
 #### WETH ([0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619](https://polygonscan.com/address/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619))
 
@@ -33,7 +33,7 @@ exports[`report > should generate a well formatted report 1`] = `
 | description | value before | value after |
 | --- | --- | --- |
 | reserveFactor | 20 % | 35 % |
-| interestRate | ![before](/.assets/4ab0dbcff3f330539d66319942d38435e45137bf.svg) | ![after](/.assets/4ab0dbcff3f330539d66319942d38435e45137bf.svg) |
+
 
 #### agEUR ([0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4](https://polygonscan.com/address/0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4))
 

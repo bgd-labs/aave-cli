@@ -57,11 +57,11 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
         // diff reserve
         let report = renderReserveDiff(diffResult.reserves[reserveKey] as any, chainId);
         // diff irs
-        if (diffResult.strategies[reserveKey]) {
+        const preIrHash = hash(pre.strategies[reserveKey]);
+        const postIrHash = hash(post.strategies[reserveKey]);
+        if (preIrHash != postIrHash) {
           report += renderStrategyDiff(diff(pre.strategies[reserveKey], post.strategies[reserveKey]) as any);
-          report += `| interestRate | ![before](/.assets/${hash(
-            pre.strategies[reserveKey]
-          )}.svg) | ![after](/.assets/${hash(post.strategies[reserveKey])}.svg) |`;
+          report += `| interestRate | ![before](/.assets/${preIrHash}.svg) | ![after](/.assets/${postIrHash}.svg) |`;
         }
         // diff eModes
         if (diffResult.reserves[reserveKey].eModeCategory?.hasOwnProperty('from')) {
