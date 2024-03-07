@@ -2,12 +2,8 @@ import path from 'path';
 import { existsSync, mkdirSync, createWriteStream } from 'fs';
 import { Readable } from 'stream';
 import { finished } from 'stream/promises';
-import { pipeline } from 'stream';
-import { promisify } from 'util';
 import hash from 'object-hash';
 import { AaveV3Strategy } from './snapshot-types';
-
-const streamPipeline = promisify(pipeline);
 
 /**
  * Fetches the rate image from rate-strategy explorer
@@ -28,12 +24,10 @@ export async function fetchRateStrategyImage(rate: AaveV3Strategy) {
   const paramsObj: { [key: string]: string } = {
     variableRateSlope1: rate.variableRateSlope1,
     variableRateSlope2: rate.variableRateSlope2,
-    stableRateSlope1: rate.stableRateSlope1,
-    stableRateSlope2: rate.stableRateSlope2,
     optimalUsageRatio: rate.optimalUsageRatio,
     baseVariableBorrowRate: rate.baseVariableBorrowRate,
+    maxVariableBorrowRate: rate.maxVariableBorrowRate,
   };
-  if (rate.baseStableBorrowRate != undefined) paramsObj.baseStableBorrowRate = rate.baseStableBorrowRate;
   const searchParams = new URLSearchParams(paramsObj);
   const writeStream = createWriteStream(pathWithFile);
   const { body } = await fetch(`https://rate-strategy-explorer.vercel.app/api/static?${searchParams.toString()}`);

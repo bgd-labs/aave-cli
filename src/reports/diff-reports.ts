@@ -25,12 +25,8 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
       // to being present on reserve level % trueish means reserve was added
       if ((diffResult.reserves[reserveKey] as any).to) {
         let report = renderReserve((diffResult.reserves[reserveKey] as any).to, chainId);
-        const imageHash = hash(
-          post.strategies[((diffResult.reserves[reserveKey] as any).to as AaveV3Reserve).interestRateStrategy]
-        );
-        report += renderStrategy(
-          post.strategies[((diffResult.reserves[reserveKey] as any).to as AaveV3Reserve).interestRateStrategy]
-        );
+        const imageHash = hash(post.strategies[reserveKey]);
+        report += renderStrategy(post.strategies[reserveKey]);
 
         report += `| interestRate | ![ir](/.assets/${imageHash}.svg) |\n`;
         if (post.reserves[reserveKey].eModeCategory && post.reserves[reserveKey].eModeCategory != 0) {
@@ -58,20 +54,16 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
           (fieldKey) => typeof (diffResult.reserves as any)[reserveKey][fieldKey] === 'object'
         )
       ) {
+        // diff reserve
         let report = renderReserveDiff(diffResult.reserves[reserveKey] as any, chainId);
-        if (diffResult.reserves[reserveKey].interestRateStrategy.hasOwnProperty('from')) {
-          report += renderStrategyDiff(
-            diff(
-              pre.strategies[(diffResult.reserves[reserveKey].interestRateStrategy as any).from],
-              post.strategies[(diffResult.reserves[reserveKey].interestRateStrategy as any).to]
-            ) as any
-          );
-          report += `| interestRate | ![before](/.assets/${hash(
-            pre.strategies[(diffResult.reserves[reserveKey].interestRateStrategy as any).from]
-          )}.svg) | ![after](/.assets/${hash(
-            post.strategies[(diffResult.reserves[reserveKey].interestRateStrategy as any).to]
-          )}.svg) |`;
+        // diff irs
+        const preIrHash = hash(pre.strategies[reserveKey]);
+        const postIrHash = hash(post.strategies[reserveKey]);
+        if (preIrHash != postIrHash) {
+          report += renderStrategyDiff(diff(pre.strategies[reserveKey], post.strategies[reserveKey]) as any);
+          report += `| interestRate | ![before](/.assets/${preIrHash}.svg) | ![after](/.assets/${postIrHash}.svg) |`;
         }
+        // diff eModes
         if (diffResult.reserves[reserveKey].eModeCategory?.hasOwnProperty('from')) {
           report += renderEmodeDiff(
             diff(
