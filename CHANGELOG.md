@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/bgd-labs/aave-cli/compare/v0.7.2...v0.8.0) (2024-03-07)
+
+
+### Features
+
+* compatibility with new ir types ([#116](https://github.com/bgd-labs/aave-cli/issues/116)) ([90fc6d3](https://github.com/bgd-labs/aave-cli/commit/90fc6d315db7cfcf9f573dc453aaccd760ff4d7c))
+
 ## [0.7.2](https://github.com/bgd-labs/aave-cli/compare/v0.7.1...v0.7.2) (2024-03-05)
 
 
