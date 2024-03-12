@@ -16,31 +16,18 @@ export async function interpretStateChange(
   if (name === '_reserves' && (original.configuration.data || dirty.configuration.data))
     return await reserveConfigurationChanged(contractAddress, original, dirty, key, client);
   if (
-    name === '_balances' ||
-    name === 'balanceOf' ||
-    name === 'balances' ||
-    name === 'allowed' ||
-    name == '_allowances'
-  )
-    return numberValueChanged(contractAddress, name, original, dirty, key, client);
+    typeof original === 'string' &&
+    typeof dirty === 'string' &&
+    (name === '_balances' || name === 'balanceOf' || name === 'balances' || name === 'allowed' || name == '_allowances')
+  ) {
+    const asset = await findAsset(client, contractAddress);
+    return tenderlyDeepDiff(
+      `${formatNumberString(formatUnits(BigInt(original as string), asset.decimals))}[${original}]`,
+      `${formatNumberString(formatUnits(BigInt(dirty as string), asset.decimals))}[${dirty}]`,
+      `\`${name}\` key \`${key}\``
+    );
+  }
   return tenderlyDeepDiff(original, dirty, `\`${name}\` key \`${key}\``);
-}
-
-async function numberValueChanged(
-  contractAddress: Hex,
-  name: string = '',
-  original: Record<string, any> | string,
-  dirty: Record<string, any> | string,
-  key: Hex,
-  client: Client
-) {
-  const asset = await findAsset(client, contractAddress);
-  if (typeof original !== 'string') return undefined;
-  return tenderlyDeepDiff(
-    formatNumberString(formatUnits(BigInt(original as string), asset.decimals)),
-    formatNumberString(formatUnits(BigInt(dirty as string), asset.decimals)),
-    `\`${name}\` key \`${key}\``
-  );
 }
 
 async function reserveConfigurationChanged(
