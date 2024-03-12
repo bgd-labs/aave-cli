@@ -50,3 +50,14 @@ export function flagKnownAddress(isKnown: string[] | void) {
   if (isKnown == undefined || isKnown.length == 0) return '';
   return `[:ghost:](https://github.com/bgd-labs/aave-address-book "${isKnown.join(', ')}")`;
 }
+
+/**
+ * Returns a string with `,` separators.
+ * Not using toLocalString() as it forces us to use `number` types, which can be problematic with decimals & big numbers
+ * @param x
+ * @returns
+ * credits: https://stackoverflow.com/a/2901298
+ */
+export function formatNumberString(x: string | number) {
+  return String(x).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+}

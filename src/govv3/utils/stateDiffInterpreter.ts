@@ -1,11 +1,11 @@
-import { Client, Hex, getContract } from 'viem';
+import { Client, Hex, formatUnits, getContract } from 'viem';
 import { tenderlyDeepDiff } from './tenderlyDeepDiff';
-import { ERC20_ABI } from '../abis/ERC20';
 import * as pools from '@bgd-labs/aave-address-book';
 import { getBits } from '../../utils/storageSlots';
+import { formatNumberString } from './markdownUtils';
 
 export async function interpretStateChange(
-  contractAddress: string,
+  contractAddress: Hex,
   name: string = '',
   original: Record<string, any>,
   dirty: Record<string, any>,
@@ -14,11 +14,35 @@ export async function interpretStateChange(
 ) {
   if (name === '_reserves' && (original.configuration.data || dirty.configuration.data))
     return await reserveConfigurationChanged(contractAddress, original, dirty, key, client);
+  if (
+    name === '_balances' ||
+    name === 'balanceOf' ||
+    name === 'balances' ||
+    name === 'allowed' ||
+    name == '_allowances'
+  )
+    return numberValueChanged(contractAddress, original, dirty, key, client);
   return undefined;
 }
 
+async function numberValueChanged(
+  contractAddress: Hex,
+  original: Record<string, any> | string,
+  dirty: Record<string, any> | string,
+  key: Hex,
+  client: Client
+) {
+  const erc20Contract = getContract({ client, address: contractAddress, abi: pools.IERC20Detailed_ABI });
+  const decimals = await erc20Contract.read.decimals();
+  if (typeof original !== 'string') return undefined;
+  return `# formatted value for \`${key}\` (${decimals} decimals)\n${tenderlyDeepDiff(
+    formatNumberString(formatUnits(BigInt(original as string), decimals)),
+    formatNumberString(formatUnits(BigInt(dirty as string), decimals))
+  )}`;
+}
+
 async function reserveConfigurationChanged(
-  contractAddress: string,
+  contractAddress: Hex,
   original: Record<string, any>,
   dirty: Record<string, any>,
   key: Hex,
@@ -28,7 +52,7 @@ async function reserveConfigurationChanged(
   const configurationAfter = getDecodedReserveData(contractAddress, dirty.configuration.data);
   let symbol = 'unknown';
   try {
-    const erc20Contract = getContract({ client, address: key, abi: ERC20_ABI });
+    const erc20Contract = getContract({ client, address: key, abi: pools.IERC20Detailed_ABI });
     symbol = await erc20Contract.read.symbol();
   } catch (e) {}
   // const symbol =
