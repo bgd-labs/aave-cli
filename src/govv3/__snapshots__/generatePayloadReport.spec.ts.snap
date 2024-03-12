@@ -28,18 +28,10 @@ InitializableImmutableAdminUpgradeabilityProxy (Aave USDT) at \`0x3Ed3B47Dd13EC9
 Dai (Dai) at \`0x6B175474E89094C44Da98b954EedeAC495271d0F\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.ASSETS.DAI.UNDERLYING, AaveV2EthereumAMM.ASSETS.DAI.UNDERLYING, AaveV3Ethereum.ASSETS.DAI.UNDERLYING")
 \`\`\`diff
 @@ \`balanceOf\` key \`0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c\` @@
-- 502889065017878577338563
-+ 2889065017878577338563
-
-# formatted value for \`0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c\` (18 decimals)
 - 502,889.065017878577338563
 + 2,889.065017878577338563
 
 @@ \`balanceOf\` key \`0x9d53cefcd5fbeb850b053a23ec6f59eb3dc76e33\` @@
-- 0
-+ 500000000000000000000000
-
-# formatted value for \`0x9d53cefcd5fbeb850b053a23ec6f59eb3dc76e33\` (18 decimals)
 - 0
 + 500,000
 
@@ -185,18 +177,10 @@ TransparentUpgradeableProxy at \`0xdAbad81aF85554E9ae636395611C58F7eC1aAEc5\`[:g
 TetherToken (Tether) at \`0xdAC17F958D2ee523a2206206994597C13D831ec7\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.ASSETS.USDT.UNDERLYING, AaveV2EthereumAMM.ASSETS.USDT.UNDERLYING, AaveV3Ethereum.ASSETS.USDT.UNDERLYING")
 \`\`\`diff
 @@ \`balances\` key \`0x3ed3b47dd13ec9a98b44e6204a523e766b225811\` @@
-- 37673056276055
-+ 38423056276055
-
-# formatted value for \`0x3ed3b47dd13ec9a98b44e6204a523e766b225811\` (6 decimals)
 - 37,673,056.276055
 + 38,423,056.276055
 
 @@ \`balances\` key \`0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c\` @@
-- 750000000000
-+ 0
-
-# formatted value for \`0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c\` (6 decimals)
 - 750,000
 + 0
 

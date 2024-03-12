@@ -22,12 +22,13 @@ export async function interpretStateChange(
     name === 'allowed' ||
     name == '_allowances'
   )
-    return numberValueChanged(contractAddress, original, dirty, key, client);
-  return undefined;
+    return numberValueChanged(contractAddress, name, original, dirty, key, client);
+  return tenderlyDeepDiff(original, dirty, `\`${name}\` key \`${key}\``);
 }
 
 async function numberValueChanged(
   contractAddress: Hex,
+  name: string = '',
   original: Record<string, any> | string,
   dirty: Record<string, any> | string,
   key: Hex,
@@ -35,10 +36,11 @@ async function numberValueChanged(
 ) {
   const asset = await findAsset(client, contractAddress);
   if (typeof original !== 'string') return undefined;
-  return `# formatted value for \`${key}\` (${asset.decimals} decimals)\n${tenderlyDeepDiff(
+  return tenderlyDeepDiff(
     formatNumberString(formatUnits(BigInt(original as string), asset.decimals)),
-    formatNumberString(formatUnits(BigInt(dirty as string), asset.decimals))
-  )}`;
+    formatNumberString(formatUnits(BigInt(dirty as string), asset.decimals)),
+    `\`${name}\` key \`${key}\``
+  );
 }
 
 async function reserveConfigurationChanged(

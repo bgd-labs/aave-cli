@@ -70,16 +70,14 @@ export const checkStateChanges: ProposalCheck<any> = {
               const original = diff.original as Record<string, any>;
               const dirty = diff.dirty as Record<string, any>;
               for (const k of keys as Hex[]) {
-                stateChanges += tenderlyDeepDiff(original[k], dirty[k], `\`${diff.soltype?.name}\` key \`${k}\``);
-                const interpretation = await interpretStateChange(
-                  address,
+                stateChanges += await interpretStateChange(
+                  address as Hex,
                   diff.soltype?.name,
                   original[k],
                   dirty[k],
                   k,
                   client
                 );
-                if (interpretation) stateChanges += `\n${interpretation}`;
                 stateChanges += '\n';
               }
             } else {
