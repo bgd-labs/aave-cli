@@ -3,6 +3,7 @@ import { tenderlyDeepDiff } from './tenderlyDeepDiff';
 import * as pools from '@bgd-labs/aave-address-book';
 import { getBits } from '../../utils/storageSlots';
 import { formatNumberString } from './markdownUtils';
+import { findAsset } from './checkAddress';
 
 export async function interpretStateChange(
   contractAddress: Hex,
@@ -32,12 +33,11 @@ async function numberValueChanged(
   key: Hex,
   client: Client
 ) {
-  const erc20Contract = getContract({ client, address: contractAddress, abi: pools.IERC20Detailed_ABI });
-  const decimals = await erc20Contract.read.decimals();
+  const asset = await findAsset(client, contractAddress);
   if (typeof original !== 'string') return undefined;
-  return `# formatted value for \`${key}\` (${decimals} decimals)\n${tenderlyDeepDiff(
-    formatNumberString(formatUnits(BigInt(original as string), decimals)),
-    formatNumberString(formatUnits(BigInt(dirty as string), decimals))
+  return `# formatted value for \`${key}\` (${asset.decimals} decimals)\n${tenderlyDeepDiff(
+    formatNumberString(formatUnits(BigInt(original as string), asset.decimals)),
+    formatNumberString(formatUnits(BigInt(dirty as string), asset.decimals))
   )}`;
 }
 
@@ -50,13 +50,8 @@ async function reserveConfigurationChanged(
 ) {
   const configurationBefore = getDecodedReserveData(contractAddress, original.configuration.data);
   const configurationAfter = getDecodedReserveData(contractAddress, dirty.configuration.data);
-  let symbol = 'unknown';
-  try {
-    const erc20Contract = getContract({ client, address: key, abi: pools.IERC20Detailed_ABI });
-    symbol = await erc20Contract.read.symbol();
-  } catch (e) {}
-  // const symbol =
-  return `# decoded configuration.data for key \`${key}\` (symbol: ${symbol})
+  const asset = await findAsset(client, key);
+  return `# decoded configuration.data for key \`${key}\` (symbol: ${asset.symbol})
   ${tenderlyDeepDiff(configurationBefore, configurationAfter, 'configuration.data')}`;
 }
 
