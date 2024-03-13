@@ -91,12 +91,12 @@ export async function deepDiff(
     return `@@ ${type ? `${wrapInQuotes(type, true)} key ` : ''}${wrapInQuotes(
       name,
       !!type
-    )} @@\n- ${await enhanceValue(client, address, before, type)}\n+ ${await enhanceValue(
+    )} @@\n- ${await enhanceValue({ client, address, value: before as string, type })}\n+ ${await enhanceValue({
       client,
       address,
-      after,
-      type
-    )}\n`;
+      value: after as string,
+      type,
+    })}\n`;
   }
   let result = '';
   for (const key of Object.keys(before)) {
@@ -107,20 +107,46 @@ export async function deepDiff(
       result += `@@ ${type ? `${wrapInQuotes(type, true)} key ` : ''}${wrapInQuotes(
         `${name}.${key}`,
         !!type
-      )} @@\n- ${await enhanceValue(client, address, before[key], type)}\n+ ${await enhanceValue(
+      )} @@\n- ${await enhanceValue({
         client,
         address,
-        after[key],
-        type
-      )}\n`;
+        value: before[key],
+        type,
+        subType: key,
+      })}\n+ ${await enhanceValue({
+        client,
+        address,
+        value: after[key],
+        type,
+        subType: key,
+      })}\n`;
   }
   return result;
 }
 
-async function enhanceValue(client: Client, address: Hex, value: string, type?: string) {
-  if (type && ['_balances', 'balanceOf', 'balances', 'allowed', '_allowances', 'allowance'].includes(type)) {
-    const asset = await findAsset(client, address);
-    if (asset) return `${formatNumberString(formatUnits(BigInt(value), asset.decimals))}[${value}]`;
+async function enhanceValue({
+  client,
+  address,
+  value,
+  type,
+  subType,
+}: {
+  client: Client;
+  address: Hex;
+  value: string;
+  type?: string;
+  subType?: string;
+}) {
+  if (type) {
+    // values to be rendered with asset decimals
+    if (['_balances', 'balanceOf', 'balances', 'allowed', '_allowances', 'allowance'].includes(type)) {
+      const asset = await findAsset(client, address);
+      if (asset) return `${formatNumberString(formatUnits(BigInt(value), asset.decimals))}[${value}]`;
+    }
+    // values to be rendered with ray decimals
+    if (subType && ['_reserves'].includes(type) && ['liquidityIndex', 'variableBorrowIndex'].includes(subType)) {
+      return `${formatNumberString(formatUnits(BigInt(value), 27))}[${value}]`;
+    }
   }
   return value;
 }
