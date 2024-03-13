@@ -77,3 +77,8 @@ export function prettifyNumber({
     suffix ? `${suffix}` : ''
   }[${value}]`;
 }
+
+export function wrapInQuotes(name: string, quotes: boolean) {
+  if (quotes) return '`' + name + '`';
+  return name;
+}

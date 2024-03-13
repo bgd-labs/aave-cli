@@ -1,11 +1,11 @@
 // Based on https://github.com/Uniswap/governance-seatbelt/blob/main/checks/check-state-changes.ts
 // adjusted for viem & aave governance v3
-import { Client, Hex, formatUnits, getAddress } from 'viem';
+import { Client, Hex, getAddress } from 'viem';
 import { ProposalCheck } from './types';
 import { getContractName } from '../utils/solidityUtils';
 import { StateDiff, TenderlySimulationResponse } from '../../utils/tenderlyClient';
 import { findAsset } from '../utils/checkAddress';
-import { formatNumberString, prettifyNumber } from '../utils/markdownUtils';
+import { prettifyNumber, wrapInQuotes } from '../utils/markdownUtils';
 import { getDecodedReserveData } from '../utils/reserveConfigurationInterpreter';
 
 type ValueType = string | Record<string, string>;
@@ -75,11 +75,6 @@ async function renderContractChanges(
   return stateChanges;
 }
 
-function wrapInQuotes(name: string, quotes: boolean) {
-  if (quotes) return '`' + name + '`';
-  return name;
-}
-
 export async function deepDiff(
   client: Client,
   address: Hex,
@@ -103,8 +98,8 @@ export async function deepDiff(
    * Injecting the decoded configuration uint256 into the state diff
    */
   if (type === '_reserves' && (before.configuration?.data || after.configuration?.data)) {
-    before.configuration.decoded = getDecodedReserveData(address, before.configuration.data);
-    after.configuration.decoded = getDecodedReserveData(address, after.configuration.data);
+    before.configuration.data_decoded = getDecodedReserveData(address, before.configuration.data);
+    after.configuration.data_decoded = getDecodedReserveData(address, after.configuration.data);
   }
 
   let result = '';
