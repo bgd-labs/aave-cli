@@ -20,57 +20,52 @@ Dai (Dai) at \`0x6B175474E89094C44Da98b954EedeAC495271d0F\`[:ghost:](https://git
 @@ \`balanceOf\` key \`0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c\` @@
 - 502,889.065017878577338563[502889065017878577338563]
 + 2,889.065017878577338563[2889065017878577338563]
-
 @@ \`balanceOf\` key \`0x9d53cefcd5fbeb850b053a23ec6f59eb3dc76e33\` @@
 - 0[0]
 + 500,000[500000000000000000000000]
-
-@@ \`allowance\` key \`0x9d53cefcd5fbeb850b053a23ec6f59eb3dc76e33\`.0xc92e8bdf79f0507f65a392b0ab4667716bfe0110 @@
-- 0
-+ 115792089237316195423570985008687907853269984665640564039457584007913129639935
-
+@@ \`allowance\` key \`0x9d53cefcd5fbeb850b053a23ec6f59eb3dc76e33.0xc92e8bdf79f0507f65a392b0ab4667716bfe0110\` @@
+- 0[0]
++ 115,792,089,237,316,195,423,570,985,008,687,907,853,269,984,665,640,564,039,457.584007913129639935[115792089237316195423570985008687907853269984665640564039457584007913129639935]
 \`\`\`
 
 InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`
 \`\`\`diff
-@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\`.liquidityIndex @@
+@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.liquidityIndex\` @@
 - 1125972900043692179606694722
 + 1125991030272021514250652312
-@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\`.variableBorrowIndex @@
+@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.variableBorrowIndex\` @@
 - 1185069240973920592952379763
 + 1185097276944910539318953337
-@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\`.currentLiquidityRate @@
+@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.currentLiquidityRate\` @@
 - 100751473401236648012460614
 + 123029815053899026525991182
-@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\`.currentVariableBorrowRate @@
+@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.currentVariableBorrowRate\` @@
 - 148027638325434642033107448
 + 180113117017905438863598858
-@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\`.currentStableBorrowRate @@
+@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.currentStableBorrowRate\` @@
 - 198027638325434642033107448
 + 230113117017905438863598858
-@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\`.lastUpdateTimestamp @@
+@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.lastUpdateTimestamp\` @@
 - 1705396271
 + 1705401311
-
-@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7\`.liquidityIndex @@
+@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7.liquidityIndex\` @@
 - 1149223734302009162656035865
 + 1149227808508467355639962102
-@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7\`.variableBorrowIndex @@
+@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7.variableBorrowIndex\` @@
 - 1228776684865256100554716625
 + 1228783878292595972201993472
-@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7\`.currentLiquidityRate @@
+@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7.currentLiquidityRate\` @@
 - 45670276364018875818860783
 + 36453252711281215796169147
-@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7\`.currentVariableBorrowRate @@
+@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7.currentVariableBorrowRate\` @@
 - 75414841326160726671541020
 + 59996093895016005528209445
-@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7\`.currentStableBorrowRate @@
+@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7.currentStableBorrowRate\` @@
 - 135414841326160726671541020
 + 119998697965005335176069815
-@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7\`.lastUpdateTimestamp @@
+@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7.lastUpdateTimestamp\` @@
 - 1705398863
 + 1705401311
-
 \`\`\`
 
 InitializableImmutableAdminUpgradeabilityProxy at \`0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV3Ethereum.POOL") with implementation Pool at \`0x5FAab9E1adbddaD0a08734BE8a52185Fd6558E14\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV3Ethereum.POOL_IMPL")
@@ -144,14 +139,15 @@ InitializableImmutableAdminUpgradeabilityProxy (Aave v2 USDC) at \`0xBcca60bB619
 
 InitializableImmutableAdminUpgradeabilityProxy at \`0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.DEFAULT_INCENTIVES_CONTROLLER")
 \`\`\`diff
-@@ \`assets\` key \`0x3ed3b47dd13ec9a98b44e6204a523e766b225811\`.lastUpdateTimestamp @@
+@@ \`assets\` key \`0x3ed3b47dd13ec9a98b44e6204a523e766b225811.lastUpdateTimestamp\` @@
 - 1705398863
 + 1705401311
-
-@@ \`assets\` key \`0xbcca60bb61934080951369a648fb03df4f96263c\`.users.0x5300a1a15135ea4dc7ad5a167152c01efc9b192a @@
+@@ \`assets\` key \`0xbcca60bb61934080951369a648fb03df4f96263c.lastUpdateTimestamp\` @@
+- 1705396271
++ 1705401311
+@@ \`assets\` key \`0xbcca60bb61934080951369a648fb03df4f96263c.users.0x5300a1a15135ea4dc7ad5a167152c01efc9b192a\` @@
 - 0
 + 35777739039773953913685859
-
 \`\`\`
 
 TransparentUpgradeableProxy at \`0xdAbad81aF85554E9ae636395611C58F7eC1aAEc5\`[:ghost:](https://github.com/bgd-labs/aave-address-book "GovernanceV3Ethereum.PAYLOADS_CONTROLLER") with implementation PayloadsController at \`0x7222182cB9c5320587b5148BF03eeE107AD64578\`
@@ -169,11 +165,9 @@ TetherToken (Tether) at \`0xdAC17F958D2ee523a2206206994597C13D831ec7\`[:ghost:](
 @@ \`balances\` key \`0x3ed3b47dd13ec9a98b44e6204a523e766b225811\` @@
 - 37,673,056.276055[37673056276055]
 + 38,423,056.276055[38423056276055]
-
 @@ \`balances\` key \`0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c\` @@
 - 750,000[750000000000]
 + 0[0]
-
 \`\`\`
 ",
   ],
