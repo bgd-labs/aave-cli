@@ -4,6 +4,7 @@ import { Address, getAddress } from 'viem';
 import { ProposalCheck } from './types';
 import { Log } from '../../utils/tenderlyClient';
 import { getContractName } from '../utils/solidityUtils';
+import { interpretLog } from '../utils/logInterpreter';
 
 /**
  * Reports all emitted events from the proposal
@@ -28,17 +29,15 @@ export const checkLogs: ProposalCheck<any> = {
       info.push(`- ${getContractName(sim.contracts, address as Address, client.chain!.id)}`);
 
       // Format log data for report
-      logs.forEach((log) => {
+      for (const log of logs) {
         if (Boolean(log.name)) {
-          // Log is decoded, format data as: VotingDelaySet(oldVotingDelay: value, newVotingDelay: value)
-          const parsedInputs = log.inputs?.map((i) => `${i.soltype!.name}: ${i.value}`).join(', ');
-          info.push(`  - \`${log.name}(${parsedInputs || ''})\``);
+          info.push(await interpretLog(client, address as Address, log.name, log.inputs));
         } else {
           // Log is not decoded, report the raw data
           // TODO find a transaction with undecoded logs to know how topics/data are formatted in simulation response
           info.push(`  - Undecoded log: \`${JSON.stringify(log)}\``);
         }
-      });
+      }
     }
 
     return { info, warnings: [], errors: [] };

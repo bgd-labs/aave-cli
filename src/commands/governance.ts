@@ -17,6 +17,8 @@ import {
   readBookKeepingCache,
   writeBookKeepingCache,
 } from '../govv3/cache/updateCache';
+import { findPayloadsController } from '../govv3/utils/checkAddress';
+import { generateReport } from '../govv3/generatePayloadReport';
 
 enum DialogOptions {
   DETAILS,
@@ -44,16 +46,24 @@ export function addCommand(program: Command) {
     .description('simulates a payloadId on tenderly')
     .requiredOption('--chainId <number>', 'the chainId to fork of')
     .requiredOption('--payloadId <number>', 'payloadId to simulate via tenderly')
-    .option('--payloadsController <string>', 'PayloadsController address')
-    .action(async ({ payloadId: _payloadId, payloadsController: payloadsControllerAddress, chainId }, options) => {
+    .action(async ({ payloadId: _payloadId, chainId }, options) => {
       const payloadId = Number(_payloadId);
       const client = CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP];
+      const payloadsControllerAddress = findPayloadsController(Number(chainId));
       const payloadsController = getPayloadsController(payloadsControllerAddress as Hex, client);
       const cache = readBookKeepingCache();
       const { eventsCache } = await cachePayloadsController(client, payloadsControllerAddress as Address, cache);
       writeBookKeepingCache(cache);
       const config = await payloadsController.getPayload(payloadId, eventsCache);
-      await payloadsController.simulatePayloadExecutionOnTenderly(Number(payloadId), config);
+      const result = await payloadsController.simulatePayloadExecutionOnTenderly(Number(payloadId), config);
+      console.log(
+        await generateReport({
+          simulation: result,
+          payloadId: payloadId,
+          payloadInfo: config,
+          client,
+        })
+      );
     });
 
   govV3
