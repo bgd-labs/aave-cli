@@ -5,7 +5,8 @@ import { ProposalCheck } from './types';
 import { getContractName } from '../utils/solidityUtils';
 import { StateDiff, TenderlySimulationResponse } from '../../utils/tenderlyClient';
 import { findAsset } from '../utils/checkAddress';
-import { formatNumberString } from '../utils/markdownUtils';
+import { formatNumberString, prettifyNumber } from '../utils/markdownUtils';
+import { getDecodedReserveData } from '../utils/reserveConfigurationInterpreter';
 
 type ValueType = string | Record<string, string>;
 
@@ -98,6 +99,14 @@ export async function deepDiff(
       type,
     })}\n`;
   }
+  /**
+   * Injecting the decoded configuration uint256 into the state diff
+   */
+  if (type === '_reserves' && (before.configuration?.data || after.configuration?.data)) {
+    before.configuration.decoded = getDecodedReserveData(address, before.configuration.data);
+    after.configuration.decoded = getDecodedReserveData(address, after.configuration.data);
+  }
+
   let result = '';
   for (const key of Object.keys(before)) {
     if (before[key] === after[key]) continue;
@@ -141,11 +150,11 @@ async function enhanceValue({
     // values to be rendered with asset decimals
     if (['_balances', 'balanceOf', 'balances', 'allowed', '_allowances', 'allowance'].includes(type)) {
       const asset = await findAsset(client, address);
-      if (asset) return `${formatNumberString(formatUnits(BigInt(value), asset.decimals))}[${value}]`;
+      if (asset) return prettifyNumber({ decimals: asset.decimals, value });
     }
     // values to be rendered with ray decimals
     if (subType && ['_reserves'].includes(type) && ['liquidityIndex', 'variableBorrowIndex'].includes(subType)) {
-      return `${formatNumberString(formatUnits(BigInt(value), 27))}[${value}]`;
+      return prettifyNumber({ decimals: 27, value });
     }
   }
   return value;

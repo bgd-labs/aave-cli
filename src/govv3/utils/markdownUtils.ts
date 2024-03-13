@@ -1,4 +1,4 @@
-import { Client, Hex } from 'viem';
+import { Client, Hex, formatUnits } from 'viem';
 import { CheckResult } from '../checks/types';
 
 export function boolToMarkdown(value: boolean) {
@@ -60,4 +60,20 @@ export function flagKnownAddress(isKnown: string[] | void) {
  */
 export function formatNumberString(x: string | number) {
   return String(x).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+}
+
+export function prettifyNumber({
+  value,
+  decimals,
+  prefix,
+  suffix,
+}: {
+  value: string | number;
+  decimals: number;
+  prefix?: string;
+  suffix?: string;
+}) {
+  return `${prefix ? `${prefix}` : ''}${formatNumberString(formatUnits(BigInt(value), decimals))}${
+    suffix ? `${suffix}` : ''
+  }[${value}]`;
 }
