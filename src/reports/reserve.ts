@@ -8,6 +8,10 @@ export function renderReserveValue<T extends keyof AaveV3Reserve>(key: T, reserv
     return `${formatUnits(BigInt(reserve[key]), 2)} %`;
   if (['supplyCap', 'borrowCap'].includes(key)) return `${reserve[key].toLocaleString('en-US')} ${reserve.symbol}`;
   if (key === 'debtCeiling') return `${Number(formatUnits(BigInt(reserve[key]), 2)).toLocaleString('en-US')} $`;
+  if (['liquidityIndex', 'variableBorrowIndex'].includes(key))
+    return `${Number(formatUnits(BigInt(reserve[key]), 27)).toLocaleString('en-US')}`;
+  if (['currentLiquidityRate', 'currentVariableBorrowRate'].includes(key))
+    return `${Number(formatUnits(BigInt(reserve[key]), 25)).toLocaleString('en-US')} %`;
   if (key === 'liquidationBonus') return reserve[key] === 0 ? '0 %' : `${((reserve[key] as number) - 10000) / 100} %`;
   if (key === 'interestRateStrategy') return toAddressLink(reserve[key] as Hex, true, CHAIN_ID_CLIENT_MAP[chainId]);
   if (key === 'oracleLatestAnswer' && reserve.oracleDecimals)
@@ -54,6 +58,8 @@ const ORDER: (keyof AaveV3Reserve)[] = [
   'stableBorrowRateEnabled',
   'isBorrowableInIsolation',
   'interestRateStrategy',
+  'liquidityIndex',
+  'variableBorrowIndex',
 ];
 function sortReserveKeys(a: keyof AaveV3Reserve, b: keyof AaveV3Reserve) {
   const indexA = ORDER.indexOf(a);

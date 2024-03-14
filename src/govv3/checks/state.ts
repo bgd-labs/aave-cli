@@ -143,7 +143,7 @@ async function enhanceValue({
 }) {
   if (type) {
     // values to be rendered with asset decimals
-    if (['_balances', 'balanceOf', 'balances', 'allowed', '_allowances', 'allowance'].includes(type)) {
+    if (['_balances', 'balanceOf', 'balances', 'allowed', '_allowances', 'allowance', '_totalSupply'].includes(type)) {
       const asset = await findAsset(client, address);
       if (asset) return prettifyNumber({ decimals: asset.decimals, value });
     }

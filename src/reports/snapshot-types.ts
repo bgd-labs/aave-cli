@@ -45,6 +45,10 @@ export const aaveV3ReserveSchema = z.object({
   oracleDescription: z.string(),
   decimals: z.number(),
   isSiloed: z.boolean(),
+  liquidityIndex: z.number(),
+  variableBorrowIndex: z.number(),
+  currentLiquidityRate: z.number(),
+  currentVariableBorrowRate: z.number(),
 });
 
 export type AaveV3Reserve = z.infer<typeof aaveV3ReserveSchema>;
