@@ -1,30 +1,41 @@
 import { Client, Hex, formatUnits } from 'viem';
 import { Input } from '../../utils/tenderlyClient';
-import { formatNumberString } from './markdownUtils';
+import { formatNumberString, prettifyNumber } from './markdownUtils';
 import { findAsset } from './checkAddress';
 
-const decimalAmountEvents = [
-  'Transfer',
-  'Approval',
-  'Burn',
-  'Mint',
-  'BalanceTransfer',
-  'Withdraw',
-  'Supply',
-  'Deposit',
-];
+// events emitted typically on the erc20
+const tokenAmountEvents = ['Transfer', 'Approval', 'Burn', 'Mint', 'BalanceTransfer'];
+
+// events emitted on the pool
+const reserveEvents = ['Withdraw', 'Supply', 'Deposit'];
 
 export async function interpretLog(client: Client, address: Hex, name: string | null, inputs: Input[]) {
-  if (name && decimalAmountEvents.includes(name)) {
+  if (name && tokenAmountEvents.includes(name)) {
     // fields formatted by the asset decimal
     const decimalFieldNames = ['value', 'amount', 'wad'];
     for (const name of decimalFieldNames) {
       const valueIndex = inputs.findIndex((i) => i.soltype!.name === name);
       if (valueIndex !== -1) {
         const asset = await findAsset(client, address);
-        inputs[valueIndex].value = `${formatNumberString(
-          formatUnits(BigInt(inputs[valueIndex].value as string), asset.decimals)
-        )}[${inputs[valueIndex].value}]`;
+        if (asset) {
+          inputs[valueIndex].value = prettifyNumber({
+            value: inputs[valueIndex].value as string,
+            decimals: asset.decimals,
+          });
+        }
+      }
+    }
+  }
+  if (name && reserveEvents.includes(name)) {
+    const valueIndex = inputs.findIndex((i) => i.soltype!.name === 'amount');
+    const reserveIndex = inputs.findIndex((i) => i.soltype!.name === 'reserve');
+    if (valueIndex !== -1 && reserveIndex !== -1) {
+      const asset = await findAsset(client, inputs[reserveIndex].value as Hex);
+      if (asset) {
+        inputs[valueIndex].value = prettifyNumber({
+          value: inputs[valueIndex].value as string,
+          decimals: asset.decimals,
+        });
       }
     }
   }
@@ -34,9 +45,10 @@ export async function interpretLog(client: Client, address: Hex, name: string | 
     for (const name of decimalFieldNames) {
       const valueIndex = inputs.findIndex((i) => i.soltype!.name === name);
       if (valueIndex !== -1) {
-        inputs[valueIndex].value = `${formatNumberString(
-          formatUnits(BigInt(inputs[valueIndex].value as string), 27)
-        )}[${inputs[valueIndex].value}]`;
+        inputs[valueIndex].value = prettifyNumber({
+          value: inputs[valueIndex].value as string,
+          decimals: 27,
+        });
       }
     }
   }
