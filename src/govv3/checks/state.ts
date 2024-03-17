@@ -151,6 +151,14 @@ async function enhanceValue({
     if (subType && ['_reserves'].includes(type) && ['liquidityIndex', 'variableBorrowIndex'].includes(subType)) {
       return prettifyNumber({ decimals: 27, value });
     }
+    // also rays but representing percentage
+    if (
+      subType &&
+      ['_reserves'].includes(type) &&
+      ['currentLiquidityRate', 'currentVariableBorrowRate', 'currentStableBorrowRate'].includes(subType)
+    ) {
+      return prettifyNumber({ decimals: 25, value, suffix: '%' });
+    }
   }
   return value;
 }
