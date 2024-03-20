@@ -1,21 +1,14 @@
-import {
-  CHAIN_ID_CLIENT_MAP,
-  ProposalMetadata,
-  getBlockAtTimestamp,
-  getProposalMetadata,
-  readJSONCache,
-  writeJSONCache,
-} from '@bgd-labs/js-utils';
-import { getGovernanceEvents, isProposalFinal } from './modules/governance';
+import { CHAIN_ID_CLIENT_MAP, getBlockAtTimestamp, readJSONCache, writeJSONCache } from '@bgd-labs/js-utils';
+import { getGovernanceEvents } from './modules/governance';
 import { getPayloadsControllerEvents, isPayloadFinal } from './modules/payloadsController';
 import { AbiStateMutability, Address, Client, ContractFunctionReturnType, getContract } from 'viem';
 import { IGovernanceCore_ABI, IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book';
 import { getBlockNumber } from 'viem/actions';
+import { isProposalFinal } from '../governance';
 
 export async function cacheGovernance(
   client: Client,
-  governanceAddress: Address,
-  bookKeepingCache: BookKeepingCache
+  governanceAddress: Address
 ): Promise<{
   proposalsCache: Record<
     string,
@@ -23,7 +16,9 @@ export async function cacheGovernance(
   >;
   eventsCache: Awaited<ReturnType<typeof getGovernanceEvents>>;
 }> {
-  const bookKeepingCacheId = 'governance';
+  const proposalsPath = `${client.chain!.id.toString()}/proposals`;
+  const cachedBlock: { lastSeenBlock: string } =
+    readJSONCache<{ lastSeenBlock: number }>(proposalsPath, 'lastSeenBlock') || {};
   const currentBlockOnGovernanceChain = await getBlockNumber(client);
   const contract = getContract({
     abi: IGovernanceCore_ABI,
@@ -32,14 +27,13 @@ export async function cacheGovernance(
   });
   const proposalsCount = await contract.read.getProposalsCount();
   if (proposalsCount == BigInt(0)) {
-    bookKeepingCache[bookKeepingCacheId] = currentBlockOnGovernanceChain.toString();
+    cachedBlock.lastSeenBlock = currentBlockOnGovernanceChain.toString();
     return {
       proposalsCache: {},
       eventsCache: [],
     };
   }
   // cache data
-  const proposalsPath = `${client.chain!.id.toString()}/proposals`;
   const proposalsCache =
     readJSONCache<
       Record<string, ContractFunctionReturnType<typeof IGovernanceCore_ABI, AbiStateMutability, 'getProposal'>>
@@ -56,8 +50,8 @@ export async function cacheGovernance(
   const eventsPath = `${client.chain!.id.toString()}/events`;
   const governanceEvents =
     readJSONCache<Awaited<ReturnType<typeof getGovernanceEvents>>>(eventsPath, governanceAddress) || [];
-  const lastSeenBlock = bookKeepingCache[bookKeepingCacheId]
-    ? BigInt(bookKeepingCache[bookKeepingCacheId])
+  const lastSeenBlock = cachedBlock.lastSeenBlock
+    ? BigInt(cachedBlock.lastSeenBlock)
     : (
         await getBlockAtTimestamp({
           client: client,
@@ -74,17 +68,16 @@ export async function cacheGovernance(
     currentBlockOnGovernanceChain
   );
   const eventsCache = [...governanceEvents, ...logs];
+  cachedBlock.lastSeenBlock = currentBlockOnGovernanceChain.toString();
+  writeJSONCache(proposalsPath, 'lastSeenBlock', cachedBlock);
   writeJSONCache(eventsPath, governanceAddress, eventsCache);
-  bookKeepingCache[bookKeepingCacheId] = currentBlockOnGovernanceChain.toString();
   return { proposalsCache, eventsCache };
 }
 
-export async function cachePayloadsController(
-  client: Client,
-  payloadsControllerAddress: Address,
-  bookKeepingCache: BookKeepingCache
-) {
+export async function cachePayloadsController(client: Client, payloadsControllerAddress: Address) {
   const payloadsPath = `${client.chain!.id}/payloads`;
+  const cachedBlock: { lastSeenBlock: string } =
+    readJSONCache<{ lastSeenBlock: number }>(payloadsPath, 'lastSeenBlock') || {};
   const contract = getContract({
     abi: IPayloadsControllerCore_ABI,
     client,
@@ -94,7 +87,7 @@ export async function cachePayloadsController(
 
   const currentBlockOnPayloadsControllerChain = await getBlockNumber(client);
   if (payloadsCount == 0) {
-    bookKeepingCache[payloadsPath] = currentBlockOnPayloadsControllerChain.toString();
+    cachedBlock.lastSeenBlock = currentBlockOnPayloadsControllerChain.toString();
     return { eventsCache: [] };
   }
   // cache data
@@ -116,8 +109,8 @@ export async function cachePayloadsController(
   const eventsPath = `${client.chain!.id}/events`;
   const eventsCache =
     readJSONCache<Awaited<ReturnType<typeof getPayloadsControllerEvents>>>(eventsPath, payloadsControllerAddress) || [];
-  const lastSeenBlock = bookKeepingCache[payloadsPath]
-    ? BigInt(bookKeepingCache[payloadsPath])
+  const lastSeenBlock = cachedBlock
+    ? BigInt(cachedBlock.lastSeenBlock)
     : (
         await getBlockAtTimestamp({
           client: client,
@@ -134,29 +127,16 @@ export async function cachePayloadsController(
     currentBlockOnPayloadsControllerChain
   );
   const updatedEventsCache = [...eventsCache, ...logs];
+  cachedBlock.lastSeenBlock = currentBlockOnPayloadsControllerChain.toString();
   writeJSONCache(eventsPath, payloadsControllerAddress, updatedEventsCache);
-  bookKeepingCache[payloadsPath] = currentBlockOnPayloadsControllerChain.toString();
+  writeJSONCache(payloadsPath, 'lastSeenBlock', cachedBlock);
   return { eventsCache: updatedEventsCache };
 }
 
-export async function cachePayloadsControllers(controllers: Map<Address, number>, bookKeepingCache: BookKeepingCache) {
+export async function cachePayloadsControllers(controllers: Map<Address, number>) {
   return await Promise.all(
     Array.from(controllers).map(async ([address, chainId]) =>
-      cachePayloadsController(CHAIN_ID_CLIENT_MAP[chainId], address, bookKeepingCache)
+      cachePayloadsController(CHAIN_ID_CLIENT_MAP[chainId], address)
     )
   );
-}
-
-/**
- * simple cache mapping:
- * filename:blockNumber with the last used block for caching
- */
-type BookKeepingCache = Record<string, string>;
-
-export function readBookKeepingCache() {
-  return readJSONCache<BookKeepingCache>('bookKeeping', 'lastFetchedBlocks') || {};
-}
-
-export function writeBookKeepingCache(cache: BookKeepingCache) {
-  writeJSONCache('bookKeeping', 'lastFetchedBlocks', cache);
 }
