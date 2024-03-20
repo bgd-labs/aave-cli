@@ -1,7 +1,6 @@
 import * as pools from '@bgd-labs/aave-address-book';
 import { getBits } from '../../utils/storageSlots';
-import { formatNumberString, prettifyNumber } from './markdownUtils';
-import { formatUnits } from 'viem';
+import { prettifyNumber } from './markdownUtils';
 
 export function getDecodedReserveData(contractAddress: string, data?: bigint) {
   if (!data) return data;

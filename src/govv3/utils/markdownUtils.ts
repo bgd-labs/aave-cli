@@ -75,7 +75,7 @@ export function prettifyNumber({
 }) {
   return `${prefix ? `${prefix}` : ''}${formatNumberString(formatUnits(BigInt(value), decimals))}${
     suffix ? `${suffix}` : ''
-  }[${value}]`;
+  }[${value}](${decimals} decimals)`;
 }
 
 export function wrapInQuotes(name: string, quotes: boolean) {
