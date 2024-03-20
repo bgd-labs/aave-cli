@@ -7,4 +7,6 @@ export * from './govv3/generateProposalReport';
 export * from './utils/tenderlyClient';
 export * from './utils/logger';
 export * from './govv3/cache/updateCache';
+export * from './govv3/cache/modules/governance';
+export * from './govv3/cache/modules/payloadsController';
 export * from './govv3/utils/checkAddress';

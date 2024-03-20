@@ -14,21 +14,6 @@ export type ProposalVotingActivatedEvent = LogWithTimestamp<
   ExtractAbiEvent<typeof IGovernanceCore_ABI, 'VotingActivated'>
 >;
 
-export enum ProposalState {
-  Null, // proposal does not exists
-  Created, // created, waiting for a cooldown to initiate the balances snapshot
-  Active, // balances snapshot set, voting in progress
-  Queued, // voting results submitted, but proposal is under grace period when guardian can cancel it
-  Executed, // results sent to the execution chain(s)
-  Failed, // voting was not successful
-  Cancelled, // got cancelled by guardian, or because proposition power of creator dropped below allowed minimum
-  Expired,
-}
-
-export function isProposalFinal(state: ProposalState) {
-  return [ProposalState.Executed, ProposalState.Failed, ProposalState.Cancelled, ProposalState.Expired].includes(state);
-}
-
 export async function getGovernanceEvents(
   governanceAddress: Address,
   client: Client,
