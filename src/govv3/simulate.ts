@@ -6,7 +6,7 @@ import { PayloadsController, getPayloadsController } from './payloadsController'
 import { CHAIN_ID_CLIENT_MAP } from '@bgd-labs/js-utils';
 import { generateReport } from './generatePayloadReport';
 import { generateProposalReport } from './generateProposalReport';
-import { cacheGovernance, cachePayloadsController, readBookKeepingCache } from './cache/updateCache';
+import { cacheGovernance, cachePayloadsController } from './cache/updateCache';
 
 /**
  * Reference implementation, unused
@@ -16,10 +16,9 @@ import { cacheGovernance, cachePayloadsController, readBookKeepingCache } from '
  * @returns
  */
 export async function simulateProposal(governanceAddress: Hex, client: Client, proposalId: bigint) {
-  const cache = readBookKeepingCache();
   logInfo('General', `Running simulation for ${proposalId}`);
   const governance = getGovernance({ address: governanceAddress, client });
-  const { eventsCache } = await cacheGovernance(client, governanceAddress, cache);
+  const { eventsCache } = await cacheGovernance(client, governanceAddress);
   const proposal = await governance.getProposalAndLogs(proposalId, eventsCache);
   const result = await governance.simulateProposalExecutionOnTenderly(proposalId, proposal);
   console.log(
@@ -37,7 +36,7 @@ export async function simulateProposal(governanceAddress: Hex, client: Client, p
   for (const payload of proposal.proposal.payloads) {
     const client = CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP];
     const controllerContract = getPayloadsController(payload.payloadsController, client);
-    const { eventsCache } = await cachePayloadsController(client, payload.payloadsController, cache);
+    const { eventsCache } = await cachePayloadsController(client, payload.payloadsController);
     const config = await controllerContract.getPayload(payload.payloadId, eventsCache);
     try {
       const result = await controllerContract.simulatePayloadExecutionOnTenderly(payload.payloadId, config);
