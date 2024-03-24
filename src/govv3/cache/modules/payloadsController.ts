@@ -4,6 +4,7 @@ import { Address, Client, getAbiItem } from 'viem';
 import { getBlock } from 'viem/actions';
 import type { ExtractAbiEvent } from 'abitype';
 import { LogWithTimestamp } from '../../../utils/logs';
+import { PayloadState } from '../../payloadsController';
 
 export type PayloadCreatedEvent = LogWithTimestamp<
   ExtractAbiEvent<typeof IPayloadsControllerCore_ABI, 'PayloadCreated'>
@@ -12,24 +13,6 @@ export type PayloadQueuedEvent = LogWithTimestamp<ExtractAbiEvent<typeof IPayloa
 export type PayloadExecutedEvent = LogWithTimestamp<
   ExtractAbiEvent<typeof IPayloadsControllerCore_ABI, 'PayloadExecuted'>
 >;
-
-export enum PayloadState {
-  None,
-  Created,
-  Queued,
-  Executed,
-  Cancelled,
-  Expired,
-}
-
-export const HUMAN_READABLE_PAYLOAD_STATE = {
-  [PayloadState.None]: 'None',
-  [PayloadState.Created]: 'Created',
-  [PayloadState.Queued]: 'Queued',
-  [PayloadState.Executed]: 'Executed',
-  [PayloadState.Cancelled]: 'Cancelled',
-  [PayloadState.Expired]: 'Expired',
-};
 
 export function isPayloadFinal(state: number) {
   return [

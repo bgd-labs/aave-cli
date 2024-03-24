@@ -11,12 +11,7 @@ import { toAddressLink, toTxLink } from '../govv3/utils/markdownUtils';
 import { getAccountRPL, getBlockRLP } from '../govv3/proofs';
 import { DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT, FORMAT } from '../utils/constants';
 import { getPayloadsController } from '../govv3/payloadsController';
-import {
-  cacheGovernance,
-  cachePayloadsController,
-  readBookKeepingCache,
-  writeBookKeepingCache,
-} from '../govv3/cache/updateCache';
+import { cacheGovernance, cachePayloadsController } from '../govv3/cache/updateCache';
 import { findPayloadsController } from '../govv3/utils/checkAddress';
 import { generateReport } from '../govv3/generatePayloadReport';
 
@@ -51,9 +46,7 @@ export function addCommand(program: Command) {
       const client = CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP];
       const payloadsControllerAddress = findPayloadsController(Number(chainId));
       const payloadsController = getPayloadsController(payloadsControllerAddress as Hex, client);
-      const cache = readBookKeepingCache();
-      const { eventsCache } = await cachePayloadsController(client, payloadsControllerAddress as Address, cache);
-      writeBookKeepingCache(cache);
+      const { eventsCache } = await cachePayloadsController(client, payloadsControllerAddress as Address);
       const config = await payloadsController.getPayload(payloadId, eventsCache);
       const result = await payloadsController.simulatePayloadExecutionOnTenderly(Number(payloadId), config);
       console.log(
@@ -75,9 +68,7 @@ export function addCommand(program: Command) {
         client: DEFAULT_GOVERNANCE_CLIENT,
         blockCreated: 9640498n,
       });
-      const cache = readBookKeepingCache();
-      const { eventsCache } = await cacheGovernance(DEFAULT_GOVERNANCE_CLIENT, DEFAULT_GOVERNANCE, cache);
-      writeBookKeepingCache(cache);
+      const { eventsCache } = await cacheGovernance(DEFAULT_GOVERNANCE_CLIENT, DEFAULT_GOVERNANCE);
       const count = await governance.governanceContract.read.getProposalsCount();
       const proposalIds = [...Array(Number(count)).keys()].reverse();
       const selectedProposalId = BigInt(

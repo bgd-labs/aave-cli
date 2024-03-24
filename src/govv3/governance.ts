@@ -27,7 +27,6 @@ import { setBits } from '../utils/storageSlots';
 import { VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof } from './proofs';
 import { logInfo } from '../utils/logger';
 import { GetProofReturnType } from 'viem/_types/actions/public/getProof';
-import { readJSONCache, writeJSONCache } from '@bgd-labs/js-utils';
 import {
   ProposalCreatedEvent,
   ProposalExecutedEvent,
@@ -50,7 +49,7 @@ export enum ProposalState {
   Expired,
 }
 
-function isStateFinal(state: ProposalState) {
+export function isProposalFinal(state: ProposalState) {
   return [ProposalState.Executed, ProposalState.Failed, ProposalState.Cancelled, ProposalState.Expired].includes(state);
 }
 
@@ -124,13 +123,7 @@ export const getGovernance = ({ address, client }: GetGovernanceParams): Governa
   });
 
   async function getProposal(proposalId: bigint) {
-    const filePath = client.chain!.id.toString() + `/proposals`;
-    const fileName = proposalId;
-    const cache = readJSONCache(filePath, fileName.toString());
-    if (cache) return cache;
-    const proposal = await governanceContract.read.getProposal([proposalId]);
-    if (isStateFinal(proposal.state)) writeJSONCache(filePath, fileName.toString(), proposal);
-    return proposal;
+    return governanceContract.read.getProposal([proposalId]);
   }
 
   async function getSimulationPayloadForExecution(proposalId: bigint) {
