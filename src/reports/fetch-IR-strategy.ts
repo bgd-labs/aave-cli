@@ -30,7 +30,7 @@ export async function fetchRateStrategyImage(rate: AaveV3Strategy) {
   };
   const searchParams = new URLSearchParams(paramsObj);
   const writeStream = createWriteStream(pathWithFile);
-  const { body } = await fetch(`https://bgdash.vercel.app/api/static?${searchParams.toString()}`);
+  const { body } = await fetch(`https://dash.onaave.com/api/static?${searchParams.toString()}`);
   if (!body) throw Error('Error fetching the image');
   await finished(Readable.fromWeb(body as any).pipe(writeStream));
 }
