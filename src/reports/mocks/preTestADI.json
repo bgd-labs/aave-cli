@@ -1,0 +1,29 @@
+{
+  "chainId": 137,
+  "forwarderAdaptersByChain": {
+    "1": {
+      "destination_0": "0xDB8953194810b1942544fA528791278D458719D5",
+      "destination_1": "0x2a323be63e08E08536Fc3b5d8C6f24825e68895e",
+      "destination_2": "0x6Abb61beb5848B476d026C4934E8a6415e2E75a8",
+      "destination_3": "0xb13712De579E1f9943502FFCf72eab6ec348cF79",
+      "origin_0": "0x95Fa2c817169E26956AB8795c84a225b55d7db5B",
+      "origin_1": "0xDA4B6024aA06f7565BBcAaD9B8bE24C3c229AAb5",
+      "origin_2": "0x3c25b96fF62D21E90556869272a277eE2E229747",
+      "origin_3": "0xb13712De579E1f9943502FFCf72eab6ec348cF79"
+    }
+  },
+  "receiverAdaptersByChain": {
+    "1": {
+      "receiver_0": "0x95Fa2c817169E26956AB8795c84a225b55d7db5B",
+      "receiver_1": "0xDA4B6024aA06f7565BBcAaD9B8bE24C3c229AAb5",
+      "receiver_2": "0x3c25b96fF62D21E90556869272a277eE2E229747",
+      "receiver_3": "0xb13712De579E1f9943502FFCf72eab6ec348cF79"
+    }
+  },
+  "receiverConfigs": {
+    "1": {
+      "requiredConfirmations": 3,
+      "validityTimestamp": 0
+    }
+  }
+}
