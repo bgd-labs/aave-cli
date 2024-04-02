@@ -84,6 +84,10 @@ export const CHAIN_ID = {
   AVALANCHE: 43114,
   METIS: 1088,
   BASE: 8453,
+  SCROLL: 534352,
+  BNB: 56,
+  GNOSIS: 100,
+  CELO: 42220,
 } as const;
 
 const zodChainId = z.nativeEnum(CHAIN_ID);
@@ -98,4 +102,19 @@ export const aaveV3SnapshotSchema = z.object({
   chainId: zodChainId,
 });
 
+
+export const aDIReceiverConfigSchema = z.object({
+  requiredConfirmations: z.number(),
+  validityTimestamp: z.number()
+});
+export const aDIAdapterSchema = z.record(z.string(), z.string());
+
+export const aDISnapshotSchema = z.object({
+  receiverConfigs: z.record(zodChainId, aDIReceiverConfigSchema),
+  forwarderAdaptersByChain: z.record(zodChainId, aDIAdapterSchema),
+  receiverAdaptersByChain: z.record(zodChainId, aDIAdapterSchema),
+  chainId: zodChainId,
+});
+
 export type AaveV3Snapshot = z.infer<typeof aaveV3SnapshotSchema>;
+export type ADISnapshot = z.infer<typeof aDISnapshotSchema>;
