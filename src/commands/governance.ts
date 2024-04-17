@@ -14,6 +14,7 @@ import { toAddressLink, toTxLink } from "../govv3/utils/markdownUtils";
 import { getCachedIpfs } from "../ipfs/getCachedProposalMetaData";
 import { DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT, FORMAT } from "../utils/constants";
 import { logError, logInfo, logSuccess } from "../utils/logger";
+import { getBlock } from "viem/actions";
 
 enum DialogOptions {
   DETAILS = 0,
@@ -49,16 +50,14 @@ export function addCommand(program: Command) {
       const { eventsCache } = await cachePayloadsController(client, payloadsControllerAddress as Address);
       const config = await payloadsController.getPayload(payloadId, eventsCache);
       const result = await payloadsController.simulatePayloadExecutionOnTenderly(Number(payloadId), config);
-      result.contracts.map((ctr, ix) => delete result.contracts[ix].src_map);
-      console.log(JSON.stringify({simulation: result, payloadInfo: config}, (key, value) => (typeof value === "bigint" ? value.toString() : value), 2));
-      // console.log(
-      //   await generateReport({
-      //     simulation: result,
-      //     payloadId: payloadId,
-      //     payloadInfo: config,
-      //     client,
-      //   })
-      // );
+      console.log(
+        await generateReport({
+          simulation: result,
+          payloadId: payloadId,
+          payloadInfo: config,
+          client,
+        })
+      );
     });
 
   govV3
@@ -235,7 +234,7 @@ export function addCommand(program: Command) {
               CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP],
             ),
           );
-          const block = await DEFAULT_GOVERNANCE_CLIENT.getBlock({
+          const block = await getBlock(DEFAULT_GOVERNANCE_CLIENT,{
             blockHash: proposal.snapshotBlockHash,
           });
           const blockRPL = getBlockRLP(block);
@@ -282,7 +281,7 @@ export function addCommand(program: Command) {
       const proposal = await governance.getProposal(proposalId);
 
       const roots = await governance.getStorageRoots(proposalId);
-      const block = await DEFAULT_GOVERNANCE_CLIENT.getBlock({
+      const block = await getBlock(DEFAULT_GOVERNANCE_CLIENT, {
         blockHash: proposal.snapshotBlockHash,
       });
       const blockRPL = getBlockRLP(block);

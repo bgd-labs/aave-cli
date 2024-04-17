@@ -48,15 +48,16 @@ export async function generateProposalReport({
     )})\n`;
   }
   if (executedLog) {
-    report += `- executedAt: [${renderUnixTime(executedLog.timestamp)}, block: ${executedLog.blockNumber}](${toTxLink(
+    report += `- executedAt: [${renderUnixTime(executedLog.timestamp)}, timestamp: ${executedLog.timestamp}, block: ${executedLog.blockNumber}](${toTxLink(
       executedLog.transactionHash,
       false,
       client,
     )})\n`;
   } else {
+    const timestamp = Math.floor(new Date(simulation.transaction.timestamp).getTime() / 1000);
     report += `- simulatedExecutionAt: ${renderUnixTime(
-      Math.floor(new Date(simulation.transaction.timestamp).getTime() / 1000),
-    )}, block: ${simulation.transaction.block_number}`;
+      timestamp,
+    )}, timestamp: ${timestamp}, block: ${simulation.transaction.block_number}`;
   }
   report += "\n";
 

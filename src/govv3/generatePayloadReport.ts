@@ -34,7 +34,7 @@ export async function generateReport({ payloadId, payloadInfo, simulation, clien
       client,
     )})\n`;
     if (executedLog) {
-      report += `- executedAt: [${renderUnixTime(payload.executedAt)}](${toTxLink(
+      report += `- executedAt: [${renderUnixTime(payload.executedAt)}, timestamp: ${executedLog.timestamp}, block: ${executedLog.blockNumber}](${toTxLink(
         executedLog.transactionHash,
         false,
         client,
@@ -43,6 +43,10 @@ export async function generateReport({ payloadId, payloadInfo, simulation, clien
       report += `- earliest execution at: [${renderUnixTime(
         payload.queuedAt + payload.delay,
       )}](https://www.epochconverter.com/countdown?q=${payload.queuedAt + payload.delay})\n`;
+      const timestamp = Math.floor(new Date(simulation.transaction.timestamp).getTime() / 1000);
+      report += `- simulatedExecutionAt: ${renderUnixTime(
+        timestamp,
+      )}, timestamp: ${timestamp}, block: ${simulation.transaction.block_number}`
     }
   }
 

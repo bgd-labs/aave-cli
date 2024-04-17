@@ -89,7 +89,7 @@ export function addCommand(program: Command) {
       if (payloadId) {
         const payloadsController = getPayloadsController(
           payloadsControllerAddress as Hex,
-          CHAIN_ID_CLIENT_MAP[chainId],
+          CHAIN_ID_CLIENT_MAP[Number(chainId)],
         );
         const payload = await payloadsController.getSimulationPayloadForExecution(Number(payloadId));
         const fork = await tenderly.fork({

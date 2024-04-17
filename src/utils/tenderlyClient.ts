@@ -207,6 +207,7 @@ type TenderlyContractResponseObject = {
     decimals: number;
   };
   child_contracts?: { id: string; address: Hex; network_id: string }[];
+  src_map: any;
 };
 
 export interface TenderlySimulationResponseObject {
