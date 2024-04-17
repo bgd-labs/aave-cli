@@ -49,7 +49,7 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
     .map((reserveKey) => {
       // from being present on key means reserve was removed
       if (
-        !(diffResult.reserves[reserveKey] as any).hasOwn("from") &&
+        !(diffResult.reserves[reserveKey] as any).hasOwnProperty("from") &&
         Object.keys(diffResult.reserves[reserveKey]).find(
           (fieldKey) => typeof (diffResult.reserves as any)[reserveKey][fieldKey] === "object",
         )
@@ -64,7 +64,7 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
           report += `| interestRate | ![before](/.assets/${preIrHash}.svg) | ![after](/.assets/${postIrHash}.svg) |`;
         }
         // diff eModes
-        if (diffResult.reserves[reserveKey].eModeCategory?.hasOwn("from")) {
+        if (diffResult.reserves[reserveKey].eModeCategory?.hasOwnProperty("from")) {
           report += renderEmodeDiff(
             diff(
               pre.eModes[(diffResult.reserves[reserveKey].eModeCategory as any).from] || {},

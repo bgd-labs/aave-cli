@@ -21,7 +21,7 @@ export function diff<T extends Record<string, any>, X extends Record<string, any
 ): DiffOutput<T, X> {
   const out = {} as Record<string, any>;
   for (const key in a) {
-    if (!b.hasOwn(key)) {
+    if (!b.hasOwnProperty(key)) {
       out[key] = { from: a[key], to: null };
     } else {
       if (typeof a[key] === "object") {
@@ -39,7 +39,7 @@ export function diff<T extends Record<string, any>, X extends Record<string, any
     }
   }
   for (const key in b) {
-    if (a.hasOwn(key)) continue;
+    if (a.hasOwnProperty(key)) continue;
     out[key] = { from: null, to: b[key] };
   }
   return out as DiffOutput<T, X>;

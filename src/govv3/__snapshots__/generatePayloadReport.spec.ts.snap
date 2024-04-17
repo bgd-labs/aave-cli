@@ -379,7 +379,7 @@ exports[`generatePayloadReport > should match snapshot streams 1`] = `
 - actions: [{"target":"0x97B53cD563DA629640F55821189452315c05F177","withDelegateCall":true,"accessLevel":1,"value":"0","signature":"execute()","callData":"0x"}]
 - createdAt: [26/03/2024, 17:36:11](https://etherscan.io/tx/0x3cd3a9120450ae2616b6b1a560827e2a97d4ab0c1ae9ae3dce4be4ab76ac0647)
 - queuedAt: [30/03/2024, 22:06:59](https://etherscan.io/tx/0xdad8366532b1f0db17d785edf6bf26fb2982b3dc6487ba8f689a555a6566bbfc)
-- executedAt: [31/03/2024, 22:07:23](https://etherscan.io/tx/0x2cf215a37e4eb624ae7486be4c89f7ada05f56a51b8eb1316623ebe3f33f2447)
+- executedAt: [31/03/2024, 22:07:23, timestamp: 1711922843, block: 19556730](https://etherscan.io/tx/0x2cf215a37e4eb624ae7486be4c89f7ada05f56a51b8eb1316623ebe3f33f2447)
 
 ### Check: Reports all state changes :white_check_mark:
 

@@ -10,7 +10,8 @@
     "rules": {
       "recommended": true,
       "suspicious": {
-        "noExplicitAny": "off"
+        "noExplicitAny": "off",
+        "noPrototypeBuiltins": "off"
       },
       "performance": {
         "noDelete": "off"

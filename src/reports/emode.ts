@@ -58,7 +58,7 @@ export function renderEmodeDiff(diff: EmodeDiff) {
 
   (Object.keys(diff) as (keyof AaveV3Emode)[])
     .filter((key) => !OMIT_KEYS.includes(key))
-    .filter((key) => diff[key].hasOwn("from"))
+    .filter((key) => diff[key].hasOwnProperty("from"))
     .sort(sortEmodeKeys)
     .map((key) => {
       content += `| eMode.${key} | ${renderEModeValue(key, {

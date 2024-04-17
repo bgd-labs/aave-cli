@@ -108,7 +108,7 @@ export function renderReserveDiff(diff: ReserveDiff, chainId: CHAIN_ID) {
     return acc;
   }, {} as AaveV3Reserve);
   (Object.keys(diff) as (keyof AaveV3Reserve)[])
-    .filter((key) => diff[key].hasOwn("from"))
+    .filter((key) => diff[key].hasOwnProperty("from"))
     .sort(sortReserveKeys)
     .map((key) => {
       content += `| ${key} | ${renderReserveValue(key, from, chainId)} | ${renderReserveValue(key, to, chainId)} |\n`;

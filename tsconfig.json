@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "lib": ["ESNext", "ES2022.Object"],
     "target": "ESNext",
     "strict": true,
     "esModuleInterop": true,
