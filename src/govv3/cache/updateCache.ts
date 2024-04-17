@@ -1,10 +1,14 @@
 import { IGovernanceCore_ABI, IPayloadsControllerCore_ABI } from "@bgd-labs/aave-address-book";
-import { CHAIN_ID_CLIENT_MAP, getBlockAtTimestamp, readJSONCache, writeJSONCache } from "@bgd-labs/js-utils";
+import { CHAIN_ID_CLIENT_MAP, getBlockAtTimestamp } from "@bgd-labs/js-utils";
 import { type AbiStateMutability, type Address, type Client, type ContractFunctionReturnType, getContract } from "viem";
 import { getBlockNumber } from "viem/actions";
 import { isProposalFinal } from "../governance";
 import { getGovernanceEvents } from "./modules/governance";
 import { getPayloadsControllerEvents, isPayloadFinal } from "./modules/payloadsController";
+
+function readJSONCache<T extends any>(...args: any): any{}
+function writeJSONCache<T extends any>(...args: any): any{}
+
 
 export async function cacheGovernance(
   client: Client,
