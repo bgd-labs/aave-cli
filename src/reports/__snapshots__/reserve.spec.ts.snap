@@ -1,14 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`reserve > renderReserve > should properly render altered reserve 1`] = `
-"#### WBTC ([0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f](https://etherscan.io/address/0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f))
-
-| description | value before | value after |
-| --- | --- | --- |
-| borrowCap | 1,115 WBTC | 100 WBTC |
-"
-`;
-
 exports[`reserve > renderReserve > should properly render new reserve 1`] = `
 "#### WBTC ([0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f](https://etherscan.io/address/0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f))
 
@@ -82,15 +73,5 @@ exports[`reserve > renderReserve > should properly render new reserve with local
 | stableBorrowRateEnabled | false |
 | isBorrowableInIsolation | false |
 | interestRateStrategy | 0x9b34E3e183c9b0d1a08fF57a8fb59c821616295f |
-"
-`;
-
-exports[`reserve > renderReserve > should render decimals 1`] = `
-"#### WBTC ([0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f](https://etherscan.io/address/0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f))
-
-| description | value before | value after |
-| --- | --- | --- |
-| oracleDecimals | null | 8 |
-| oracleLatestAnswer | 2,251,904,551,524 | 1.23456789 |
 "
 `;

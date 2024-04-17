@@ -1,28 +1,28 @@
 // Based on https://github.com/Uniswap/governance-seatbelt/blob/main/checks/check-state-changes.ts
 // adjusted for viem & aave governance v3
-import { Client, Hex, getAddress } from 'viem';
-import { ProposalCheck } from './types';
-import { getContractName } from '../utils/solidityUtils';
-import { StateDiff, TenderlySimulationResponse } from '../../utils/tenderlyClient';
-import { findAsset } from '../utils/checkAddress';
-import { prettifyNumber, wrapInQuotes } from '../utils/markdownUtils';
-import { getDecodedReserveData } from '../utils/reserveConfigurationInterpreter';
+import { type Client, type Hex, getAddress } from "viem";
+import type { StateDiff, TenderlySimulationResponse } from "../../utils/tenderlyClient";
+import { findAsset } from "../utils/checkAddress";
+import { prettifyNumber, wrapInQuotes } from "../utils/markdownUtils";
+import { getDecodedReserveData } from "../utils/reserveConfigurationInterpreter";
+import { getContractName } from "../utils/solidityUtils";
+import type { ProposalCheck } from "./types";
 
 type ValueType = string | Record<string, string>;
 
 type Change = { name: string; before: string | Record<string, ValueType>; after: string; type?: string };
 
 function getContractChanges(diffs: StateDiff[]) {
-  let changes: Change[] = [];
+  const changes: Change[] = [];
   for (const diff of diffs) {
     if (!diff.soltype) {
       // In this branch, state change is not decoded, so return raw data of each storage write
       // (all other branches have decoded state changes)
-      diff.raw.forEach((w) => {
+      for (const w of diff.raw) {
         const oldVal = JSON.stringify(w.original);
         const newVal = JSON.stringify(w.dirty);
         changes.push({ before: oldVal, after: newVal, name: `Slot \`${w.key}\`` });
-      });
+      }
     } else if (diff.soltype.simple_type) {
       // This is a simple type with a single changed value
       // const oldVal = JSON.parse(JSON.stringify(diff.original))
@@ -33,7 +33,7 @@ function getContractChanges(diffs: StateDiff[]) {
         name: diff.soltype.name,
         type: diff.soltype?.name,
       });
-    } else if (diff.soltype.type.startsWith('mapping')) {
+    } else if (diff.soltype.type.startsWith("mapping")) {
       // This is a complex type like a mapping, which may have multiple changes. The diff.original
       // and diff.dirty fields can be strings or objects, and for complex types they are objects,
       // so we cast them as such
@@ -48,13 +48,13 @@ function getContractChanges(diffs: StateDiff[]) {
       // that changes state of these types to inspect the Tenderly simulation response and
       // handle it accordingly. In the meantime we show the raw state changes and print a
       // warning about decoding the data
-      diff.raw.forEach((w) => {
+      for (const w of diff.raw) {
         const oldVal = JSON.stringify(w.original);
         const newVal = JSON.stringify(w.dirty);
         // info += `\n        - Slot \`${w.key}\` changed from \`${oldVal}\` to \`${newVal}\``
         changes.push({ before: oldVal, after: newVal, name: `Slot \`${w.key}\`` });
         console.log(`Could not parse state: add support for formatting type ${diff.soltype?.type} (slot ${w.key})\n`);
-      });
+      }
     }
   }
   return changes;
@@ -64,13 +64,13 @@ async function renderContractChanges(
   simulation: TenderlySimulationResponse,
   client: Client,
   address: Hex,
-  changes: Change[]
+  changes: Change[],
 ) {
   let stateChanges = `\n${getContractName(simulation.contracts, address, client.chain!.id)}\n\`\`\`diff\n`;
   for (const change of changes) {
     stateChanges += await deepDiff(client, address, change.before, change.after, change.name, change.type);
   }
-  stateChanges += '```\n';
+  stateChanges += "```\n";
 
   return stateChanges;
 }
@@ -81,12 +81,12 @@ export async function deepDiff(
   before: Record<string, any> | string,
   after: Record<string, any> | string,
   name: string,
-  type?: string
+  type?: string,
 ): Promise<string> {
-  if (typeof before !== 'object' || typeof after !== 'object') {
-    return `@@ ${type ? `${wrapInQuotes(type, true)} key ` : ''}${wrapInQuotes(
+  if (typeof before !== "object" || typeof after !== "object") {
+    return `@@ ${type ? `${wrapInQuotes(type, true)} key ` : ""}${wrapInQuotes(
       name,
-      !!type
+      !!type,
     )} @@\n- ${await enhanceValue({ client, address, value: before as string, type })}\n+ ${await enhanceValue({
       client,
       address,
@@ -97,20 +97,20 @@ export async function deepDiff(
   /**
    * Injecting the decoded configuration uint256 into the state diff
    */
-  if (type === '_reserves' && (before.configuration?.data || after.configuration?.data)) {
+  if (type === "_reserves" && (before.configuration?.data || after.configuration?.data)) {
     before.configuration.data_decoded = getDecodedReserveData(address, before.configuration.data);
     after.configuration.data_decoded = getDecodedReserveData(address, after.configuration.data);
   }
 
-  let result = '';
+  let result = "";
   for (const key of Object.keys(before)) {
     if (before[key] === after[key]) continue;
-    if (typeof before[key] === 'object')
+    if (typeof before[key] === "object")
       result += await deepDiff(client, address, before[key], after[key], name ? `${name}.${key}` : key, type);
     else
-      result += `@@ ${type ? `${wrapInQuotes(type, true)} key ` : ''}${wrapInQuotes(
+      result += `@@ ${type ? `${wrapInQuotes(type, true)} key ` : ""}${wrapInQuotes(
         `${name}.${key}`,
-        !!type
+        !!type,
       )} @@\n- ${await enhanceValue({
         client,
         address,
@@ -143,52 +143,55 @@ async function enhanceValue({
 }) {
   if (type) {
     // values to be rendered with asset decimals
-    if (['_balances', 'balanceOf', 'balances', 'allowed', '_allowances', 'allowance', '_totalSupply'].includes(type)) {
+    if (["_balances", "balanceOf", "balances", "allowed", "_allowances", "allowance", "_totalSupply"].includes(type)) {
       const asset = await findAsset(client, address);
       if (asset) return prettifyNumber({ decimals: asset.decimals, value });
     }
     // values to be rendered with ray decimals
-    if (subType && ['_reserves'].includes(type) && ['liquidityIndex', 'variableBorrowIndex'].includes(subType)) {
+    if (subType && ["_reserves"].includes(type) && ["liquidityIndex", "variableBorrowIndex"].includes(subType)) {
       return prettifyNumber({ decimals: 27, value });
     }
     // also rays but representing percentage
     if (
       subType &&
-      ['_reserves'].includes(type) &&
-      ['currentLiquidityRate', 'currentVariableBorrowRate', 'currentStableBorrowRate'].includes(subType)
+      ["_reserves"].includes(type) &&
+      ["currentLiquidityRate", "currentVariableBorrowRate", "currentStableBorrowRate"].includes(subType)
     ) {
-      return prettifyNumber({ decimals: 25, value, suffix: '%' });
+      return prettifyNumber({ decimals: 25, value, suffix: "%" });
     }
   }
   return value;
 }
 
 export const checkStateChanges: ProposalCheck<any> = {
-  name: 'Reports all state changes',
+  name: "Reports all state changes",
   async checkProposal(proposal, simulation, client) {
     const info: string[] = [];
     const warnings: string[] = [];
     const errors: string[] = [];
     if (!simulation.transaction.status) {
       const txInfo = simulation.transaction.transaction_info;
-      const reason = txInfo.stack_trace ? txInfo.stack_trace[0].error_reason : 'unknown error';
+      const reason = txInfo.stack_trace ? txInfo.stack_trace[0].error_reason : "unknown error";
       errors.push(`Transaction reverted with reason: ${reason}`);
     } else {
       // State diffs in the simulation are an array, so first we organize them by address.
-      const stateDiffs = simulation.transaction.transaction_info.state_diff.reduce((diffs, diff) => {
-        // TODO: double check if that's safe to skip
-        if (!diff.raw?.[0]) return diffs;
-        const addr = getAddress(diff.raw[0].address);
-        if (!diffs[addr]) diffs[addr] = [diff];
-        else diffs[addr].push(diff);
-        return diffs;
-      }, {} as Record<string, StateDiff[]>);
+      const stateDiffs = simulation.transaction.transaction_info.state_diff.reduce(
+        (diffs, diff) => {
+          // TODO: double check if that's safe to skip
+          if (!diff.raw?.[0]) return diffs;
+          const addr = getAddress(diff.raw[0].address);
+          if (!diffs[addr]) diffs[addr] = [diff];
+          else diffs[addr].push(diff);
+          return diffs;
+        },
+        {} as Record<string, StateDiff[]>,
+      );
 
       if (!Object.keys(stateDiffs).length) {
-        warnings.push(`No state changes detected`);
+        warnings.push("No state changes detected");
       } else {
-        let stateChanges = '';
-        let warnings = '';
+        let stateChanges = "";
+        const warnings = "";
         // Parse state changes at each address
         for (const [address, diffs] of Object.entries(stateDiffs)) {
           const changes = getContractChanges(diffs);

@@ -1,11 +1,12 @@
-import { MOCK_PAYLOAD } from './mocks/payload';
-import { describe, it, expect } from 'vitest';
-import { CHAIN_ID_CLIENT_MAP } from '@bgd-labs/js-utils';
-import { generateReport } from './generatePayloadReport.js';
+import { CHAIN_ID_CLIENT_MAP } from "@bgd-labs/js-utils";
+import { describe, expect, it } from "vitest";
+import { generateReport } from "./generatePayloadReport";
+import { MOCK_PAYLOAD } from "./mocks/payload";
+import { STREAM_PAYLOAD } from "./mocks/streamPayload";
 
-describe('generatePayloadReport', () => {
+describe("generatePayloadReport", () => {
   it(
-    'should match snapshot',
+    "should match snapshot listing",
     async () => {
       const report = await generateReport({
         ...(MOCK_PAYLOAD as any),
@@ -13,6 +14,18 @@ describe('generatePayloadReport', () => {
       });
       expect(report).toMatchSnapshot();
     },
-    { timeout: 30000 }
+    { timeout: 30000 },
+  );
+
+  it(
+    "should match snapshot streams",
+    async () => {
+      const report = await generateReport({
+        ...(STREAM_PAYLOAD as any),
+        client: CHAIN_ID_CLIENT_MAP[MOCK_PAYLOAD.simulation.transaction.network_id],
+      });
+      expect(report).toMatchSnapshot();
+    },
+    { timeout: 30000 },
   );
 });

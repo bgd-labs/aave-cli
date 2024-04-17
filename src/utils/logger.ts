@@ -1,5 +1,5 @@
-import chalk from 'chalk';
-import { VERBOSE } from './constants';
+import chalk from "chalk";
+import { VERBOSE } from "./constants";
 
 export function logInfo(topic: string, text: string | number | bigint) {
   if (!VERBOSE) return;

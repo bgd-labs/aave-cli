@@ -1,17 +1,17 @@
-import { describe, it, expect } from 'vitest';
-import { readJsonFile } from '../utils/json';
-import { adiDiffReports } from './adi-diff-reports';
+import { describe, expect, it } from "vitest";
+import { readJsonFile } from "../utils/json";
+import { adiDiffReports } from "./adi-diff-reports";
 
-describe('adi report', () => {
+describe("adi report", () => {
   it(
-    'should generate a well formatted adi report',
+    "should generate a well formatted adi report",
     async () => {
-      const from = readJsonFile('/src/reports/mocks/preTestADI.json');
-      const to = readJsonFile('/src/reports/mocks/postTestADI.json');
+      const from = readJsonFile("/src/reports/mocks/preTestADI.json");
+      const to = readJsonFile("/src/reports/mocks/postTestADI.json");
       const content = await adiDiffReports(from, to);
       console.log(content);
       expect(content).toMatchSnapshot();
     },
-    { timeout: 30000 }
+    { timeout: 30000 },
   );
 });

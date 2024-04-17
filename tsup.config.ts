@@ -1,9 +1,9 @@
-import type { Options } from 'tsup';
+import type { Options } from "tsup";
 
 const config: Options = {
-  entry: ['src/index.ts', 'src/cli.ts'],
+  entry: ["src/index.ts", "src/cli.ts"],
   sourcemap: true,
-  format: ['iife', 'cjs', 'esm'],
+  format: ["iife", "cjs", "esm"],
   // dts: {
   //   compilerOptions: {
   //     moduleResolution: 'node',

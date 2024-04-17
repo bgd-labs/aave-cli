@@ -1,15 +1,15 @@
 import {
-  Hex,
-  pad,
-  keccak256,
-  encodeAbiParameters,
-  parseAbiParameters,
-  trim,
-  fromHex,
-  toHex,
-  toBytes,
+  type Hex,
   concat,
-} from 'viem';
+  encodeAbiParameters,
+  fromHex,
+  keccak256,
+  pad,
+  parseAbiParameters,
+  toBytes,
+  toHex,
+  trim,
+} from "viem";
 /**
  * @notice Returns the storage slot for a Solidity mapping with bytes32 keys, given the slot of the mapping itself
  * @dev Read more at https://docs.soliditylang.org/en/latest/internals/layout_in_storage.html#mappings-and-dynamic-arrays
@@ -19,7 +19,7 @@ import {
  */
 export function getSolidityStorageSlotBytes(mappingSlot: Hex, key: Hex) {
   const slot = pad(mappingSlot, { size: 32 });
-  return trim(keccak256(encodeAbiParameters(parseAbiParameters('bytes32, uint256'), [key, BigInt(slot)])));
+  return trim(keccak256(encodeAbiParameters(parseAbiParameters("bytes32, uint256"), [key, BigInt(slot)])));
 }
 
 /**
@@ -30,11 +30,11 @@ export function getSolidityStorageSlotBytes(mappingSlot: Hex, key: Hex) {
  * @returns Storage slot
  */
 export function getSolidityStorageSlotUint(mappingSlot: bigint, key: bigint) {
-  return keccak256(encodeAbiParameters(parseAbiParameters('uint256, uint256'), [key, mappingSlot]));
+  return keccak256(encodeAbiParameters(parseAbiParameters("uint256, uint256"), [key, mappingSlot]));
 }
 
 export function getSolidityStorageSlotAddress(mappingSlot: bigint | number, key: Hex) {
-  return keccak256(encodeAbiParameters(parseAbiParameters('address, uint256'), [key, BigInt(mappingSlot)]));
+  return keccak256(encodeAbiParameters(parseAbiParameters("address, uint256"), [key, BigInt(mappingSlot)]));
 }
 
 /**
@@ -47,10 +47,10 @@ export function getSolidityStorageSlotAddress(mappingSlot: bigint | number, key:
 export function getDynamicArraySlot(baseSlot: bigint, arrayIndex: number, itemSize: number): Hex {
   return pad(
     toHex(
-      fromHex(keccak256(encodeAbiParameters(parseAbiParameters('uint256'), [baseSlot])), 'bigint') +
-        BigInt(arrayIndex * itemSize)
+      fromHex(keccak256(encodeAbiParameters(parseAbiParameters("uint256"), [baseSlot])), "bigint") +
+        BigInt(arrayIndex * itemSize),
     ),
-    { size: 32 }
+    { size: 32 },
   );
 }
 
@@ -60,8 +60,8 @@ export function getDynamicArraySlot(baseSlot: bigint, arrayIndex: number, itemSi
  */
 export function getBytesValue(value: string | Hex) {
   const bytesString = toBytes(value);
-  if (bytesString.length > 31) throw new Error('Error: strings > 31 bytes are not implemented');
-  return concat([toHex(pad(bytesString, { size: 31, dir: 'right' })), toHex(bytesString.length * 2, { size: 1 })]);
+  if (bytesString.length > 31) throw new Error("Error: strings > 31 bytes are not implemented");
+  return concat([toHex(pad(bytesString, { size: 31, dir: "right" })), toHex(bytesString.length * 2, { size: 1 })]);
 }
 
 /**
@@ -71,10 +71,11 @@ export function getBytesValue(value: string | Hex) {
  * @param endBit
  * @returns
  */
-export function getBits(_bigIntValue: bigint | number | string, startBit: bigint, endBit: bigint) {
+export function getBits(_bigIntValue: bigint | number | string, startBit: bigint, _endBit: bigint) {
+  let endBit = _endBit;
   const bigIntValue = BigInt(_bigIntValue);
   if (startBit > endBit) {
-    throw new Error('Invalid bit range: startBit must be less than or equal to endBit');
+    throw new Error("Invalid bit range: startBit must be less than or equal to endBit");
   }
 
   const bitLength = BigInt(bigIntValue.toString(2)).toString().length;
@@ -99,7 +100,7 @@ export function setBits(
   _bigIntBase: bigint | number | string,
   startBit: bigint,
   endBit: bigint,
-  _replaceValue: bigint | number
+  _replaceValue: bigint | number,
 ) {
   const bigIntBase = BigInt(_bigIntBase);
   const bigIntReplaceValue = BigInt(_replaceValue);
@@ -113,6 +114,6 @@ export function setBits(
   const clearedNumber = bigIntBase & ~mask;
 
   // Set the new bits in the specified range
-  let result = clearedNumber | (bigIntReplaceValue << BigInt(startBit));
+  const result = clearedNumber | (bigIntReplaceValue << BigInt(startBit));
   return result;
 }

@@ -1,5 +1,5 @@
-import { Client } from 'viem';
-import { TenderlySimulationResponse } from '../../utils/tenderlyClient';
+import type { Client } from "viem";
+import type { TenderlySimulationResponse } from "../../utils/tenderlyClient";
 
 export type CheckResult = {
   info: string[];

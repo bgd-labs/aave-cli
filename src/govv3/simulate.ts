@@ -1,12 +1,12 @@
-import { logInfo } from '../utils/logger';
-import { TenderlySimulationResponse } from '../utils/tenderlyClient';
-import { getGovernance } from './governance';
-import { Client, Hex } from 'viem';
-import { PayloadsController, getPayloadsController } from './payloadsController';
-import { CHAIN_ID_CLIENT_MAP } from '@bgd-labs/js-utils';
-import { generateReport } from './generatePayloadReport';
-import { generateProposalReport } from './generateProposalReport';
-import { cacheGovernance, cachePayloadsController } from './cache/updateCache';
+import { CHAIN_ID_CLIENT_MAP } from "@bgd-labs/js-utils";
+import type { Client, Hex } from "viem";
+import { logInfo } from "../utils/logger";
+import type { TenderlySimulationResponse } from "../utils/tenderlyClient";
+import { cacheGovernance, cachePayloadsController } from "./cache/updateCache";
+import { generateReport } from "./generatePayloadReport";
+import { generateProposalReport } from "./generateProposalReport";
+import { getGovernance } from "./governance";
+import { type PayloadsController, getPayloadsController } from "./payloadsController";
 
 /**
  * Reference implementation, unused
@@ -16,7 +16,7 @@ import { cacheGovernance, cachePayloadsController } from './cache/updateCache';
  * @returns
  */
 export async function simulateProposal(governanceAddress: Hex, client: Client, proposalId: bigint) {
-  logInfo('General', `Running simulation for ${proposalId}`);
+  logInfo("General", `Running simulation for ${proposalId}`);
   const governance = getGovernance({ address: governanceAddress, client });
   const { eventsCache } = await cacheGovernance(client, governanceAddress);
   const proposal = await governance.getProposalAndLogs(proposalId, eventsCache);
@@ -27,10 +27,10 @@ export async function simulateProposal(governanceAddress: Hex, client: Client, p
       proposalId: proposalId,
       proposalInfo: proposal,
       client,
-    })
+    }),
   );
   const payloads: {
-    payload: Awaited<ReturnType<PayloadsController['getPayload']>>;
+    payload: Awaited<ReturnType<PayloadsController["getPayload"]>>;
     simulation: TenderlySimulationResponse;
   }[] = [];
   for (const payload of proposal.proposal.payloads) {
@@ -46,11 +46,11 @@ export async function simulateProposal(governanceAddress: Hex, client: Client, p
           payloadId: payload.payloadId,
           payloadInfo: config,
           client: CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP],
-        })
+        }),
       );
       payloads.push({ payload: config, simulation: result });
     } catch (e) {
-      console.log('error simulating payload');
+      console.log("error simulating payload");
       console.log(e);
     }
   }

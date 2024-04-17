@@ -1,18 +1,18 @@
-import { Client, Hex, formatUnits } from 'viem';
-import { Input } from '../../utils/tenderlyClient';
-import { formatNumberString, prettifyNumber } from './markdownUtils';
-import { findAsset } from './checkAddress';
+import { type Client, type Hex, formatUnits } from "viem";
+import type { Input } from "../../utils/tenderlyClient";
+import { findAsset } from "./checkAddress";
+import { formatNumberString, prettifyNumber } from "./markdownUtils";
 
 // events emitted typically on the erc20
-const tokenAmountEvents = ['Transfer', 'Approval', 'Burn', 'Mint', 'BalanceTransfer'];
+const tokenAmountEvents = ["Transfer", "Approval", "Burn", "Mint", "BalanceTransfer"];
 
 // events emitted on the pool
-const reserveEvents = ['Withdraw', 'Supply', 'Deposit'];
+const reserveEvents = ["Withdraw", "Supply", "Deposit"];
 
 export async function interpretLog(client: Client, address: Hex, name: string | null, inputs: Input[]) {
   if (name && tokenAmountEvents.includes(name)) {
     // fields formatted by the asset decimal
-    const decimalFieldNames = ['value', 'amount', 'wad'];
+    const decimalFieldNames = ["value", "amount", "wad"];
     for (const name of decimalFieldNames) {
       const valueIndex = inputs.findIndex((i) => i.soltype!.name === name);
       if (valueIndex !== -1) {
@@ -27,8 +27,8 @@ export async function interpretLog(client: Client, address: Hex, name: string | 
     }
   }
   if (name && reserveEvents.includes(name)) {
-    const valueIndex = inputs.findIndex((i) => i.soltype!.name === 'amount');
-    const reserveIndex = inputs.findIndex((i) => i.soltype!.name === 'reserve');
+    const valueIndex = inputs.findIndex((i) => i.soltype!.name === "amount");
+    const reserveIndex = inputs.findIndex((i) => i.soltype!.name === "reserve");
     if (valueIndex !== -1 && reserveIndex !== -1) {
       const asset = await findAsset(client, inputs[reserveIndex].value as Hex);
       if (asset) {
@@ -39,9 +39,9 @@ export async function interpretLog(client: Client, address: Hex, name: string | 
       }
     }
   }
-  if (name && ['Mint', 'ReserveDataUpdated', 'Burn'].includes(name)) {
+  if (name && ["Mint", "ReserveDataUpdated", "Burn"].includes(name)) {
     // fields formatted by the asset decimal
-    const decimalFieldNames = ['liquidityIndex', 'variableBorrowIndex', 'index'];
+    const decimalFieldNames = ["liquidityIndex", "variableBorrowIndex", "index"];
     for (const name of decimalFieldNames) {
       const valueIndex = inputs.findIndex((i) => i.soltype!.name === name);
       if (valueIndex !== -1) {
@@ -52,6 +52,6 @@ export async function interpretLog(client: Client, address: Hex, name: string | 
       }
     }
   }
-  const parsedInputs = inputs?.map((i) => `${i.soltype!.name}: ${i.value}`).join(', ');
-  return `  - \`${name}(${parsedInputs || ''})\``;
+  const parsedInputs = inputs?.map((i) => `${i.soltype!.name}: ${i.value}`).join(", ");
+  return `  - \`${name}(${parsedInputs || ""})\``;
 }

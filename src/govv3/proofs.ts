@@ -1,6 +1,6 @@
-import { AaveSafetyModule, AaveV3Ethereum, GovernanceV3Ethereum } from '@bgd-labs/aave-address-book';
-import { Chain, Client, GetBlockReturnType, Hex, fromRlp, toHex, toRlp } from 'viem';
-import { getBlock, getProof as viemGetProof } from 'viem/actions';
+import { AaveSafetyModule, AaveV3Ethereum, GovernanceV3Ethereum } from "@bgd-labs/aave-address-book";
+import { type Chain, type Client, type GetBlockReturnType, type Hex, fromRlp, toHex, toRlp } from "viem";
+import { getBlock, getProof as viemGetProof } from "viem/actions";
 
 /**
  * Slots that represent configuration values relevant for all accounts
@@ -34,7 +34,7 @@ export async function getProof(client: Client, address: Hex, slots: readonly Hex
 }
 
 // IMPORTANT valid only for post-Shapella blocks, as it includes `withdrawalsRoot`
-export const getBlockRLP = (rawBlock: GetBlockReturnType<Chain | undefined, false, 'latest'>): Hex => {
+export const getBlockRLP = (rawBlock: GetBlockReturnType<Chain | undefined, false, "latest">): Hex => {
   const rawData: Hex[] = [
     rawBlock.parentHash,
     rawBlock.sha3Uncles,
@@ -43,7 +43,7 @@ export const getBlockRLP = (rawBlock: GetBlockReturnType<Chain | undefined, fals
     rawBlock.transactionsRoot,
     rawBlock.receiptsRoot,
     rawBlock.logsBloom!,
-    '0x0', //toHex(rawBlock.difficulty),
+    "0x0", //toHex(rawBlock.difficulty),
     toHex(rawBlock.number || 0), // 0 to account for type null
     toHex(rawBlock.gasLimit),
     toHex(rawBlock.gasUsed),
@@ -59,5 +59,5 @@ export const getBlockRLP = (rawBlock: GetBlockReturnType<Chain | undefined, fals
 };
 
 export const getAccountRPL = (proof: Hex[]) => {
-  return toRlp(proof.map((rpl) => fromRlp(rpl, 'hex')));
+  return toRlp(proof.map((rpl) => fromRlp(rpl, "hex")));
 };

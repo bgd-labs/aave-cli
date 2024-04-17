@@ -1,9 +1,9 @@
-import { Client, Hex, formatUnits } from 'viem';
-import { CheckResult } from '../checks/types';
+import { type Client, type Hex, formatUnits } from "viem";
+import type { CheckResult } from "../checks/types";
 
 export function boolToMarkdown(value: boolean) {
-  if (value) return `:white_check_mark:`;
-  return `:sos:`;
+  if (value) return ":white_check_mark:";
+  return ":sos:";
 }
 
 /**
@@ -36,19 +36,19 @@ export function toMarkdownLink(link: string, title?: any) {
 
 export function renderCheckResult(check: { name: string }, result: CheckResult) {
   let response = `### Check: ${check.name} ${boolToMarkdown(!result.errors.length)}\n\n`;
-  if (result.errors.length) response += `#### Errors\n\n${result.errors.join('\n')}\n\n`;
-  if (result.warnings.length) response += `#### Warnings\n\n${result.warnings.join('\n')}\n\n`;
-  if (result.info.length) response += `#### Info\n\n${result.info.join('\n')}\n\n`;
+  if (result.errors.length) response += `#### Errors\n\n${result.errors.join("\n")}\n\n`;
+  if (result.warnings.length) response += `#### Warnings\n\n${result.warnings.join("\n")}\n\n`;
+  if (result.info.length) response += `#### Info\n\n${result.info.join("\n")}\n\n`;
   return response;
 }
 
 export function renderUnixTime(time: number) {
-  return new Date(time * 1000).toLocaleString('en-GB', { timeZone: 'UTC' });
+  return new Date(time * 1000).toLocaleString("en-GB", { timeZone: "UTC" });
 }
 
 export function flagKnownAddress(isKnown: string[] | void) {
-  if (isKnown == undefined || isKnown.length == 0) return '';
-  return `[:ghost:](https://github.com/bgd-labs/aave-address-book "${isKnown.join(', ')}")`;
+  if (isKnown === undefined || isKnown.length === 0) return "";
+  return `[:ghost:](https://github.com/bgd-labs/aave-address-book "${isKnown.join(", ")}")`;
 }
 
 /**
@@ -59,7 +59,7 @@ export function flagKnownAddress(isKnown: string[] | void) {
  * credits: https://stackoverflow.com/a/2901298
  */
 export function formatNumberString(x: string | number) {
-  return String(x).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+  return String(x).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }
 
 export function prettifyNumber({
@@ -73,12 +73,12 @@ export function prettifyNumber({
   prefix?: string;
   suffix?: string;
 }) {
-  return `${prefix ? `${prefix}` : ''}${formatNumberString(formatUnits(BigInt(value), decimals))}${
-    suffix ? `${suffix}` : ''
+  return `${prefix ? `${prefix}` : ""}${formatNumberString(formatUnits(BigInt(value), decimals))}${
+    suffix ? `${suffix}` : ""
   }[${value}](${decimals} decimals)`;
 }
 
 export function wrapInQuotes(name: string, quotes: boolean) {
-  if (quotes) return '`' + name + '`';
+  if (quotes) return "`" + name + "`";
   return name;
 }
