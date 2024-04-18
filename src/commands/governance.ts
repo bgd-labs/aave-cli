@@ -141,11 +141,10 @@ export function addCommand(program: Command) {
         }
 
         if (moreInfo === DialogOptions.IPFS_TEXT) {
-          const ipfs = await getCachedIpfs(cache.proposal.ipfsHash);
-          logInfo('title', ipfs.title);
-          logInfo('author', ipfs.author);
-          logInfo('discussion', ipfs.discussions);
-          logInfo('description', ipfs.description);
+          logInfo('title', cache.ipfs.title);
+          logInfo('author', cache.ipfs.author);
+          logInfo('discussion', cache.ipfs.discussions);
+          logInfo('description', cache.ipfs.description);
         }
 
         if (moreInfo === DialogOptions.TRANSACTIONS) {

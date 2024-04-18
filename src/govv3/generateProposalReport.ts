@@ -1,11 +1,10 @@
 import type {Client} from 'viem';
-import {getCachedIpfs} from '../ipfs/getCachedProposalMetaData';
 import type {TenderlySimulationResponse} from '../utils/tenderlyClient';
 import {checkLogs} from './checks/logs';
 import {checkTouchedContractsNoSelfdestruct} from './checks/selfDestruct';
 import {checkStateChanges} from './checks/state';
 import {checkTouchedContractsVerifiedEtherscan} from './checks/targetsVerified';
-import {type Governance, HUMAN_READABLE_STATE} from './governance';
+import {HUMAN_READABLE_STATE} from './governance';
 import {renderCheckResult, renderUnixTime, toTxLink} from './utils/markdownUtils';
 import {GetProposalReturnType} from '@bgd-labs/aave-v3-governance-cache';
 
@@ -27,6 +26,7 @@ export async function generateProposalReport({
   const {
     proposal,
     logs: {executedLog, queuedLog, createdLog, payloadSentLog, votingActivatedLog},
+    ipfs,
   } = proposalInfo;
   // generate file header
   let report = `## Proposal ${proposalId}
@@ -67,13 +67,12 @@ export async function generateProposalReport({
   }
   report += '\n';
 
-  const ipfsMeta = await getCachedIpfs(proposal.ipfsHash);
   report += `### Ipfs
 
 <details>
-  <summary>Proposal text</summary>
+  <summary>${ipfs.title}</summary>
   
-  ${ipfsMeta.description}
+  ${ipfs.description}
 </details>\n\n`;
 
   // check if simulation was successful
