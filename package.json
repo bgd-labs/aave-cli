@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "start": "tsx src/cli.ts",
+    "start": "node dist/cli.js",
     "build": "tsup",
     "test": "vitest",
     "lint:fix": "bunx prettier . --write",
@@ -34,7 +34,7 @@
     "vitest": "^1.5.0"
   },
   "type": "module",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "exports": {
     ".": {
@@ -51,7 +51,7 @@
     }
   },
   "bin": {
-    "aave-cli": "dist/cli.cjs"
+    "aave-cli": "dist/cli.js"
   },
   "publishConfig": {
     "access": "public"
