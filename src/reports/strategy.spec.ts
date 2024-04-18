@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { diff } from './diff';
-import { renderStrategy, renderStrategyDiff } from './strategy';
-import { fetchRateStrategyImage } from './fetch-IR-strategy';
-import { AaveV3Strategy } from './snapshot-types';
+import {describe, expect, it} from 'vitest';
+import {diff} from './diff';
+import {fetchRateStrategyImage} from './fetch-IR-strategy';
+import type {AaveV3Strategy} from './snapshot-types';
+import {renderStrategy, renderStrategyDiff} from './strategy';
 
 const STRATEGY_1: AaveV3Strategy = {
   address: '0xfab05a6aF585da2F96e21452F91E812452996BD3',

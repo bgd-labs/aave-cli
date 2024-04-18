@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import {z} from 'zod';
 
 export const aaveV3ConfigSchema = z.object({
   oracle: z.string(),
@@ -102,10 +102,9 @@ export const aaveV3SnapshotSchema = z.object({
   chainId: zodChainId,
 });
 
-
 export const aDIReceiverConfigSchema = z.object({
   requiredConfirmations: z.number(),
-  validityTimestamp: z.number()
+  validityTimestamp: z.number(),
 });
 export const aDIAdapterSchema = z.record(z.string(), z.string());
 

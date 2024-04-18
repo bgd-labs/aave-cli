@@ -1,10 +1,10 @@
-import fs from 'fs';
-import path from 'path';
-import Hash from 'ipfs-only-hash';
+import fs from 'node:fs';
+import path from 'node:path';
+import type {Command} from '@commander-js/extra-typings';
 import bs58 from 'bs58';
-import { validateAIPHeader } from '../ipfs/aipValidation';
-import { Command } from '@commander-js/extra-typings';
-import { logError } from '../utils/logger';
+import Hash from 'ipfs-only-hash';
+import {validateAIPHeader} from '../ipfs/aipValidation';
+import {logError} from '../utils/logger';
 
 // https://ethereum.stackexchange.com/questions/44506/ipfs-hash-algorithm
 async function getHash(data: string): Promise<string> {
@@ -33,7 +33,7 @@ async function uploadToPinata(source: string) {
 
   const result = await res.json();
 
-  if (result.error) throw { message: result.error };
+  if (result.error) throw {message: result.error};
   return result;
 }
 
@@ -54,7 +54,7 @@ export function addCommand(program: Command) {
     .argument('<source>')
     .option('-u, --upload')
     .option('--verbose')
-    .action(async (source, { upload, verbose }) => {
+    .action(async (source, {upload, verbose}) => {
       const filePath = path.join(process.cwd(), source);
       if (!fs.existsSync(filePath)) {
         logError('Upload', `Cannot find file at: ${filePath}`);
@@ -67,7 +67,10 @@ export function addCommand(program: Command) {
       const bs58Hash = `0x${Buffer.from(bs58.decode(hash)).slice(2).toString('hex')}`;
 
       if (upload) {
-        const [pinata, thegraph] = await Promise.all([uploadToPinata(content), uploadToTheGraph(content)]);
+        const [pinata, thegraph] = await Promise.all([
+          uploadToPinata(content),
+          uploadToTheGraph(content),
+        ]);
         if (verbose) {
           console.log('pinata response', pinata);
           console.log('thegraph response', thegraph);

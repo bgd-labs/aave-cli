@@ -1,7 +1,7 @@
-import { Client, Hex, formatUnits } from 'viem';
-import { Input } from '../../utils/tenderlyClient';
-import { formatNumberString, prettifyNumber } from './markdownUtils';
-import { findAsset } from './checkAddress';
+import {type Client, type Hex, formatUnits} from 'viem';
+import type {Input} from '../../utils/tenderlyClient';
+import {findAsset} from './checkAddress';
+import {formatNumberString, prettifyNumber} from './markdownUtils';
 
 // events emitted typically on the erc20
 const tokenAmountEvents = ['Transfer', 'Approval', 'Burn', 'Mint', 'BalanceTransfer'];
@@ -9,7 +9,12 @@ const tokenAmountEvents = ['Transfer', 'Approval', 'Burn', 'Mint', 'BalanceTrans
 // events emitted on the pool
 const reserveEvents = ['Withdraw', 'Supply', 'Deposit'];
 
-export async function interpretLog(client: Client, address: Hex, name: string | null, inputs: Input[]) {
+export async function interpretLog(
+  client: Client,
+  address: Hex,
+  name: string | null,
+  inputs: Input[],
+) {
   if (name && tokenAmountEvents.includes(name)) {
     // fields formatted by the asset decimal
     const decimalFieldNames = ['value', 'amount', 'wad'];
@@ -52,6 +57,11 @@ export async function interpretLog(client: Client, address: Hex, name: string | 
       }
     }
   }
-  const parsedInputs = inputs?.map((i) => `${i.soltype!.name}: ${i.value}`).join(', ');
+  const parsedInputs = inputs
+    ?.map(
+      (i) =>
+        `${i.soltype!.name}: ${typeof i.value === 'object' ? JSON.stringify(i.value) : i.value}`,
+    )
+    .join(', ');
   return `  - \`${name}(${parsedInputs || ''})\``;
 }

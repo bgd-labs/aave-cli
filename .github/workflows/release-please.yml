@@ -23,7 +23,7 @@ jobs:
         with:
           release-type: node
           package-name: aave-cli
-          pull-request-header: 'I have created a release'
+          pull-request-header: "I have created a release"
 
   release-node:
     uses: bgd-labs/github-workflows/.github/workflows/release-node.yml@main

@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { readJsonFile } from '../utils/json';
-import { adiDiffReports } from './adi-diff-reports';
+import {describe, expect, it} from 'vitest';
+import {readJsonFile} from '../utils/json';
+import {adiDiffReports} from './adi-diff-reports';
 
 describe('adi report', () => {
   it(
@@ -12,6 +12,6 @@ describe('adi report', () => {
       console.log(content);
       expect(content).toMatchSnapshot();
     },
-    { timeout: 30000 }
+    {timeout: 30000},
   );
 });

@@ -1,12 +1,15 @@
 import hash from 'object-hash';
-import { fetchRateStrategyImage } from './fetch-IR-strategy';
-import { renderReserve, renderReserveDiff } from './reserve';
-import { renderStrategy, renderStrategyDiff } from './strategy';
-import { AaveV3Snapshot, AaveV3Reserve } from './snapshot-types';
-import { diff } from './diff';
-import { renderEmode, renderEmodeDiff } from './emode';
+import {diff} from './diff';
+import {renderEmode, renderEmodeDiff} from './emode';
+import {fetchRateStrategyImage} from './fetch-IR-strategy';
+import {renderReserve, renderReserveDiff} from './reserve';
+import {AaveV3Reserve, type AaveV3Snapshot} from './snapshot-types';
+import {renderStrategy, renderStrategyDiff} from './strategy';
 
-export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snapshot>(pre: A, post: B) {
+export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snapshot>(
+  pre: A,
+  post: B,
+) {
   const chainId = pre.chainId;
   const diffResult = diff(pre, post);
   // download interest rate strategies
@@ -29,7 +32,10 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
         report += renderStrategy(post.strategies[reserveKey]);
 
         report += `| interestRate | ![ir](/.assets/${imageHash}.svg) |\n`;
-        if (post.reserves[reserveKey].eModeCategory && post.reserves[reserveKey].eModeCategory != 0) {
+        if (
+          post.reserves[reserveKey].eModeCategory &&
+          post.reserves[reserveKey].eModeCategory !== 0
+        ) {
           report += renderEmode(post.eModes[post.reserves[reserveKey].eModeCategory]);
         }
 
@@ -51,7 +57,7 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
       if (
         !(diffResult.reserves[reserveKey] as any).hasOwnProperty('from') &&
         Object.keys(diffResult.reserves[reserveKey]).find(
-          (fieldKey) => typeof (diffResult.reserves as any)[reserveKey][fieldKey] === 'object'
+          (fieldKey) => typeof (diffResult.reserves as any)[reserveKey][fieldKey] === 'object',
         )
       ) {
         // diff reserve
@@ -59,8 +65,10 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
         // diff irs
         const preIrHash = hash(pre.strategies[reserveKey]);
         const postIrHash = hash(post.strategies[reserveKey]);
-        if (preIrHash != postIrHash) {
-          report += renderStrategyDiff(diff(pre.strategies[reserveKey], post.strategies[reserveKey]) as any);
+        if (preIrHash !== postIrHash) {
+          report += renderStrategyDiff(
+            diff(pre.strategies[reserveKey], post.strategies[reserveKey]) as any,
+          );
           report += `| interestRate | ![before](/.assets/${preIrHash}.svg) | ![after](/.assets/${postIrHash}.svg) |`;
         }
         // diff eModes
@@ -68,8 +76,8 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
           report += renderEmodeDiff(
             diff(
               pre.eModes[(diffResult.reserves[reserveKey].eModeCategory as any).from] || {},
-              post.eModes[(diffResult.reserves[reserveKey].eModeCategory as any).to]
-            ) as any
+              post.eModes[(diffResult.reserves[reserveKey].eModeCategory as any).to],
+            ) as any,
           );
         }
 

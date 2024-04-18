@@ -1,21 +1,36 @@
-import { Client } from 'viem';
-import { TenderlySimulationResponse } from '../utils/tenderlyClient';
-import { HUMAN_READABLE_PAYLOAD_STATE, PayloadsController } from './payloadsController';
-import { renderCheckResult, renderUnixTime, toTxLink } from './utils/markdownUtils';
-import { checkTargetsNoSelfdestruct, checkTouchedContractsNoSelfdestruct } from './checks/selfDestruct';
-import { checkLogs } from './checks/logs';
-import { checkTargetsVerifiedEtherscan, checkTouchedContractsVerifiedEtherscan } from './checks/targetsVerified';
-import { checkStateChanges } from './checks/state';
+import type {Client} from 'viem';
+import type {TenderlySimulationResponse} from '../utils/tenderlyClient';
+import {checkLogs} from './checks/logs';
+import {
+  checkTargetsNoSelfdestruct,
+  checkTouchedContractsNoSelfdestruct,
+} from './checks/selfDestruct';
+import {checkStateChanges} from './checks/state';
+import {
+  checkTargetsVerifiedEtherscan,
+  checkTouchedContractsVerifiedEtherscan,
+} from './checks/targetsVerified';
+import {HUMAN_READABLE_PAYLOAD_STATE} from './payloadsController';
+import {renderCheckResult, renderUnixTime, toTxLink} from './utils/markdownUtils';
+import {GetPayloadReturnType} from '@bgd-labs/aave-v3-governance-cache';
 
 type GenerateReportRequest = {
   payloadId: number;
-  payloadInfo: Awaited<ReturnType<PayloadsController['getPayload']>>;
+  payloadInfo: GetPayloadReturnType;
   simulation: TenderlySimulationResponse;
   client: Client;
 };
 
-export async function generateReport({ payloadId, payloadInfo, simulation, client }: GenerateReportRequest) {
-  const { payload, executedLog, queuedLog, createdLog } = payloadInfo;
+export async function generateReport({
+  payloadId,
+  payloadInfo,
+  simulation,
+  client,
+}: GenerateReportRequest) {
+  const {
+    payload,
+    logs: {executedLog, queuedLog, createdLog},
+  } = payloadInfo;
   // generate file header
   let report = `## Payload ${payloadId} on ${client.chain!.name}
 
@@ -31,18 +46,22 @@ export async function generateReport({ payloadId, payloadInfo, simulation, clien
     report += `- queuedAt: [${renderUnixTime(payload.queuedAt)}](${toTxLink(
       queuedLog.transactionHash,
       false,
-      client
+      client,
     )})\n`;
     if (executedLog) {
-      report += `- executedAt: [${renderUnixTime(payload.executedAt)}](${toTxLink(
+      report += `- executedAt: [${renderUnixTime(payload.executedAt)}, timestamp: ${executedLog.timestamp}, block: ${executedLog.blockNumber}](${toTxLink(
         executedLog.transactionHash,
         false,
-        client
+        client,
       )})\n`;
     } else {
       report += `- earliest execution at: [${renderUnixTime(
-        payload.queuedAt + payload.delay
+        payload.queuedAt + payload.delay,
       )}](https://www.epochconverter.com/countdown?q=${payload.queuedAt + payload.delay})\n`;
+      const timestamp = Math.floor(new Date(simulation.transaction.timestamp).getTime() / 1000);
+      report += `- simulatedExecutionAt: ${renderUnixTime(
+        timestamp,
+      )}, timestamp: ${timestamp}, block: ${simulation.transaction.block_number}`;
     }
   }
 

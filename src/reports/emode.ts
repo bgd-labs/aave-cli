@@ -1,11 +1,12 @@
-import { AaveV3Emode } from './snapshot-types';
-import { formatUnits } from 'viem';
+import {formatUnits} from 'viem';
+import type {AaveV3Emode} from './snapshot-types';
 
 export function renderEModeValue<T extends keyof AaveV3Emode>(key: T, emode: AaveV3Emode) {
   if (!emode[key]) return '-';
   if (['reserveFactor', 'liquidationProtocolFee', 'liquidationThreshold', 'ltv'].includes(key))
     return `${formatUnits(BigInt(emode[key]), 2)} %`;
-  if (key === 'liquidationBonus') return emode[key] === 0 ? '0 %' : `${((emode[key] as number) - 10000) / 100} %`;
+  if (key === 'liquidationBonus')
+    return emode[key] === 0 ? '0 %' : `${((emode[key] as number) - 10000) / 100} %`;
   return emode[key];
 }
 
@@ -20,7 +21,7 @@ const ORDER: (keyof AaveV3Emode)[] = [
 function sortEmodeKeys(a: keyof AaveV3Emode, b: keyof AaveV3Emode) {
   const indexA = ORDER.indexOf(a);
   const indexB = ORDER.indexOf(b);
-  if (indexA != -1 && indexB != -1) {
+  if (indexA !== -1 && indexB !== -1) {
     if (indexA > indexB) {
       return 1;
     }
@@ -28,8 +29,8 @@ function sortEmodeKeys(a: keyof AaveV3Emode, b: keyof AaveV3Emode) {
       return -1;
     }
   }
-  if (indexA != -1) return -1;
-  if (indexB != -1) return -1;
+  if (indexA !== -1) return -1;
+  if (indexB !== -1) return -1;
   return a.localeCompare(b);
 }
 
@@ -64,7 +65,7 @@ export function renderEmodeDiff(diff: EmodeDiff) {
       content += `| eMode.${key} | ${renderEModeValue(key, {
         ...diff,
         [key]: diff[key].from,
-      })} | ${renderEModeValue(key, { ...diff, [key]: diff[key].to })} |\n`;
+      })} | ${renderEModeValue(key, {...diff, [key]: diff[key].to})} |\n`;
     });
 
   return content;

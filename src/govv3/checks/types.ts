@@ -1,5 +1,5 @@
-import { Client } from 'viem';
-import { TenderlySimulationResponse } from '../../utils/tenderlyClient';
+import type {Client} from 'viem';
+import type {TenderlySimulationResponse} from '../../utils/tenderlyClient';
 
 export type CheckResult = {
   info: string[];
@@ -9,5 +9,9 @@ export type CheckResult = {
 
 export interface ProposalCheck<T> {
   name: string;
-  checkProposal(proposalInfo: T, simulation: TenderlySimulationResponse, client: Client): Promise<CheckResult>;
+  checkProposal(
+    proposalInfo: T,
+    simulation: TenderlySimulationResponse,
+    client: Client,
+  ): Promise<CheckResult>;
 }

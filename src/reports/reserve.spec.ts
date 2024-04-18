@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { diff } from './diff';
-import { AaveV3Reserve, CHAIN_ID } from './snapshot-types';
-import { renderReserve, renderReserveDiff, renderReserveValue } from './reserve';
+import {describe, expect, it} from 'vitest';
+import {diff} from './diff';
+import {renderReserve, renderReserveDiff, renderReserveValue} from './reserve';
+import type {AaveV3Reserve, CHAIN_ID} from './snapshot-types';
 
 const WBTC_MOCK = {
   aToken: '0x078f358208685046a11C85e8ad32895DED33A249',
@@ -51,7 +51,7 @@ describe('reserve', () => {
     });
     it('address with block explorer', () => {
       expect(renderReserveValue('aToken', WBTC_MOCK, 1)).toBe(
-        `[${WBTC_MOCK.aToken}](https://etherscan.io/address/${WBTC_MOCK.aToken})`
+        `[${WBTC_MOCK.aToken}](https://etherscan.io/address/${WBTC_MOCK.aToken})`,
       );
     });
     it('address without block explorer', () => {
@@ -68,14 +68,18 @@ describe('reserve', () => {
       expect(out).toMatchSnapshot();
     });
     it('should properly render altered reserve', () => {
-      const input: AaveV3Reserve = { ...WBTC_MOCK, borrowCap: 100 };
-      const out = diff(WBTC_MOCK, { ...input });
+      const input: AaveV3Reserve = {...WBTC_MOCK, borrowCap: 100};
+      const out = diff(WBTC_MOCK, {...input});
 
       expect(renderReserveDiff(out as any, 1)).toMatchSnapshot();
     });
     it('should render decimals', () => {
-      const { oracleDecimals, ...subDecimals } = WBTC_MOCK;
-      const out = diff(subDecimals, { ...subDecimals, oracleDecimals, oracleLatestAnswer: '123456789' });
+      const {oracleDecimals, ...subDecimals} = WBTC_MOCK;
+      const out = diff(subDecimals, {
+        ...subDecimals,
+        oracleDecimals,
+        oracleLatestAnswer: '123456789',
+      });
       expect(renderReserveDiff(out as any, 1)).toMatchSnapshot();
     });
   });

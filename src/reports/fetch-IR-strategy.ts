@@ -1,9 +1,9 @@
-import path from 'path';
-import { existsSync, mkdirSync, createWriteStream } from 'fs';
-import { Readable } from 'stream';
-import { finished } from 'stream/promises';
+import {createWriteStream, existsSync, mkdirSync} from 'node:fs';
+import path from 'node:path';
+import {Readable} from 'node:stream';
+import {finished} from 'node:stream/promises';
 import hash from 'object-hash';
-import { AaveV3Strategy } from './snapshot-types';
+import type {AaveV3Strategy} from './snapshot-types';
 
 /**
  * Fetches the rate image from rate-strategy explorer
@@ -19,9 +19,9 @@ export async function fetchRateStrategyImage(rate: AaveV3Strategy) {
   if (existsSync(pathWithFile)) return;
   // create folder if it doesn't exist
   if (!existsSync(relativePath)) {
-    mkdirSync(relativePath, { recursive: true });
+    mkdirSync(relativePath, {recursive: true});
   }
-  const paramsObj: { [key: string]: string } = {
+  const paramsObj: {[key: string]: string} = {
     variableRateSlope1: rate.variableRateSlope1,
     variableRateSlope2: rate.variableRateSlope2,
     optimalUsageRatio: rate.optimalUsageRatio,
@@ -30,7 +30,7 @@ export async function fetchRateStrategyImage(rate: AaveV3Strategy) {
   };
   const searchParams = new URLSearchParams(paramsObj);
   const writeStream = createWriteStream(pathWithFile);
-  const { body } = await fetch(`https://dash.onaave.com/api/static?${searchParams.toString()}`);
+  const {body} = await fetch(`https://dash.onaave.com/api/static?${searchParams.toString()}`);
   if (!body) throw Error('Error fetching the image');
   await finished(Readable.fromWeb(body as any).pipe(writeStream));
 }

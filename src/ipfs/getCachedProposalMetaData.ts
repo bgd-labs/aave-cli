@@ -1,4 +1,9 @@
-import { ProposalMetadata, getProposalMetadata, readJSONCache, writeJSONCache } from '@bgd-labs/js-utils';
+import {
+  type ProposalMetadata,
+  getProposalMetadata,
+  readJSONCache,
+  writeJSONCache,
+} from '@bgd-labs/js-utils';
 
 /**
  * Slim caching layer on top of ipfs fetcher to speed up fetching of ipfs data

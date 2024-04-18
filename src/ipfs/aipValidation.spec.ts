@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { validateAIPHeader } from './aipValidation';
+import {describe, expect, it} from 'vitest';
+import {validateAIPHeader} from './aipValidation';
 
 describe('validateAIP', () => {
   it('should succeed when all keys are present', () => {

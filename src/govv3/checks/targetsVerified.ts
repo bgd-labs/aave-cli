@@ -1,23 +1,25 @@
 // Based on https://github.com/Uniswap/governance-seatbelt/blob/main/checks/check-targets-verified-etherscan.ts
 // adjusted for viem & aave governance v3
-import { Client, Hex } from 'viem';
-import { ProposalCheck } from './types';
-import { TenderlySimulationResponse, tenderly } from '../../utils/tenderlyClient';
-import { PayloadsController } from '../payloadsController';
-import { isKnownAddress } from '../utils/checkAddress';
-import { flagKnownAddress } from '../utils/markdownUtils';
-import { getBytecode } from 'viem/actions';
+import type {Client, Hex} from 'viem';
+import {getBytecode} from 'viem/actions';
+import {type TenderlySimulationResponse, tenderly} from '../../utils/tenderlyClient';
+import type {PayloadsController} from '../payloadsController';
+import {isKnownAddress} from '../utils/checkAddress';
+import {flagKnownAddress} from '../utils/markdownUtils';
+import type {ProposalCheck} from './types';
 
 /**
  * Check all targets with code are verified on Etherscan
  */
-export const checkTargetsVerifiedEtherscan: ProposalCheck<Awaited<ReturnType<PayloadsController['getPayload']>>> = {
+export const checkTargetsVerifiedEtherscan: ProposalCheck<
+  Awaited<ReturnType<PayloadsController['getPayload']>>
+> = {
   name: 'Check all targets are verified on Etherscan',
   async checkProposal(proposal, sim, client) {
     const allTargets = proposal.payload.actions.map((action) => action.target);
     const uniqueTargets = allTargets.filter((addr, i, targets) => targets.indexOf(addr) === i);
     const info = await checkVerificationStatuses(sim, uniqueTargets, client);
-    return { info, warnings: [], errors: [] };
+    return {info, warnings: [], errors: []};
   },
 };
 
@@ -28,7 +30,7 @@ export const checkTouchedContractsVerifiedEtherscan: ProposalCheck<any> = {
   name: 'Check all touched contracts are verified on Etherscan',
   async checkProposal(proposal, sim, client) {
     const info = await checkVerificationStatuses(sim, sim.transaction.addresses, client);
-    return { info, warnings: [], errors: [] };
+    return {info, warnings: [], errors: []};
   },
 };
 
@@ -38,9 +40,9 @@ export const checkTouchedContractsVerifiedEtherscan: ProposalCheck<any> = {
 async function checkVerificationStatuses(
   sim: TenderlySimulationResponse,
   addresses: Hex[],
-  client: Client
+  client: Client,
 ): Promise<string[]> {
-  let info: string[] = []; // prepare output
+  const info: string[] = []; // prepare output
   for (const addr of addresses) {
     const isAddrKnown = isKnownAddress(addr, client.chain!.id);
     const status = await checkVerificationStatus(sim, addr, client);
@@ -48,7 +50,9 @@ async function checkVerificationStatuses(
       info.push(`- ${addr}: EOA (verification not applicable)`);
     } else if (status === 'verified') {
       const contract = getContract(sim, addr);
-      info.push(`- ${addr}: Contract (verified) (${contract?.contract_name}) ${flagKnownAddress(isAddrKnown)}`);
+      info.push(
+        `- ${addr}: Contract (verified) (${contract?.contract_name}) ${flagKnownAddress(isAddrKnown)}`,
+      );
     } else {
       info.push(`- ${addr}: Contract (not verified) ${flagKnownAddress(isAddrKnown)}`);
     }
@@ -62,7 +66,7 @@ async function checkVerificationStatuses(
 async function checkVerificationStatus(
   sim: TenderlySimulationResponse,
   addr: Hex,
-  client: Client
+  client: Client,
 ): Promise<'verified' | 'eoa' | 'unverified'> {
   // If an address exists in the contracts array, it's verified on Etherscan
   const contract = getContract(sim, addr);
@@ -70,7 +74,7 @@ async function checkVerificationStatus(
   const stateDiff = getStateDiff(sim, addr);
   if (stateDiff) return 'unverified';
   // Otherwise, check if there's code at the address. Addresses with code not in the contracts array are not verified
-  const code = await getBytecode(client, { address: addr });
+  const code = await getBytecode(client, {address: addr});
   return code === undefined ? 'eoa' : 'unverified';
 }
 
@@ -80,6 +84,6 @@ function getContract(sim: TenderlySimulationResponse, addr: string) {
 
 function getStateDiff(sim: TenderlySimulationResponse, addr: string) {
   return sim.transaction.transaction_info.state_diff?.find(
-    (diff) => diff.raw?.[0]?.address.toLowerCase() === addr.toLowerCase()
+    (diff) => diff.raw?.[0]?.address.toLowerCase() === addr.toLowerCase(),
   );
 }

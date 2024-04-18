@@ -1,6 +1,14 @@
-import { AaveSafetyModule, AaveV3Ethereum, GovernanceV3Ethereum } from '@bgd-labs/aave-address-book';
-import { Chain, Client, GetBlockReturnType, Hex, fromRlp, toHex, toRlp } from 'viem';
-import { getBlock, getProof as viemGetProof } from 'viem/actions';
+import {AaveSafetyModule, AaveV3Ethereum, GovernanceV3Ethereum} from '@bgd-labs/aave-address-book';
+import {
+  type Chain,
+  type Client,
+  type GetBlockReturnType,
+  type Hex,
+  fromRlp,
+  toHex,
+  toRlp,
+} from 'viem';
+import {getBlock, getProof as viemGetProof} from 'viem/actions';
 
 /**
  * Slots that represent configuration values relevant for all accounts
@@ -15,17 +23,22 @@ export const WAREHOUSE_SLOTS = {
  * Slots that represent the balance of a single account
  */
 export const VOTING_SLOTS = {
-  [AaveSafetyModule.STK_AAVE]: { balance: 0n }, // balance
+  [AaveSafetyModule.STK_AAVE]: {balance: 0n}, // balance
   [AaveV3Ethereum.ASSETS.AAVE.A_TOKEN]: {
     balance: 52n, // balance
     delegation: 64n,
   }, // delegation
-  [AaveV3Ethereum.ASSETS.AAVE.UNDERLYING]: { balance: 0n }, // balance
-  [GovernanceV3Ethereum.GOVERNANCE]: { representative: 9n }, // representative
+  [AaveV3Ethereum.ASSETS.AAVE.UNDERLYING]: {balance: 0n}, // balance
+  [GovernanceV3Ethereum.GOVERNANCE]: {representative: 9n}, // representative
 } as const;
 
-export async function getProof(client: Client, address: Hex, slots: readonly Hex[], blockHash: Hex) {
-  const block = await getBlock(client, { blockHash });
+export async function getProof(
+  client: Client,
+  address: Hex,
+  slots: readonly Hex[],
+  blockHash: Hex,
+) {
+  const block = await getBlock(client, {blockHash});
   return viemGetProof(client, {
     address,
     storageKeys: slots.map((slot) => slot),
@@ -34,7 +47,9 @@ export async function getProof(client: Client, address: Hex, slots: readonly Hex
 }
 
 // IMPORTANT valid only for post-Shapella blocks, as it includes `withdrawalsRoot`
-export const getBlockRLP = (rawBlock: GetBlockReturnType<Chain | undefined, false, 'latest'>): Hex => {
+export const getBlockRLP = (
+  rawBlock: GetBlockReturnType<Chain | undefined, false, 'latest'>,
+): Hex => {
   const rawData: Hex[] = [
     rawBlock.parentHash,
     rawBlock.sha3Uncles,

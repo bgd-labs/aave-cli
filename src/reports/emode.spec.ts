@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { diff } from './diff';
-import { fetchRateStrategyImage } from './fetch-IR-strategy';
-import { renderEmode, renderEmodeDiff } from './emode';
+import {describe, expect, it} from 'vitest';
+import {diff} from './diff';
+import {renderEmode, renderEmodeDiff} from './emode';
+import {fetchRateStrategyImage} from './fetch-IR-strategy';
 
 const EMODE_1 = {
   eModeCategory: 1,

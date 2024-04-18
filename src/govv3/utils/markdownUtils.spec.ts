@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { formatNumberString } from './markdownUtils';
+import {describe, expect, it} from 'vitest';
+import {formatNumberString} from './markdownUtils';
 
 describe('formatNumberString', () => {
   it('should return correctly formatted int', () => {

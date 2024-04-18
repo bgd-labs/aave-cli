@@ -1,22 +1,33 @@
-import { Client } from 'viem';
-import { TenderlySimulationResponse } from '../utils/tenderlyClient';
-import { renderCheckResult, renderUnixTime, toTxLink } from './utils/markdownUtils';
-import { checkTouchedContractsNoSelfdestruct } from './checks/selfDestruct';
-import { checkLogs } from './checks/logs';
-import { checkTouchedContractsVerifiedEtherscan } from './checks/targetsVerified';
-import { Governance, HUMAN_READABLE_STATE } from './governance';
-import { checkStateChanges } from './checks/state';
-import { getCachedIpfs } from '../ipfs/getCachedProposalMetaData';
+import type {Client} from 'viem';
+import {getCachedIpfs} from '../ipfs/getCachedProposalMetaData';
+import type {TenderlySimulationResponse} from '../utils/tenderlyClient';
+import {checkLogs} from './checks/logs';
+import {checkTouchedContractsNoSelfdestruct} from './checks/selfDestruct';
+import {checkStateChanges} from './checks/state';
+import {checkTouchedContractsVerifiedEtherscan} from './checks/targetsVerified';
+import {type Governance, HUMAN_READABLE_STATE} from './governance';
+import {renderCheckResult, renderUnixTime, toTxLink} from './utils/markdownUtils';
+import {GetProposalReturnType} from '@bgd-labs/aave-v3-governance-cache';
 
 type GenerateReportRequest = {
   proposalId: bigint;
-  proposalInfo: Awaited<ReturnType<Governance['getProposalAndLogs']>>;
+  proposalInfo: GetProposalReturnType;
   simulation: TenderlySimulationResponse;
   client: Client;
+  formattedPayloads?: string[];
 };
 
-export async function generateProposalReport({ proposalId, proposalInfo, simulation, client }: GenerateReportRequest) {
-  const { proposal, executedLog, queuedLog, createdLog, payloadSentLog, votingActivatedLog } = proposalInfo;
+export async function generateProposalReport({
+  proposalId,
+  proposalInfo,
+  simulation,
+  client,
+  formattedPayloads,
+}: GenerateReportRequest) {
+  const {
+    proposal,
+    logs: {executedLog, queuedLog, createdLog, payloadSentLog, votingActivatedLog},
+  } = proposalInfo;
   // generate file header
   let report = `## Proposal ${proposalId}
 
@@ -26,21 +37,33 @@ export async function generateProposalReport({ proposalId, proposalInfo, simulat
 - state: ${HUMAN_READABLE_STATE[proposal.state as keyof typeof HUMAN_READABLE_STATE]}
 - creator: ${proposal.creator}
 - maximumAccessLevelRequired: ${proposal.accessLevel}
-- payloads: ${JSON.stringify(proposal.payloads, (key, value) => (typeof value === 'bigint' ? value.toString() : value))}
+- payloads: 
+  ${
+    formattedPayloads
+      ? formattedPayloads.map((payload) => `  - ${payload}\n`).join()
+      : JSON.stringify(proposal.payloads, (key, value) =>
+          typeof value === 'bigint' ? value.toString() : value,
+        )
+  }
 - createdAt: [${renderUnixTime(proposal.creationTime)}](${toTxLink(createdLog.transactionHash, false, client)})\n`;
   if (queuedLog) {
     report += `- queuedAt: [${renderUnixTime(proposal.queuingTime)}](${toTxLink(
       queuedLog.transactionHash,
       false,
-      client
+      client,
     )})\n`;
   }
   if (executedLog) {
-    report += `- executedAt: [${renderUnixTime(executedLog.timestamp)}](${toTxLink(
+    report += `- executedAt: [${renderUnixTime(executedLog.timestamp)}, timestamp: ${executedLog.timestamp}, block: ${executedLog.blockNumber}](${toTxLink(
       executedLog.transactionHash,
       false,
-      client
+      client,
     )})\n`;
+  } else {
+    const timestamp = Math.floor(new Date(simulation.transaction.timestamp).getTime() / 1000);
+    report += `- simulatedExecutionAt: ${renderUnixTime(
+      timestamp,
+    )}, timestamp: ${timestamp}, block: ${simulation.transaction.block_number}`;
   }
   report += '\n';
 

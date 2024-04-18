@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { diffReports } from './diff-reports';
-import { readJsonFile } from '../utils/json';
+import {describe, expect, it} from 'vitest';
+import {readJsonFile} from '../utils/json';
+import {diffReports} from './diff-reports';
 
 describe('report', () => {
   it(
@@ -12,6 +12,6 @@ describe('report', () => {
       console.log(content);
       expect(content).toMatchSnapshot();
     },
-    { timeout: 30000 }
+    {timeout: 30000},
   );
 });

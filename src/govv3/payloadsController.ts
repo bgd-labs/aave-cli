@@ -1,33 +1,29 @@
+import {IPayloadsControllerCore_ABI} from '@bgd-labs/aave-address-book';
 import {
-  AbiStateMutability,
-  ContractFunctionReturnType,
-  GetContractReturnType,
-  Hex,
-  Client,
+  type Client,
+  type GetContractReturnType,
+  type Hex,
   encodeFunctionData,
   encodePacked,
   getContract,
 } from 'viem';
-import { TenderlyRequest, tenderly, TenderlySimulationResponse } from '../utils/tenderlyClient';
-import { EOA } from '../utils/constants';
-import { getSolidityStorageSlotUint } from '../utils/storageSlots';
-import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book';
+import {getBlock, getTransaction} from 'viem/actions';
+import {EOA} from '../utils/constants';
+import {getSolidityStorageSlotUint} from '../utils/storageSlots';
 import {
-  PayloadCreatedEvent,
-  PayloadExecutedEvent,
-  PayloadQueuedEvent,
-  findPayloadLogs,
-  getPayloadsControllerEvents,
-} from './cache/modules/payloadsController';
-import { getBlock, getTransaction } from 'viem/actions';
+  type TenderlyRequest,
+  type TenderlySimulationResponse,
+  tenderly,
+} from '../utils/tenderlyClient';
+import {GetPayloadReturnType} from '@bgd-labs/aave-v3-governance-cache';
 
 export enum PayloadState {
-  None,
-  Created,
-  Queued,
-  Executed,
-  Cancelled,
-  Expired,
+  None = 0,
+  Created = 1,
+  Queued = 2,
+  Executed = 3,
+  Cancelled = 4,
+  Expired = 5,
 }
 
 export const HUMAN_READABLE_PAYLOAD_STATE = {
@@ -41,23 +37,11 @@ export const HUMAN_READABLE_PAYLOAD_STATE = {
 
 export interface PayloadsController {
   controllerContract: GetContractReturnType<typeof IPayloadsControllerCore_ABI, Client>;
-  // executes an existing payload
-  getPayload: (
-    id: number,
-    logs: Awaited<ReturnType<typeof getPayloadsControllerEvents>>
-  ) => Promise<{
-    payload: ContractFunctionReturnType<typeof IPayloadsControllerCore_ABI, AbiStateMutability, 'getPayloadById'>;
-    createdLog: PayloadCreatedEvent;
-    queuedLog?: PayloadQueuedEvent;
-    executedLog?: PayloadExecutedEvent;
-  }>;
   getSimulationPayloadForExecution: (id: number) => Promise<TenderlyRequest>;
   simulatePayloadExecutionOnTenderly: (
     id: number,
-    logs: Awaited<ReturnType<PayloadsController['getPayload']>>
+    logs: GetPayloadReturnType['logs'],
   ) => Promise<TenderlySimulationResponse>;
-  // creates and executes a payload
-  // TODO: not sure yet about types etc
 }
 
 const SLOTS = {
@@ -65,7 +49,11 @@ const SLOTS = {
 };
 
 export const getPayloadsController = (address: Hex, client: Client): PayloadsController => {
-  const controllerContract = getContract({ abi: IPayloadsControllerCore_ABI, address, client });
+  const controllerContract = getContract({
+    abi: IPayloadsControllerCore_ABI,
+    address,
+    client,
+  });
 
   const getSimulationPayloadForExecution = async (id: number) => {
     const payload = await controllerContract.read.getPayloadById([id]);
@@ -93,7 +81,7 @@ export const getPayloadsController = (address: Hex, client: Client): PayloadsCon
                 PayloadState.Queued,
                 payload.maximumAccessLevelRequired,
                 payload.creator,
-              ]
+              ],
             ),
           },
         },
@@ -104,16 +92,13 @@ export const getPayloadsController = (address: Hex, client: Client): PayloadsCon
 
   return {
     controllerContract,
-    getPayload: async (id, logs) => {
-      const payload = await controllerContract.read.getPayloadById([id]);
-      const payloadLogs = await findPayloadLogs(logs, id);
-      return { ...payloadLogs, payload };
-    },
     getSimulationPayloadForExecution,
-    simulatePayloadExecutionOnTenderly: async (id, { executedLog }) => {
+    simulatePayloadExecutionOnTenderly: async (id, {executedLog}) => {
       // if successfully executed just replay the txn
       if (executedLog) {
-        const tx = await getTransaction(client, { hash: executedLog.transactionHash! });
+        const tx = await getTransaction(client, {
+          hash: executedLog.transactionHash!,
+        });
         return tenderly.simulateTx(client.chain!.id, tx);
       }
       const payload = await getSimulationPayloadForExecution(id);

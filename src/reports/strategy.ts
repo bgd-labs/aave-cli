@@ -1,7 +1,10 @@
-import { AaveV3Strategy } from './snapshot-types';
-import { formatUnits } from 'viem';
+import {formatUnits} from 'viem';
+import type {AaveV3Strategy} from './snapshot-types';
 
-export function renderStrategyValue<T extends keyof AaveV3Strategy>(key: T, reserve: AaveV3Strategy) {
+export function renderStrategyValue<T extends keyof AaveV3Strategy>(
+  key: T,
+  reserve: AaveV3Strategy,
+) {
   if (reserve[key] === undefined || reserve[key] === null) return '/';
   return `${formatUnits(BigInt(reserve[key]), 25)} %`;
 }
@@ -16,7 +19,7 @@ const ORDER: (keyof AaveV3Strategy)[] = [
 function sortStrategyKeys(a: keyof AaveV3Strategy, b: keyof AaveV3Strategy) {
   const indexA = ORDER.indexOf(a);
   const indexB = ORDER.indexOf(b);
-  if (indexA != -1 && indexB != -1) {
+  if (indexA !== -1 && indexB !== -1) {
     if (indexA > indexB) {
       return 1;
     }
@@ -24,8 +27,8 @@ function sortStrategyKeys(a: keyof AaveV3Strategy, b: keyof AaveV3Strategy) {
       return -1;
     }
   }
-  if (indexA != -1) return -1;
-  if (indexB != -1) return -1;
+  if (indexA !== -1) return -1;
+  if (indexB !== -1) return -1;
   return a.localeCompare(b);
 }
 
@@ -62,7 +65,7 @@ export function renderStrategyDiff(diff: StrategyDiff) {
       content += `| ${key} | ${renderStrategyValue(key, {
         ...diff,
         [key]: diff[key].from,
-      })} | ${renderStrategyValue(key, { ...diff, [key]: diff[key].to })} |\n`;
+      })} | ${renderStrategyValue(key, {...diff, [key]: diff[key].to})} |\n`;
     });
 
   return content;

@@ -1,9 +1,9 @@
-import { Command } from '@commander-js/extra-typings';
-import { adiDiffReports } from '../reports/adi-diff-reports';
-import { diffReports } from '../reports/diff-reports';
-import { readJsonString, readJsonFile } from '../utils/json';
-import fs from 'fs';
-import { compareStorageLayouts } from '@bgd-labs/js-utils';
+import fs from 'node:fs';
+import {compareStorageLayouts} from '@bgd-labs/js-utils';
+import type {Command} from '@commander-js/extra-typings';
+import {adiDiffReports} from '../reports/adi-diff-reports';
+import {diffReports} from '../reports/diff-reports';
+import {readJsonFile, readJsonString} from '../utils/json';
 
 export function addCommand(program: Command) {
   program

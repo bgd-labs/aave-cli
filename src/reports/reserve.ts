@@ -1,19 +1,27 @@
-import { Hex, formatUnits } from 'viem';
-import { AaveV3Reserve, CHAIN_ID } from './snapshot-types';
-import { toAddressLink } from '../govv3/utils/markdownUtils';
-import { CHAIN_ID_CLIENT_MAP } from '@bgd-labs/js-utils';
+import {CHAIN_ID_CLIENT_MAP} from '@bgd-labs/js-utils';
+import {type Hex, formatUnits} from 'viem';
+import {toAddressLink} from '../govv3/utils/markdownUtils';
+import type {AaveV3Reserve, CHAIN_ID} from './snapshot-types';
 
-export function renderReserveValue<T extends keyof AaveV3Reserve>(key: T, reserve: AaveV3Reserve, chainId: CHAIN_ID) {
+export function renderReserveValue<T extends keyof AaveV3Reserve>(
+  key: T,
+  reserve: AaveV3Reserve,
+  chainId: CHAIN_ID,
+) {
   if (['reserveFactor', 'liquidationProtocolFee', 'liquidationThreshold', 'ltv'].includes(key))
     return `${formatUnits(BigInt(reserve[key]), 2)} %`;
-  if (['supplyCap', 'borrowCap'].includes(key)) return `${reserve[key].toLocaleString('en-US')} ${reserve.symbol}`;
-  if (key === 'debtCeiling') return `${Number(formatUnits(BigInt(reserve[key]), 2)).toLocaleString('en-US')} $`;
+  if (['supplyCap', 'borrowCap'].includes(key))
+    return `${reserve[key].toLocaleString('en-US')} ${reserve.symbol}`;
+  if (key === 'debtCeiling')
+    return `${Number(formatUnits(BigInt(reserve[key]), 2)).toLocaleString('en-US')} $`;
   if (['liquidityIndex', 'variableBorrowIndex'].includes(key))
     return `${Number(formatUnits(BigInt(reserve[key]), 27)).toLocaleString('en-US')}`;
   if (['currentLiquidityRate', 'currentVariableBorrowRate'].includes(key))
     return `${Number(formatUnits(BigInt(reserve[key]), 25)).toLocaleString('en-US')} %`;
-  if (key === 'liquidationBonus') return reserve[key] === 0 ? '0 %' : `${((reserve[key] as number) - 10000) / 100} %`;
-  if (key === 'interestRateStrategy') return toAddressLink(reserve[key] as Hex, true, CHAIN_ID_CLIENT_MAP[chainId]);
+  if (key === 'liquidationBonus')
+    return reserve[key] === 0 ? '0 %' : `${((reserve[key] as number) - 10000) / 100} %`;
+  if (key === 'interestRateStrategy')
+    return toAddressLink(reserve[key] as Hex, true, CHAIN_ID_CLIENT_MAP[chainId]);
   if (key === 'oracleLatestAnswer' && reserve.oracleDecimals)
     return formatUnits(BigInt(reserve[key]), reserve.oracleDecimals);
   if (typeof reserve[key] === 'number') return reserve[key].toLocaleString('en-US');
@@ -91,7 +99,7 @@ export function renderReserve(reserve: AaveV3Reserve, chainId: CHAIN_ID) {
 }
 
 export type ReserveDiff<A extends AaveV3Reserve = AaveV3Reserve> = {
-  [key in keyof A]: A[key] & { from: A[key] | null; to: A[key] | null };
+  [key in keyof A]: A[key] & {from: A[key] | null; to: A[key] | null};
 };
 
 export function renderReserveDiff(diff: ReserveDiff, chainId: CHAIN_ID) {
