@@ -6,9 +6,7 @@ import {
 } from "@bgd-labs/aave-address-book";
 import merge from "deepmerge";
 import {
-  type AbiStateMutability,
   type Client,
-  type ContractFunctionReturnType,
   type GetContractReturnType,
   type Hex,
   encodeFunctionData,
@@ -16,7 +14,7 @@ import {
   getContract,
   toHex,
 } from "viem";
-import type { GetProofReturnType } from "viem/_types/actions/public/getProof";
+import type { GetProofReturnType } from "viem/actions";
 import { getBlock, getStorageAt, getTransaction } from "viem/actions";
 import { EOA } from "../utils/constants";
 import { logInfo } from "../utils/logger";
@@ -26,17 +24,21 @@ import {
   getSolidityStorageSlotUint,
 } from "../utils/storageSlots";
 import { setBits } from "../utils/storageSlots";
-import { type TenderlyRequest, type TenderlySimulationResponse, tenderly } from "../utils/tenderlyClient";
 import {
-  type ProposalCreatedEvent,
-  type ProposalExecutedEvent,
-  type ProposalPayloadSentEvent,
-  type ProposalQueuedEvent,
-  type ProposalVotingActivatedEvent,
-  findProposalLogs,
-  type getGovernanceEvents,
-} from "./cache/modules/governance";
-import { VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof } from "./proofs";
+  type TenderlyRequest,
+  type TenderlySimulationResponse,
+  tenderly,
+} from "../utils/tenderlyClient";
+import {
+  VOTING_SLOTS,
+  WAREHOUSE_SLOTS,
+  getAccountRPL,
+  getProof,
+} from "./proofs";
+import type {
+  Proposal,
+  ProposalExecutedEvent,
+} from "@bgd-labs/aave-v3-governance-cache";
 
 export enum ProposalState {
   Null = 0, // proposal does not exists
@@ -50,7 +52,12 @@ export enum ProposalState {
 }
 
 export function isProposalFinal(state: ProposalState) {
-  return [ProposalState.Executed, ProposalState.Failed, ProposalState.Cancelled, ProposalState.Expired].includes(state);
+  return [
+    ProposalState.Executed,
+    ProposalState.Failed,
+    ProposalState.Cancelled,
+    ProposalState.Expired,
+  ].includes(state);
 }
 
 export interface Governance {
@@ -61,24 +68,12 @@ export interface Governance {
    * @param proposalId
    * @returns Proposal struct
    */
-  getProposal: (
-    proposalId: bigint,
-  ) => Promise<ContractFunctionReturnType<typeof IGovernanceCore_ABI, AbiStateMutability, "getProposal">>;
-  getProposalAndLogs: (
-    proposalId: bigint,
-    logs: Awaited<ReturnType<typeof getGovernanceEvents>>,
-  ) => Promise<{
-    proposal: ContractFunctionReturnType<typeof IGovernanceCore_ABI, AbiStateMutability, "getProposal">;
-    createdLog: ProposalCreatedEvent;
-    queuedLog?: ProposalQueuedEvent;
-    executedLog?: ProposalExecutedEvent;
-    votingActivatedLog?: ProposalVotingActivatedEvent;
-    payloadSentLog: ProposalPayloadSentEvent[];
-  }>;
-  getSimulationPayloadForExecution: (proposalId: bigint) => Promise<TenderlyRequest>;
+  getSimulationPayloadForExecution: (
+    proposalId: bigint
+  ) => Promise<TenderlyRequest>;
   simulateProposalExecutionOnTenderly: (
     proposalId: bigint,
-    params: { executedLog?: ProposalExecutedEvent },
+    params: { executedLog?: ProposalExecutedEvent }
   ) => Promise<TenderlySimulationResponse>;
   getStorageRoots(proposalId: bigint): Promise<GetProofReturnType[]>;
   /**
@@ -90,7 +85,7 @@ export interface Governance {
   getVotingProofs: (
     proposalId: bigint,
     voter: Hex,
-    votingChainId: bigint,
+    votingChainId: bigint
   ) => Promise<{ proof: Hex; slot: bigint; underlyingAsset: Hex }[]>;
 }
 
@@ -115,7 +110,10 @@ interface GetGovernanceParams {
   blockCreated?: bigint;
 }
 
-export const getGovernance = ({ address, client }: GetGovernanceParams): Governance => {
+export const getGovernance = ({
+  address,
+  client,
+}: GetGovernanceParams): Governance => {
   const governanceContract = getContract({
     abi: IGovernanceCore_ABI,
     address,
@@ -128,7 +126,10 @@ export const getGovernance = ({ address, client }: GetGovernanceParams): Governa
 
   async function getSimulationPayloadForExecution(proposalId: bigint) {
     const currentBlock = await getBlock(client);
-    const proposalSlot = getSolidityStorageSlotUint(SLOTS.PROPOSALS_MAPPING, proposalId);
+    const proposalSlot = getSolidityStorageSlotUint(
+      SLOTS.PROPOSALS_MAPPING,
+      proposalId
+    );
     const data = await getStorageAt(client, {
       address: governanceContract.address,
       slot: proposalSlot,
@@ -142,7 +143,8 @@ export const getGovernance = ({ address, client }: GetGovernanceParams): Governa
       proposalSlot1,
       16n,
       56n,
-      currentBlock.timestamp - (await governanceContract.read.PROPOSAL_EXPIRATION_TIME()),
+      currentBlock.timestamp -
+        (await governanceContract.read.PROPOSAL_EXPIRATION_TIME())
     );
     const simulationPayload: TenderlyRequest = {
       network_id: String(client.chain!.id),
@@ -171,59 +173,79 @@ export const getGovernance = ({ address, client }: GetGovernanceParams): Governa
 
   return {
     governanceContract,
-    getProposal,
-    async getProposalAndLogs(proposalId, logs) {
-      const proposal = await getProposal(proposalId);
-      const proposalLogs = await findProposalLogs(logs, proposalId);
-      return { proposal, ...proposalLogs };
-    },
     getSimulationPayloadForExecution,
     async simulateProposalExecutionOnTenderly(proposalId, { executedLog }) {
       // if successfully executed just replay the txn
       if (executedLog) {
-        const tx = await getTransaction(client, { hash: executedLog.transactionHash! });
+        const tx = await getTransaction(client, {
+          hash: executedLog.transactionHash!,
+        });
         return tenderly.simulateTx(client.chain!.id, tx);
       }
       const payload = await getSimulationPayloadForExecution(proposalId);
       return tenderly.simulate(payload, client);
     },
-    async getVotingProofs(proposalId: bigint, voter: Hex, votingChainId: bigint) {
+    async getVotingProofs(
+      proposalId: bigint,
+      voter: Hex,
+      votingChainId: bigint
+    ) {
       const proposal = await getProposal(proposalId);
 
-      const [stkAaveProof, aaveProof, aAaveProof, representativeProof] = await Promise.all([
-        getProof(
-          client,
-          AaveSafetyModule.STK_AAVE,
-          [getSolidityStorageSlotAddress(VOTING_SLOTS[AaveSafetyModule.STK_AAVE].balance, voter)],
-          proposal.snapshotBlockHash,
-        ),
-        getProof(
-          client,
-          AaveV3Ethereum.ASSETS.AAVE.UNDERLYING,
-          [getSolidityStorageSlotAddress(VOTING_SLOTS[AaveV3Ethereum.ASSETS.AAVE.UNDERLYING].balance, voter)],
-          proposal.snapshotBlockHash,
-        ),
-        getProof(
-          client,
-          AaveV3Ethereum.ASSETS.AAVE.A_TOKEN,
-          [
-            getSolidityStorageSlotAddress(VOTING_SLOTS[AaveV3Ethereum.ASSETS.AAVE.A_TOKEN].balance, voter),
-            getSolidityStorageSlotAddress(VOTING_SLOTS[AaveV3Ethereum.ASSETS.AAVE.A_TOKEN].delegation, voter),
-          ],
-          proposal.snapshotBlockHash,
-        ),
-        getProof(
-          client,
-          GovernanceV3Ethereum.GOVERNANCE,
-          [
-            getSolidityStorageSlotBytes(
-              getSolidityStorageSlotAddress(VOTING_SLOTS[GovernanceV3Ethereum.GOVERNANCE].representative, voter),
-              toHex(votingChainId, { size: 32 }),
-            ),
-          ],
-          proposal.snapshotBlockHash,
-        ),
-      ]);
+      const [stkAaveProof, aaveProof, aAaveProof, representativeProof] =
+        await Promise.all([
+          getProof(
+            client,
+            AaveSafetyModule.STK_AAVE,
+            [
+              getSolidityStorageSlotAddress(
+                VOTING_SLOTS[AaveSafetyModule.STK_AAVE].balance,
+                voter
+              ),
+            ],
+            proposal.snapshotBlockHash
+          ),
+          getProof(
+            client,
+            AaveV3Ethereum.ASSETS.AAVE.UNDERLYING,
+            [
+              getSolidityStorageSlotAddress(
+                VOTING_SLOTS[AaveV3Ethereum.ASSETS.AAVE.UNDERLYING].balance,
+                voter
+              ),
+            ],
+            proposal.snapshotBlockHash
+          ),
+          getProof(
+            client,
+            AaveV3Ethereum.ASSETS.AAVE.A_TOKEN,
+            [
+              getSolidityStorageSlotAddress(
+                VOTING_SLOTS[AaveV3Ethereum.ASSETS.AAVE.A_TOKEN].balance,
+                voter
+              ),
+              getSolidityStorageSlotAddress(
+                VOTING_SLOTS[AaveV3Ethereum.ASSETS.AAVE.A_TOKEN].delegation,
+                voter
+              ),
+            ],
+            proposal.snapshotBlockHash
+          ),
+          getProof(
+            client,
+            GovernanceV3Ethereum.GOVERNANCE,
+            [
+              getSolidityStorageSlotBytes(
+                getSolidityStorageSlotAddress(
+                  VOTING_SLOTS[GovernanceV3Ethereum.GOVERNANCE].representative,
+                  voter
+                ),
+                toHex(votingChainId, { size: 32 })
+              ),
+            ],
+            proposal.snapshotBlockHash
+          ),
+        ]);
 
       return [
         { proof: stkAaveProof, slots: [0n] },
@@ -237,7 +259,10 @@ export const getGovernance = ({ address, client }: GetGovernanceParams): Governa
             .filter((slot, ix) => {
               const shouldSubmitProof = proof.storageProof[ix].value !== 0n;
               if (!shouldSubmitProof)
-                logInfo("Proof", `Skipping slot ${slot} on ${proof.address} as value is zero for voter ${voter}`);
+                logInfo(
+                  "Proof",
+                  `Skipping slot ${slot} on ${proof.address} as value is zero for voter ${voter}`
+                );
               return shouldSubmitProof;
             })
             .map((slot, ix) => ({
@@ -257,10 +282,12 @@ export const getGovernance = ({ address, client }: GetGovernanceParams): Governa
           getProof(
             client,
             address,
-            Object.keys(addresses[address]).map((slotKey) => toHex((addresses[address] as any)[slotKey])),
-            proposal.snapshotBlockHash,
-          ),
-        ),
+            Object.keys(addresses[address]).map((slotKey) =>
+              toHex((addresses[address] as any)[slotKey])
+            ),
+            proposal.snapshotBlockHash
+          )
+        )
       );
 
       return proofs;

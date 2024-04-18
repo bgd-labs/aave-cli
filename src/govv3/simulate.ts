@@ -1,12 +1,14 @@
-import { CHAIN_ID_CLIENT_MAP } from "@bgd-labs/js-utils";
-import type { Client, Hex } from "viem";
-import { logInfo } from "../utils/logger";
-import type { TenderlySimulationResponse } from "../utils/tenderlyClient";
-import { cacheGovernance, cachePayloadsController } from "./cache/updateCache";
-import { generateReport } from "./generatePayloadReport";
-import { generateProposalReport } from "./generateProposalReport";
-import { getGovernance } from "./governance";
-import { type PayloadsController, getPayloadsController } from "./payloadsController";
+import {CHAIN_ID_CLIENT_MAP} from '@bgd-labs/js-utils';
+import type {Client, Hex} from 'viem';
+import {logInfo} from '../utils/logger';
+import type {TenderlySimulationResponse} from '../utils/tenderlyClient';
+import {generateReport} from './generatePayloadReport';
+import {generateProposalReport} from './generateProposalReport';
+import {getGovernance} from './governance';
+import {getPayloadsController} from './payloadsController';
+import {localCacheAdapter} from '@bgd-labs/aave-v3-governance-cache/localCache';
+import {refreshCache} from '@bgd-labs/aave-v3-governance-cache/refreshCache';
+import {GetPayloadReturnType} from '@bgd-labs/aave-v3-governance-cache';
 
 /**
  * Reference implementation, unused
@@ -16,11 +18,15 @@ import { type PayloadsController, getPayloadsController } from "./payloadsContro
  * @returns
  */
 export async function simulateProposal(governanceAddress: Hex, client: Client, proposalId: bigint) {
-  logInfo("General", `Running simulation for ${proposalId}`);
-  const governance = getGovernance({ address: governanceAddress, client });
-  const { eventsCache } = await cacheGovernance(client, governanceAddress);
-  const proposal = await governance.getProposalAndLogs(proposalId, eventsCache);
-  const result = await governance.simulateProposalExecutionOnTenderly(proposalId, proposal);
+  logInfo('General', `Running simulation for ${proposalId}`);
+  const governance = getGovernance({address: governanceAddress, client});
+  await refreshCache(localCacheAdapter);
+  const proposal = localCacheAdapter.getProposal({
+    chainId: client.chain!.id,
+    governance: governanceAddress as Hex,
+    proposalId: Number(proposalId),
+  });
+  const result = await governance.simulateProposalExecutionOnTenderly(proposalId, proposal.logs);
   console.log(
     await generateProposalReport({
       simulation: result,
@@ -30,29 +36,35 @@ export async function simulateProposal(governanceAddress: Hex, client: Client, p
     }),
   );
   const payloads: {
-    payload: Awaited<ReturnType<PayloadsController["getPayload"]>>;
+    payload: GetPayloadReturnType;
     simulation: TenderlySimulationResponse;
   }[] = [];
   for (const payload of proposal.proposal.payloads) {
-    const client = CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP];
+    const client = CHAIN_ID_CLIENT_MAP[Number(payload.chain)];
     const controllerContract = getPayloadsController(payload.payloadsController, client);
-    const { eventsCache } = await cachePayloadsController(client, payload.payloadsController);
-    const config = await controllerContract.getPayload(payload.payloadId, eventsCache);
+    const cache = localCacheAdapter.getPayload({
+      payloadId: payload.payloadId,
+      chainId: Number(payload.chain),
+      payloadsController: payload.payloadsController,
+    });
     try {
-      const result = await controllerContract.simulatePayloadExecutionOnTenderly(payload.payloadId, config);
+      const result = await controllerContract.simulatePayloadExecutionOnTenderly(
+        payload.payloadId,
+        cache.logs,
+      );
       console.log(
         await generateReport({
           simulation: result,
           payloadId: payload.payloadId,
-          payloadInfo: config,
+          payloadInfo: cache,
           client: CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP],
         }),
       );
-      payloads.push({ payload: config, simulation: result });
+      payloads.push({payload: cache, simulation: result});
     } catch (e) {
-      console.log("error simulating payload");
+      console.log('error simulating payload');
       console.log(e);
     }
   }
-  return { proposal, payloads };
+  return {proposal, payloads};
 }

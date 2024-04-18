@@ -1,16 +1,17 @@
-import type { Client } from "viem";
-import { getCachedIpfs } from "../ipfs/getCachedProposalMetaData";
-import type { TenderlySimulationResponse } from "../utils/tenderlyClient";
-import { checkLogs } from "./checks/logs";
-import { checkTouchedContractsNoSelfdestruct } from "./checks/selfDestruct";
-import { checkStateChanges } from "./checks/state";
-import { checkTouchedContractsVerifiedEtherscan } from "./checks/targetsVerified";
-import { type Governance, HUMAN_READABLE_STATE } from "./governance";
-import { renderCheckResult, renderUnixTime, toTxLink } from "./utils/markdownUtils";
+import type {Client} from 'viem';
+import {getCachedIpfs} from '../ipfs/getCachedProposalMetaData';
+import type {TenderlySimulationResponse} from '../utils/tenderlyClient';
+import {checkLogs} from './checks/logs';
+import {checkTouchedContractsNoSelfdestruct} from './checks/selfDestruct';
+import {checkStateChanges} from './checks/state';
+import {checkTouchedContractsVerifiedEtherscan} from './checks/targetsVerified';
+import {type Governance, HUMAN_READABLE_STATE} from './governance';
+import {renderCheckResult, renderUnixTime, toTxLink} from './utils/markdownUtils';
+import {GetProposalReturnType} from '@bgd-labs/aave-v3-governance-cache';
 
 type GenerateReportRequest = {
   proposalId: bigint;
-  proposalInfo: Awaited<ReturnType<Governance["getProposalAndLogs"]>>;
+  proposalInfo: GetProposalReturnType;
   simulation: TenderlySimulationResponse;
   client: Client;
   formattedPayloads?: string[];
@@ -23,7 +24,10 @@ export async function generateProposalReport({
   client,
   formattedPayloads,
 }: GenerateReportRequest) {
-  const { proposal, executedLog, queuedLog, createdLog, payloadSentLog, votingActivatedLog } = proposalInfo;
+  const {
+    proposal,
+    logs: {executedLog, queuedLog, createdLog, payloadSentLog, votingActivatedLog},
+  } = proposalInfo;
   // generate file header
   let report = `## Proposal ${proposalId}
 
@@ -37,7 +41,9 @@ export async function generateProposalReport({
   ${
     formattedPayloads
       ? formattedPayloads.map((payload) => `  - ${payload}\n`).join()
-      : JSON.stringify(proposal.payloads, (key, value) => (typeof value === "bigint" ? value.toString() : value))
+      : JSON.stringify(proposal.payloads, (key, value) =>
+          typeof value === 'bigint' ? value.toString() : value,
+        )
   }
 - createdAt: [${renderUnixTime(proposal.creationTime)}](${toTxLink(createdLog.transactionHash, false, client)})\n`;
   if (queuedLog) {
@@ -59,7 +65,7 @@ export async function generateProposalReport({
       timestamp,
     )}, timestamp: ${timestamp}, block: ${simulation.transaction.block_number}`;
   }
-  report += "\n";
+  report += '\n';
 
   const ipfsMeta = await getCachedIpfs(proposal.ipfsHash);
   report += `### Ipfs

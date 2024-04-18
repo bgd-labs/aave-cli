@@ -1,25 +1,21 @@
-import { IPayloadsControllerCore_ABI } from "@bgd-labs/aave-address-book";
+import {IPayloadsControllerCore_ABI} from '@bgd-labs/aave-address-book';
 import {
-  type AbiStateMutability,
   type Client,
-  type ContractFunctionReturnType,
   type GetContractReturnType,
   type Hex,
   encodeFunctionData,
   encodePacked,
   getContract,
-} from "viem";
-import { getBlock, getTransaction } from "viem/actions";
-import { EOA } from "../utils/constants";
-import { getSolidityStorageSlotUint } from "../utils/storageSlots";
-import { type TenderlyRequest, type TenderlySimulationResponse, tenderly } from "../utils/tenderlyClient";
+} from 'viem';
+import {getBlock, getTransaction} from 'viem/actions';
+import {EOA} from '../utils/constants';
+import {getSolidityStorageSlotUint} from '../utils/storageSlots';
 import {
-  type PayloadCreatedEvent,
-  type PayloadExecutedEvent,
-  type PayloadQueuedEvent,
-  findPayloadLogs,
-  type getPayloadsControllerEvents,
-} from "./cache/modules/payloadsController";
+  type TenderlyRequest,
+  type TenderlySimulationResponse,
+  tenderly,
+} from '../utils/tenderlyClient';
+import {GetPayloadReturnType} from '@bgd-labs/aave-v3-governance-cache';
 
 export enum PayloadState {
   None = 0,
@@ -31,33 +27,21 @@ export enum PayloadState {
 }
 
 export const HUMAN_READABLE_PAYLOAD_STATE = {
-  [PayloadState.None]: "None",
-  [PayloadState.Created]: "Created",
-  [PayloadState.Queued]: "Queued",
-  [PayloadState.Executed]: "Executed",
-  [PayloadState.Cancelled]: "Cancelled",
-  [PayloadState.Expired]: "Expired",
+  [PayloadState.None]: 'None',
+  [PayloadState.Created]: 'Created',
+  [PayloadState.Queued]: 'Queued',
+  [PayloadState.Executed]: 'Executed',
+  [PayloadState.Cancelled]: 'Cancelled',
+  [PayloadState.Expired]: 'Expired',
 };
 
 export interface PayloadsController {
   controllerContract: GetContractReturnType<typeof IPayloadsControllerCore_ABI, Client>;
-  // executes an existing payload
-  getPayload: (
-    id: number,
-    logs: Awaited<ReturnType<typeof getPayloadsControllerEvents>>,
-  ) => Promise<{
-    payload: ContractFunctionReturnType<typeof IPayloadsControllerCore_ABI, AbiStateMutability, "getPayloadById">;
-    createdLog: PayloadCreatedEvent;
-    queuedLog?: PayloadQueuedEvent;
-    executedLog?: PayloadExecutedEvent;
-  }>;
   getSimulationPayloadForExecution: (id: number) => Promise<TenderlyRequest>;
   simulatePayloadExecutionOnTenderly: (
     id: number,
-    logs: Awaited<ReturnType<PayloadsController["getPayload"]>>,
+    logs: GetPayloadReturnType['logs'],
   ) => Promise<TenderlySimulationResponse>;
-  // creates and executes a payload
-  // TODO: not sure yet about types etc
 }
 
 const SLOTS = {
@@ -65,7 +49,11 @@ const SLOTS = {
 };
 
 export const getPayloadsController = (address: Hex, client: Client): PayloadsController => {
-  const controllerContract = getContract({ abi: IPayloadsControllerCore_ABI, address, client });
+  const controllerContract = getContract({
+    abi: IPayloadsControllerCore_ABI,
+    address,
+    client,
+  });
 
   const getSimulationPayloadForExecution = async (id: number) => {
     const payload = await controllerContract.read.getPayloadById([id]);
@@ -76,7 +64,7 @@ export const getPayloadsController = (address: Hex, client: Client): PayloadsCon
       to: controllerContract.address,
       input: encodeFunctionData({
         abi: IPayloadsControllerCore_ABI,
-        functionName: "executePayload",
+        functionName: 'executePayload',
         args: [id],
       }),
       block_number: -2,
@@ -84,7 +72,7 @@ export const getPayloadsController = (address: Hex, client: Client): PayloadsCon
         [controllerContract.address]: {
           storage: {
             [getSolidityStorageSlotUint(SLOTS.PAYLOADS_MAPPING, BigInt(id))]: encodePacked(
-              ["uint40", "uint40", "uint8", "uint8", "address"],
+              ['uint40', 'uint40', 'uint8', 'uint8', 'address'],
               [
                 // we substract 240n(4min), as tenderly might have been fallen behind
                 // therefore using block_number -1 (latest on tenderly) and a 4min margin should give a save margin
@@ -104,16 +92,13 @@ export const getPayloadsController = (address: Hex, client: Client): PayloadsCon
 
   return {
     controllerContract,
-    getPayload: async (id, logs) => {
-      const payload = await controllerContract.read.getPayloadById([id]);
-      const payloadLogs = await findPayloadLogs(logs, id);
-      return { ...payloadLogs, payload };
-    },
     getSimulationPayloadForExecution,
-    simulatePayloadExecutionOnTenderly: async (id, { executedLog }) => {
+    simulatePayloadExecutionOnTenderly: async (id, {executedLog}) => {
       // if successfully executed just replay the txn
       if (executedLog) {
-        const tx = await getTransaction(client, { hash: executedLog.transactionHash! });
+        const tx = await getTransaction(client, {
+          hash: executedLog.transactionHash!,
+        });
         return tenderly.simulateTx(client.chain!.id, tx);
       }
       const payload = await getSimulationPayloadForExecution(id);
