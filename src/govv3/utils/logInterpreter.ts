@@ -57,6 +57,11 @@ export async function interpretLog(
       }
     }
   }
-  const parsedInputs = inputs?.map((i) => `${i.soltype!.name}: ${i.value}`).join(', ');
+  const parsedInputs = inputs
+    ?.map(
+      (i) =>
+        `${i.soltype!.name}: ${typeof i.value === 'object' ? JSON.stringify(i.value) : i.value}`,
+    )
+    .join(', ');
   return `  - \`${name}(${parsedInputs || ''})\``;
 }
