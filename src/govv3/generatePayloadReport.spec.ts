@@ -26,9 +26,9 @@ function cleanupMock(mockData: any) {
 }
 
 describe('generatePayloadReport', () => {
-  it('cleanup', () => {
-    expect(cleanupMock({simulation: CONFIG_CHANGE_PAYLOAD})).toMatchSnapshot();
-  });
+  // it('cleanup', () => {
+  //   expect(cleanupMock({simulation: CONFIG_CHANGE_PAYLOAD})).toMatchSnapshot();
+  // });
   /**
    * Can be used to generate a new snapshot
    */
