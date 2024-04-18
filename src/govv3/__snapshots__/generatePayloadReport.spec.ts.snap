@@ -403,10 +403,10 @@ InitializableAdminUpgradeabilityProxy at \`0x25F2226B597E8F9514B3F68F00f494cF4f2
 + 1999999999999992384000
 @@ \`_streams\` key \`100009.ratePerSecond\` @@
 - 0
-+ 128600823045267
++ 0.000128600823045267[128600823045267](18 decimals)
 @@ \`_streams\` key \`100009.remainingBalance\` @@
 - 0
-+ 1999999999999992384000
++ 1,999.999999999992384[1999999999999992384000](18 decimals)
 @@ \`_streams\` key \`100009.startTime\` @@
 - 0
 + 1711922843
@@ -420,8 +420,8 @@ InitializableAdminUpgradeabilityProxy at \`0x25F2226B597E8F9514B3F68F00f494cF4f2
 - 0x0000000000000000000000000000000000000000
 + 0x25f2226b597e8f9514b3f68f00f494cf4f286491
 @@ \`_streams\` key \`100009.tokenAddress\` @@
-- 0x0000000000000000000000000000000000000000
-+ 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9
+- 0x0000000000000000000000000000000000000000 (symbol: unknown)
++ 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9 (symbol: AAVE)
 @@ \`_streams\` key \`100009.isEntity\` @@
 - false
 + true
@@ -430,10 +430,10 @@ InitializableAdminUpgradeabilityProxy at \`0x25F2226B597E8F9514B3F68F00f494cF4f2
 + 4500000000000000000000
 @@ \`_streams\` key \`100010.ratePerSecond\` @@
 - 0
-+ 4500000000000000000000
++ 4,500[4500000000000000000000](18 decimals)
 @@ \`_streams\` key \`100010.remainingBalance\` @@
 - 0
-+ 4500000000000000000000
++ 4,500[4500000000000000000000](18 decimals)
 @@ \`_streams\` key \`100010.startTime\` @@
 - 0
 + 1722290843
@@ -447,8 +447,8 @@ InitializableAdminUpgradeabilityProxy at \`0x25F2226B597E8F9514B3F68F00f494cF4f2
 - 0x0000000000000000000000000000000000000000
 + 0x25f2226b597e8f9514b3f68f00f494cf4f286491
 @@ \`_streams\` key \`100010.tokenAddress\` @@
-- 0x0000000000000000000000000000000000000000
-+ 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9
+- 0x0000000000000000000000000000000000000000 (symbol: unknown)
++ 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9 (symbol: AAVE)
 @@ \`_streams\` key \`100010.isEntity\` @@
 - false
 + true
@@ -474,10 +474,10 @@ InitializableAdminUpgradeabilityProxy at \`0x464C71f6c2F760DdA6093dCB91C24c39e5d
 + 639999999999999988992000
 @@ \`_streams\` key \`100030.ratePerSecond\` @@
 - 0
-+ 41152263374485596
++ 0.041152263374485596[41152263374485596](18 decimals)
 @@ \`_streams\` key \`100030.remainingBalance\` @@
 - 0
-+ 639999999999999988992000
++ 639,999.999999999988992[639999999999999988992000](18 decimals)
 @@ \`_streams\` key \`100030.startTime\` @@
 - 0
 + 1711922843
@@ -491,8 +491,8 @@ InitializableAdminUpgradeabilityProxy at \`0x464C71f6c2F760DdA6093dCB91C24c39e5d
 - 0x0000000000000000000000000000000000000000
 + 0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c
 @@ \`_streams\` key \`100030.tokenAddress\` @@
-- 0x0000000000000000000000000000000000000000
-+ 0x40d16fc0246ad3160ccc09b8d0d3a2cd28ae6c2f
+- 0x0000000000000000000000000000000000000000 (symbol: unknown)
++ 0x40d16fc0246ad3160ccc09b8d0d3a2cd28ae6c2f (symbol: GHO)
 @@ \`_streams\` key \`100030.isEntity\` @@
 - false
 + true
@@ -501,10 +501,10 @@ InitializableAdminUpgradeabilityProxy at \`0x464C71f6c2F760DdA6093dCB91C24c39e5d
 + 1140000000000
 @@ \`_streams\` key \`100031.ratePerSecond\` @@
 - 0
-+ 1140000000000
++ 1,140,000[1140000000000](6 decimals)
 @@ \`_streams\` key \`100031.remainingBalance\` @@
 - 0
-+ 1140000000000
++ 1,140,000[1140000000000](6 decimals)
 @@ \`_streams\` key \`100031.startTime\` @@
 - 0
 + 1722290843
@@ -518,8 +518,8 @@ InitializableAdminUpgradeabilityProxy at \`0x464C71f6c2F760DdA6093dCB91C24c39e5d
 - 0x0000000000000000000000000000000000000000
 + 0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c
 @@ \`_streams\` key \`100031.tokenAddress\` @@
-- 0x0000000000000000000000000000000000000000
-+ 0x98c23e9d8f34fefb1b7bd6a91b7ff122f4e16f5c
+- 0x0000000000000000000000000000000000000000 (symbol: unknown)
++ 0x98c23e9d8f34fefb1b7bd6a91b7ff122f4e16f5c (symbol: aEthUSDC)
 @@ \`_streams\` key \`100031.isEntity\` @@
 - false
 + true

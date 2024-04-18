@@ -1,6 +1,5 @@
 import * as pools from '@bgd-labs/aave-address-book';
 import {getBits} from '../../utils/storageSlots';
-import {prettifyNumber} from './markdownUtils';
 
 export function getDecodedReserveData(contractAddress: string, data?: bigint) {
   if (!data) return data;
@@ -37,7 +36,7 @@ function decodeReserveDataV2(data: bigint) {
     frozen: !!frozen,
     borrowingEnabled: !!borrowingEnabled,
     stableBorrowingEnabled: !!stableBorrowingEnabled,
-    reserveFactor: prettifyNumber({value: reserveFactor, decimals: 2, suffix: '%'}),
+    reserveFactor,
   };
 }
 
@@ -73,7 +72,7 @@ function decodeReserveDataV3(data: bigint) {
     stableRateBorrowingEnabled,
     paused,
     borrowingInIsolation,
-    reserveFactor: prettifyNumber({value: reserveFactor, decimals: 2, suffix: '%'}),
+    reserveFactor,
     borrowCap,
     supplyCap,
     liquidationProtocolFee,

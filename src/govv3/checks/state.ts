@@ -1,6 +1,6 @@
 // Based on https://github.com/Uniswap/governance-seatbelt/blob/main/checks/check-state-changes.ts
 // adjusted for viem & aave governance v3
-import {type Client, type Hex, getAddress} from 'viem';
+import {type Client, type Hex, getAddress, Address} from 'viem';
 import type {StateDiff, TenderlySimulationResponse} from '../../utils/tenderlyClient';
 import {findAsset} from '../utils/checkAddress';
 import {prettifyNumber, wrapInQuotes} from '../utils/markdownUtils';
@@ -16,6 +16,10 @@ type Change = {
   after: string;
   type?: string;
 };
+
+function resolveChain(chain: string[]) {
+  return chain.join('.');
+}
 
 function getContractChanges(diffs: StateDiff[]) {
   const changes: Change[] = [];
@@ -75,77 +79,100 @@ async function renderContractChanges(
 ) {
   let stateChanges = `\n${getContractName(simulation.contracts, address, client.chain!.id)}\n\`\`\`diff\n`;
   for (const change of changes) {
-    stateChanges += await deepDiff(
+    stateChanges += await deepDiff({
       client,
       address,
-      change.before,
-      change.after,
-      change.name,
-      change.type,
-    );
+      before: change.before,
+      after: change.after,
+      accessChain: [change.name],
+      type: change.type,
+    });
   }
   stateChanges += '```\n';
 
   return stateChanges;
 }
 
-export async function deepDiff(
-  client: Client,
-  address: Hex,
-  before: Record<string, any> | string,
-  after: Record<string, any> | string,
-  name: string,
-  type?: string,
-): Promise<string> {
+export async function deepDiff({
+  client,
+  address,
+  before,
+  after,
+  accessChain,
+  type,
+}: {
+  client: Client;
+  address: Hex;
+  before: Record<string, any> | string;
+  after: Record<string, any> | string;
+  accessChain: string[];
+  type?: string;
+}): Promise<string> {
   if (typeof before !== 'object' || typeof after !== 'object') {
     return `@@ ${type ? `${wrapInQuotes(type, true)} key ` : ''}${wrapInQuotes(
-      name,
+      resolveChain(accessChain),
       !!type,
-    )} @@\n- ${await enhanceValue({client, address, value: before as string, type})}\n+ ${await enhanceValue(
+    )} @@\n- ${await enhanceValue({client, address, value: before as string, type, accessChain})}\n+ ${await enhanceValue(
       {
         client,
         address,
         value: after as string,
         type,
+        accessChain,
       },
     )}\n`;
   }
   /**
    * Injecting the decoded configuration uint256 into the state diff
    */
+
+  let result = '';
   if (type === '_reserves' && (before.configuration?.data || after.configuration?.data)) {
+    const asset = await findAsset(client, accessChain[0] as Hex);
+    result += `# decoded configuration data for key ${accessChain[0]} (symbol: ${asset.symbol})\n`;
     before.configuration.data_decoded = getDecodedReserveData(address, before.configuration.data);
     after.configuration.data_decoded = getDecodedReserveData(address, after.configuration.data);
   }
 
-  let result = '';
+  if (type === '_streams') {
+    const asset = await findAsset(client, after.tokenAddress);
+    after.ratePerSecond = prettifyNumber({decimals: asset.decimals, value: after.ratePerSecond});
+    after.remainingBalance = prettifyNumber({
+      decimals: asset.decimals,
+      value: after.remainingBalance,
+    });
+  }
+
   for (const key of Object.keys(before)) {
     if (before[key] === after[key]) continue;
-    if (typeof before[key] === 'object')
-      result += await deepDiff(
+
+    const newAccessChain = [...accessChain];
+    newAccessChain.push(key);
+    if (typeof before[key] === 'object') {
+      result += await deepDiff({
         client,
         address,
-        before[key],
-        after[key],
-        name ? `${name}.${key}` : key,
-        type,
-      );
-    else
+        before: before[key],
+        after: after[key],
+        accessChain: newAccessChain,
+        type: type,
+      });
+    } else
       result += `@@ ${type ? `${wrapInQuotes(type, true)} key ` : ''}${wrapInQuotes(
-        `${name}.${key}`,
+        resolveChain([...accessChain, key]),
         !!type,
       )} @@\n- ${await enhanceValue({
         client,
         address,
         value: before[key],
         type,
-        subType: key,
+        accessChain: newAccessChain,
       })}\n+ ${await enhanceValue({
         client,
         address,
         value: after[key],
         type,
-        subType: key,
+        accessChain: newAccessChain,
       })}\n`;
   }
   return result;
@@ -156,14 +183,20 @@ async function enhanceValue({
   address,
   value,
   type,
-  subType,
+  accessChain,
 }: {
   client: Client;
   address: Hex;
   value: string;
   type?: string;
-  subType?: string;
+  accessChain: string[];
 }) {
+  const key = accessChain[accessChain?.length - 1];
+  if (key === 'tokenAddress') {
+    const asset = await findAsset(client, value as Address);
+    return `${value} (symbol: ${asset.symbol})`;
+  }
+  // if(accessChain.includes(''))
   if (type) {
     // values to be rendered with asset decimals
     if (
@@ -181,22 +214,17 @@ async function enhanceValue({
       if (asset) return prettifyNumber({decimals: asset.decimals, value});
     }
     // values to be rendered with ray decimals
-    if (
-      subType &&
-      ['_reserves'].includes(type) &&
-      ['liquidityIndex', 'variableBorrowIndex'].includes(subType)
-    ) {
-      return prettifyNumber({decimals: 27, value});
-    }
-    // also rays but representing percentage
-    if (
-      subType &&
-      ['_reserves'].includes(type) &&
-      ['currentLiquidityRate', 'currentVariableBorrowRate', 'currentStableBorrowRate'].includes(
-        subType,
+    if (key && ['_reserves'].includes(type)) {
+      if (['liquidityIndex', 'variableBorrowIndex'].includes(key))
+        return prettifyNumber({decimals: 27, value});
+      if (['liquidationThreshold', 'reserveFactor', 'liquidationProtocolFee'].includes(key))
+        return prettifyNumber({decimals: 2, value, suffix: '%'});
+      if (
+        ['currentLiquidityRate', 'currentVariableBorrowRate', 'currentStableBorrowRate'].includes(
+          key,
+        )
       )
-    ) {
-      return prettifyNumber({decimals: 25, value, suffix: '%'});
+        return prettifyNumber({decimals: 25, value, suffix: '%'});
     }
   }
   return value;
