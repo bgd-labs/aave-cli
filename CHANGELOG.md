@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.11.0](https://github.com/bgd-labs/aave-cli/compare/v0.10.0...v0.11.0) (2024-04-18)
+
+
+### Features
+
+* seatbelt improvements ([#128](https://github.com/bgd-labs/aave-cli/issues/128)) ([d1bdad1](https://github.com/bgd-labs/aave-cli/commit/d1bdad1df0991d1138e3f967edb5ceefca3809ce))
+
+
+### Bug Fixes
+
+* cleanup cache ([6393ec7](https://github.com/bgd-labs/aave-cli/commit/6393ec7b18e5b0d595c26d32f40bfc0fd99932da))
+
 ## [0.10.0](https://github.com/bgd-labs/aave-cli/compare/v0.9.3...v0.10.0) (2024-04-02)
 
 ### Features
