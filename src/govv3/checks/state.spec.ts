@@ -16,7 +16,7 @@ describe('state check', () => {
   it('should correctly render state diff for config change', async () => {
     const result = await checkStateChanges.checkProposal(
       null as any,
-      CONFIG_CHANGE_PAYLOAD,
+      CONFIG_CHANGE_PAYLOAD.simulation,
       CHAIN_ID_CLIENT_MAP[1],
     );
     expect(result).toMatchSnapshot();

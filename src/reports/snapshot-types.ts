@@ -1,4 +1,4 @@
-import { z } from "zod";
+import {z} from 'zod';
 
 export const aaveV3ConfigSchema = z.object({
   oracle: z.string(),

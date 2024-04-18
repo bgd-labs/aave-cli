@@ -10,11 +10,11 @@ import {
   pad,
   parseEther,
   toHex,
-} from "viem";
-import type { GetTransactionReturnType } from "viem";
-import { deployContract, getBlock, getTransactionReceipt, sendTransaction } from "viem/actions";
-import { EOA } from "./constants";
-import { logError, logInfo, logSuccess, logWarning } from "./logger";
+} from 'viem';
+import type {GetTransactionReturnType} from 'viem';
+import {deployContract, getBlock, getTransactionReceipt, sendTransaction} from 'viem/actions';
+import {EOA} from './constants';
+import {logError, logInfo, logSuccess, logWarning} from './logger';
 export type StateObject = {
   balance?: string;
   code?: string;
@@ -41,7 +41,7 @@ export type ContractObject = {
   source: string;
   sourcePath: string;
   compiler: {
-    name: "solc";
+    name: 'solc';
     version: string;
   };
   networks: Record<
@@ -65,7 +65,7 @@ export type TenderlyRequest = {
   gas?: number;
   gas_price?: string;
   value?: string;
-  simulation_type?: "full" | "quick";
+  simulation_type?: 'full' | 'quick';
   save?: boolean;
   save_if_fails?: boolean;
   state_objects?: Record<Hex, StateObject>;
@@ -79,36 +79,36 @@ export type TenderlyRequest = {
 };
 
 enum SoltypeType {
-  Address = "address",
-  Bool = "bool",
-  Bytes32 = "bytes32",
-  MappingAddressUint256 = "mapping (address => uint256)",
-  MappingUint256Uint256 = "mapping (uint256 => uint256)",
-  String = "string",
-  Tuple = "tuple",
-  TypeAddress = "address[]",
-  TypeTuple = "tuple[]",
-  Uint16 = "uint16",
-  Uint256 = "uint256",
-  Uint48 = "uint48",
-  Uint56 = "uint56",
-  Uint8 = "uint8",
+  Address = 'address',
+  Bool = 'bool',
+  Bytes32 = 'bytes32',
+  MappingAddressUint256 = 'mapping (address => uint256)',
+  MappingUint256Uint256 = 'mapping (uint256 => uint256)',
+  String = 'string',
+  Tuple = 'tuple',
+  TypeAddress = 'address[]',
+  TypeTuple = 'tuple[]',
+  Uint16 = 'uint16',
+  Uint256 = 'uint256',
+  Uint48 = 'uint48',
+  Uint56 = 'uint56',
+  Uint8 = 'uint8',
 }
 
 enum StorageLocation {
-  Calldata = "calldata",
-  Default = "default",
-  Memory = "memory",
-  Storage = "storage",
+  Calldata = 'calldata',
+  Default = 'default',
+  Memory = 'memory',
+  Storage = 'storage',
 }
 
 enum SimpleTypeType {
-  Address = "address",
-  Bool = "bool",
-  Bytes = "bytes",
-  Slice = "slice",
-  String = "string",
-  Uint = "uint",
+  Address = 'address',
+  Bool = 'bool',
+  Bytes = 'bytes',
+  Slice = 'slice',
+  String = 'string',
+  Uint = 'uint',
 }
 
 interface Type {
@@ -206,7 +206,7 @@ type TenderlyContractResponseObject = {
     name: string;
     decimals: number;
   };
-  child_contracts?: { id: string; address: Hex; network_id: string }[];
+  child_contracts?: {id: string; address: Hex; network_id: string}[];
   src_map: any;
 };
 
@@ -251,7 +251,7 @@ export type Fork = {
 };
 
 class Tenderly {
-  TENDERLY_BASE = "https://api.tenderly.co/api/v1";
+  TENDERLY_BASE = 'https://api.tenderly.co/api/v1';
 
   ACCESS_TOKEN: string;
   ACCOUNT: string;
@@ -264,13 +264,16 @@ class Tenderly {
   }
 
   trace = async (chainId: number, txHash: string): Promise<TenderlyTraceResponse> => {
-    const response = await fetch(`${this.TENDERLY_BASE}/public-contract/${chainId}/trace/${txHash}`, {
-      method: "GET",
-      headers: new Headers({
-        "Content-Type": "application/json",
-        "X-Access-Key": this.ACCESS_TOKEN,
-      }),
-    });
+    const response = await fetch(
+      `${this.TENDERLY_BASE}/public-contract/${chainId}/trace/${txHash}`,
+      {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'X-Access-Key': this.ACCESS_TOKEN,
+        }),
+      },
+    );
     const result: TenderlyTraceResponse = await response.json();
     // Post-processing to ensure addresses we use are checksummed (since ethers returns checksummed addresses)
     // result.transaction.addresses = result.transaction.addresses.map(getAddress);
@@ -278,16 +281,19 @@ class Tenderly {
     return result;
   };
 
-  simulate = async (request: TenderlyRequest, client?: Client): Promise<TenderlySimulationResponse> => {
+  simulate = async (
+    request: TenderlyRequest,
+    client?: Client,
+  ): Promise<TenderlySimulationResponse> => {
     if (!request.state_objects) {
       request.state_objects = {};
     }
     if (!request.state_objects[request.from]) {
       request.state_objects[request.from] = {
-        balance: String(parseEther("3")),
+        balance: String(parseEther('3')),
       };
     } else {
-      request.state_objects[request.from].balance = String(parseEther("3"));
+      request.state_objects[request.from].balance = String(parseEther('3'));
     }
 
     let apiUrl = `${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/simulate`;
@@ -309,20 +315,20 @@ class Tenderly {
     const fullRequest = JSON.stringify({
       generate_access_list: true,
       save: true,
-      gas_price: "0",
+      gas_price: '0',
       gas: 30_000_000,
       force_import_contracts: true,
       ...request,
     });
 
-    logInfo("tenderly", `request: ${JSON.stringify(fullRequest)}`);
+    logInfo('tenderly', `request: ${JSON.stringify(fullRequest)}`);
 
     const response = await fetch(apiUrl, {
-      method: "POST",
+      method: 'POST',
       body: fullRequest,
       headers: new Headers({
-        "Content-Type": "application/json",
-        "X-Access-Key": this.ACCESS_TOKEN,
+        'Content-Type': 'application/json',
+        'X-Access-Key': this.ACCESS_TOKEN,
       }),
     });
     if (response.status !== 200) {
@@ -342,10 +348,10 @@ class Tenderly {
     const response: Response = await fetch(
       `${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${project || this.PROJECT}/fork/${forkId}`,
       {
-        method: "GET",
+        method: 'GET',
         headers: new Headers({
-          "Content-Type": "application/json",
-          "X-Access-Key": this.ACCESS_TOKEN,
+          'Content-Type': 'application/json',
+          'X-Access-Key': this.ACCESS_TOKEN,
         }),
       },
     );
@@ -373,7 +379,7 @@ class Tenderly {
    */
   simulateTx = async (
     chainId: number,
-    tx: GetTransactionReturnType<Chain, "latest">,
+    tx: GetTransactionReturnType<Chain, 'latest'>,
   ): Promise<TenderlySimulationResponse> => {
     const simulationPayload = {
       network_id: String(chainId),
@@ -398,22 +404,25 @@ class Tenderly {
   }): Promise<Fork> => {
     const forkingPoint = {
       network_id: chainId,
-      chain_config: { chain_id: forkChainId },
+      chain_config: {chain_id: forkChainId},
     };
     if (blockNumber) (forkingPoint as any).block_number = blockNumber;
     if (alias) (forkingPoint as any).alias = alias;
-    const response = await fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/fork`, {
-      method: "POST",
-      body: JSON.stringify(forkingPoint),
-      headers: new Headers({
-        "Content-Type": "application/json",
-        "X-Access-Key": this.ACCESS_TOKEN,
-      }),
-    });
+    const response = await fetch(
+      `${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/fork`,
+      {
+        method: 'POST',
+        body: JSON.stringify(forkingPoint),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'X-Access-Key': this.ACCESS_TOKEN,
+        }),
+      },
+    );
 
     const result = await response.json();
     if (result.error) {
-      logError("tenderly", "fork could not be created");
+      logError('tenderly', 'fork could not be created');
       throw new Error(result.error.message);
     }
     const fork = {
@@ -425,7 +434,7 @@ class Tenderly {
       global_head: result.simulation_fork.global_head,
     };
     logSuccess(
-      "tenderly",
+      'tenderly',
       `Fork created! To use in aave interface you need to run the following commands:\n\n---\nlocalStorage.setItem('forkEnabled', 'true');\nlocalStorage.setItem('forkBaseChainId', ${fork.chainId});\nlocalStorage.setItem('forkNetworkId', ${fork.forkNetworkId});\nlocalStorage.setItem("forkRPCUrl", "${fork.forkUrl}");\n---\n`,
     );
     return fork;
@@ -434,12 +443,12 @@ class Tenderly {
   deployCode = async (fork: Fork, filePath: string, from?: Hex) => {
     const walletProvider = createClient({
       account: from || EOA,
-      chain: { id: fork.forkNetworkId, name: "tenderly" } as any,
+      chain: {id: fork.forkNetworkId, name: 'tenderly'} as any,
       transport: http(fork.forkUrl),
     });
 
     const artifact = require(filePath);
-    logInfo("tenderly", `deploying ${filePath}`);
+    logInfo('tenderly', `deploying ${filePath}`);
 
     const hash = await deployContract(walletProvider, {
       abi: artifact.abi,
@@ -447,27 +456,27 @@ class Tenderly {
       account: walletProvider.account,
     } as any);
 
-    const receipt = await getTransactionReceipt(walletProvider, { hash });
-    return getContractAddress({ from: receipt.from, nonce: receipt.nonce });
+    const receipt = await getTransactionReceipt(walletProvider, {hash});
+    return getContractAddress({from: receipt.from, nonce: receipt.nonce});
   };
 
   warpTime = async (fork: Fork, timestamp: bigint) => {
     const client = createClient({
-      chain: { id: fork.forkNetworkId } as any,
+      chain: {id: fork.forkNetworkId} as any,
       transport: http(fork.forkUrl),
     });
 
     const currentBlock = await getBlock(client);
     // warping forward in time
     if (timestamp > currentBlock.timestamp) {
-      logInfo("tenderly", `warping time from ${currentBlock.timestamp} to ${timestamp}`);
+      logInfo('tenderly', `warping time from ${currentBlock.timestamp} to ${timestamp}`);
       await client.request({
-        method: "evm_increaseTime" as any,
+        method: 'evm_increaseTime' as any,
         params: [toHex(timestamp - currentBlock.timestamp)],
       });
     } else {
       logWarning(
-        "tenderly",
+        'tenderly',
         `skipping time warp as tenderly forks do not support traveling back in time (from ${currentBlock.timestamp} to ${timestamp})`,
       );
     }
@@ -475,18 +484,21 @@ class Tenderly {
 
   warpBlocks = async (fork: Fork, blockNumber: bigint) => {
     const client = createClient({
-      chain: { id: fork.forkNetworkId } as any,
+      chain: {id: fork.forkNetworkId} as any,
       transport: http(fork.forkUrl),
     });
     const currentBlock = await getBlock(client);
     if (blockNumber > currentBlock.number) {
-      logInfo("tenderly", `warping blocks from ${currentBlock.number} to ${blockNumber}`);
+      logInfo('tenderly', `warping blocks from ${currentBlock.number} to ${blockNumber}`);
       await client.request({
-        method: "evm_increaseBlocks" as any,
+        method: 'evm_increaseBlocks' as any,
         params: [toHex(blockNumber - currentBlock.number)],
       });
     } else {
-      logWarning("tenderly", "skipping block warp as tenderly forks do not support traveling back in time");
+      logWarning(
+        'tenderly',
+        'skipping block warp as tenderly forks do not support traveling back in time',
+      );
     }
   };
 
@@ -495,20 +507,20 @@ class Tenderly {
     await this.fundAccount(fork, request.from);
 
     const publicProvider = createClient({
-      chain: { id: fork.forkNetworkId } as any,
+      chain: {id: fork.forkNetworkId} as any,
       transport: http(fork.forkUrl),
     });
     // 1. apply storage changes
     if (request.state_objects) {
-      logInfo("tenderly", "setting storage");
+      logInfo('tenderly', 'setting storage');
       for (const address of Object.keys(request.state_objects) as Hex[]) {
         if (request.state_objects[address].storage) {
           for (const slot of Object.keys(request.state_objects[address].storage!) as Hex[]) {
             await publicProvider.request({
-              method: "tenderly_setStorageAt" as any,
+              method: 'tenderly_setStorageAt' as any,
               params: [
                 address as Hex,
-                pad(slot as Hex, { size: 32 }),
+                pad(slot as Hex, {size: 32}),
                 pad(request.state_objects[address].storage![slot] as Hex, {
                   size: 32,
                 }),
@@ -521,18 +533,18 @@ class Tenderly {
 
     // 2. warp time
     if (request.block_header?.timestamp) {
-      await this.warpTime(fork, fromHex(request.block_header?.timestamp, "bigint"));
+      await this.warpTime(fork, fromHex(request.block_header?.timestamp, 'bigint'));
     }
     if (request.block_header?.number) {
-      await this.warpBlocks(fork, fromHex(request.block_header?.number, "bigint"));
+      await this.warpBlocks(fork, fromHex(request.block_header?.number, 'bigint'));
     }
 
     // 3. execute txn
     if (request.input) {
-      logInfo("tenderly", "execute transaction");
+      logInfo('tenderly', 'execute transaction');
       const walletProvider = createClient({
         account: request.from,
-        chain: { id: fork.forkNetworkId, name: "tenderly" } as any,
+        chain: {id: fork.forkNetworkId, name: 'tenderly'} as any,
         transport: http(fork.forkUrl),
       });
       const hash = await sendTransaction(walletProvider, {
@@ -540,35 +552,38 @@ class Tenderly {
         to: request.to,
         value: request.value || 0n,
       } as any);
-      const receipt = await getTransactionReceipt(walletProvider, { hash });
-      if (receipt.status === "success") {
-        logSuccess("tenderly", "transaction successfully executed");
+      const receipt = await getTransactionReceipt(walletProvider, {hash});
+      if (receipt.status === 'success') {
+        logSuccess('tenderly', 'transaction successfully executed');
       } else {
-        logError("tenderly", "transaction reverted");
+        logError('tenderly', 'transaction reverted');
       }
       return hash;
     }
   };
 
   fundAccount = (fork: Fork, address: Hex) => {
-    logInfo("tenderly", "fund account");
-    return fetch(`${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/fork/${fork.id}/balance`, {
-      method: "POST",
-      body: JSON.stringify({ accounts: [address], amount: 1000 }),
-      headers: new Headers({
-        "Content-Type": "application/json",
-        "X-Access-Key": this.ACCESS_TOKEN,
-      }),
-    });
+    logInfo('tenderly', 'fund account');
+    return fetch(
+      `${this.TENDERLY_BASE}/account/${this.ACCOUNT}/project/${this.PROJECT}/fork/${fork.id}/balance`,
+      {
+        method: 'POST',
+        body: JSON.stringify({accounts: [address], amount: 1000}),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'X-Access-Key': this.ACCESS_TOKEN,
+        }),
+      },
+    );
   };
 
   replaceCode = (fork: Fork, address: Hex, code: Hex) => {
     const publicProvider = createClient({
-      chain: { id: fork.forkNetworkId } as any,
+      chain: {id: fork.forkNetworkId} as any,
       transport: http(fork.forkUrl),
     });
     return publicProvider.request({
-      method: "tenderly_setCode" as any,
+      method: 'tenderly_setCode' as any,
       params: [address, code],
     });
   };

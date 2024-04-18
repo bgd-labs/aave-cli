@@ -1,23 +1,25 @@
 // Based on https://github.com/Uniswap/governance-seatbelt/blob/main/checks/check-targets-verified-etherscan.ts
 // adjusted for viem & aave governance v3
-import type { Client, Hex } from "viem";
-import { getBytecode } from "viem/actions";
-import { type TenderlySimulationResponse, tenderly } from "../../utils/tenderlyClient";
-import type { PayloadsController } from "../payloadsController";
-import { isKnownAddress } from "../utils/checkAddress";
-import { flagKnownAddress } from "../utils/markdownUtils";
-import type { ProposalCheck } from "./types";
+import type {Client, Hex} from 'viem';
+import {getBytecode} from 'viem/actions';
+import {type TenderlySimulationResponse, tenderly} from '../../utils/tenderlyClient';
+import type {PayloadsController} from '../payloadsController';
+import {isKnownAddress} from '../utils/checkAddress';
+import {flagKnownAddress} from '../utils/markdownUtils';
+import type {ProposalCheck} from './types';
 
 /**
  * Check all targets with code are verified on Etherscan
  */
-export const checkTargetsVerifiedEtherscan: ProposalCheck<Awaited<ReturnType<PayloadsController["getPayload"]>>> = {
-  name: "Check all targets are verified on Etherscan",
+export const checkTargetsVerifiedEtherscan: ProposalCheck<
+  Awaited<ReturnType<PayloadsController['getPayload']>>
+> = {
+  name: 'Check all targets are verified on Etherscan',
   async checkProposal(proposal, sim, client) {
     const allTargets = proposal.payload.actions.map((action) => action.target);
     const uniqueTargets = allTargets.filter((addr, i, targets) => targets.indexOf(addr) === i);
     const info = await checkVerificationStatuses(sim, uniqueTargets, client);
-    return { info, warnings: [], errors: [] };
+    return {info, warnings: [], errors: []};
   },
 };
 
@@ -25,10 +27,10 @@ export const checkTargetsVerifiedEtherscan: ProposalCheck<Awaited<ReturnType<Pay
  * Check all touched contracts with code are verified on Etherscan
  */
 export const checkTouchedContractsVerifiedEtherscan: ProposalCheck<any> = {
-  name: "Check all touched contracts are verified on Etherscan",
+  name: 'Check all touched contracts are verified on Etherscan',
   async checkProposal(proposal, sim, client) {
     const info = await checkVerificationStatuses(sim, sim.transaction.addresses, client);
-    return { info, warnings: [], errors: [] };
+    return {info, warnings: [], errors: []};
   },
 };
 
@@ -44,11 +46,13 @@ async function checkVerificationStatuses(
   for (const addr of addresses) {
     const isAddrKnown = isKnownAddress(addr, client.chain!.id);
     const status = await checkVerificationStatus(sim, addr, client);
-    if (status === "eoa") {
+    if (status === 'eoa') {
       info.push(`- ${addr}: EOA (verification not applicable)`);
-    } else if (status === "verified") {
+    } else if (status === 'verified') {
       const contract = getContract(sim, addr);
-      info.push(`- ${addr}: Contract (verified) (${contract?.contract_name}) ${flagKnownAddress(isAddrKnown)}`);
+      info.push(
+        `- ${addr}: Contract (verified) (${contract?.contract_name}) ${flagKnownAddress(isAddrKnown)}`,
+      );
     } else {
       info.push(`- ${addr}: Contract (not verified) ${flagKnownAddress(isAddrKnown)}`);
     }
@@ -63,15 +67,15 @@ async function checkVerificationStatus(
   sim: TenderlySimulationResponse,
   addr: Hex,
   client: Client,
-): Promise<"verified" | "eoa" | "unverified"> {
+): Promise<'verified' | 'eoa' | 'unverified'> {
   // If an address exists in the contracts array, it's verified on Etherscan
   const contract = getContract(sim, addr);
-  if (contract) return "verified";
+  if (contract) return 'verified';
   const stateDiff = getStateDiff(sim, addr);
-  if (stateDiff) return "unverified";
+  if (stateDiff) return 'unverified';
   // Otherwise, check if there's code at the address. Addresses with code not in the contracts array are not verified
-  const code = await getBytecode(client, { address: addr });
-  return code === undefined ? "eoa" : "unverified";
+  const code = await getBytecode(client, {address: addr});
+  return code === undefined ? 'eoa' : 'unverified';
 }
 
 function getContract(sim: TenderlySimulationResponse, addr: string) {

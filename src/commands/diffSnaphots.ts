@@ -1,18 +1,18 @@
-import fs from "node:fs";
-import { compareStorageLayouts } from "@bgd-labs/js-utils";
-import type { Command } from "@commander-js/extra-typings";
-import { adiDiffReports } from "../reports/adi-diff-reports";
-import { diffReports } from "../reports/diff-reports";
-import { readJsonFile, readJsonString } from "../utils/json";
+import fs from 'node:fs';
+import {compareStorageLayouts} from '@bgd-labs/js-utils';
+import type {Command} from '@commander-js/extra-typings';
+import {adiDiffReports} from '../reports/adi-diff-reports';
+import {diffReports} from '../reports/diff-reports';
+import {readJsonFile, readJsonString} from '../utils/json';
 
 export function addCommand(program: Command) {
   program
-    .command("diff-snapshots")
-    .description("generate a snapshot diff report")
-    .argument("<from>")
-    .argument("<to>")
-    .option("-o, --out <string>", "output path")
-    .option("--stringMode", "expects input to be a string, not paths")
+    .command('diff-snapshots')
+    .description('generate a snapshot diff report')
+    .argument('<from>')
+    .argument('<to>')
+    .option('-o, --out <string>', 'output path')
+    .option('--stringMode', 'expects input to be a string, not paths')
     .action(async (_from, _to, options) => {
       const from = options.stringMode ? readJsonString(_from) : readJsonFile(_from);
       const to = options.stringMode ? readJsonString(_to) : readJsonFile(_to);
@@ -25,12 +25,12 @@ export function addCommand(program: Command) {
     });
 
   program
-    .command("adi-diff-snapshots")
-    .description("generate a aDI snapshot diff report")
-    .argument("<from>")
-    .argument("<to>")
-    .option("-o, --out <string>", "output path")
-    .option("--stringMode", "expects input to be a string, not paths")
+    .command('adi-diff-snapshots')
+    .description('generate a aDI snapshot diff report')
+    .argument('<from>')
+    .argument('<to>')
+    .option('-o, --out <string>', 'output path')
+    .option('--stringMode', 'expects input to be a string, not paths')
     .action(async (_from, _to, options) => {
       const from = options.stringMode ? readJsonString(_from) : readJsonFile(_from);
       const to = options.stringMode ? readJsonString(_to) : readJsonFile(_to);
@@ -43,11 +43,11 @@ export function addCommand(program: Command) {
     });
 
   program
-    .command("diff-storage")
-    .description("generate a storage diff")
-    .argument("<from>")
-    .argument("<to>")
-    .option("-o, --out <string>", "output path")
+    .command('diff-storage')
+    .description('generate a storage diff')
+    .argument('<from>')
+    .argument('<to>')
+    .option('-o, --out <string>', 'output path')
     .action(async (_from, _to, options) => {
       const from = readJsonFile(_from);
       const to = readJsonFile(_to);

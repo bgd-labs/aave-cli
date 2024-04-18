@@ -11,8 +11,8 @@
     "start": "tsx src/cli.ts",
     "build": "tsup",
     "test": "vitest",
-    "lint:fix": "bunx @biomejs/biome check . --apply-unsafe",
-    "lint": "bunx @biomejs/biome check  .",
+    "lint:fix": "bunx prettier . --write",
+    "lint": "bunx prettier . --check",
     "ci:publish": "npm run build && npm publish --access=public"
   },
   "repository": {

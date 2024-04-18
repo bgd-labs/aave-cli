@@ -1,16 +1,16 @@
 // Based on https://github.com/Uniswap/governance-seatbelt/blob/main/checks/check-logs.ts
 // adjusted for viem & aave governance v3
-import { type Address, getAddress } from "viem";
-import type { Log } from "../../utils/tenderlyClient";
-import { interpretLog } from "../utils/logInterpreter";
-import { getContractName } from "../utils/solidityUtils";
-import type { ProposalCheck } from "./types";
+import {type Address, getAddress} from 'viem';
+import type {Log} from '../../utils/tenderlyClient';
+import {interpretLog} from '../utils/logInterpreter';
+import {getContractName} from '../utils/solidityUtils';
+import type {ProposalCheck} from './types';
 
 /**
  * Reports all emitted events from the proposal
  */
 export const checkLogs: ProposalCheck<any> = {
-  name: "Reports all events emitted from the proposal",
+  name: 'Reports all events emitted from the proposal',
   async checkProposal(proposal, sim, client) {
     const info = [];
     const events = sim.transaction.transaction_info.logs?.reduce(
@@ -24,7 +24,8 @@ export const checkLogs: ProposalCheck<any> = {
     );
 
     // Return if no events to show
-    if (!events || !Object.keys(events).length) return { info: ["No events emitted"], warnings: [], errors: [] };
+    if (!events || !Object.keys(events).length)
+      return {info: ['No events emitted'], warnings: [], errors: []};
 
     // Parse each event
     for (const [address, logs] of Object.entries(events)) {
@@ -43,6 +44,6 @@ export const checkLogs: ProposalCheck<any> = {
       }
     }
 
-    return { info, warnings: [], errors: [] };
+    return {info, warnings: [], errors: []};
   },
 };

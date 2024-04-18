@@ -1,7 +1,7 @@
-import { type Address, getAddress } from "viem";
-import type { TenderlySimulationResponse } from "../../utils/tenderlyClient";
-import { isKnownAddress } from "./checkAddress";
-import { flagKnownAddress } from "./markdownUtils";
+import {type Address, getAddress} from 'viem';
+import type {TenderlySimulationResponse} from '../../utils/tenderlyClient';
+import {isKnownAddress} from './checkAddress';
+import {flagKnownAddress} from './markdownUtils';
 
 // --- Helper methods ---
 /**
@@ -9,7 +9,7 @@ import { flagKnownAddress } from "./markdownUtils";
  * @param contract Tenderly contract object to generate name from
  */
 export function getContractName(
-  contracts: TenderlySimulationResponse["contracts"],
+  contracts: TenderlySimulationResponse['contracts'],
   address: Address,
   chainId: number,
 ): string {
@@ -17,7 +17,8 @@ export function getContractName(
 
   // lower-case comparison as strict equality would fail on child contracts which are lower-cased when returned from tenderly
   const contract = contracts.find((c) => c.address.toLowerCase() === address.toLowerCase());
-  if (!contract) return `unknown contract name at \`${getAddress(address)}\`${flagKnownAddress(isAddrKnown)}`;
+  if (!contract)
+    return `unknown contract name at \`${getAddress(address)}\`${flagKnownAddress(isAddrKnown)}`;
   let contractName = contract?.contract_name;
 
   // If the contract is a token, include the full token name. This is useful in cases where the
@@ -25,7 +26,7 @@ export function getContractName(
   if (contract?.token_data?.name) contractName += ` (${contract?.token_data?.name})`;
 
   // if the contract is a proxy include it's child
-  if (contract.standards?.includes("eip1967") && contract.child_contracts?.[0].address) {
+  if (contract.standards?.includes('eip1967') && contract.child_contracts?.[0].address) {
     return `${contractName} at \`${getAddress(address)}\`${flagKnownAddress(
       isAddrKnown,
     )} with implementation ${getContractName(contracts, contract.child_contracts?.[0].address, chainId)}`;
