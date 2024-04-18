@@ -21,7 +21,7 @@ export async function simulateProposal(governanceAddress: Hex, client: Client, p
   logInfo('General', `Running simulation for ${proposalId}`);
   const governance = getGovernance({address: governanceAddress, client});
   await refreshCache(localCacheAdapter);
-  const proposal = localCacheAdapter.getProposal({
+  const proposal = await localCacheAdapter.getProposal({
     chainId: client.chain!.id,
     governance: governanceAddress as Hex,
     proposalId: Number(proposalId),
@@ -42,7 +42,7 @@ export async function simulateProposal(governanceAddress: Hex, client: Client, p
   for (const payload of proposal.proposal.payloads) {
     const client = CHAIN_ID_CLIENT_MAP[Number(payload.chain)];
     const controllerContract = getPayloadsController(payload.payloadsController, client);
-    const cache = localCacheAdapter.getPayload({
+    const cache = await localCacheAdapter.getPayload({
       payloadId: payload.payloadId,
       chainId: Number(payload.chain),
       payloadsController: payload.payloadsController,
