@@ -139,7 +139,7 @@ export const getGovernance = ({address, client}: GetGovernanceParams): Governanc
         args: [proposalId],
       }),
       // value: parseEther('0.5').toString(),
-      block_number: Number(currentBlock.number),
+      block_number: -2,
       state_objects: {
         [governanceContract.address]: {
           storage: {
