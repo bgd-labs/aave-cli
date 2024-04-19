@@ -1,5 +1,6 @@
-import {type Client, type Hex, formatUnits} from 'viem';
+import {type Client, type Hex, formatUnits, Address} from 'viem';
 import type {CheckResult} from '../checks/types';
+import {findAsset} from './checkAddress';
 
 export function boolToMarkdown(value: boolean) {
   if (value) return ':white_check_mark:';
@@ -81,4 +82,9 @@ export function prettifyNumber({
 export function wrapInQuotes(name: string, quotes: boolean) {
   if (quotes) return '`' + name + '`';
   return name;
+}
+
+export async function addAssetSymbol(client: Client, value: Address) {
+  const asset = await findAsset(client, value);
+  return `${value} (symbol: ${asset.symbol})`;
 }

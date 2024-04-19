@@ -3,7 +3,7 @@
 import {type Client, type Hex, getAddress, Address} from 'viem';
 import type {StateDiff, TenderlySimulationResponse} from '../../utils/tenderlyClient';
 import {findAsset} from '../utils/checkAddress';
-import {prettifyNumber, wrapInQuotes} from '../utils/markdownUtils';
+import {addAssetSymbol, prettifyNumber, wrapInQuotes} from '../utils/markdownUtils';
 import {getDecodedReserveData} from '../utils/reserveConfigurationInterpreter';
 import {getContractName} from '../utils/solidityUtils';
 import type {ProposalCheck} from './types';
@@ -127,9 +127,10 @@ export async function deepDiff({
    */
 
   let result = '';
+  if (type && accessChain.length === 1 && ['_reserves', 'assets', 'assetsSources'].includes(type)) {
+    accessChain[0] = await addAssetSymbol(client, accessChain[0] as Address);
+  }
   if (type === '_reserves' && (before.configuration?.data || after.configuration?.data)) {
-    const asset = await findAsset(client, accessChain[0] as Hex);
-    result += `# decoded configuration data for key ${accessChain[0]} (symbol: ${asset.symbol})\n`;
     before.configuration.data_decoded = getDecodedReserveData(address, before.configuration.data);
     after.configuration.data_decoded = getDecodedReserveData(address, after.configuration.data);
   }
@@ -193,8 +194,7 @@ async function enhanceValue({
 }) {
   const key = accessChain[accessChain?.length - 1];
   if (key === 'tokenAddress') {
-    const asset = await findAsset(client, value as Address);
-    return `${value} (symbol: ${asset.symbol})`;
+    return addAssetSymbol(client, value as Address);
   }
   // if(accessChain.includes(''))
   if (type) {

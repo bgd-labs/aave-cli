@@ -30,40 +30,40 @@ Dai (Dai) at \`0x6B175474E89094C44Da98b954EedeAC495271d0F\`[:ghost:](https://git
 
 InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_IMPL")
 \`\`\`diff
-@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.liquidityIndex\` @@
+@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC).liquidityIndex\` @@
 - 1.125972900043692179606694722[1125972900043692179606694722](27 decimals)
 + 1.125991030272021514250652312[1125991030272021514250652312](27 decimals)
-@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.variableBorrowIndex\` @@
+@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC).variableBorrowIndex\` @@
 - 1.185069240973920592952379763[1185069240973920592952379763](27 decimals)
 + 1.185097276944910539318953337[1185097276944910539318953337](27 decimals)
-@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.currentLiquidityRate\` @@
+@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC).currentLiquidityRate\` @@
 - 10.0751473401236648012460614%[100751473401236648012460614](25 decimals)
 + 12.3029815053899026525991182%[123029815053899026525991182](25 decimals)
-@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.currentVariableBorrowRate\` @@
+@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC).currentVariableBorrowRate\` @@
 - 14.8027638325434642033107448%[148027638325434642033107448](25 decimals)
 + 18.0113117017905438863598858%[180113117017905438863598858](25 decimals)
-@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.currentStableBorrowRate\` @@
+@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC).currentStableBorrowRate\` @@
 - 19.8027638325434642033107448%[198027638325434642033107448](25 decimals)
 + 23.0113117017905438863598858%[230113117017905438863598858](25 decimals)
-@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.lastUpdateTimestamp\` @@
+@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC).lastUpdateTimestamp\` @@
 - 1705396271
 + 1705401311
-@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7.liquidityIndex\` @@
+@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7 (symbol: USDT).liquidityIndex\` @@
 - 1.149223734302009162656035865[1149223734302009162656035865](27 decimals)
 + 1.149227808508467355639962102[1149227808508467355639962102](27 decimals)
-@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7.variableBorrowIndex\` @@
+@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7 (symbol: USDT).variableBorrowIndex\` @@
 - 1.228776684865256100554716625[1228776684865256100554716625](27 decimals)
 + 1.228783878292595972201993472[1228783878292595972201993472](27 decimals)
-@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7.currentLiquidityRate\` @@
+@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7 (symbol: USDT).currentLiquidityRate\` @@
 - 4.5670276364018875818860783%[45670276364018875818860783](25 decimals)
 + 3.6453252711281215796169147%[36453252711281215796169147](25 decimals)
-@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7.currentVariableBorrowRate\` @@
+@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7 (symbol: USDT).currentVariableBorrowRate\` @@
 - 7.541484132616072667154102%[75414841326160726671541020](25 decimals)
 + 5.9996093895016005528209445%[59996093895016005528209445](25 decimals)
-@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7.currentStableBorrowRate\` @@
+@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7 (symbol: USDT).currentStableBorrowRate\` @@
 - 13.541484132616072667154102%[135414841326160726671541020](25 decimals)
 + 11.9998697965005335176069815%[119998697965005335176069815](25 decimals)
-@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7.lastUpdateTimestamp\` @@
+@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7 (symbol: USDT).lastUpdateTimestamp\` @@
 - 1705398863
 + 1705401311
 \`\`\`
@@ -139,13 +139,13 @@ InitializableImmutableAdminUpgradeabilityProxy (Aave v2 USDC) at \`0xBcca60bB619
 
 InitializableImmutableAdminUpgradeabilityProxy at \`0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.DEFAULT_INCENTIVES_CONTROLLER")
 \`\`\`diff
-@@ \`assets\` key \`0x3ed3b47dd13ec9a98b44e6204a523e766b225811.lastUpdateTimestamp\` @@
+@@ \`assets\` key \`0x3ed3b47dd13ec9a98b44e6204a523e766b225811 (symbol: aUSDT).lastUpdateTimestamp\` @@
 - 1705398863
 + 1705401311
-@@ \`assets\` key \`0xbcca60bb61934080951369a648fb03df4f96263c.lastUpdateTimestamp\` @@
+@@ \`assets\` key \`0xbcca60bb61934080951369a648fb03df4f96263c (symbol: aUSDC).lastUpdateTimestamp\` @@
 - 1705396271
 + 1705401311
-@@ \`assets\` key \`0xbcca60bb61934080951369a648fb03df4f96263c.users.0x5300a1a15135ea4dc7ad5a167152c01efc9b192a\` @@
+@@ \`assets\` key \`0xbcca60bb61934080951369a648fb03df4f96263c (symbol: aUSDC).users.0x5300a1a15135ea4dc7ad5a167152c01efc9b192a\` @@
 - 0
 + 35777739039773953913685859
 \`\`\`
@@ -182,242 +182,208 @@ exports[`state check > should correctly render state diff for config change 1`] 
     "
 InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_IMPL")
 \`\`\`diff
-# decoded configuration data for key 0x0000000000085d4780b73119b644ae5ecd22b376 (symbol: TUSD)
-@@ \`_reserves\` key \`0x0000000000085d4780b73119b644ae5ecd22b376.configuration.data\` @@
+@@ \`_reserves\` key \`0x0000000000085d4780b73119b644ae5ecd22b376 (symbol: TUSD).configuration.data\` @@
 - 184283194582935181459456
 + 184449215279598567424000
-@@ \`_reserves\` key \`0x0000000000085d4780b73119b644ae5ecd22b376.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x0000000000085d4780b73119b644ae5ecd22b376 (symbol: TUSD).configuration.data_decoded.reserveFactor\` @@
 - 99.9%[9990](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0x03ab458634910aad20ef5f1c8ee96f1d6ac54919 (symbol: RAI)
-@@ \`_reserves\` key \`0x03ab458634910aad20ef5f1c8ee96f1d6ac54919.configuration.data\` @@
+@@ \`_reserves\` key \`0x03ab458634910aad20ef5f1c8ee96f1d6ac54919 (symbol: RAI).configuration.data\` @@
 - 182623275799432407285760
 + 184449503462729652895744
-@@ \`_reserves\` key \`0x03ab458634910aad20ef5f1c8ee96f1d6ac54919.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x03ab458634910aad20ef5f1c8ee96f1d6ac54919 (symbol: RAI).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0x056fd409e1d7a124bd7017459dfea2f387b6d5cd (symbol: GUSD)
-@@ \`_reserves\` key \`0x056fd409e1d7a124bd7017459dfea2f387b6d5cd.configuration.data\` @@
+@@ \`_reserves\` key \`0x056fd409e1d7a124bd7017459dfea2f387b6d5cd (symbol: GUSD).configuration.data\` @@
 - 36893848998339246292992
 + 46117221035194022100992
-@@ \`_reserves\` key \`0x056fd409e1d7a124bd7017459dfea2f387b6d5cd.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x056fd409e1d7a124bd7017459dfea2f387b6d5cd (symbol: GUSD).configuration.data_decoded.reserveFactor\` @@
 - 20%[2000](2 decimals)
 + 25%[2500](2 decimals)
-# decoded configuration data for key 0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e (symbol: YFI)
-@@ \`_reserves\` key \`0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e.configuration.data\` @@
+@@ \`_reserves\` key \`0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e (symbol: YFI).configuration.data\` @@
 - 182623275846677047869440
 + 184449503509974293479424
-@@ \`_reserves\` key \`0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e (symbol: YFI).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0x0d8775f648430679a709e98d2b0cb6250d2887ef (symbol: BAT)
-@@ \`_reserves\` key \`0x0d8775f648430679a709e98d2b0cb6250d2887ef.configuration.data\` @@
+@@ \`_reserves\` key \`0x0d8775f648430679a709e98d2b0cb6250d2887ef (symbol: BAT).configuration.data\` @@
 - 182622987616300896157696
 + 184449215279598141767680
-@@ \`_reserves\` key \`0x0d8775f648430679a709e98d2b0cb6250d2887ef.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x0d8775f648430679a709e98d2b0cb6250d2887ef (symbol: BAT).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0x0f5d2fb29fb7d3cfee444a200298f468908cc942 (symbol: MANA)
-@@ \`_reserves\` key \`0x0f5d2fb29fb7d3cfee444a200298f468908cc942.configuration.data\` @@
+@@ \`_reserves\` key \`0x0f5d2fb29fb7d3cfee444a200298f468908cc942 (symbol: MANA).configuration.data\` @@
 - 182623275846677047869440
 + 184449503509974293479424
-@@ \`_reserves\` key \`0x0f5d2fb29fb7d3cfee444a200298f468908cc942.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x0f5d2fb29fb7d3cfee444a200298f468908cc942 (symbol: MANA).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0x111111111117dc0aa78b770fa6a738034120c302 (symbol: 1INCH)
-@@ \`_reserves\` key \`0x111111111117dc0aa78b770fa6a738034120c302.configuration.data\` @@
+@@ \`_reserves\` key \`0x111111111117dc0aa78b770fa6a738034120c302 (symbol: 1INCH).configuration.data\` @@
 - 182622987615656651063296
 + 184449215278953896673280
-@@ \`_reserves\` key \`0x111111111117dc0aa78b770fa6a738034120c302.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x111111111117dc0aa78b770fa6a738034120c302 (symbol: 1INCH).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0x1494ca1f11d487c2bbe4543e90080aeba4ba3c2b (symbol: DPI)
-@@ \`_reserves\` key \`0x1494ca1f11d487c2bbe4543e90080aeba4ba3c2b.configuration.data\` @@
+@@ \`_reserves\` key \`0x1494ca1f11d487c2bbe4543e90080aeba4ba3c2b (symbol: DPI).configuration.data\` @@
 - 182622987616300896157696
 + 184449215279598141767680
-@@ \`_reserves\` key \`0x1494ca1f11d487c2bbe4543e90080aeba4ba3c2b.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x1494ca1f11d487c2bbe4543e90080aeba4ba3c2b (symbol: DPI).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0x1f9840a85d5af5bf1d1762f925bdaddc4201f984 (symbol: UNI)
-@@ \`_reserves\` key \`0x1f9840a85d5af5bf1d1762f925bdaddc4201f984.configuration.data\` @@
+@@ \`_reserves\` key \`0x1f9840a85d5af5bf1d1762f925bdaddc4201f984 (symbol: UNI).configuration.data\` @@
 - 182622987615871490850816
 + 184449215279168736460800
-@@ \`_reserves\` key \`0x1f9840a85d5af5bf1d1762f925bdaddc4201f984.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x1f9840a85d5af5bf1d1762f925bdaddc4201f984 (symbol: UNI).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 (symbol: WBTC)
-@@ \`_reserves\` key \`0x2260fac5e5542a773aa44fbcfedf7c193bc2c599.configuration.data\` @@
+@@ \`_reserves\` key \`0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 (symbol: WBTC).configuration.data\` @@
 - 55340594805996352183328
 + 64563966842851127991328
-@@ \`_reserves\` key \`0x2260fac5e5542a773aa44fbcfedf7c193bc2c599.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 (symbol: WBTC).configuration.data_decoded.reserveFactor\` @@
 - 30%[3000](2 decimals)
 + 35%[3500](2 decimals)
-# decoded configuration data for key 0x408e41876cccdc0f92210600ef50372656052a38 (symbol: REN)
-@@ \`_reserves\` key \`0x408e41876cccdc0f92210600ef50372656052a38.configuration.data\` @@
+@@ \`_reserves\` key \`0x408e41876cccdc0f92210600ef50372656052a38 (symbol: REN).configuration.data\` @@
 - 182622987616300896157696
 + 184449215279598141767680
-@@ \`_reserves\` key \`0x408e41876cccdc0f92210600ef50372656052a38.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x408e41876cccdc0f92210600ef50372656052a38 (symbol: REN).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b (symbol: CVX)
-@@ \`_reserves\` key \`0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b.configuration.data\` @@
+@@ \`_reserves\` key \`0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b (symbol: CVX).configuration.data\` @@
 - 182622987615656651063296
 + 184449215278953896673280
-@@ \`_reserves\` key \`0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b (symbol: CVX).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0x4fabb145d64652a948d72533023f6e7a623c7c53 (symbol: BUSD)
-@@ \`_reserves\` key \`0x4fabb145d64652a948d72533023f6e7a623c7c53.configuration.data\` @@
+@@ \`_reserves\` key \`0x4fabb145d64652a948d72533023f6e7a623c7c53 (symbol: BUSD).configuration.data\` @@
 - 184283482766066266931200
 + 184449503462729652895744
-@@ \`_reserves\` key \`0x4fabb145d64652a948d72533023f6e7a623c7c53.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x4fabb145d64652a948d72533023f6e7a623c7c53 (symbol: BUSD).configuration.data_decoded.reserveFactor\` @@
 - 99.9%[9990](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0x514910771af9ca656af840dff83e8264ecf986ca (symbol: LINK)
-@@ \`_reserves\` key \`0x514910771af9ca656af840dff83e8264ecf986ca.configuration.data\` @@
+@@ \`_reserves\` key \`0x514910771af9ca656af840dff83e8264ecf986ca (symbol: LINK).configuration.data\` @@
 - 55340453506416971350016
 + 64563825543271747158016
-@@ \`_reserves\` key \`0x514910771af9ca656af840dff83e8264ecf986ca.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x514910771af9ca656af840dff83e8264ecf986ca (symbol: LINK).configuration.data_decoded.reserveFactor\` @@
 - 30%[3000](2 decimals)
 + 35%[3500](2 decimals)
-# decoded configuration data for key 0x57ab1ec28d129707052df4df418d58a2d46d5f51 (symbol: sUSD)
-@@ \`_reserves\` key \`0x57ab1ec28d129707052df4df418d58a2d46d5f51.configuration.data\` @@
+@@ \`_reserves\` key \`0x57ab1ec28d129707052df4df418d58a2d46d5f51 (symbol: sUSD).configuration.data\` @@
 - 55340597575648425279488
 + 64563969612503201087488
-@@ \`_reserves\` key \`0x57ab1ec28d129707052df4df418d58a2d46d5f51.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x57ab1ec28d129707052df4df418d58a2d46d5f51 (symbol: sUSD).configuration.data_decoded.reserveFactor\` @@
 - 30%[3000](2 decimals)
 + 35%[3500](2 decimals)
-# decoded configuration data for key 0x5f98805a4e8be255a32880fdec7f6728c6568ba0 (symbol: LUSD)
-@@ \`_reserves\` key \`0x5f98805a4e8be255a32880fdec7f6728c6568ba0.configuration.data\` @@
+@@ \`_reserves\` key \`0x5f98805a4e8be255a32880fdec7f6728c6568ba0 (symbol: LUSD).configuration.data\` @@
 - 46117225538793649471488
 + 55340597575648425279488
-@@ \`_reserves\` key \`0x5f98805a4e8be255a32880fdec7f6728c6568ba0.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x5f98805a4e8be255a32880fdec7f6728c6568ba0 (symbol: LUSD).configuration.data_decoded.reserveFactor\` @@
 - 25%[2500](2 decimals)
 + 30%[3000](2 decimals)
-# decoded configuration data for key 0x6b175474e89094c44da98b954eedeac495271d0f (symbol: DAI)
-@@ \`_reserves\` key \`0x6b175474e89094c44da98b954eedeac495271d0f.configuration.data\` @@
+@@ \`_reserves\` key \`0x6b175474e89094c44da98b954eedeac495271d0f (symbol: DAI).configuration.data\` @@
 - 46117225583461879520588
 + 55340597620316655328588
-@@ \`_reserves\` key \`0x6b175474e89094c44da98b954eedeac495271d0f.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x6b175474e89094c44da98b954eedeac495271d0f (symbol: DAI).configuration.data_decoded.reserveFactor\` @@
 - 25%[2500](2 decimals)
 + 30%[3000](2 decimals)
-# decoded configuration data for key 0x853d955acef822db058eb8505911ed77f175b99e (symbol: FRAX)
-@@ \`_reserves\` key \`0x853d955acef822db058eb8505911ed77f175b99e.configuration.data\` @@
+@@ \`_reserves\` key \`0x853d955acef822db058eb8505911ed77f175b99e (symbol: FRAX).configuration.data\` @@
 - 55340597575648425279488
 + 64563969612503201087488
-@@ \`_reserves\` key \`0x853d955acef822db058eb8505911ed77f175b99e.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x853d955acef822db058eb8505911ed77f175b99e (symbol: FRAX).configuration.data_decoded.reserveFactor\` @@
 - 30%[3000](2 decimals)
 + 35%[3500](2 decimals)
-# decoded configuration data for key 0x8798249c2e607446efb7ad49ec89dd1865ff4272 (symbol: xSUSHI)
-@@ \`_reserves\` key \`0x8798249c2e607446efb7ad49ec89dd1865ff4272.configuration.data\` @@
+@@ \`_reserves\` key \`0x8798249c2e607446efb7ad49ec89dd1865ff4272 (symbol: xSUSHI).configuration.data\` @@
 - 182622987616300896157696
 + 184449215279598141767680
-@@ \`_reserves\` key \`0x8798249c2e607446efb7ad49ec89dd1865ff4272.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x8798249c2e607446efb7ad49ec89dd1865ff4272 (symbol: xSUSHI).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0x8e870d67f660d95d5be530380d0ec0bd388289e1 (symbol: USDP)
-@@ \`_reserves\` key \`0x8e870d67f660d95d5be530380d0ec0bd388289e1.configuration.data\` @@
+@@ \`_reserves\` key \`0x8e870d67f660d95d5be530380d0ec0bd388289e1 (symbol: USDP).configuration.data\` @@
 - 36893853501938873663488
 + 46117225538793649471488
-@@ \`_reserves\` key \`0x8e870d67f660d95d5be530380d0ec0bd388289e1.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x8e870d67f660d95d5be530380d0ec0bd388289e1 (symbol: USDP).configuration.data_decoded.reserveFactor\` @@
 - 20%[2000](2 decimals)
 + 25%[2500](2 decimals)
-# decoded configuration data for key 0x956f47f50a910163d8bf957cf5846d573e7f87ca (symbol: FEI)
-@@ \`_reserves\` key \`0x956f47f50a910163d8bf957cf5846d573e7f87ca.configuration.data\` @@
+@@ \`_reserves\` key \`0x956f47f50a910163d8bf957cf5846d573e7f87ca (symbol: FEI).configuration.data\` @@
 - 182623275846677047869440
 + 184449503509974293479424
-@@ \`_reserves\` key \`0x956f47f50a910163d8bf957cf5846d573e7f87ca.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x956f47f50a910163d8bf957cf5846d573e7f87ca (symbol: FEI).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2 (symbol: unknown)
-@@ \`_reserves\` key \`0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2.configuration.data\` @@
+@@ \`_reserves\` key \`0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2 (symbol: unknown).configuration.data\` @@
 - 182622987615227245756416
 + 184449215278524491366400
-@@ \`_reserves\` key \`0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2 (symbol: unknown).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC)
-@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.configuration.data\` @@
+@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC).configuration.data\` @@
 - 46117222205976910634816
 + 55340594242831686442816
-@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC).configuration.data_decoded.reserveFactor\` @@
 - 25%[2500](2 decimals)
 + 30%[3000](2 decimals)
-# decoded configuration data for key 0xa693b19d2931d498c5b318df961919bb4aee87a5 (symbol: UST)
-@@ \`_reserves\` key \`0xa693b19d2931d498c5b318df961919bb4aee87a5.configuration.data\` @@
+@@ \`_reserves\` key \`0xa693b19d2931d498c5b318df961919bb4aee87a5 (symbol: UST).configuration.data\` @@
 - 182623272421732686757888
 + 184449500085029932367872
-@@ \`_reserves\` key \`0xa693b19d2931d498c5b318df961919bb4aee87a5.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0xa693b19d2931d498c5b318df961919bb4aee87a5 (symbol: UST).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0xba100000625a3754423978a60c9317c58a424e3d (symbol: BAL)
-@@ \`_reserves\` key \`0xba100000625a3754423978a60c9317c58a424e3d.configuration.data\` @@
+@@ \`_reserves\` key \`0xba100000625a3754423978a60c9317c58a424e3d (symbol: BAL).configuration.data\` @@
 - 182622987615441902698496
 + 184449215278739148308480
-@@ \`_reserves\` key \`0xba100000625a3754423978a60c9317c58a424e3d.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0xba100000625a3754423978a60c9317c58a424e3d (symbol: BAL).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f (symbol: SNX)
-@@ \`_reserves\` key \`0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f.configuration.data\` @@
+@@ \`_reserves\` key \`0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f (symbol: SNX).configuration.data\` @@
 - 182622987615227154333696
 + 184449215278524399943680
-@@ \`_reserves\` key \`0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f (symbol: SNX).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 (symbol: WETH)
-@@ \`_reserves\` key \`0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.configuration.data\` @@
+@@ \`_reserves\` key \`0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 (symbol: WETH).configuration.data\` @@
 - 46117225583891369697338
 + 55340597620746145505338
-@@ \`_reserves\` key \`0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 (symbol: WETH).configuration.data_decoded.reserveFactor\` @@
 - 25%[2500](2 decimals)
 + 30%[3000](2 decimals)
-# decoded configuration data for key 0xc18360217d8f7ab5e7c516566761ea12ce7f9d72 (symbol: ENS)
-@@ \`_reserves\` key \`0xc18360217d8f7ab5e7c516566761ea12ce7f9d72.configuration.data\` @@
+@@ \`_reserves\` key \`0xc18360217d8f7ab5e7c516566761ea12ce7f9d72 (symbol: ENS).configuration.data\` @@
 - 182622987615441902698496
 + 184449215278739148308480
-@@ \`_reserves\` key \`0xc18360217d8f7ab5e7c516566761ea12ce7f9d72.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0xc18360217d8f7ab5e7c516566761ea12ce7f9d72 (symbol: ENS).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0xd46ba6d942050d489dbd938a2c909a5d5039a161 (symbol: AMPL)
-@@ \`_reserves\` key \`0xd46ba6d942050d489dbd938a2c909a5d5039a161.configuration.data\` @@
+@@ \`_reserves\` key \`0xd46ba6d942050d489dbd938a2c909a5d5039a161 (symbol: AMPL).configuration.data\` @@
 - 184283480232791476535296
 + 184449500929454862499840
-@@ \`_reserves\` key \`0xd46ba6d942050d489dbd938a2c909a5d5039a161.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0xd46ba6d942050d489dbd938a2c909a5d5039a161 (symbol: AMPL).configuration.data_decoded.reserveFactor\` @@
 - 99.9%[9990](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0xd533a949740bb3306d119cc777fa900ba034cd52 (symbol: CRV)
-@@ \`_reserves\` key \`0xd533a949740bb3306d119cc777fa900ba034cd52.configuration.data\` @@
+@@ \`_reserves\` key \`0xd533a949740bb3306d119cc777fa900ba034cd52 (symbol: CRV).configuration.data\` @@
 - 182622987615441994121216
 + 184449215278739239731200
-@@ \`_reserves\` key \`0xd533a949740bb3306d119cc777fa900ba034cd52.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0xd533a949740bb3306d119cc777fa900ba034cd52 (symbol: CRV).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0xdac17f958d2ee523a2206206994597c13d831ec7 (symbol: USDT)
-@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7.configuration.data\` @@
+@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7 (symbol: USDT).configuration.data\` @@
 - 46117222161093928943616
 + 55340594197948704751616
-@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0xdac17f958d2ee523a2206206994597c13d831ec7 (symbol: USDT).configuration.data_decoded.reserveFactor\` @@
 - 25%[2500](2 decimals)
 + 30%[3000](2 decimals)
-# decoded configuration data for key 0xdd974d5c2e2928dea5f71b9825b8b646686bd200 (symbol: KNC)
-@@ \`_reserves\` key \`0xdd974d5c2e2928dea5f71b9825b8b646686bd200.configuration.data\` @@
+@@ \`_reserves\` key \`0xdd974d5c2e2928dea5f71b9825b8b646686bd200 (symbol: KNC).configuration.data\` @@
 - 182623275846677047869440
 + 184449503509974293479424
-@@ \`_reserves\` key \`0xdd974d5c2e2928dea5f71b9825b8b646686bd200.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0xdd974d5c2e2928dea5f71b9825b8b646686bd200 (symbol: KNC).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0xe41d2489571d322189246dafa5ebde1f4699f498 (symbol: ZRX)
-@@ \`_reserves\` key \`0xe41d2489571d322189246dafa5ebde1f4699f498.configuration.data\` @@
+@@ \`_reserves\` key \`0xe41d2489571d322189246dafa5ebde1f4699f498 (symbol: ZRX).configuration.data\` @@
 - 182622987616300948258816
 + 184449215279598193868800
-@@ \`_reserves\` key \`0xe41d2489571d322189246dafa5ebde1f4699f498.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0xe41d2489571d322189246dafa5ebde1f4699f498 (symbol: ZRX).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
-# decoded configuration data for key 0xf629cbd94d3791c9250152bd8dfbdf380e2a3b9c (symbol: ENJ)
-@@ \`_reserves\` key \`0xf629cbd94d3791c9250152bd8dfbdf380e2a3b9c.configuration.data\` @@
+@@ \`_reserves\` key \`0xf629cbd94d3791c9250152bd8dfbdf380e2a3b9c (symbol: ENJ).configuration.data\` @@
 - 182623275846677047869440
 + 184449503509974293479424
-@@ \`_reserves\` key \`0xf629cbd94d3791c9250152bd8dfbdf380e2a3b9c.configuration.data_decoded.reserveFactor\` @@
+@@ \`_reserves\` key \`0xf629cbd94d3791c9250152bd8dfbdf380e2a3b9c (symbol: ENJ).configuration.data_decoded.reserveFactor\` @@
 - 99%[9900](2 decimals)
 + 99.99%[9999](2 decimals)
 \`\`\`
