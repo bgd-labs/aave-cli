@@ -88,11 +88,16 @@ export function addCommand(program: Command) {
           message: 'Select a proposal to get more information',
           choices: await Promise.all(
             proposalIds.map(async (id) => {
-              const proposal = await governance.governanceContract.read.getProposal([BigInt(id)]);
-              const ipfs = await getCachedIpfs(proposal.ipfsHash);
+              const proposalCache = await localCacheAdapter.getProposal({
+                chainId: DEFAULT_GOVERNANCE_CLIENT.chain!.id,
+                governance: DEFAULT_GOVERNANCE,
+                proposalId: BigInt(id),
+              });
               const title = `${id} - ${
-                HUMAN_READABLE_STATE[proposal.state as keyof typeof HUMAN_READABLE_STATE]
-              } | ${ipfs.title}`;
+                HUMAN_READABLE_STATE[
+                  proposalCache.proposal.state as keyof typeof HUMAN_READABLE_STATE
+                ]
+              } | ${proposalCache.ipfs?.title || 'problems fetching ipfs meta'}`;
               return {name: title, value: id};
             }),
           ),
@@ -101,7 +106,7 @@ export function addCommand(program: Command) {
       const cache = await localCacheAdapter.getProposal({
         chainId: DEFAULT_GOVERNANCE_CLIENT.chain!.id,
         governance: DEFAULT_GOVERNANCE,
-        proposalId: Number(selectedProposalId),
+        proposalId: selectedProposalId,
       });
       let exitLvl2 = false;
       while (!exitLvl2) {
@@ -141,10 +146,10 @@ export function addCommand(program: Command) {
         }
 
         if (moreInfo === DialogOptions.IPFS_TEXT) {
-          logInfo('title', cache.ipfs.title);
-          logInfo('author', cache.ipfs.author);
-          logInfo('discussion', cache.ipfs.discussions);
-          logInfo('description', cache.ipfs.description);
+          logInfo('title', cache.ipfs?.title || 'problem fetching ipfs metadata');
+          logInfo('author', cache.ipfs?.author || 'problem fetching ipfs metadata');
+          logInfo('discussion', cache.ipfs?.discussions || 'problem fetching ipfs metadata');
+          logInfo('description', cache.ipfs?.description || 'problem fetching ipfs metadata');
         }
 
         if (moreInfo === DialogOptions.TRANSACTIONS) {

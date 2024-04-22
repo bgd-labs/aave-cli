@@ -30,27 +30,7 @@ import {
   tenderly,
 } from '../utils/tenderlyClient';
 import {VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof} from './proofs';
-import type {Proposal, ProposalExecutedEvent} from '@bgd-labs/aave-v3-governance-cache';
-
-export enum ProposalState {
-  Null = 0, // proposal does not exists
-  Created = 1, // created, waiting for a cooldown to initiate the balances snapshot
-  Active = 2, // balances snapshot set, voting in progress
-  Queued = 3, // voting results submitted, but proposal is under grace period when guardian can cancel it
-  Executed = 4, // results sent to the execution chain(s)
-  Failed = 5, // voting was not successful
-  Cancelled = 6, // got cancelled by guardian, or because proposition power of creator dropped below allowed minimum
-  Expired = 7,
-}
-
-export function isProposalFinal(state: ProposalState) {
-  return [
-    ProposalState.Executed,
-    ProposalState.Failed,
-    ProposalState.Cancelled,
-    ProposalState.Expired,
-  ].includes(state);
-}
+import {ProposalState, type ProposalExecutedEvent} from '@bgd-labs/aave-v3-governance-cache';
 
 export interface Governance {
   governanceContract: GetContractReturnType<typeof IGovernanceCore_ABI, Client>;

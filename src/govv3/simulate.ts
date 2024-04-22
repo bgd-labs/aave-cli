@@ -23,8 +23,8 @@ export async function simulateProposal(governanceAddress: Hex, client: Client, p
   await refreshCache(localCacheAdapter);
   const proposal = await localCacheAdapter.getProposal({
     chainId: client.chain!.id,
-    governance: governanceAddress as Hex,
-    proposalId: Number(proposalId),
+    governance: governanceAddress,
+    proposalId,
   });
   const result = await governance.simulateProposalExecutionOnTenderly(proposalId, proposal.logs);
   console.log(
