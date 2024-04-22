@@ -2,18 +2,16 @@
 // adjusted for viem & aave governance v3
 import type {Client, Hex} from 'viem';
 import {getBytecode} from 'viem/actions';
-import {type TenderlySimulationResponse, tenderly} from '../../utils/tenderlyClient';
-import type {PayloadsController} from '../payloadsController';
+import {type TenderlySimulationResponse} from '../../utils/tenderlyClient';
 import {isKnownAddress} from '../utils/checkAddress';
 import {flagKnownAddress} from '../utils/markdownUtils';
 import type {ProposalCheck} from './types';
+import {GetPayloadReturnType} from '@bgd-labs/aave-v3-governance-cache';
 
 /**
  * Check all targets with code are verified on Etherscan
  */
-export const checkTargetsVerifiedEtherscan: ProposalCheck<
-  Awaited<ReturnType<PayloadsController['getPayload']>>
-> = {
+export const checkTargetsVerifiedEtherscan: ProposalCheck<GetPayloadReturnType> = {
   name: 'Check all targets are verified on Etherscan',
   async checkProposal(proposal, sim, client) {
     const allTargets = proposal.payload.actions.map((action) => action.target);

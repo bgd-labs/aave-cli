@@ -108,6 +108,9 @@ export async function deepDiff({
   accessChain: string[];
   type?: string;
 }): Promise<string> {
+  if (type && accessChain.length === 1 && ['_reserves', 'assets', 'assetsSources'].includes(type)) {
+    accessChain[0] = await addAssetSymbol(client, accessChain[0] as Address);
+  }
   if (typeof before !== 'object' || typeof after !== 'object') {
     return `@@ ${type ? `${wrapInQuotes(type, true)} key ` : ''}${wrapInQuotes(
       resolveChain(accessChain),
@@ -127,9 +130,6 @@ export async function deepDiff({
    */
 
   let result = '';
-  if (type && accessChain.length === 1 && ['_reserves', 'assets', 'assetsSources'].includes(type)) {
-    accessChain[0] = await addAssetSymbol(client, accessChain[0] as Address);
-  }
   if (type === '_reserves' && (before.configuration?.data || after.configuration?.data)) {
     before.configuration.data_decoded = getDecodedReserveData(address, before.configuration.data);
     after.configuration.data_decoded = getDecodedReserveData(address, after.configuration.data);

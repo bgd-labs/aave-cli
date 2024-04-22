@@ -38,10 +38,10 @@
   resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.25.1.tgz#85de3030d94f7afcba5111c77238581faec63cf6"
   integrity sha512-GRRdVgGgtYCVpvlFaXwUDXRcyUXzFR69zZLl09ay0/3sv82Abztb0kvhjQkFQY6foyUt1/pb4Dsgqlvuae5Hgw==
 
-"@bgd-labs/aave-v3-governance-cache@^0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-v3-governance-cache/-/aave-v3-governance-cache-0.0.11.tgz#01e7d1ff73222a67a7c809119eb075b3e3aaec99"
-  integrity sha512-ojTNCBBBbUPrRK3fMdFfMJim9ovyew/ifdahl507RH/l/FB1DbNl0DpwDl7dfTBm99CE1rKkx64Gcn/1lRDH1A==
+"@bgd-labs/aave-v3-governance-cache@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-v3-governance-cache/-/aave-v3-governance-cache-0.0.13.tgz#f63d0fe9b9f03b8605e2524b35a51aa9490ac2f4"
+  integrity sha512-kXezI2gN6IeFQHOO2cjbIrrHmos2QuGTCKnn7t2nQcQHJ35wNBCX9+AZymoqROd6fyIgz7qTpatj+0/K5ifhdg==
 
 "@bgd-labs/js-utils@^1.3.0":
   version "1.3.0"

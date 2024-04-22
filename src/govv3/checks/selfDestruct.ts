@@ -2,17 +2,15 @@
 // adjusted for viem & aave governance v3
 import type {Client, Hex} from 'viem';
 import {getBytecode, getTransactionCount} from 'viem/actions';
-import type {PayloadsController} from '../payloadsController';
 import {isKnownAddress} from '../utils/checkAddress';
 import {flagKnownAddress, toAddressLink} from '../utils/markdownUtils';
 import type {ProposalCheck} from './types';
+import {GetPayloadReturnType} from '@bgd-labs/aave-v3-governance-cache';
 
 /**
  * Check all targets with code if they contain selfdestruct.
  */
-export const checkTargetsNoSelfdestruct: ProposalCheck<
-  Awaited<ReturnType<PayloadsController['getPayload']>>
-> = {
+export const checkTargetsNoSelfdestruct: ProposalCheck<GetPayloadReturnType> = {
   name: 'Check all targets do not contain selfdestruct',
   async checkProposal(proposal, sim, client) {
     const allTargets = proposal.payload.actions.map((action) => action.target);

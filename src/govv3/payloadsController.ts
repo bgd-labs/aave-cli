@@ -15,16 +15,7 @@ import {
   type TenderlySimulationResponse,
   tenderly,
 } from '../utils/tenderlyClient';
-import {GetPayloadReturnType} from '@bgd-labs/aave-v3-governance-cache';
-
-export enum PayloadState {
-  None = 0,
-  Created = 1,
-  Queued = 2,
-  Executed = 3,
-  Cancelled = 4,
-  Expired = 5,
-}
+import {GetPayloadReturnType, PayloadState} from '@bgd-labs/aave-v3-governance-cache';
 
 export const HUMAN_READABLE_PAYLOAD_STATE = {
   [PayloadState.None]: 'None',

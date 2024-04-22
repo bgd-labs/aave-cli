@@ -70,9 +70,9 @@ export async function generateProposalReport({
   report += `### Ipfs
 
 <details>
-  <summary>${ipfs.title}</summary>
+  <summary>${ipfs?.title || 'problem fetching ipfs metadata'}</summary>
   
-  ${ipfs.description}
+  ${ipfs?.description || 'problem fetching ipfs metadata'}
 </details>\n\n`;
 
   // check if simulation was successful
