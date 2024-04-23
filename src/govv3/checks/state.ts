@@ -1,9 +1,9 @@
 // Based on https://github.com/Uniswap/governance-seatbelt/blob/main/checks/check-state-changes.ts
 // adjusted for viem & aave governance v3
-import {type Client, type Hex, getAddress, Address} from 'viem';
+import {type Client, type Hex, getAddress, Address, getContract} from 'viem';
 import type {StateDiff, TenderlySimulationResponse} from '../../utils/tenderlyClient';
 import {findAsset} from '../utils/checkAddress';
-import {addAssetSymbol, prettifyNumber, wrapInQuotes} from '../utils/markdownUtils';
+import {addAssetPrice, addAssetSymbol, prettifyNumber, wrapInQuotes} from '../utils/markdownUtils';
 import {getDecodedReserveData} from '../utils/reserveConfigurationInterpreter';
 import {getContractName} from '../utils/solidityUtils';
 import type {ProposalCheck} from './types';
@@ -198,6 +198,10 @@ async function enhanceValue({
   }
   // if(accessChain.includes(''))
   if (type) {
+    // priceFeeds to enhance with current price
+    if (type === 'assetsSources') {
+      return addAssetPrice(client, value as Address);
+    }
     // values to be rendered with asset decimals
     if (
       [

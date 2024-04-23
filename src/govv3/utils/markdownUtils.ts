@@ -1,4 +1,4 @@
-import {type Client, type Hex, formatUnits, Address} from 'viem';
+import {type Client, type Hex, formatUnits, Address, getContract} from 'viem';
 import type {CheckResult} from '../checks/types';
 import {findAsset} from './checkAddress';
 
@@ -69,7 +69,7 @@ export function prettifyNumber({
   prefix,
   suffix,
 }: {
-  value: string | number;
+  value: string | number | bigint;
   decimals: number;
   prefix?: string;
   suffix?: string;
@@ -87,4 +87,45 @@ export function wrapInQuotes(name: string, quotes: boolean) {
 export async function addAssetSymbol(client: Client, value: Address) {
   const asset = await findAsset(client, value);
   return `${value} (symbol: ${asset.symbol})`;
+}
+
+const CL_PROXY_ABI = [
+  {
+    inputs: [],
+    name: 'decimals',
+    outputs: [{internalType: 'uint8', name: '', type: 'uint8'}],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'description',
+    outputs: [{internalType: 'string', name: '', type: 'string'}],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'latestAnswer',
+    outputs: [{internalType: 'int256', name: '', type: 'int256'}],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const;
+
+export async function addAssetPrice(client: Client, address: Address) {
+  const clProxy = getContract({client, address, abi: CL_PROXY_ABI});
+  let decimals,
+    latestAnswer = 0n,
+    description = 'unknown';
+  try {
+    decimals = await clProxy.read.decimals();
+  } catch (e) {}
+  try {
+    latestAnswer = await clProxy.read.latestAnswer();
+  } catch (e) {}
+  try {
+    description = await clProxy.read.description();
+  } catch (e) {}
+  return `${address} (latestAnswer: ${decimals ? prettifyNumber({value: latestAnswer, decimals}) : latestAnswer}, description: ${description})`;
 }
