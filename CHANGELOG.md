@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.12.0](https://github.com/bgd-labs/aave-cli/compare/v0.11.4...v0.12.0) (2024-04-23)
+
+
+### Features
+
+* inline latest answer on pricefeeds ([#135](https://github.com/bgd-labs/aave-cli/issues/135)) ([ddc5369](https://github.com/bgd-labs/aave-cli/commit/ddc536973d18c5866deaac87b7baaf4b358ccf24))
+
 ## [0.11.4](https://github.com/bgd-labs/aave-cli/compare/v0.11.3...v0.11.4) (2024-04-22)
 
 
