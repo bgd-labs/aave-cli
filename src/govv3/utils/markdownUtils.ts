@@ -115,7 +115,7 @@ const CL_PROXY_ABI = [
 
 export async function addAssetPrice(client: Client, address: Address) {
   const clProxy = getContract({client, address, abi: CL_PROXY_ABI});
-  let decimals = 0,
+  let decimals,
     latestAnswer = 0n,
     description = 'unknown';
   try {
@@ -127,5 +127,5 @@ export async function addAssetPrice(client: Client, address: Address) {
   try {
     description = await clProxy.read.description();
   } catch (e) {}
-  return `${address} (latestAnswer: ${prettifyNumber({value: latestAnswer, decimals})}, description: ${description})`;
+  return `${address} (latestAnswer: ${decimals ? prettifyNumber({value: latestAnswer, decimals}) : latestAnswer}, description: ${description})`;
 }

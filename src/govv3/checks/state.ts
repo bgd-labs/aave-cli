@@ -196,11 +196,12 @@ async function enhanceValue({
   if (key === 'tokenAddress') {
     return addAssetSymbol(client, value as Address);
   }
-  if (type === 'assetSources') {
-    return addAssetPrice(client, value as Address);
-  }
   // if(accessChain.includes(''))
   if (type) {
+    // priceFeeds to enhance with current price
+    if (type === 'assetsSources') {
+      return addAssetPrice(client, value as Address);
+    }
     // values to be rendered with asset decimals
     if (
       [
