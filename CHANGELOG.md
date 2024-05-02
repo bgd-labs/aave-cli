@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.0](https://github.com/bgd-labs/aave-cli/compare/v0.12.0...v0.13.0) (2024-05-02)
+
+
+### Features
+
+* generate capo prices md report ([#137](https://github.com/bgd-labs/aave-cli/issues/137)) ([b9ff230](https://github.com/bgd-labs/aave-cli/commit/b9ff230404b3ac2ac01a57215c67aa1e3b3685db))
+
 ## [0.12.0](https://github.com/bgd-labs/aave-cli/compare/v0.11.4...v0.12.0) (2024-04-23)
 
 
