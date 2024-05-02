@@ -117,3 +117,18 @@ export const aDISnapshotSchema = z.object({
 
 export type AaveV3Snapshot = z.infer<typeof aaveV3SnapshotSchema>;
 export type ADISnapshot = z.infer<typeof aDISnapshotSchema>;
+
+export const capoPriceSchema = z.object({
+  referencePrice: z.number(),
+  sourcePrice: z.number(),
+  timestamp: z.number(),
+});
+
+export const capoSnapshotSchema = z.object({
+  decimals: z.number(),
+  reference: z.string(),
+  source: z.string(),
+  prices: z.record(capoPriceSchema),
+});
+
+export type CapoSnapshot = z.infer<typeof capoSnapshotSchema>;
