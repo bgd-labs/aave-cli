@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`capo report > should generate a well formatted capo report 1`] = `
+"# Capo Report
+
+| Capped weETH / eETH(ETH) / USD | ETH / USD | Diff | Date |
+| --- | --- | --- | --- |
+| 2455.63473636 | 2388.9727 | 2.75% | 02 Jan 2024 |
+| 2328.76567023 | 2265.02270881 | 2.78% | 05 Jan 2024 |
+| 2333.12206165 | 2268.66 | 2.80% | 08 Jan 2024 |
+| 2716.68868225 | 2641.12022704 | 2.82% | 11 Jan 2024 |
+"
+`;

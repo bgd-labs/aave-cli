@@ -1,0 +1,27 @@
+{
+  "decimals": 8,
+  "prices": {
+    "18918450": {
+      "referencePrice": 238897270000,
+      "sourcePrice": 245563473636,
+      "timestamp": 1704183335
+    },
+    "18940350": {
+      "referencePrice": 226502270881,
+      "sourcePrice": 232876567023,
+      "timestamp": 1704448919
+    },
+    "18962250": {
+      "referencePrice": 226866000000,
+      "sourcePrice": 233312206165,
+      "timestamp": 1704716315
+    },
+    "18984150": {
+      "referencePrice": 264112022704,
+      "sourcePrice": 271668868225,
+      "timestamp": 1704981743
+    }
+  },
+  "reference": "ETH / USD",
+  "source": "Capped weETH / eETH(ETH) / USD"
+}
