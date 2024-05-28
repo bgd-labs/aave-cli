@@ -128,6 +128,8 @@ export const capoSnapshotSchema = z.object({
   decimals: z.number(),
   reference: z.string(),
   source: z.string(),
+  yearlyGrowthPercent: z.number(),
+  maxYearlyGrowthPercent: z.number(),
   prices: z.record(capoPriceSchema),
 });
 

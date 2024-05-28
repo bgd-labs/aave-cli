@@ -20,8 +20,15 @@
       "referencePrice": 264112022704,
       "sourcePrice": 271668868225,
       "timestamp": 1704981743
+    },
+    "19575450": {
+      "referencePrice": 331009407509,
+      "sourcePrice": 342686187101,
+      "timestamp": 1712149799
     }
   },
   "reference": "ETH / USD",
-  "source": "Capped weETH / eETH(ETH) / USD"
+  "source": "Capped weETH / eETH(ETH) / USD",
+  "yearlyGrowthPercent": 283,
+  "maxYearlyGrowthPercent": 875
 }

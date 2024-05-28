@@ -42,6 +42,14 @@ export async function generateCapoReport(snapshot: CapoSnapshot) {
     content += `| ${price.sourcePrice} | ${price.referencePrice} | ${price.diff}% | ${price.date} |\n`;
   });
 
+  const yearlyGrowthPercent = (snapshot.yearlyGrowthPercent / 100).toFixed(2);
+  const maxYearlyGrowthPercent = (snapshot.maxYearlyGrowthPercent / 100).toFixed(2);
+
+  content += `\n\n`;
+  content += `| Max Yearly % | Actual Yearly % | From | To |\n`;
+  content += `| --- | --- | --- | --- |\n`;
+  content += `| ${maxYearlyGrowthPercent}% | ${yearlyGrowthPercent}% | ${prices[0].date} | ${prices.at(-1)?.date} |\n`;
+
   return content;
 }
 
