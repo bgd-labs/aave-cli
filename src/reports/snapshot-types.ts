@@ -122,14 +122,16 @@ export const capoPriceSchema = z.object({
   referencePrice: z.number(),
   sourcePrice: z.number(),
   timestamp: z.number(),
+  dayToDayGrowth: z.number(),
+  smoothedGrowth: z.number(),
 });
 
 export const capoSnapshotSchema = z.object({
   decimals: z.number(),
   reference: z.string(),
   source: z.string(),
-  yearlyGrowthPercent: z.number(),
   maxYearlyGrowthPercent: z.number(),
+  minSnapshotDelay: z.number(),
   prices: z.record(capoPriceSchema),
 });
 
