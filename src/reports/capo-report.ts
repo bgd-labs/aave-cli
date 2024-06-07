@@ -5,6 +5,8 @@ type Price = {
   sourcePrice: string;
   referencePrice: string;
   diff: string;
+  dayToDayGrowth: string;
+  smoothedGrowth: string;
   date: string;
 };
 
@@ -13,11 +15,16 @@ export async function generateCapoReport(snapshot: CapoSnapshot) {
 
   const prices: Price[] = [];
 
+  let maxDayToDayGrowth = 0;
+  let maxSmoothedGrowth = 0;
+
   for (const key in snapshot.prices) {
     const price = snapshot.prices[key];
 
     const sourcePrice = formatUnits(BigInt(price.sourcePrice), snapshot.decimals);
     const referencePrice = formatUnits(BigInt(price.referencePrice), snapshot.decimals);
+    const dayToDayGrowth = (price.dayToDayGrowth / 100).toFixed(2);
+    const smoothedGrowth = (price.smoothedGrowth / 100).toFixed(2);
     const diff = (
       (100 * (Number(sourcePrice) - Number(referencePrice))) /
       ((Number(sourcePrice) + Number(referencePrice)) / 2)
@@ -25,22 +32,42 @@ export async function generateCapoReport(snapshot: CapoSnapshot) {
 
     const formattedDate = formatTimestamp(price.timestamp);
 
-    prices.push({
-      sourcePrice,
-      referencePrice,
-      diff,
-      date: formattedDate,
-    });
+    if (price.smoothedGrowth > 0) {
+      prices.push({
+        sourcePrice,
+        referencePrice,
+        diff,
+        dayToDayGrowth,
+        smoothedGrowth,
+        date: formattedDate,
+      });
+    }
+
+    maxDayToDayGrowth = Math.max(maxDayToDayGrowth, price.dayToDayGrowth);
+    maxSmoothedGrowth = Math.max(maxSmoothedGrowth, price.smoothedGrowth);
   }
 
   // generate md report
   let content = '';
   content += `# Capo Report\n\n`;
-  content += `| ${snapshot.source} | ${snapshot.reference} | Diff | Date |\n`;
-  content += `| --- | --- | --- | --- |\n`;
+  content += `| ${snapshot.source} | ${snapshot.reference} | Diff | Date | ${snapshot.minSnapshotDelay}-day growth in yearly % |\n`;
+  content += `| --- | --- | --- | --- | --- |\n`;
   prices.forEach((price) => {
-    content += `| ${price.sourcePrice} | ${price.referencePrice} | ${price.diff}% | ${price.date} |\n`;
+    content += `| ${price.sourcePrice} | ${price.referencePrice} | ${price.diff}% | ${price.date} | ${price.smoothedGrowth}% |\n`;
   });
+  content += `\n\n`;
+  content += `* ${snapshot.minSnapshotDelay}-day growth is calculated as an annualized percentage relative to the value of the rate ${snapshot.minSnapshotDelay} days prior. \n`;
+  const maxYearlyGrowthPercent = (snapshot.maxYearlyGrowthPercent / 100).toFixed(2);
+  const maxDayToDayGrowthPercent = (maxDayToDayGrowth / 100).toFixed(2);
+  const maxSmoothedGrowthPercent = (maxSmoothedGrowth / 100).toFixed(2);
+
+  content += `\n\n`;
+  content += `| Max Yearly % | Max Day-to-day yearly % | Max ${snapshot.minSnapshotDelay}-day yearly % | \n`;
+  content += `| --- | --- | --- | --- |\n`;
+  content += `| ${maxYearlyGrowthPercent}% | ${maxDayToDayGrowthPercent}% | ${maxSmoothedGrowthPercent}% | \n`;
+  content += `\n\n`;
+
+  content += `* Max day-to-day yearly % indicates the maximum growth between two emissions as an annualized percentage. \n`;
 
   return content;
 }
@@ -49,13 +76,11 @@ function formatTimestamp(timestampInSec: number) {
   // Create a new Date object from the timestamp in seconds
   const date = new Date(timestampInSec * 1000);
 
-  // Define the desired format string
-  const format = 'dd-MMM-yyyy';
-
   // Use the Intl.DateTimeFormat API to format the date
   return new Intl.DateTimeFormat('en-GB', {
     year: 'numeric',
     month: 'short',
     day: '2-digit',
+    timeZone: 'GMT',
   }).format(date);
 }
