@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.0](https://github.com/bgd-labs/aave-cli/compare/v0.13.0...v0.14.0) (2024-06-07)
+
+
+### Features
+
+* add growth percent to capo report ([#139](https://github.com/bgd-labs/aave-cli/issues/139)) ([7b40b1c](https://github.com/bgd-labs/aave-cli/commit/7b40b1c0e11a4f917fdb870a19935856fd99a416))
+
 ## [0.13.0](https://github.com/bgd-labs/aave-cli/compare/v0.12.0...v0.13.0) (2024-05-02)
 
 
