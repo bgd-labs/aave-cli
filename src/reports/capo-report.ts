@@ -76,13 +76,11 @@ function formatTimestamp(timestampInSec: number) {
   // Create a new Date object from the timestamp in seconds
   const date = new Date(timestampInSec * 1000);
 
-  // Define the desired format string
-  const format = 'dd-MMM-yyyy';
-
   // Use the Intl.DateTimeFormat API to format the date
   return new Intl.DateTimeFormat('en-GB', {
     year: 'numeric',
     month: 'short',
     day: '2-digit',
+    timeZone: 'GMT',
   }).format(date);
 }
