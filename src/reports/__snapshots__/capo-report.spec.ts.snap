@@ -35,7 +35,7 @@ exports[`capo report > should generate a well formatted capo report 1`] = `
 
 
 | Max Yearly % | Max Day-to-day yearly % | Max 7-day yearly % | 
-| --- | --- | --- | --- |
+| --- | --- | --- |
 | 8.75% | 4.91% | 3.65% | 
 
 
