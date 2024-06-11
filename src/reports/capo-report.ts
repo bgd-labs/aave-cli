@@ -13,7 +13,7 @@ type Price = {
 export async function generateCapoReport(snapshot: CapoSnapshot) {
   // map to dates and formatted values
 
-  const prices: Price[] = [];
+  let prices: Price[] = [];
 
   let maxDayToDayGrowth = 0;
   let maxSmoothedGrowth = 0;
@@ -32,20 +32,20 @@ export async function generateCapoReport(snapshot: CapoSnapshot) {
 
     const formattedDate = formatTimestamp(price.timestamp);
 
-    if (price.smoothedGrowth > 0) {
-      prices.push({
-        sourcePrice,
-        referencePrice,
-        diff,
-        dayToDayGrowth,
-        smoothedGrowth,
-        date: formattedDate,
-      });
-    }
+    prices.push({
+      sourcePrice,
+      referencePrice,
+      diff,
+      dayToDayGrowth,
+      smoothedGrowth,
+      date: formattedDate,
+    });
 
     maxDayToDayGrowth = Math.max(maxDayToDayGrowth, price.dayToDayGrowth);
     maxSmoothedGrowth = Math.max(maxSmoothedGrowth, price.smoothedGrowth);
   }
+
+  prices = prices.slice(snapshot.minSnapshotDelay);
 
   // generate md report
   let content = '';
@@ -63,7 +63,7 @@ export async function generateCapoReport(snapshot: CapoSnapshot) {
 
   content += `\n\n`;
   content += `| Max Yearly % | Max Day-to-day yearly % | Max ${snapshot.minSnapshotDelay}-day yearly % | \n`;
-  content += `| --- | --- | --- | --- |\n`;
+  content += `| --- | --- | --- |\n`;
   content += `| ${maxYearlyGrowthPercent}% | ${maxDayToDayGrowthPercent}% | ${maxSmoothedGrowthPercent}% | \n`;
   content += `\n\n`;
 
