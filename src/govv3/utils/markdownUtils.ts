@@ -64,8 +64,8 @@ export function formatNumberString(x: string | number) {
 }
 
 function limitDecimalsWithoutRounding(val: string, decimals: number){
-  let parts = val.toString().split(".");
-  return parseFloat(parts[0] + "." + parts[1].substring(0, decimals));
+  const parts = val.split(".");
+  return parts[0] + "." + parts[1].substring(0, decimals);
 }
 
 export function prettifyNumber({
