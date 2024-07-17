@@ -10,18 +10,14 @@ export function renderReserveValue<T extends keyof AaveV3Reserve>(
 ) {
   if (['reserveFactor', 'liquidationProtocolFee', 'liquidationThreshold', 'ltv'].includes(key))
     return prettifyNumber({decimals: 2, value:BigInt(reserve[key]), suffix: '%'});
-  // `${formatUnits(BigInt(reserve[key]), 2)} %`;
   if (['supplyCap', 'borrowCap'].includes(key))
     return `${reserve[key].toLocaleString('en-US')} ${reserve.symbol}`;
   if (key === 'debtCeiling')
     return prettifyNumber({decimals: 2, value:BigInt(reserve[key]), suffix: '$'});
-  // `${Number(formatUnits(BigInt(reserve[key]), 2)).toLocaleString('en-US')} $`;
   if (['liquidityIndex', 'variableBorrowIndex'].includes(key))
-    return prettifyNumber({decimals: 27, value:BigInt(reserve[key])});
-  // `${Number(formatUnits(BigInt(reserve[key]), 0)).toLocaleString('en-US')}`;
+    return prettifyNumber({decimals: 27, value:BigInt(reserve[key]), decimalsToDisplay: 3});
   if (['currentLiquidityRate', 'currentVariableBorrowRate'].includes(key))
-    return prettifyNumber({decimals: 25, value:BigInt(reserve[key]), suffix: '%'});
-  // `${Number(formatUnits(BigInt(reserve[key]), 0)).toLocaleString('en-US')} %`;
+    return prettifyNumber({decimals: 25, value:BigInt(reserve[key]), suffix: '%', decimalsToDisplay: 3});
   if (key === 'liquidationBonus')
     return reserve[key] === 0 ? '0 %' : `${((reserve[key] as number) - 10000) / 100} %`;
   if (key === 'interestRateStrategy')

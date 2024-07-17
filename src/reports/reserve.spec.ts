@@ -17,6 +17,7 @@ const WBTC_MOCK = {
   isFlashloanable: false,
   isFrozen: false,
   isSiloed: false,
+  liquidityIndex: '1001688262989374224491143837',
   liquidationBonus: 11000,
   liquidationProtocolFee: 1000,
   liquidationThreshold: 7555,
@@ -40,6 +41,9 @@ const WBTC_MOCK = {
 
 describe('reserve', () => {
   describe('renderReserveValue', () => {
+    it('liquidityIndex', () => {
+      expect(renderReserveValue('liquidityIndex', WBTC_MOCK, 1)).toBe('1.001[1001688262989374224491143837](27 decimals)');
+    });
     it('reserveFactor', () => {
       expect(renderReserveValue('reserveFactor', WBTC_MOCK, 1)).toBe('20%[2000](2 decimals)');
     });
