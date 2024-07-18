@@ -73,7 +73,6 @@ export function prettifyNumber({
   decimals,
   prefix,
   suffix,
-                                 decimalsToDisplay,
 }: {
   value: string | number | bigint;
   decimals: number;
