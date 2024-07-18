@@ -19,7 +19,7 @@ exports[`reserve > renderReserve > should properly render new reserve 1`] = `
 | isFrozen | false |
 | supplyCap | 2,100 WBTC |
 | borrowCap | 1,115 WBTC |
-| debtCeiling | 1,000$ [100000] (2 decimals) |
+| debtCeiling | 1,000$ [100000] |
 | isSiloed | false |
 | isFlashloanable | false |
 | eModeCategory | 0 |
@@ -29,11 +29,11 @@ exports[`reserve > renderReserve > should properly render new reserve 1`] = `
 | oracleName | BTC / USD |
 | oracleLatestAnswer | 22519.04551524 |
 | usageAsCollateralEnabled | true |
-| ltv | 70% [7000] (2 decimals) |
-| liquidationThreshold | 75.55% [7555] (2 decimals) |
+| ltv | 70% [7000] |
+| liquidationThreshold | 75.55% [7555] |
 | liquidationBonus | 10 % |
-| liquidationProtocolFee | 10% [1000] (2 decimals) |
-| reserveFactor | 20% [2000] (2 decimals) |
+| liquidationProtocolFee | 10% [1000] |
+| reserveFactor | 20% [2000] |
 | aToken | [0x078f358208685046a11C85e8ad32895DED33A249](https://etherscan.io/address/0x078f358208685046a11C85e8ad32895DED33A249) |
 | aTokenImpl | [0xa5ba6E5EC19a1Bf23C857991c857dB62b2Aa187B](https://etherscan.io/address/0xa5ba6E5EC19a1Bf23C857991c857dB62b2Aa187B) |
 | variableDebtToken | [0x92b42c66840C7AD907b4BF74879FF3eF7c529473](https://etherscan.io/address/0x92b42c66840C7AD907b4BF74879FF3eF7c529473) |
@@ -44,7 +44,7 @@ exports[`reserve > renderReserve > should properly render new reserve 1`] = `
 | stableBorrowRateEnabled | false |
 | isBorrowableInIsolation | false |
 | interestRateStrategy | [0x9b34E3e183c9b0d1a08fF57a8fb59c821616295f](https://etherscan.io/address/0x9b34E3e183c9b0d1a08fF57a8fb59c821616295f) |
-| liquidityIndex | 1.001 [1001688262989374224491143837] (27 decimals) |
+| liquidityIndex | 1.001 [1001688262989374224491143837] |
 "
 `;
 
@@ -58,7 +58,7 @@ exports[`reserve > renderReserve > should properly render new reserve with local
 | isFrozen | false |
 | supplyCap | 2,100 WBTC |
 | borrowCap | 1,115 WBTC |
-| debtCeiling | 1,000$ [100000] (2 decimals) |
+| debtCeiling | 1,000$ [100000] |
 | isSiloed | false |
 | isFlashloanable | false |
 | eModeCategory | 0 |
@@ -68,11 +68,11 @@ exports[`reserve > renderReserve > should properly render new reserve with local
 | oracleName | BTC / USD |
 | oracleLatestAnswer | 22519.04551524 |
 | usageAsCollateralEnabled | true |
-| ltv | 70% [7000] (2 decimals) |
-| liquidationThreshold | 75.55% [7555] (2 decimals) |
+| ltv | 70% [7000] |
+| liquidationThreshold | 75.55% [7555] |
 | liquidationBonus | 10 % |
-| liquidationProtocolFee | 10% [1000] (2 decimals) |
-| reserveFactor | 20% [2000] (2 decimals) |
+| liquidationProtocolFee | 10% [1000] |
+| reserveFactor | 20% [2000] |
 | aToken | 0x078f358208685046a11C85e8ad32895DED33A249 |
 | aTokenImpl | 0xa5ba6E5EC19a1Bf23C857991c857dB62b2Aa187B |
 | variableDebtToken | 0x92b42c66840C7AD907b4BF74879FF3eF7c529473 |
@@ -83,7 +83,7 @@ exports[`reserve > renderReserve > should properly render new reserve with local
 | stableBorrowRateEnabled | false |
 | isBorrowableInIsolation | false |
 | interestRateStrategy | 0x9b34E3e183c9b0d1a08fF57a8fb59c821616295f |
-| liquidityIndex | 1.001 [1001688262989374224491143837] (27 decimals) |
+| liquidityIndex | 1.001 [1001688262989374224491143837] |
 "
 `;
 

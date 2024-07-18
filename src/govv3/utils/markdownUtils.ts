@@ -102,7 +102,7 @@ export function prettifyNumberForMarkdown({
     limitDecimalsWithoutRounding(formatNumberString(formatUnits(BigInt(value), decimals)), decimalsToDisplay)
     : formatNumberString(formatUnits(BigInt(value), decimals))}${
     suffix ? `${suffix}` : ''
-  } [${value}] (${decimals} decimals)`;
+  } [${value}]`;
 }
 
 export function wrapInQuotes(name: string, quotes: boolean) {
