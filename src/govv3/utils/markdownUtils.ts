@@ -79,13 +79,31 @@ export function prettifyNumber({
   decimals: number;
   prefix?: string;
   suffix?: string;
+}) {
+  return `${prefix ? `${prefix}` : ''}${
+    formatNumberString(formatUnits(BigInt(value), decimals))}${
+    suffix ? `${suffix}` : ''
+  } [${value}](${decimals}decimals)`;
+}
+
+export function prettifyNumberForMarkdown({
+  value,
+  decimals,
+  prefix,
+  suffix,
+  decimalsToDisplay,
+}: {
+  value: string | number | bigint;
+  decimals: number;
+  prefix?: string;
+  suffix?: string;
   decimalsToDisplay?: number;
 }) {
   return `${prefix ? `${prefix}` : ''}${decimalsToDisplay ?
     limitDecimalsWithoutRounding(formatNumberString(formatUnits(BigInt(value), decimals)), decimalsToDisplay)
     : formatNumberString(formatUnits(BigInt(value), decimals))}${
     suffix ? `${suffix}` : ''
-  }[${value}](${decimals} decimals)`;
+  } [${value}] (${decimals} decimals)`;
 }
 
 export function wrapInQuotes(name: string, quotes: boolean) {

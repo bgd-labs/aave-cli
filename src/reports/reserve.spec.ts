@@ -42,16 +42,16 @@ const WBTC_MOCK = {
 describe('reserve', () => {
   describe('renderReserveValue', () => {
     it('liquidityIndex', () => {
-      expect(renderReserveValue('liquidityIndex', WBTC_MOCK, 1)).toBe('1.001[1001688262989374224491143837](27 decimals)');
+      expect(renderReserveValue('liquidityIndex', WBTC_MOCK, 1)).toBe('1.001 [1001688262989374224491143837] (27 decimals)');
     });
     it('reserveFactor', () => {
-      expect(renderReserveValue('reserveFactor', WBTC_MOCK, 1)).toBe('20%[2000](2 decimals)');
+      expect(renderReserveValue('reserveFactor', WBTC_MOCK, 1)).toBe('20% [2000] (2 decimals)');
     });
     it('debtCeiling', () => {
-      expect(renderReserveValue('debtCeiling', WBTC_MOCK, 1)).toBe('1,000$[100000](2 decimals)');
+      expect(renderReserveValue('debtCeiling', WBTC_MOCK, 1)).toBe('1,000$ [100000] (2 decimals)');
     });
     it('lt', () => {
-      expect(renderReserveValue('liquidationThreshold', WBTC_MOCK, 1)).toBe('75.55%[7555](2 decimals)');
+      expect(renderReserveValue('liquidationThreshold', WBTC_MOCK, 1)).toBe('75.55% [7555] (2 decimals)');
     });
     it('address with block explorer', () => {
       expect(renderReserveValue('aToken', WBTC_MOCK, 1)).toBe(
