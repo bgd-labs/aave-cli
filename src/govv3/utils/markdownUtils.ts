@@ -83,7 +83,7 @@ export function prettifyNumber({
   return `${prefix ? `${prefix}` : ''}${
     formatNumberString(formatUnits(BigInt(value), decimals))}${
     suffix ? `${suffix}` : ''
-  } [${value}](${decimals}decimals)`;
+  }[${value}](${decimals} decimals)`;
 }
 
 export function prettifyNumberForMarkdown({
