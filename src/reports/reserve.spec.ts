@@ -41,13 +41,13 @@ const WBTC_MOCK = {
 describe('reserve', () => {
   describe('renderReserveValue', () => {
     it('reserveFactor', () => {
-      expect(renderReserveValue('reserveFactor', WBTC_MOCK, 1)).toBe('20 %');
+      expect(renderReserveValue('reserveFactor', WBTC_MOCK, 1)).toBe('20 % [2000]');
     });
     it('debtCeiling', () => {
-      expect(renderReserveValue('debtCeiling', WBTC_MOCK, 1)).toBe('1,000 $');
+      expect(renderReserveValue('debtCeiling', WBTC_MOCK, 1)).toBe('1,000 $ [100000]');
     });
     it('lt', () => {
-      expect(renderReserveValue('liquidationThreshold', WBTC_MOCK, 1)).toBe('75.55 %');
+      expect(renderReserveValue('liquidationThreshold', WBTC_MOCK, 1)).toBe('75.55 % [7555]');
     });
     it('address with block explorer', () => {
       expect(renderReserveValue('aToken', WBTC_MOCK, 1)).toBe(

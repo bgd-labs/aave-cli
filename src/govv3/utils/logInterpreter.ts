@@ -32,6 +32,7 @@ export async function interpretLog(
           const asset = await findAsset(client, address);
           if (asset) {
             inputs[valueIndex].value = prettifyNumber({
+              showDecimals: true,
               value: inputs[valueIndex].value as string,
               decimals: asset.decimals,
             });
@@ -46,6 +47,7 @@ export async function interpretLog(
         const asset = await findAsset(client, inputs[reserveIndex].value as Hex);
         if (asset) {
           inputs[valueIndex].value = prettifyNumber({
+            showDecimals: true,
             value: inputs[valueIndex].value as string,
             decimals: asset.decimals,
           });
@@ -59,6 +61,7 @@ export async function interpretLog(
         const valueIndex = inputs.findIndex((i) => i.soltype!.name === name);
         if (valueIndex !== -1) {
           inputs[valueIndex].value = prettifyNumber({
+            showDecimals: true,
             value: inputs[valueIndex].value as string,
             decimals: 27,
           });

@@ -5,10 +5,33 @@
 `aave-cli` is a command line tool providing commands to automate certain tasks when interacting with the aave protocol.
 For a full overview of features you can run `aave-cli --help`
 
+## Installation
+
+Make sure to setup your .env as most utilities rely on tenderly and will fail otherwise.
+```
+TENDERLY_ACCESS_TOKEN=
+TENDERLY_PROJECT_SLUG=
+TENDERLY_ACCOUNT=
+```
+
+Local installation
+```
+npm i @bgd-labs/aave-cli
+```
+
+Global installation
+```
+npm i -g @bgd-labs/aave-cli
+```
+
+Once installed you should be able to run commands via the `@bgd-labs/aave-cli` or the `aave-cli` binary.
+
+Alteratively you can use `npx @bgd-labs/aave-cli` to run the cli via npx.
+
 ## Fork
 
-`aave-cli fork --chainId <id>` can ge used to generate tenderly forks.  
-The cli allows executing certain proposal/actionset IDs, an address or even local payload via aave governance.  
+`aave-cli fork --chainId <id>` can ge used to generate tenderly forks.
+The cli allows executing certain proposal/actionset IDs, an address or even local payload via aave governance.
 For a full overview of commands please run `aave-cli fork --help`
 
 ## Ipfs

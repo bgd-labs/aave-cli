@@ -5,18 +5,28 @@ exports[`report > should generate a well formatted report 1`] = `
 
 ### Reserve altered
 
+#### SUSHI ([0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a](https://polygonscan.com/address/0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a))
+
+| description | value before | value after |
+| --- | --- | --- |
+| liquidityIndex | 1.0030 % [1003072362844608475393012777] | 1.1020 % [1102072362844608475393012777] |
+| variableBorrowIndex | 1.0191 % [1019120004296811649883429668] | 1.0211 % [1021120004296811649883429668] |
+| currentLiquidityRate | 0.0013 % [13415266124935912038726] | 0.0013 % [13515266124935912038726] |
+| currentVariableBorrowRate | 0.1615 % [1615092557328383571260600] | 0.1715 % [1715092557328383571260600] |
+
+
 #### GHST ([0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7](https://polygonscan.com/address/0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7))
 
 | description | value before | value after |
 | --- | --- | --- |
-| reserveFactor | 20 % | 35 % |
+| reserveFactor | 20 % [2000] | 35 % [3500] |
 
 
 #### WETH ([0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619](https://polygonscan.com/address/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619))
 
 | description | value before | value after |
 | --- | --- | --- |
-| reserveFactor | 10 % | 15 % |
+| reserveFactor | 10 % [1000] | 15 % [1500] |
 | interestRateStrategy | [0x03733F4E008d36f2e37F0080fF1c8DF756622E6F](https://polygonscan.com/address/0x03733F4E008d36f2e37F0080fF1c8DF756622E6F) | [0x27eFE5db315b71753b2a38ED3d5dd7E9362ba93F](https://polygonscan.com/address/0x27eFE5db315b71753b2a38ED3d5dd7E9362ba93F) |
 | stableRateSlope1 | 0 % | 4 % |
 | optimalUsageRatio | 45 % | 80 % |
@@ -32,7 +42,7 @@ exports[`report > should generate a well formatted report 1`] = `
 
 | description | value before | value after |
 | --- | --- | --- |
-| reserveFactor | 20 % | 35 % |
+| reserveFactor | 20 % [2000] | 35 % [3500] |
 
 
 #### agEUR ([0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4](https://polygonscan.com/address/0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4))
@@ -61,7 +71,7 @@ exports[`report > should generate a well formatted report 1`] = `
 
 | description | value before | value after |
 | --- | --- | --- |
-| reserveFactor | 10 % | 20 % |
+| reserveFactor | 10 % [1000] | 20 % [2000] |
 | interestRateStrategy | [0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4](https://polygonscan.com/address/0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4) | [0xA9F3C3caE095527061e6d270DBE163693e6fda9D](https://polygonscan.com/address/0xA9F3C3caE095527061e6d270DBE163693e6fda9D) |
 | variableRateSlope2 | 60 % | 75 % |
 | stableRateSlope2 | 60 % | 75 % |
@@ -85,6 +95,24 @@ exports[`report > should generate a well formatted report 1`] = `
 \`\`\`json
 {
   "reserves": {
+    "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a": {
+      "currentLiquidityRate": {
+        "from": "13415266124935912038726",
+        "to": "13515266124935912038726"
+      },
+      "currentVariableBorrowRate": {
+        "from": "1615092557328383571260600",
+        "to": "1715092557328383571260600"
+      },
+      "liquidityIndex": {
+        "from": "1003072362844608475393012777",
+        "to": "1102072362844608475393012777"
+      },
+      "variableBorrowIndex": {
+        "from": "1019120004296811649883429668",
+        "to": "1021120004296811649883429668"
+      }
+    },
     "0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7": {
       "reserveFactor": {
         "from": 2000,

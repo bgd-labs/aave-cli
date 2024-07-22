@@ -63,20 +63,32 @@ export function formatNumberString(x: string | number) {
   return String(x).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
 }
 
+function limitDecimalsWithoutRounding(val: string, decimals: number) {
+  const parts = val.split('.');
+  if (parts.length != 2) return val;
+  return parts[0] + '.' + parts[1].substring(0, decimals);
+}
+
 export function prettifyNumber({
   value,
   decimals,
   prefix,
   suffix,
+  showDecimals,
 }: {
   value: string | number | bigint;
   decimals: number;
   prefix?: string;
   suffix?: string;
+  showDecimals?: boolean;
 }) {
-  return `${prefix ? `${prefix}` : ''}${formatNumberString(formatUnits(BigInt(value), decimals))}${
-    suffix ? `${suffix}` : ''
-  }[${value}](${decimals} decimals)`;
+  const formattedNumber = limitDecimalsWithoutRounding(
+    formatNumberString(formatUnits(BigInt(value), decimals)),
+    4,
+  );
+  return `${prefix ? `${prefix} ` : ''}${formattedNumber}${
+    suffix ? ` ${suffix}` : ''
+  } [${value}${showDecimals ? `, ${decimals} decimals` : ''}]`;
 }
 
 export function wrapInQuotes(name: string, quotes: boolean) {
@@ -127,5 +139,7 @@ export async function addAssetPrice(client: Client, address: Address) {
   try {
     description = await clProxy.read.description();
   } catch (e) {}
-  return `${address} (latestAnswer: ${decimals ? prettifyNumber({value: latestAnswer, decimals}) : latestAnswer}, description: ${description})`;
+  return `${address} (latestAnswer: ${
+    decimals ? prettifyNumber({value: latestAnswer, decimals, showDecimals: true}) : latestAnswer
+  }, description: ${description})`;
 }
