@@ -63,20 +63,32 @@ export function formatNumberString(x: string | number) {
   return String(x).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
 }
 
+function limitDecimalsWithoutRounding(val: string, decimals: number) {
+  const parts = val.split('.');
+  if (parts.length != 2) return val;
+  return parts[0] + '.' + parts[1].substring(0, decimals);
+}
+
 export function prettifyNumber({
   value,
   decimals,
   prefix,
   suffix,
+  decimalsToDisplay = 4,
 }: {
   value: string | number | bigint;
   decimals: number;
   prefix?: string;
   suffix?: string;
+  decimalsToDisplay?: number;
 }) {
-  return `${prefix ? `${prefix}` : ''}${formatNumberString(formatUnits(BigInt(value), decimals))}${
-    suffix ? `${suffix}` : ''
-  }[${value}](${decimals} decimals)`;
+  const formattedNumber = limitDecimalsWithoutRounding(
+    formatNumberString(formatUnits(BigInt(value), decimals)),
+    decimalsToDisplay,
+  );
+  return `${prefix ? `${prefix} ` : ''}${formattedNumber}${
+    suffix ? ` ${suffix}` : ''
+  } [${value}, ${decimals} decimals]`;
 }
 
 export function wrapInQuotes(name: string, quotes: boolean) {

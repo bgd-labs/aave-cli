@@ -9,14 +9,14 @@ exports[`report > should generate a well formatted report 1`] = `
 
 | description | value before | value after |
 | --- | --- | --- |
-| reserveFactor | 20 % | 35 % |
+| reserveFactor | 20 % [2000, 2 decimals] | 35 % [3500, 2 decimals] |
 
 
 #### WETH ([0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619](https://polygonscan.com/address/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619))
 
 | description | value before | value after |
 | --- | --- | --- |
-| reserveFactor | 10 % | 15 % |
+| reserveFactor | 10 % [1000, 2 decimals] | 15 % [1500, 2 decimals] |
 | interestRateStrategy | [0x03733F4E008d36f2e37F0080fF1c8DF756622E6F](https://polygonscan.com/address/0x03733F4E008d36f2e37F0080fF1c8DF756622E6F) | [0x27eFE5db315b71753b2a38ED3d5dd7E9362ba93F](https://polygonscan.com/address/0x27eFE5db315b71753b2a38ED3d5dd7E9362ba93F) |
 | stableRateSlope1 | 0 % | 4 % |
 | optimalUsageRatio | 45 % | 80 % |
@@ -32,7 +32,7 @@ exports[`report > should generate a well formatted report 1`] = `
 
 | description | value before | value after |
 | --- | --- | --- |
-| reserveFactor | 20 % | 35 % |
+| reserveFactor | 20 % [2000, 2 decimals] | 35 % [3500, 2 decimals] |
 
 
 #### agEUR ([0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4](https://polygonscan.com/address/0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4))
@@ -61,7 +61,7 @@ exports[`report > should generate a well formatted report 1`] = `
 
 | description | value before | value after |
 | --- | --- | --- |
-| reserveFactor | 10 % | 20 % |
+| reserveFactor | 10 % [1000, 2 decimals] | 20 % [2000, 2 decimals] |
 | interestRateStrategy | [0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4](https://polygonscan.com/address/0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4) | [0xA9F3C3caE095527061e6d270DBE163693e6fda9D](https://polygonscan.com/address/0xA9F3C3caE095527061e6d270DBE163693e6fda9D) |
 | variableRateSlope2 | 60 % | 75 % |
 | stableRateSlope2 | 60 % | 75 % |
