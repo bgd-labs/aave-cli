@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.15.0](https://github.com/bgd-labs/aave-cli/compare/v0.14.1...v0.15.0) (2024-07-22)
+
+
+### Features
+
+* use consistent decimals length ([#144](https://github.com/bgd-labs/aave-cli/issues/144)) ([1272f9c](https://github.com/bgd-labs/aave-cli/commit/1272f9c1bc4e6368bc6a18c128f932efb4decdcf))
+
 ## [0.14.1](https://github.com/bgd-labs/aave-cli/compare/v0.14.0...v0.14.1) (2024-06-11)
 
 
