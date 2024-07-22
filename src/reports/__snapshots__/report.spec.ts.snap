@@ -5,6 +5,16 @@ exports[`report > should generate a well formatted report 1`] = `
 
 ### Reserve altered
 
+#### SUSHI ([0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a](https://polygonscan.com/address/0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a))
+
+| description | value before | value after |
+| --- | --- | --- |
+| liquidityIndex | 1.0030 % [1003072362844608475393012777] | 1.1020 % [1102072362844608475393012777] |
+| variableBorrowIndex | 1.0191 % [1019120004296811649883429668] | 1.0211 % [1021120004296811649883429668] |
+| currentLiquidityRate | 0.0013 % [13415266124935912038726] | 0.0013 % [13515266124935912038726] |
+| currentVariableBorrowRate | 0.1615 % [1615092557328383571260600] | 0.1715 % [1715092557328383571260600] |
+
+
 #### GHST ([0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7](https://polygonscan.com/address/0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7))
 
 | description | value before | value after |
@@ -85,6 +95,24 @@ exports[`report > should generate a well formatted report 1`] = `
 \`\`\`json
 {
   "reserves": {
+    "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a": {
+      "currentLiquidityRate": {
+        "from": "13415266124935912038726",
+        "to": "13515266124935912038726"
+      },
+      "currentVariableBorrowRate": {
+        "from": "1615092557328383571260600",
+        "to": "1715092557328383571260600"
+      },
+      "liquidityIndex": {
+        "from": "1003072362844608475393012777",
+        "to": "1102072362844608475393012777"
+      },
+      "variableBorrowIndex": {
+        "from": "1019120004296811649883429668",
+        "to": "1021120004296811649883429668"
+      }
+    },
     "0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7": {
       "reserveFactor": {
         "from": 2000,
