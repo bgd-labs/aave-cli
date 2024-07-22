@@ -74,21 +74,21 @@ export function prettifyNumber({
   decimals,
   prefix,
   suffix,
-  decimalsToDisplay = 4,
+  showDecimals,
 }: {
   value: string | number | bigint;
   decimals: number;
   prefix?: string;
   suffix?: string;
-  decimalsToDisplay?: number;
+  showDecimals?: boolean;
 }) {
   const formattedNumber = limitDecimalsWithoutRounding(
     formatNumberString(formatUnits(BigInt(value), decimals)),
-    decimalsToDisplay,
+    4,
   );
   return `${prefix ? `${prefix} ` : ''}${formattedNumber}${
     suffix ? ` ${suffix}` : ''
-  } [${value}, ${decimals} decimals]`;
+  } [${value}${showDecimals ? `, ${decimals} decimals` : ''}]`;
 }
 
 export function wrapInQuotes(name: string, quotes: boolean) {
@@ -139,5 +139,7 @@ export async function addAssetPrice(client: Client, address: Address) {
   try {
     description = await clProxy.read.description();
   } catch (e) {}
-  return `${address} (latestAnswer: ${decimals ? prettifyNumber({value: latestAnswer, decimals}) : latestAnswer}, description: ${description})`;
+  return `${address} (latestAnswer: ${
+    decimals ? prettifyNumber({value: latestAnswer, decimals, showDecimals: true}) : latestAnswer
+  }, description: ${description})`;
 }

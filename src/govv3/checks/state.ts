@@ -137,8 +137,13 @@ export async function deepDiff({
 
   if (type === '_streams') {
     const asset = await findAsset(client, after.tokenAddress);
-    after.ratePerSecond = prettifyNumber({decimals: asset.decimals, value: after.ratePerSecond});
+    after.ratePerSecond = prettifyNumber({
+      decimals: asset.decimals,
+      value: after.ratePerSecond,
+      showDecimals: true,
+    });
     after.remainingBalance = prettifyNumber({
+      showDecimals: true,
       decimals: asset.decimals,
       value: after.remainingBalance,
     });
@@ -215,20 +220,20 @@ async function enhanceValue({
       ].includes(type)
     ) {
       const asset = await findAsset(client, address);
-      if (asset) return prettifyNumber({decimals: asset.decimals, value});
+      if (asset) return prettifyNumber({decimals: asset.decimals, value, showDecimals: true});
     }
     // values to be rendered with ray decimals
     if (key && ['_reserves'].includes(type)) {
       if (['liquidityIndex', 'variableBorrowIndex'].includes(key))
-        return prettifyNumber({decimals: 27, value});
+        return prettifyNumber({decimals: 27, value, showDecimals: true});
       if (['liquidationThreshold', 'reserveFactor', 'liquidationProtocolFee'].includes(key))
-        return prettifyNumber({decimals: 2, value, suffix: '%'});
+        return prettifyNumber({decimals: 2, value, suffix: '%', showDecimals: true});
       if (
         ['currentLiquidityRate', 'currentVariableBorrowRate', 'currentStableBorrowRate'].includes(
           key,
         )
       )
-        return prettifyNumber({decimals: 25, value, suffix: '%'});
+        return prettifyNumber({decimals: 25, value, suffix: '%', showDecimals: true});
     }
   }
   return value;
