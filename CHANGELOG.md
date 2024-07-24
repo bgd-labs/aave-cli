@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.16.2](https://github.com/bgd-labs/aave-cli/compare/v0.16.1...v0.16.2) (2024-07-24)
+
+
+### Bug Fixes
+
+* properly render virtual balance fields ([#148](https://github.com/bgd-labs/aave-cli/issues/148)) ([9676548](https://github.com/bgd-labs/aave-cli/commit/967654840d59d5953dd6406fcbe670522979f5ed))
+
 ## [0.16.1](https://github.com/bgd-labs/aave-cli/compare/v0.16.0...v0.16.1) (2024-07-24)
 
 
