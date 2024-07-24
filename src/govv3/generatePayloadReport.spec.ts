@@ -6,8 +6,10 @@ import {STREAM_PAYLOAD} from './mocks/streamPayload';
 import {findPayloadsController} from './utils/checkAddress';
 import {getPayloadsController} from './payloadsController';
 import {Address} from 'viem';
-import {localCacheAdapter} from '@bgd-labs/aave-v3-governance-cache/localCache';
+import {customStorageProvider} from '@bgd-labs/aave-v3-governance-cache/customStorageProvider';
+import {fileSystemStorageAdapter} from '@bgd-labs/aave-v3-governance-cache/fileSystemStorageAdapter';
 
+const localCacheAdapter = customStorageProvider(fileSystemStorageAdapter);
 /**
  * Tenderly simulation results are insanely huge, so we're removing some stuff we don't need
  * @param mockData

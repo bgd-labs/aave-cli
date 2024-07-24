@@ -28,7 +28,7 @@ Dai (Dai) at \`0x6B175474E89094C44Da98b954EedeAC495271d0F\`[:ghost:](https://git
 + 115,792,089,237,316,195,423,570,985,008,687,907,853,269,984,665,640,564,039,457.5840 [115792089237316195423570985008687907853269984665640564039457584007913129639935, 18 decimals]
 \`\`\`
 
-InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_IMPL")
+InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`
 \`\`\`diff
 @@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC).liquidityIndex\` @@
 - 1.1259 [1125972900043692179606694722, 27 decimals]
@@ -180,7 +180,7 @@ exports[`state check > should correctly render state diff for config change 1`] 
   "errors": [],
   "info": [
     "
-InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_IMPL")
+InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`
 \`\`\`diff
 @@ \`_reserves\` key \`0x0000000000085d4780b73119b644ae5ecd22b376 (symbol: TUSD).configuration.data\` @@
 - 184283194582935181459456

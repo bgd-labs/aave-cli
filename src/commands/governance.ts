@@ -18,7 +18,11 @@ import {getCachedIpfs} from '../ipfs/getCachedProposalMetaData';
 import {DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT, FORMAT} from '../utils/constants';
 import {logError, logInfo, logSuccess} from '../utils/logger';
 import {getBlock} from 'viem/actions';
-import {localCacheAdapter} from '@bgd-labs/aave-v3-governance-cache/localCache';
+import {customStorageProvider} from '@bgd-labs/aave-v3-governance-cache/customStorageProvider';
+import {fileSystemStorageAdapter} from '@bgd-labs/aave-v3-governance-cache/fileSystemStorageAdapter';
+
+const localCacheAdapter = customStorageProvider(fileSystemStorageAdapter);
+
 import {refreshCache} from '@bgd-labs/aave-v3-governance-cache/refreshCache';
 
 enum DialogOptions {
