@@ -12,6 +12,12 @@ export function renderReserveValue<T extends keyof AaveV3Reserve>(
     return prettifyNumber({value: reserve[key] as string, decimals: 2, suffix: '%'});
   if (['supplyCap', 'borrowCap'].includes(key))
     return `${reserve[key].toLocaleString('en-US')} ${reserve.symbol}`;
+  if (['aTokenUnderlyingBalance', 'virtualBalance'].includes(key))
+    return prettifyNumber({
+      value: reserve[key] as string,
+      decimals: reserve.decimals,
+      suffix: reserve.symbol,
+    });
   if (key === 'debtCeiling')
     return prettifyNumber({value: reserve[key] as string, decimals: 2, suffix: '$'});
   if (['liquidityIndex', 'variableBorrowIndex'].includes(key))

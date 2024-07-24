@@ -2,6 +2,8 @@ import {describe, expect, it} from 'vitest';
 import {diff} from './diff';
 import post from './mocks/postTestEngineArbV3.json';
 import pre from './mocks/preTestEngineArbV3.json';
+import pre31 from './mocks/pre3-1.json';
+import post31 from './mocks/post3-1.json';
 
 describe('diff', () => {
   it('should return same object if no changes were found', () => {
@@ -25,6 +27,11 @@ describe('diff', () => {
 
   it('should find all the changes', () => {
     const out = diff(pre, post, true);
-    console.log(JSON.stringify(out, null, 2));
+    expect(out).toMatchSnapshot();
+  });
+
+  it('should find all the changes', () => {
+    const out = diff(pre31, post31, true);
+    expect(out).toMatchSnapshot();
   });
 });
