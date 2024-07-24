@@ -60,6 +60,7 @@ function decodeReserveDataV3(data: bigint) {
   const eModeCategory = getBits(data, 168n, 175n);
   const unbackedMintCap = getBits(data, 176n, 211n);
   const debtCeiling = getBits(data, 212n, 251n);
+  const virtualAccountingEnabled = getBits(data, 252n, 252n);
 
   return {
     ltv,
@@ -81,5 +82,6 @@ function decodeReserveDataV3(data: bigint) {
     debtCeiling,
     siloedBorrowingEnabled: !!siloedBorrowingEnabled,
     flashloaningEnabled: !!flashloaningEnabled,
+    virtualAccountingEnabled: !!virtualAccountingEnabled,
   };
 }
