@@ -6,6 +6,7 @@ import type {AaveV3Reserve, CHAIN_ID} from './snapshot-types';
 const WBTC_MOCK = {
   aToken: '0x078f358208685046a11C85e8ad32895DED33A249',
   aTokenImpl: '0xa5ba6E5EC19a1Bf23C857991c857dB62b2Aa187B',
+  aTokenUnderlyingBalance: 0,
   borrowCap: 1115,
   borrowingEnabled: true,
   debtCeiling: 100000,
@@ -36,6 +37,8 @@ const WBTC_MOCK = {
   usageAsCollateralEnabled: true,
   variableDebtToken: '0x92b42c66840C7AD907b4BF74879FF3eF7c529473',
   variableDebtTokenImpl: '0x81387c40EB75acB02757C1Ae55D5936E78c9dEd3',
+  virtualAccountingActive: true,
+  virtualBalance: 0,
 };
 
 describe('reserve', () => {

@@ -6,10 +6,12 @@ import {generateReport} from './generatePayloadReport';
 import {generateProposalReport} from './generateProposalReport';
 import {getGovernance} from './governance';
 import {getPayloadsController} from './payloadsController';
-import {localCacheAdapter} from '@bgd-labs/aave-v3-governance-cache/localCache';
 import {refreshCache} from '@bgd-labs/aave-v3-governance-cache/refreshCache';
 import {GetPayloadReturnType} from '@bgd-labs/aave-v3-governance-cache';
+import {customStorageProvider} from '@bgd-labs/aave-v3-governance-cache/customStorageProvider';
+import {fileSystemStorageAdapter} from '@bgd-labs/aave-v3-governance-cache/fileSystemStorageAdapter';
 
+const localCacheAdapter = customStorageProvider(fileSystemStorageAdapter);
 /**
  * Reference implementation, unused
  * @param governanceAddress

@@ -38,7 +38,7 @@ Dai (Dai) at \`0x6B175474E89094C44Da98b954EedeAC495271d0F\`[:ghost:](https://git
 + 115,792,089,237,316,195,423,570,985,008,687,907,853,269,984,665,640,564,039,457.5840 [115792089237316195423570985008687907853269984665640564039457584007913129639935, 18 decimals]
 \`\`\`
 
-InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_IMPL")
+InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`
 \`\`\`diff
 @@ \`_reserves\` key \`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC).liquidityIndex\` @@
 - 1.1259 [1125972900043692179606694722, 27 decimals]
@@ -187,7 +187,7 @@ TetherToken (Tether) at \`0xdAC17F958D2ee523a2206206994597C13D831ec7\`[:ghost:](
 
 - InitializableImmutableAdminUpgradeabilityProxy at \`0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.DEFAULT_INCENTIVES_CONTROLLER")
   - \`UserIndexUpdated(user: 0x5300a1a15135ea4dc7ad5a167152c01efc9b192a, asset: 0xbcca60bb61934080951369a648fb03df4f96263c (symbol: aUSDC), index: 35777739039773953913685859)\`
-- InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_IMPL")
+- InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`
   - \`ReserveUsedAsCollateralEnabled(reserve: 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC), user: 0x5300a1a15135ea4dc7ad5a167152c01efc9b192a)\`
   - \`ReserveDataUpdated(reserve: 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC), liquidityRate: 123029815053899026525991182, stableBorrowRate: 230113117017905438863598858, variableBorrowRate: 180113117017905438863598858, liquidityIndex: 1.1259 [1125991030272021514250652312, 27 decimals], variableBorrowIndex: 1.1850 [1185097276944910539318953337, 27 decimals])\`
   - \`ReserveUsedAsCollateralDisabled(reserve: 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC), user: 0x5300a1a15135ea4dc7ad5a167152c01efc9b192a)\`
@@ -236,7 +236,7 @@ TetherToken (Tether) at \`0xdAC17F958D2ee523a2206206994597C13D831ec7\`[:ghost:](
 - TransparentUpgradeableProxy at \`0x3ea64b1C0194524b48F9118462C8E9cd61a243c7\`[:ghost:](https://github.com/bgd-labs/aave-address-book "MiscEthereum.AAVE_SWAPPER") with implementation AaveSwapper at \`0x0bbdB9a4657912d7a4b198310397EF178DBa0893\`
   - \`SwapRequested(milkman: 0x11c76ad590abdffcd980afec9ad951b160f02797, fromToken: 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 (symbol: USDC), toToken: 0x40d16fc0246ad3160ccc09b8d0d3a2cd28ae6c2f (symbol: GHO), fromOracle: 0x8fffffd4afb6115b954bd326cbe7b4ba576818f6, toOracle: 0x3f12643d3f6f874d39c2a4c9f2cd6f2dbac877fc, amount: 1000000000000, recipient: 0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c, slippage: 100)\`
   - \`SwapRequested(milkman: 0x11c76ad590abdffcd980afec9ad951b160f02797, fromToken: 0x6b175474e89094c44da98b954eedeac495271d0f (symbol: DAI), toToken: 0x40d16fc0246ad3160ccc09b8d0d3a2cd28ae6c2f (symbol: GHO), fromOracle: 0xaed0c38402a5d19df6e4c03f4e2dced6e29c1ee9, toOracle: 0x3f12643d3f6f874d39c2a4c9f2cd6f2dbac877fc, amount: 500000000000000000000000, recipient: 0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c, slippage: 100)\`
-- Executor at \`0x5300A1a15135EA4dc7aD5a167152C01EFc9b192A\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADMIN, AaveV2EthereumAMM.POOL_ADMIN, AaveV3Ethereum.ACL_ADMIN, GovernanceV3Ethereum.EXECUTOR_LVL_1")
+- Executor at \`0x5300A1a15135EA4dc7aD5a167152C01EFc9b192A\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADMIN, AaveV2EthereumAMM.POOL_ADMIN, AaveV3Ethereum.ACL_ADMIN, AaveV3EthereumLido.ACL_ADMIN, GovernanceV3Ethereum.EXECUTOR_LVL_1")
   - \`ExecutedAction(target: 0x1f5cd22582b4cd85ff8382fd40b88776470c38fc, value: 0, signature: execute(), data: 0x, executionTime: 1705401311, withDelegatecall: true, resultData: 0x)\`
 - TransparentUpgradeableProxy at \`0xdAbad81aF85554E9ae636395611C58F7eC1aAEc5\`[:ghost:](https://github.com/bgd-labs/aave-address-book "GovernanceV3Ethereum.PAYLOADS_CONTROLLER") with implementation PayloadsController at \`0x7222182cB9c5320587b5148BF03eeE107AD64578\`
   - \`PayloadExecuted(payloadId: 46)\`
@@ -254,12 +254,12 @@ TetherToken (Tether) at \`0xdAC17F958D2ee523a2206206994597C13D831ec7\`[:ghost:](
 - 0xd73a92be73efbfcf3854433a5fcbabf9c1316073: EOA (verification not applicable)
 - 0xdabad81af85554e9ae636395611c58f7ec1aaec5: Contract (verified) (TransparentUpgradeableProxy) [:ghost:](https://github.com/bgd-labs/aave-address-book "GovernanceV3Ethereum.PAYLOADS_CONTROLLER")
 - 0x7222182cb9c5320587b5148bf03eee107ad64578: Contract (verified) (PayloadsController) 
-- 0x5300a1a15135ea4dc7ad5a167152c01efc9b192a: Contract (verified) (Executor) [:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADMIN, AaveV2EthereumAMM.POOL_ADMIN, AaveV3Ethereum.ACL_ADMIN, GovernanceV3Ethereum.EXECUTOR_LVL_1")
+- 0x5300a1a15135ea4dc7ad5a167152c01efc9b192a: Contract (verified) (Executor) [:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADMIN, AaveV2EthereumAMM.POOL_ADMIN, AaveV3Ethereum.ACL_ADMIN, AaveV3EthereumLido.ACL_ADMIN, GovernanceV3Ethereum.EXECUTOR_LVL_1")
 - 0x1f5cd22582b4cd85ff8382fd40b88776470c38fc: Contract (not verified) 
 - 0xbcca60bb61934080951369a648fb03df4f96263c: Contract (verified) (InitializableImmutableAdminUpgradeabilityProxy) [:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.ASSETS.USDC.A_TOKEN")
 - 0x1c050bca8babe53ef769d0d2e411f556e1a27e7b: Contract (verified) (AToken) 
 - 0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9: Contract (verified) (InitializableImmutableAdminUpgradeabilityProxy) [:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL")
-- 0x085e34722e04567df9e6d2c32e82fd74f3342e79: Contract (verified) (LendingPool) [:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_IMPL")
+- 0x085e34722e04567df9e6d2c32e82fd74f3342e79: Contract (verified) (LendingPool) 
 - 0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c: Contract (verified) (InitializableAdminUpgradeabilityProxy) [:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.COLLECTOR, AaveV2EthereumAMM.COLLECTOR, AaveV2EthereumArc.COLLECTOR, AaveV3Ethereum.COLLECTOR")
 - 0x80f2c02224a2e548fc67c0bf705ebfa825dd5439: Contract (verified) (Collector) 
 - 0xd784927ff2f95ba542bfc824c8a8a98f3495f6b5: Contract (verified) (InitializableImmutableAdminUpgradeabilityProxy) [:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.DEFAULT_INCENTIVES_CONTROLLER")
@@ -314,10 +314,10 @@ TetherToken (Tether) at \`0xdAC17F958D2ee523a2206206994597C13D831ec7\`[:ghost:](
 
 - [0xd73a92be73efbfcf3854433a5fcbabf9c1316073](https://etherscan.io/address/0xd73a92be73efbfcf3854433a5fcbabf9c1316073): EOA (may have code later)
 - [0xdabad81af85554e9ae636395611c58f7ec1aaec5](https://etherscan.io/address/0xdabad81af85554e9ae636395611c58f7ec1aaec5): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "GovernanceV3Ethereum.PAYLOADS_CONTROLLER")
-- [0x5300a1a15135ea4dc7ad5a167152c01efc9b192a](https://etherscan.io/address/0x5300a1a15135ea4dc7ad5a167152c01efc9b192a): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADMIN, AaveV2EthereumAMM.POOL_ADMIN, AaveV3Ethereum.ACL_ADMIN, GovernanceV3Ethereum.EXECUTOR_LVL_1")
+- [0x5300a1a15135ea4dc7ad5a167152c01efc9b192a](https://etherscan.io/address/0x5300a1a15135ea4dc7ad5a167152c01efc9b192a): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADMIN, AaveV2EthereumAMM.POOL_ADMIN, AaveV3Ethereum.ACL_ADMIN, AaveV3EthereumLido.ACL_ADMIN, GovernanceV3Ethereum.EXECUTOR_LVL_1")
 - [0xbcca60bb61934080951369a648fb03df4f96263c](https://etherscan.io/address/0xbcca60bb61934080951369a648fb03df4f96263c): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.ASSETS.USDC.A_TOKEN")
 - [0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9](https://etherscan.io/address/0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL")
-- [0x085e34722e04567df9e6d2c32e82fd74f3342e79](https://etherscan.io/address/0x085e34722e04567df9e6d2c32e82fd74f3342e79): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_IMPL")
+- [0x085e34722e04567df9e6d2c32e82fd74f3342e79](https://etherscan.io/address/0x085e34722e04567df9e6d2c32e82fd74f3342e79): Contract (with DELEGATECALL)
 - [0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c](https://etherscan.io/address/0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.COLLECTOR, AaveV2EthereumAMM.COLLECTOR, AaveV2EthereumArc.COLLECTOR, AaveV3Ethereum.COLLECTOR")
 - [0xd784927ff2f95ba542bfc824c8a8a98f3495f6b5](https://etherscan.io/address/0xd784927ff2f95ba542bfc824c8a8a98f3495f6b5): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.DEFAULT_INCENTIVES_CONTROLLER")
 - [0xb53c1a33016b2dc2ff3653530bff1848a515c8c5](https://etherscan.io/address/0xb53c1a33016b2dc2ff3653530bff1848a515c8c5): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADDRESSES_PROVIDER")
@@ -525,7 +525,7 @@ InitializableAdminUpgradeabilityProxy at \`0x464C71f6c2F760DdA6093dCB91C24c39e5d
 + true
 \`\`\`
 
-InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_IMPL")
+InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`
 \`\`\`diff
 @@ \`_usersConfig\` key \`0xb812d0944f8f581dfaa3a93dda0d22ecef51a9cf.data\` @@
 - 0
@@ -583,7 +583,7 @@ TransparentUpgradeableProxy at \`0xdAbad81aF85554E9ae636395611C58F7eC1aAEc5\`[:g
 
 - InitializableAdminUpgradeabilityProxy (Aave) at \`0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.ASSETS.AAVE.UNDERLYING, AaveV3Ethereum.ASSETS.AAVE.UNDERLYING") with implementation AaveTokenV3 at \`0x5D4Aa78B08Bc7C530e21bf7447988b1Be7991322\`
   - \`Transfer(from: 0x25f2226b597e8f9514b3f68f00f494cf4f286491, to: 0xb812d0944f8f581dfaa3a93dda0d22ecef51a9cf, value: 6,000 [6000000000000000000000, 18 decimals])\`
-- InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_IMPL")
+- InitializableImmutableAdminUpgradeabilityProxy at \`0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL") with implementation LendingPool at \`0x085E34722e04567Df9E6d2c32e82fd74f3342e79\`
   - \`ReserveUsedAsCollateralEnabled(reserve: 0xdac17f958d2ee523a2206206994597c13d831ec7 (symbol: USDT), user: 0xb812d0944f8f581dfaa3a93dda0d22ecef51a9cf)\`
 - InitializableImmutableAdminUpgradeabilityProxy (Aave USDT) at \`0x3Ed3B47Dd13EC9a98b44e6204A523E766B225811\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.ASSETS.USDT.A_TOKEN")
   - \`BalanceTransfer(from: 0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c, to: 0xb812d0944f8f581dfaa3a93dda0d22ecef51a9cf, value: 960,000 [960000000000, 6 decimals], index: 1169527841491193591052135070)\`
@@ -601,7 +601,7 @@ TransparentUpgradeableProxy at \`0xdAbad81aF85554E9ae636395611C58F7eC1aAEc5\`[:g
 - InitializableAdminUpgradeabilityProxy at \`0x464C71f6c2F760DdA6093dCB91C24c39e5d6e18c\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.COLLECTOR, AaveV2EthereumAMM.COLLECTOR, AaveV2EthereumArc.COLLECTOR, AaveV3Ethereum.COLLECTOR") with implementation Collector at \`0x80f2c02224a2E548FC67c0bF705eBFA825dd5439\`
   - \`CreateStream(streamId: 100030, sender: 0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c, recipient: 0xb812d0944f8f581dfaa3a93dda0d22ecef51a9cf, deposit: 639999999999999988992000, tokenAddress: 0x40d16fc0246ad3160ccc09b8d0d3a2cd28ae6c2f, startTime: 1711922843, stopTime: 1727474843)\`
   - \`CreateStream(streamId: 100031, sender: 0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c, recipient: 0xb812d0944f8f581dfaa3a93dda0d22ecef51a9cf, deposit: 1140000000000, tokenAddress: 0x98c23e9d8f34fefb1b7bd6a91b7ff122f4e16f5c, startTime: 1722290843, stopTime: 1722290844)\`
-- Executor at \`0x5300A1a15135EA4dc7aD5a167152C01EFc9b192A\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADMIN, AaveV2EthereumAMM.POOL_ADMIN, AaveV3Ethereum.ACL_ADMIN, GovernanceV3Ethereum.EXECUTOR_LVL_1")
+- Executor at \`0x5300A1a15135EA4dc7aD5a167152C01EFc9b192A\`[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADMIN, AaveV2EthereumAMM.POOL_ADMIN, AaveV3Ethereum.ACL_ADMIN, AaveV3EthereumLido.ACL_ADMIN, GovernanceV3Ethereum.EXECUTOR_LVL_1")
   - \`ExecutedAction(target: 0x97b53cd563da629640f55821189452315c05f177, value: 0, signature: execute(), data: 0x, executionTime: 1711922843, withDelegatecall: true, resultData: 0x)\`
 - TransparentUpgradeableProxy at \`0xdAbad81aF85554E9ae636395611C58F7eC1aAEc5\`[:ghost:](https://github.com/bgd-labs/aave-address-book "GovernanceV3Ethereum.PAYLOADS_CONTROLLER") with implementation PayloadsController at \`0x7222182cB9c5320587b5148BF03eeE107AD64578\`
   - \`PayloadExecuted(payloadId: 87)\`
@@ -629,7 +629,7 @@ TransparentUpgradeableProxy at \`0xdAbad81aF85554E9ae636395611C58F7eC1aAEc5\`[:g
 - 0x365d47ced3d7eb6a9bdb3814aa23cc06b2d33ef8: Contract (verified) (ExecutionChainRobotKeeper) 
 - 0xdabad81af85554e9ae636395611c58f7ec1aaec5: Contract (verified) (TransparentUpgradeableProxy) [:ghost:](https://github.com/bgd-labs/aave-address-book "GovernanceV3Ethereum.PAYLOADS_CONTROLLER")
 - 0x7222182cb9c5320587b5148bf03eee107ad64578: Contract (verified) (PayloadsController) 
-- 0x5300a1a15135ea4dc7ad5a167152c01efc9b192a: Contract (verified) (Executor) [:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADMIN, AaveV2EthereumAMM.POOL_ADMIN, AaveV3Ethereum.ACL_ADMIN, GovernanceV3Ethereum.EXECUTOR_LVL_1")
+- 0x5300a1a15135ea4dc7ad5a167152c01efc9b192a: Contract (verified) (Executor) [:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADMIN, AaveV2EthereumAMM.POOL_ADMIN, AaveV3Ethereum.ACL_ADMIN, AaveV3EthereumLido.ACL_ADMIN, GovernanceV3Ethereum.EXECUTOR_LVL_1")
 - 0x97b53cd563da629640f55821189452315c05f177: Contract (verified) (AaveV3Ethereum_AaveBGDPhase3_20240325) 
 - 0x3d569673daa0575c936c7c67c4e6aeda69cc630c: Contract (verified) (AaveEcosystemReserveController) [:ghost:](https://github.com/bgd-labs/aave-address-book "MiscEthereum.AAVE_ECOSYSTEM_RESERVE_CONTROLLER")
 - 0x25f2226b597e8f9514b3f68f00f494cf4f286491: Contract (verified) (InitializableAdminUpgradeabilityProxy) [:ghost:](https://github.com/bgd-labs/aave-address-book "MiscEthereum.ECOSYSTEM_RESERVE")
@@ -641,7 +641,7 @@ TransparentUpgradeableProxy at \`0xdAbad81aF85554E9ae636395611C58F7eC1aAEc5\`[:g
 - 0x3ed3b47dd13ec9a98b44e6204a523e766b225811: Contract (verified) (InitializableImmutableAdminUpgradeabilityProxy) [:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.ASSETS.USDT.A_TOKEN")
 - 0x9651f64bd77550691eb2aeeb58188cb67f005902: Contract (verified) (AToken) 
 - 0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9: Contract (verified) (InitializableImmutableAdminUpgradeabilityProxy) [:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL")
-- 0x085e34722e04567df9e6d2c32e82fd74f3342e79: Contract (verified) (LendingPool) [:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_IMPL")
+- 0x085e34722e04567df9e6d2c32e82fd74f3342e79: Contract (verified) (LendingPool) 
 - 0xd784927ff2f95ba542bfc824c8a8a98f3495f6b5: Contract (verified) (InitializableImmutableAdminUpgradeabilityProxy) [:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.DEFAULT_INCENTIVES_CONTROLLER")
 - 0xd9ed413bcf58c266f95fe6ba63b13cf79299ce31: Contract (verified) (StakedTokenIncentivesController) 
 - 0xb53c1a33016b2dc2ff3653530bff1848a515c8c5: Contract (verified) (LendingPoolAddressesProvider) [:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADDRESSES_PROVIDER")
@@ -665,13 +665,13 @@ TransparentUpgradeableProxy at \`0xdAbad81aF85554E9ae636395611C58F7eC1aAEc5\`[:g
 #### Warnings
 
 - [0xdabad81af85554e9ae636395611c58f7ec1aaec5](https://etherscan.io/address/0xdabad81af85554e9ae636395611c58f7ec1aaec5): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "GovernanceV3Ethereum.PAYLOADS_CONTROLLER")
-- [0x5300a1a15135ea4dc7ad5a167152c01efc9b192a](https://etherscan.io/address/0x5300a1a15135ea4dc7ad5a167152c01efc9b192a): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADMIN, AaveV2EthereumAMM.POOL_ADMIN, AaveV3Ethereum.ACL_ADMIN, GovernanceV3Ethereum.EXECUTOR_LVL_1")
+- [0x5300a1a15135ea4dc7ad5a167152c01efc9b192a](https://etherscan.io/address/0x5300a1a15135ea4dc7ad5a167152c01efc9b192a): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADMIN, AaveV2EthereumAMM.POOL_ADMIN, AaveV3Ethereum.ACL_ADMIN, AaveV3EthereumLido.ACL_ADMIN, GovernanceV3Ethereum.EXECUTOR_LVL_1")
 - [0x25f2226b597e8f9514b3f68f00f494cf4f286491](https://etherscan.io/address/0x25f2226b597e8f9514b3f68f00f494cf4f286491): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "MiscEthereum.ECOSYSTEM_RESERVE")
 - [0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9](https://etherscan.io/address/0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.ASSETS.AAVE.UNDERLYING, AaveV3Ethereum.ASSETS.AAVE.UNDERLYING")
 - [0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c](https://etherscan.io/address/0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.COLLECTOR, AaveV2EthereumAMM.COLLECTOR, AaveV2EthereumArc.COLLECTOR, AaveV3Ethereum.COLLECTOR")
 - [0x3ed3b47dd13ec9a98b44e6204a523e766b225811](https://etherscan.io/address/0x3ed3b47dd13ec9a98b44e6204a523e766b225811): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.ASSETS.USDT.A_TOKEN")
 - [0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9](https://etherscan.io/address/0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL")
-- [0x085e34722e04567df9e6d2c32e82fd74f3342e79](https://etherscan.io/address/0x085e34722e04567df9e6d2c32e82fd74f3342e79): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_IMPL")
+- [0x085e34722e04567df9e6d2c32e82fd74f3342e79](https://etherscan.io/address/0x085e34722e04567df9e6d2c32e82fd74f3342e79): Contract (with DELEGATECALL)
 - [0xd784927ff2f95ba542bfc824c8a8a98f3495f6b5](https://etherscan.io/address/0xd784927ff2f95ba542bfc824c8a8a98f3495f6b5): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.DEFAULT_INCENTIVES_CONTROLLER")
 - [0xb53c1a33016b2dc2ff3653530bff1848a515c8c5](https://etherscan.io/address/0xb53c1a33016b2dc2ff3653530bff1848a515c8c5): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV2Ethereum.POOL_ADDRESSES_PROVIDER")
 - [0x98c23e9d8f34fefb1b7bd6a91b7ff122f4e16f5c](https://etherscan.io/address/0x98c23e9d8f34fefb1b7bd6a91b7ff122f4e16f5c): Contract (with DELEGATECALL)[:ghost:](https://github.com/bgd-labs/aave-address-book "AaveV3Ethereum.ASSETS.USDC.A_TOKEN")
