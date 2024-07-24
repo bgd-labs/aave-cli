@@ -55,7 +55,7 @@ describe('generatePayloadReport', () => {
     async () => {
       const report = await generateReport({
         ...(MOCK_PAYLOAD as any),
-        client: CHAIN_ID_CLIENT_MAP[MOCK_PAYLOAD.simulation.transaction.network_id],
+        client: CHAIN_ID_CLIENT_MAP[Number(MOCK_PAYLOAD.simulation.transaction.network_id)],
       });
       expect(report).toMatchSnapshot();
     },
@@ -67,7 +67,7 @@ describe('generatePayloadReport', () => {
     async () => {
       const report = await generateReport({
         ...(STREAM_PAYLOAD as any),
-        client: CHAIN_ID_CLIENT_MAP[MOCK_PAYLOAD.simulation.transaction.network_id],
+        client: CHAIN_ID_CLIENT_MAP[Number(MOCK_PAYLOAD.simulation.transaction.network_id)],
       });
       expect(report).toMatchSnapshot();
     },

@@ -40,7 +40,7 @@ function decodeReserveDataV2(data: bigint) {
   };
 }
 
-function decodeReserveDataV3(data: bigint) {
+export function decodeReserveDataV3(data: bigint) {
   const ltv = getBits(data, 0n, 15n);
   const liquidationThreshold = getBits(data, 16n, 31n);
   const liquidationBonus = getBits(data, 32n, 47n);
@@ -60,7 +60,7 @@ function decodeReserveDataV3(data: bigint) {
   const eModeCategory = getBits(data, 168n, 175n);
   const unbackedMintCap = getBits(data, 176n, 211n);
   const debtCeiling = getBits(data, 212n, 251n);
-  const virtualAccountingEnabled = getBits(data, 252n, 252n);
+  const virtualAccountingEnabled = Number(getBits(data, 252n, 252n));
 
   return {
     ltv,
