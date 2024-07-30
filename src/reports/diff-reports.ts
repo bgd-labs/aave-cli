@@ -66,6 +66,8 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
         const preIrHash = hash(pre.strategies[reserveKey]);
         const postIrHash = hash(post.strategies[reserveKey]);
         if (preIrHash !== postIrHash) {
+          console.log('pre strategy: ', pre.strategies[reserveKey])
+          console.log('post strategy: ', post.strategies[reserveKey])
           report += renderStrategyDiff(
             diff(pre.strategies[reserveKey], post.strategies[reserveKey]) as any,
           );
