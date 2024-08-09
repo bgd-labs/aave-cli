@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import path from 'node:path';
 import {compareStorageLayouts} from '@bgd-labs/js-utils';
 import type {Command} from '@commander-js/extra-typings';
 import {adiDiffReports} from '../reports/adi-diff-reports';
@@ -18,6 +19,7 @@ export function addCommand(program: Command) {
       const to = options.stringMode ? readJsonString(_to) : readJsonFile(_to);
       const content = await diffReports(from, to);
       if (options.out) {
+        fs.mkdirSync(path.dirname(options.out), {recursive: true});
         fs.writeFileSync(options.out, content);
       } else {
         console.log(content);
@@ -36,6 +38,7 @@ export function addCommand(program: Command) {
       const to = options.stringMode ? readJsonString(_to) : readJsonFile(_to);
       const content = await adiDiffReports(from, to);
       if (options.out) {
+        fs.mkdirSync(path.dirname(options.out), {recursive: true});
         fs.writeFileSync(options.out, content);
       } else {
         console.log(content);
@@ -53,6 +56,7 @@ export function addCommand(program: Command) {
       const to = readJsonFile(_to);
       const content = await compareStorageLayouts(from, to);
       if (options.out) {
+        fs.mkdirSync(path.dirname(options.out), {recursive: true});
         fs.writeFileSync(options.out, content);
       } else {
         console.log(content);
