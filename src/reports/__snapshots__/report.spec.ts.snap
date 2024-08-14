@@ -15,11 +15,35 @@ exports[`report > should generate a well formatted report 1`] = `
 | currentVariableBorrowRate | 0.1615 % [1615092557328383571260600] | 0.1715 % [1715092557328383571260600] |
 
 
+#### WMATIC ([0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270](https://polygonscan.com/address/0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270))
+
+| description | value before | value after |
+| --- | --- | --- |
+
+
+#### USDC ([0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174](https://polygonscan.com/address/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174))
+
+| description | value before | value after |
+| --- | --- | --- |
+
+
 #### GHST ([0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7](https://polygonscan.com/address/0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7))
 
 | description | value before | value after |
 | --- | --- | --- |
 | reserveFactor | 20 % [2000] | 35 % [3500] |
+
+
+#### stMATIC ([0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4](https://polygonscan.com/address/0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4))
+
+| description | value before | value after |
+| --- | --- | --- |
+
+
+#### jEUR ([0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c](https://polygonscan.com/address/0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c))
+
+| description | value before | value after |
+| --- | --- | --- |
 
 
 #### WETH ([0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619](https://polygonscan.com/address/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619))
@@ -43,6 +67,12 @@ exports[`report > should generate a well formatted report 1`] = `
 | description | value before | value after |
 | --- | --- | --- |
 | reserveFactor | 20 % [2000] | 35 % [3500] |
+
+
+#### DAI ([0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063](https://polygonscan.com/address/0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063))
+
+| description | value before | value after |
+| --- | --- | --- |
 
 
 #### agEUR ([0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4](https://polygonscan.com/address/0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4))
@@ -89,6 +119,12 @@ exports[`report > should generate a well formatted report 1`] = `
 | optimalUsageRatio | 90 % | 80 % |
 | maxExcessUsageRatio | 10 % | 20 % |
 | interestRate | ![before](/.assets/1baf85e415bd720bc42ec928d822cffbd4236d90.svg) | ![after](/.assets/8a10dd458958b063af4177af8f709f1971c58974.svg) |
+
+#### MaticX ([0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6](https://polygonscan.com/address/0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6))
+
+| description | value before | value after |
+| --- | --- | --- |
+
 
 ## Raw diff
 
@@ -441,10 +477,79 @@ exports[`report > should generate a well formatted report for 3.0 to 3.1 1`] = `
 `;
 
 exports[`report > should generate a well formatted report for 3.1 1`] = `
-"## Raw diff
+"## Reserve changes
+
+### Reserve altered
+
+#### GHO ([0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f](https://etherscan.io/address/0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f))
+
+| description | value before | value after |
+| --- | --- | --- |
+| maxVariableBorrowRate | 7 % | 6 % |
+| baseVariableBorrowRate | 7 % | 6 % |
+| interestRate | ![before](/.assets/e03975867d1c729d1a52bbec364211baff2dab5a.svg) | ![after](/.assets/a1a7ab1f1b9fcdf6ffa41ac7a8b4daf2daf98328.svg) |
+
+#### wstETH ([0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](https://etherscan.io/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.liquidationBonus | 1 % | 2 % |
+
+
+#### ETHx ([0xA35b1B31Ce002FBF2058D22F30f95D405200A15b](https://etherscan.io/address/0xA35b1B31Ce002FBF2058D22F30f95D405200A15b))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.liquidationBonus | 1 % | 2 % |
+
+
+#### cbETH ([0xBe9895146f7AF43049ca1c1AE358B0541Ea49704](https://etherscan.io/address/0xBe9895146f7AF43049ca1c1AE358B0541Ea49704))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.liquidationBonus | 1 % | 2 % |
+
+
+#### WETH ([0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2](https://etherscan.io/address/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.liquidationBonus | 1 % | 2 % |
+
+
+#### weETH ([0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee](https://etherscan.io/address/0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.liquidationBonus | 1 % | 2 % |
+
+
+#### rETH ([0xae78736Cd615f374D3085123A210448E74Fc6393](https://etherscan.io/address/0xae78736Cd615f374D3085123A210448E74Fc6393))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.liquidationBonus | 1 % | 2 % |
+
+
+#### osETH ([0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38](https://etherscan.io/address/0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.liquidationBonus | 1 % | 2 % |
+
+
+## Raw diff
 
 \`\`\`json
 {
+  "eModes": {
+    "1": {
+      "liquidationBonus": {
+        "from": 10100,
+        "to": 10200
+      }
+    }
+  },
   "strategies": {
     "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f": {
       "baseVariableBorrowRate": {
