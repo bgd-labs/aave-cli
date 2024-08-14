@@ -296,7 +296,7 @@ exports[`report > should generate a well formatted report 1`] = `
 \`\`\`"
 `;
 
-exports[`report > should generate a well formatted report for 3.1 1`] = `
+exports[`report > should generate a well formatted report for 3.0 to 3.1 1`] = `
 "## Reserve changes
 
 ### Reserve altered
@@ -433,6 +433,27 @@ exports[`report > should generate a well formatted report for 3.1 1`] = `
       "variableRateSlope2": {
         "from": null,
         "to": "600000000000000000000000000"
+      }
+    }
+  }
+}
+\`\`\`"
+`;
+
+exports[`report > should generate a well formatted report for 3.1 1`] = `
+"## Raw diff
+
+\`\`\`json
+{
+  "strategies": {
+    "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f": {
+      "baseVariableBorrowRate": {
+        "from": "70000000000000000000000000",
+        "to": "60000000000000000000000000"
+      },
+      "maxVariableBorrowRate": {
+        "from": "70000000000000000000000000",
+        "to": "60000000000000000000000000"
       }
     }
   }
