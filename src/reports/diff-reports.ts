@@ -7,7 +7,8 @@ import {AaveV3Reserve, type AaveV3Snapshot} from './snapshot-types';
 import {renderStrategy, renderStrategyDiff} from './strategy';
 
 function hasDiff(input: Record<string, any>): boolean {
-  return !!Object.keys(input).map(
+  if (!input) return false;
+  return !!Object.keys(input).find(
     (key) =>
       typeof input[key as keyof typeof input] === 'object' &&
       (input[key as keyof typeof input].hasOwnProperty('from') ||
@@ -70,9 +71,9 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
         const hasChangedIr = preIrHash !== postIrHash;
         const eModeCategoryChanged =
           diffResult.reserves[reserveKey].eModeCategory?.hasOwnProperty('from');
-        const eModeParamsChanged = hasDiff(
-          diffResult.eModes?.[diffResult.reserves[reserveKey].eModeCategory as any] || {},
-        );
+        const eModeParamsChanged =
+          !eModeCategoryChanged &&
+          hasDiff(diffResult.eModes?.[diffResult.reserves[reserveKey].eModeCategory as any]);
         if (
           !hasChangedReserveProperties &&
           !hasChangedIr &&
