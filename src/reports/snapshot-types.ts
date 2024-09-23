@@ -1,3 +1,4 @@
+import {zkSync} from 'viem/chains';
 import {z} from 'zod';
 
 export const aaveV3ConfigSchema = z.object({
@@ -13,6 +14,7 @@ export const aaveV3ConfigSchema = z.object({
 export type AaveV3Config = z.infer<typeof aaveV3ConfigSchema>;
 
 export const aaveV3ReserveSchema = z.object({
+  id: z.number(),
   isBorrowableInIsolation: z.boolean(),
   borrowCap: z.number(),
   liquidationBonus: z.number(),
@@ -38,7 +40,7 @@ export const aaveV3ReserveSchema = z.object({
   stableDebtTokenImpl: z.string(),
   interestRateStrategy: z.string(),
   variableDebtTokenImpl: z.string(),
-  oracleLatestAnswer: z.number(),
+  oracleLatestAnswer: z.string(),
   oracle: z.string(),
   oracleDecimals: z.number(),
   oracleName: z.string(),
@@ -49,6 +51,9 @@ export const aaveV3ReserveSchema = z.object({
   variableBorrowIndex: z.number(),
   currentLiquidityRate: z.number(),
   currentVariableBorrowRate: z.number(),
+  aTokenUnderlyingBalance: z.string(),
+  virtualAccountingActive: z.boolean(),
+  virtualBalance: z.string(),
 });
 
 export type AaveV3Reserve = z.infer<typeof aaveV3ReserveSchema>;
@@ -71,6 +76,8 @@ export const aaveV3EmodeSchema = z.object({
   liquidationThreshold: z.number(),
   priceSource: z.string(),
   ltv: z.number(),
+  borrowableBitmap: z.string(),
+  collateralBitmap: z.string(),
 });
 
 export type AaveV3Emode = z.infer<typeof aaveV3EmodeSchema>;
@@ -88,6 +95,7 @@ export const CHAIN_ID = {
   BNB: 56,
   GNOSIS: 100,
   CELO: 42220,
+  ZKSYNC: zkSync.id,
 } as const;
 
 const zodChainId = z.nativeEnum(CHAIN_ID);

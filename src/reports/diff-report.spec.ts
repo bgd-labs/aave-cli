@@ -36,4 +36,15 @@ describe('report', () => {
     },
     {timeout: 30000},
   );
+  it(
+    'should generate a well formatted report for 3.2',
+    async () => {
+      const from = readJsonFile('/src/reports/mocks/pre3-2.json');
+      const to = readJsonFile('/src/reports/mocks/post3-2.json');
+      const content = await diffReports(from, to);
+      console.log(content);
+      expect(content).toMatchSnapshot();
+    },
+    {timeout: 30000},
+  );
 });

@@ -124,3 +124,12 @@ export function setBits(
   const result = clearedNumber | (bigIntReplaceValue << BigInt(startBit));
   return result;
 }
+
+export function bitMapToIndexes(bitmap: bigint) {
+  const reserveIndexes = [];
+  for (let i = 0; bitmap != 0n; i++) {
+    if (bitmap & 0x1n) reserveIndexes.push(i);
+    bitmap = bitmap >> 1n;
+  }
+  return reserveIndexes;
+}
