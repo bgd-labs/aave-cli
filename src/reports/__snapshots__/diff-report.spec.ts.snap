@@ -1,0 +1,1014 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`report > should generate a well formatted report 1`] = `
+"## Reserve changes
+
+### Reserve altered
+
+#### SUSHI ([0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a](https://polygonscan.com/address/0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a))
+
+| description | value before | value after |
+| --- | --- | --- |
+| liquidityIndex | 1.0030 % [1003072362844608475393012777] | 1.1020 % [1102072362844608475393012777] |
+| variableBorrowIndex | 1.0191 % [1019120004296811649883429668] | 1.0211 % [1021120004296811649883429668] |
+| currentLiquidityRate | 0.0013 % [13415266124935912038726] | 0.0013 % [13515266124935912038726] |
+| currentVariableBorrowRate | 0.1615 % [1615092557328383571260600] | 0.1715 % [1715092557328383571260600] |
+
+
+#### GHST ([0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7](https://polygonscan.com/address/0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7))
+
+| description | value before | value after |
+| --- | --- | --- |
+| reserveFactor | 20 % [2000] | 35 % [3500] |
+
+
+#### WETH ([0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619](https://polygonscan.com/address/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619))
+
+| description | value before | value after |
+| --- | --- | --- |
+| reserveFactor | 10 % [1000] | 15 % [1500] |
+| interestRateStrategy | [0x03733F4E008d36f2e37F0080fF1c8DF756622E6F](https://polygonscan.com/address/0x03733F4E008d36f2e37F0080fF1c8DF756622E6F) | [0x27eFE5db315b71753b2a38ED3d5dd7E9362ba93F](https://polygonscan.com/address/0x27eFE5db315b71753b2a38ED3d5dd7E9362ba93F) |
+| stableRateSlope1 | 0 % | 4 % |
+| optimalUsageRatio | 45 % | 80 % |
+| maxExcessUsageRatio | 55 % | 20 % |
+| baseVariableBorrowRate | 0 % | 1 % |
+| variableRateSlope1 | 7 % | 3.8 % |
+| variableRateSlope2 | 300 % | 80 % |
+| baseStableBorrowRate | 9 % | 6.8 % |
+| stableRateSlope2 | 0 % | 80 % |
+| interestRate | ![before](/.assets/4ab0dbcff3f330539d66319942d38435e45137bf.svg) | ![after](/.assets/e7c3905f5d41473b5148fbd1df41bdc06ae104fb.svg) |
+
+#### DPI ([0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369](https://polygonscan.com/address/0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369))
+
+| description | value before | value after |
+| --- | --- | --- |
+| reserveFactor | 20 % [2000] | 35 % [3500] |
+
+
+#### agEUR ([0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4](https://polygonscan.com/address/0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4](https://polygonscan.com/address/0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4) | [0xA9F3C3caE095527061e6d270DBE163693e6fda9D](https://polygonscan.com/address/0xA9F3C3caE095527061e6d270DBE163693e6fda9D) |
+| variableRateSlope2 | 60 % | 75 % |
+| stableRateSlope2 | 60 % | 75 % |
+| optimalUsageRatio | 90 % | 80 % |
+| maxExcessUsageRatio | 10 % | 20 % |
+| interestRate | ![before](/.assets/1baf85e415bd720bc42ec928d822cffbd4236d90.svg) | ![after](/.assets/8a10dd458958b063af4177af8f709f1971c58974.svg) |
+
+#### EURS ([0xE111178A87A3BFf0c8d18DECBa5798827539Ae99](https://polygonscan.com/address/0xE111178A87A3BFf0c8d18DECBa5798827539Ae99))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4](https://polygonscan.com/address/0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4) | [0xA9F3C3caE095527061e6d270DBE163693e6fda9D](https://polygonscan.com/address/0xA9F3C3caE095527061e6d270DBE163693e6fda9D) |
+| variableRateSlope2 | 60 % | 75 % |
+| stableRateSlope2 | 60 % | 75 % |
+| optimalUsageRatio | 90 % | 80 % |
+| maxExcessUsageRatio | 10 % | 20 % |
+| interestRate | ![before](/.assets/1baf85e415bd720bc42ec928d822cffbd4236d90.svg) | ![after](/.assets/8a10dd458958b063af4177af8f709f1971c58974.svg) |
+
+#### miMATIC ([0xa3Fa99A148fA48D14Ed51d610c367C61876997F1](https://polygonscan.com/address/0xa3Fa99A148fA48D14Ed51d610c367C61876997F1))
+
+| description | value before | value after |
+| --- | --- | --- |
+| reserveFactor | 10 % [1000] | 20 % [2000] |
+| interestRateStrategy | [0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4](https://polygonscan.com/address/0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4) | [0xA9F3C3caE095527061e6d270DBE163693e6fda9D](https://polygonscan.com/address/0xA9F3C3caE095527061e6d270DBE163693e6fda9D) |
+| variableRateSlope2 | 60 % | 75 % |
+| stableRateSlope2 | 60 % | 75 % |
+| optimalUsageRatio | 90 % | 80 % |
+| maxExcessUsageRatio | 10 % | 20 % |
+| interestRate | ![before](/.assets/1baf85e415bd720bc42ec928d822cffbd4236d90.svg) | ![after](/.assets/8a10dd458958b063af4177af8f709f1971c58974.svg) |
+
+#### USDT ([0xc2132D05D31c914a87C6611C10748AEb04B58e8F](https://polygonscan.com/address/0xc2132D05D31c914a87C6611C10748AEb04B58e8F))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4](https://polygonscan.com/address/0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4) | [0xA9F3C3caE095527061e6d270DBE163693e6fda9D](https://polygonscan.com/address/0xA9F3C3caE095527061e6d270DBE163693e6fda9D) |
+| variableRateSlope2 | 60 % | 75 % |
+| stableRateSlope2 | 60 % | 75 % |
+| optimalUsageRatio | 90 % | 80 % |
+| maxExcessUsageRatio | 10 % | 20 % |
+| interestRate | ![before](/.assets/1baf85e415bd720bc42ec928d822cffbd4236d90.svg) | ![after](/.assets/8a10dd458958b063af4177af8f709f1971c58974.svg) |
+
+## Emodes changes
+
+## Raw diff
+
+\`\`\`json
+{
+  "reserves": {
+    "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a": {
+      "currentLiquidityRate": {
+        "from": "13415266124935912038726",
+        "to": "13515266124935912038726"
+      },
+      "currentVariableBorrowRate": {
+        "from": "1615092557328383571260600",
+        "to": "1715092557328383571260600"
+      },
+      "liquidityIndex": {
+        "from": "1003072362844608475393012777",
+        "to": "1102072362844608475393012777"
+      },
+      "variableBorrowIndex": {
+        "from": "1019120004296811649883429668",
+        "to": "1021120004296811649883429668"
+      }
+    },
+    "0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7": {
+      "reserveFactor": {
+        "from": 2000,
+        "to": 3500
+      }
+    },
+    "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": {
+      "interestRateStrategy": {
+        "from": "0x03733F4E008d36f2e37F0080fF1c8DF756622E6F",
+        "to": "0x27eFE5db315b71753b2a38ED3d5dd7E9362ba93F"
+      },
+      "reserveFactor": {
+        "from": 1000,
+        "to": 1500
+      }
+    },
+    "0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369": {
+      "reserveFactor": {
+        "from": 2000,
+        "to": 3500
+      }
+    },
+    "0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4": {
+      "interestRateStrategy": {
+        "from": "0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4",
+        "to": "0xA9F3C3caE095527061e6d270DBE163693e6fda9D"
+      }
+    },
+    "0xE111178A87A3BFf0c8d18DECBa5798827539Ae99": {
+      "interestRateStrategy": {
+        "from": "0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4",
+        "to": "0xA9F3C3caE095527061e6d270DBE163693e6fda9D"
+      }
+    },
+    "0xa3Fa99A148fA48D14Ed51d610c367C61876997F1": {
+      "interestRateStrategy": {
+        "from": "0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4",
+        "to": "0xA9F3C3caE095527061e6d270DBE163693e6fda9D"
+      },
+      "reserveFactor": {
+        "from": 1000,
+        "to": 2000
+      }
+    },
+    "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": {
+      "interestRateStrategy": {
+        "from": "0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4",
+        "to": "0xA9F3C3caE095527061e6d270DBE163693e6fda9D"
+      }
+    }
+  },
+  "strategies": {
+    "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": {
+      "address": {
+        "from": "0x03733F4E008d36f2e37F0080fF1c8DF756622E6F",
+        "to": "0x27eFE5db315b71753b2a38ED3d5dd7E9362ba93F"
+      },
+      "baseStableBorrowRate": {
+        "from": "90000000000000000000000000",
+        "to": "68000000000000000000000000"
+      },
+      "baseVariableBorrowRate": {
+        "from": 0,
+        "to": "10000000000000000000000000"
+      },
+      "maxExcessUsageRatio": {
+        "from": "550000000000000000000000000",
+        "to": "200000000000000000000000000"
+      },
+      "optimalUsageRatio": {
+        "from": "450000000000000000000000000",
+        "to": "800000000000000000000000000"
+      },
+      "stableRateSlope1": {
+        "from": 0,
+        "to": "40000000000000000000000000"
+      },
+      "stableRateSlope2": {
+        "from": 0,
+        "to": "800000000000000000000000000"
+      },
+      "variableRateSlope1": {
+        "from": "70000000000000000000000000",
+        "to": "38000000000000000000000000"
+      },
+      "variableRateSlope2": {
+        "from": "3000000000000000000000000000",
+        "to": "800000000000000000000000000"
+      }
+    },
+    "0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4": {
+      "address": {
+        "from": "0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4",
+        "to": "0xA9F3C3caE095527061e6d270DBE163693e6fda9D"
+      },
+      "maxExcessUsageRatio": {
+        "from": "100000000000000000000000000",
+        "to": "200000000000000000000000000"
+      },
+      "optimalUsageRatio": {
+        "from": "900000000000000000000000000",
+        "to": "800000000000000000000000000"
+      },
+      "stableRateSlope2": {
+        "from": "600000000000000000000000000",
+        "to": "750000000000000000000000000"
+      },
+      "variableRateSlope2": {
+        "from": "600000000000000000000000000",
+        "to": "750000000000000000000000000"
+      }
+    },
+    "0xE111178A87A3BFf0c8d18DECBa5798827539Ae99": {
+      "address": {
+        "from": "0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4",
+        "to": "0xA9F3C3caE095527061e6d270DBE163693e6fda9D"
+      },
+      "maxExcessUsageRatio": {
+        "from": "100000000000000000000000000",
+        "to": "200000000000000000000000000"
+      },
+      "optimalUsageRatio": {
+        "from": "900000000000000000000000000",
+        "to": "800000000000000000000000000"
+      },
+      "stableRateSlope2": {
+        "from": "600000000000000000000000000",
+        "to": "750000000000000000000000000"
+      },
+      "variableRateSlope2": {
+        "from": "600000000000000000000000000",
+        "to": "750000000000000000000000000"
+      }
+    },
+    "0xa3Fa99A148fA48D14Ed51d610c367C61876997F1": {
+      "address": {
+        "from": "0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4",
+        "to": "0xA9F3C3caE095527061e6d270DBE163693e6fda9D"
+      },
+      "maxExcessUsageRatio": {
+        "from": "100000000000000000000000000",
+        "to": "200000000000000000000000000"
+      },
+      "optimalUsageRatio": {
+        "from": "900000000000000000000000000",
+        "to": "800000000000000000000000000"
+      },
+      "stableRateSlope2": {
+        "from": "600000000000000000000000000",
+        "to": "750000000000000000000000000"
+      },
+      "variableRateSlope2": {
+        "from": "600000000000000000000000000",
+        "to": "750000000000000000000000000"
+      }
+    },
+    "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": {
+      "address": {
+        "from": "0x41B66b4b6b4c9dab039d96528D1b88f7BAF8C5A4",
+        "to": "0xA9F3C3caE095527061e6d270DBE163693e6fda9D"
+      },
+      "maxExcessUsageRatio": {
+        "from": "100000000000000000000000000",
+        "to": "200000000000000000000000000"
+      },
+      "optimalUsageRatio": {
+        "from": "900000000000000000000000000",
+        "to": "800000000000000000000000000"
+      },
+      "stableRateSlope2": {
+        "from": "600000000000000000000000000",
+        "to": "750000000000000000000000000"
+      },
+      "variableRateSlope2": {
+        "from": "600000000000000000000000000",
+        "to": "750000000000000000000000000"
+      }
+    }
+  }
+}
+\`\`\`"
+`;
+
+exports[`report > should generate a well formatted report for 3.0 to 3.1 1`] = `
+"## Reserve changes
+
+### Reserve altered
+
+#### WBTC (0x3C8Ca53ee5661D29d3d3C0732689a4b86947EAF0)
+
+| description | value before | value after |
+| --- | --- | --- |
+| address | null | 0xF9514C867b37D36a5affB003582b1818dA3870eb |
+| baseVariableBorrowRate | null | 0 |
+| maxVariableBorrowRate | null | 640000000000000000000000000 |
+| optimalUsageRatio | null | 450000000000000000000000000 |
+| variableRateSlope1 | null | 40000000000000000000000000 |
+| variableRateSlope2 | null | 600000000000000000000000000 |
+
+
+#### WETH (0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f)
+
+| description | value before | value after |
+| --- | --- | --- |
+| address | null | 0xF9514C867b37D36a5affB003582b1818dA3870eb |
+| baseVariableBorrowRate | null | 0 |
+| maxVariableBorrowRate | null | 640000000000000000000000000 |
+| optimalUsageRatio | null | 450000000000000000000000000 |
+| variableRateSlope1 | null | 40000000000000000000000000 |
+| variableRateSlope2 | null | 600000000000000000000000000 |
+
+
+#### USDX (0xffD4505B3452Dc22f8473616d50503bA9E1710Ac)
+
+| description | value before | value after |
+| --- | --- | --- |
+| ltv | 82.5 % [8250] | 62 % [6200] |
+| liquidationThreshold | 86 % [8600] | 90 % [9000] |
+| liquidationBonus | 5 % | 11 % |
+| address | null | 0xF9514C867b37D36a5affB003582b1818dA3870eb |
+| baseVariableBorrowRate | null | 0 |
+| maxVariableBorrowRate | null | 640000000000000000000000000 |
+| optimalUsageRatio | null | 450000000000000000000000000 |
+| variableRateSlope1 | null | 40000000000000000000000000 |
+| variableRateSlope2 | null | 600000000000000000000000000 |
+
+
+## Raw diff
+
+\`\`\`json
+{
+  "reserves": {
+    "0x3C8Ca53ee5661D29d3d3C0732689a4b86947EAF0": {
+      "address": {
+        "from": null,
+        "to": "0xF9514C867b37D36a5affB003582b1818dA3870eb"
+      },
+      "baseVariableBorrowRate": {
+        "from": null,
+        "to": "0"
+      },
+      "maxVariableBorrowRate": {
+        "from": null,
+        "to": "640000000000000000000000000"
+      },
+      "optimalUsageRatio": {
+        "from": null,
+        "to": "450000000000000000000000000"
+      },
+      "variableRateSlope1": {
+        "from": null,
+        "to": "40000000000000000000000000"
+      },
+      "variableRateSlope2": {
+        "from": null,
+        "to": "600000000000000000000000000"
+      }
+    },
+    "0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f": {
+      "address": {
+        "from": null,
+        "to": "0xF9514C867b37D36a5affB003582b1818dA3870eb"
+      },
+      "baseVariableBorrowRate": {
+        "from": null,
+        "to": "0"
+      },
+      "maxVariableBorrowRate": {
+        "from": null,
+        "to": "640000000000000000000000000"
+      },
+      "optimalUsageRatio": {
+        "from": null,
+        "to": "450000000000000000000000000"
+      },
+      "variableRateSlope1": {
+        "from": null,
+        "to": "40000000000000000000000000"
+      },
+      "variableRateSlope2": {
+        "from": null,
+        "to": "600000000000000000000000000"
+      }
+    },
+    "0xffD4505B3452Dc22f8473616d50503bA9E1710Ac": {
+      "liquidationBonus": {
+        "from": 10500,
+        "to": 11100
+      },
+      "liquidationThreshold": {
+        "from": 8600,
+        "to": 9000
+      },
+      "ltv": {
+        "from": 8250,
+        "to": 6200
+      },
+      "address": {
+        "from": null,
+        "to": "0xF9514C867b37D36a5affB003582b1818dA3870eb"
+      },
+      "baseVariableBorrowRate": {
+        "from": null,
+        "to": "0"
+      },
+      "maxVariableBorrowRate": {
+        "from": null,
+        "to": "640000000000000000000000000"
+      },
+      "optimalUsageRatio": {
+        "from": null,
+        "to": "450000000000000000000000000"
+      },
+      "variableRateSlope1": {
+        "from": null,
+        "to": "40000000000000000000000000"
+      },
+      "variableRateSlope2": {
+        "from": null,
+        "to": "600000000000000000000000000"
+      }
+    }
+  }
+}
+\`\`\`"
+`;
+
+exports[`report > should generate a well formatted report for 3.1 1`] = `
+"## Reserve changes
+
+### Reserve altered
+
+#### GHO ([0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f](https://etherscan.io/address/0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f))
+
+| description | value before | value after |
+| --- | --- | --- |
+| maxVariableBorrowRate | 7 % | 6 % |
+| baseVariableBorrowRate | 7 % | 6 % |
+| interestRate | ![before](/.assets/e03975867d1c729d1a52bbec364211baff2dab5a.svg) | ![after](/.assets/a1a7ab1f1b9fcdf6ffa41ac7a8b4daf2daf98328.svg) |
+
+#### wstETH ([0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](https://etherscan.io/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.liquidationBonus | 1 % | 2 % |
+
+
+#### ETHx ([0xA35b1B31Ce002FBF2058D22F30f95D405200A15b](https://etherscan.io/address/0xA35b1B31Ce002FBF2058D22F30f95D405200A15b))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.liquidationBonus | 1 % | 2 % |
+
+
+#### cbETH ([0xBe9895146f7AF43049ca1c1AE358B0541Ea49704](https://etherscan.io/address/0xBe9895146f7AF43049ca1c1AE358B0541Ea49704))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.liquidationBonus | 1 % | 2 % |
+
+
+#### WETH ([0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2](https://etherscan.io/address/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.liquidationBonus | 1 % | 2 % |
+
+
+#### weETH ([0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee](https://etherscan.io/address/0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.liquidationBonus | 1 % | 2 % |
+
+
+#### rETH ([0xae78736Cd615f374D3085123A210448E74Fc6393](https://etherscan.io/address/0xae78736Cd615f374D3085123A210448E74Fc6393))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.liquidationBonus | 1 % | 2 % |
+
+
+#### osETH ([0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38](https://etherscan.io/address/0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38))
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.liquidationBonus | 1 % | 2 % |
+
+
+## Emodes changes
+
+### EMode 1:ETH correlated
+
+| eMode.liquidationBonus | 1 % | 2 % |
+## Raw diff
+
+\`\`\`json
+{
+  "eModes": {
+    "1": {
+      "liquidationBonus": {
+        "from": 10100,
+        "to": 10200
+      }
+    }
+  },
+  "strategies": {
+    "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f": {
+      "baseVariableBorrowRate": {
+        "from": "70000000000000000000000000",
+        "to": "60000000000000000000000000"
+      },
+      "maxVariableBorrowRate": {
+        "from": "70000000000000000000000000",
+        "to": "60000000000000000000000000"
+      }
+    }
+  }
+}
+\`\`\`"
+`;
+
+exports[`report > should generate a well formatted report for 3.2 1`] = `
+"## Reserve changes
+
+### Reserve altered
+
+#### wstETH ([0x03b54A6e9a984069379fae1a4fC4dBAE93B3bCCD](https://polygonscan.com/address/0x03b54A6e9a984069379fae1a4fC4dBAE93B3bCCD))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/60c7e5557a1f8ff476d4d4d122c044f9c332e983.svg) | ![after](/.assets/b9c5e10663c1fa9da437ac87c85e2ea6b89ce177.svg) |
+
+#### SUSHI ([0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a](https://polygonscan.com/address/0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
+
+#### WMATIC ([0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270](https://polygonscan.com/address/0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/16332461172bd8fa96ccd1a6269e8b18fab75ffe.svg) | ![after](/.assets/bd1b5822b68ff2ca4e907a873d83c012196a789f.svg) |
+
+#### CRV ([0x172370d5Cd63279eFa6d502DAB29171933a610AF](https://polygonscan.com/address/0x172370d5Cd63279eFa6d502DAB29171933a610AF))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/22e63860fa8f03629242d7c499e8b53221ee130a.svg) | ![after](/.assets/57895ba97fac9a80ce6bcaaa987ca703be84d466.svg) |
+
+#### WBTC ([0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6](https://polygonscan.com/address/0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/d050234e3f8f72294825f3cc061531aee8b21665.svg) | ![after](/.assets/308ced77172bdba48f5b56af2f291400a4898f19.svg) |
+
+#### USDC ([0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174](https://polygonscan.com/address/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/1f91edaee6d983649ffc6efcc1c3cfc52fa90336.svg) | ![after](/.assets/456c9815579225e6854461d612aea909fad55ae2.svg) |
+
+#### GHST ([0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7](https://polygonscan.com/address/0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
+
+#### stMATIC ([0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4](https://polygonscan.com/address/0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
+
+#### USDC ([0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359](https://polygonscan.com/address/0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/0b207451ec38eb4a7c392a3d9c43ab7e77836211.svg) | ![after](/.assets/a98f1ba4d3ed39788ba7bff5712f2588c446cec2.svg) |
+
+#### jEUR ([0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c](https://polygonscan.com/address/0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/0b207451ec38eb4a7c392a3d9c43ab7e77836211.svg) | ![after](/.assets/a98f1ba4d3ed39788ba7bff5712f2588c446cec2.svg) |
+
+#### LINK ([0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39](https://polygonscan.com/address/0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
+
+#### WETH ([0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619](https://polygonscan.com/address/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/673e539abb0c988dd28cc3517ad407509df7b9de.svg) | ![after](/.assets/883b1083f9ea8d228fc17ddb2a1616f552acdc94.svg) |
+
+#### DPI ([0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369](https://polygonscan.com/address/0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/c61157ea61e7ec553892dfe2072a2d2d59dc8a16.svg) | ![after](/.assets/c31746d494fb67b801488bbfb2d33de52240670c.svg) |
+
+#### DAI ([0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063](https://polygonscan.com/address/0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/938dd0b29af2a7ddfe8cbd0de959c4c24b5ea9ef.svg) | ![after](/.assets/743498707750e9be25e212978ba7b2625e87db30.svg) |
+
+#### BAL ([0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3](https://polygonscan.com/address/0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/a0e233eeee7bae70256ff5ae2354edc5339f8250.svg) | ![after](/.assets/03ab68b81ca42849abc08c33a4300287e74ac7cb.svg) |
+
+#### AAVE ([0xD6DF932A45C0f255f85145f286eA0b292B21C90B](https://polygonscan.com/address/0xD6DF932A45C0f255f85145f286eA0b292B21C90B))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
+
+#### EURA ([0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4](https://polygonscan.com/address/0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/fa2d9144d6937d795a23d4864f7e30b8efbfa233.svg) | ![after](/.assets/b0183da2c2ceafb2cb6dedb62351d0e43197292b.svg) |
+
+#### EURS ([0xE111178A87A3BFf0c8d18DECBa5798827539Ae99](https://polygonscan.com/address/0xE111178A87A3BFf0c8d18DECBa5798827539Ae99))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/fa2d9144d6937d795a23d4864f7e30b8efbfa233.svg) | ![after](/.assets/b0183da2c2ceafb2cb6dedb62351d0e43197292b.svg) |
+
+#### miMATIC ([0xa3Fa99A148fA48D14Ed51d610c367C61876997F1](https://polygonscan.com/address/0xa3Fa99A148fA48D14Ed51d610c367C61876997F1))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/4d42765d036179693f01f07a11408b5faebbeb5d.svg) | ![after](/.assets/090b03795ed4152b89e4c11fb3177607a3dc6db4.svg) |
+
+#### USDT ([0xc2132D05D31c914a87C6611C10748AEb04B58e8F](https://polygonscan.com/address/0xc2132D05D31c914a87C6611C10748AEb04B58e8F))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/938dd0b29af2a7ddfe8cbd0de959c4c24b5ea9ef.svg) | ![after](/.assets/743498707750e9be25e212978ba7b2625e87db30.svg) |
+
+#### MaticX ([0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6](https://polygonscan.com/address/0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6))
+
+| description | value before | value after |
+| --- | --- | --- |
+| interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| interestRate | ![before](/.assets/bb82eaef94e0b09bad831160b0da80f2328914fd.svg) | ![after](/.assets/78c0f3b7f769cca3cb57e2779e98f21b765db629.svg) |
+
+## Emodes changes
+
+### EMode 1:Stablecoins
+
+| eMode.borrowableBitmap | - | DAI,USDC,USDT,EURS,jEUR,EURA,miMATIC,USDC |
+| eMode.collateralBitmap | - | DAI,USDC,USDT,EURS,jEUR,EURA,miMATIC,USDC |
+### EMode 2:MATIC correlated
+
+| eMode.borrowableBitmap | - | WMATIC,stMATIC,MaticX |
+| eMode.collateralBitmap | - | WMATIC,stMATIC,MaticX |
+### EMode 3:ETH correlated
+
+| eMode.borrowableBitmap | - | WETH,wstETH |
+| eMode.collateralBitmap | - | WETH,wstETH |
+## Raw diff
+
+\`\`\`json
+{
+  "eModes": {
+    "1": {
+      "borrowableBitmap": {
+        "from": null,
+        "to": "1171493"
+      },
+      "collateralBitmap": {
+        "from": null,
+        "to": "1171493"
+      }
+    },
+    "2": {
+      "borrowableBitmap": {
+        "from": null,
+        "to": "393344"
+      },
+      "collateralBitmap": {
+        "from": null,
+        "to": "393344"
+      }
+    },
+    "3": {
+      "borrowableBitmap": {
+        "from": null,
+        "to": "524304"
+      },
+      "collateralBitmap": {
+        "from": null,
+        "to": "524304"
+      }
+    }
+  },
+  "poolConfig": {
+    "poolConfiguratorImpl": {
+      "from": "0x419226e0Ad27f3B2019123f7246a364622b018e5",
+      "to": "0xc6988946e3E490F3E21F8647Db2b81fD4D014acA"
+    },
+    "poolImpl": {
+      "from": "0xc4F7b5d4ca00eE04cF9887D5D811d3C5d6506477",
+      "to": "0xf877225774FBf56Db46DB017Ba9455CA64EF4e32"
+    },
+    "protocolDataProvider": {
+      "from": "0x7deEB8aCE4220643D8edeC871a23807E4d006eE5",
+      "to": "0x21d35DBF31bdfFbe40996C78Acae2058682B0774"
+    }
+  },
+  "reserves": {
+    "0x03b54A6e9a984069379fae1a4fC4dBAE93B3bCCD": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x172370d5Cd63279eFa6d502DAB29171933a610AF": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0xD6DF932A45C0f255f85145f286eA0b292B21C90B": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0xE111178A87A3BFf0c8d18DECBa5798827539Ae99": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0xa3Fa99A148fA48D14Ed51d610c367C61876997F1": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6": {
+      "interestRateStrategy": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    }
+  },
+  "strategies": {
+    "0x03b54A6e9a984069379fae1a4fC4dBAE93B3bCCD": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x172370d5Cd63279eFa6d502DAB29171933a610AF": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0xD6DF932A45C0f255f85145f286eA0b292B21C90B": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0xE111178A87A3BFf0c8d18DECBa5798827539Ae99": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0xa3Fa99A148fA48D14Ed51d610c367C61876997F1": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    },
+    "0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6": {
+      "address": {
+        "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
+        "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      }
+    }
+  }
+}
+\`\`\`"
+`;

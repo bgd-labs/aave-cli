@@ -97,6 +97,8 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
               pre.eModes[(diffResult.reserves[reserveKey].eModeCategory as any).from] || {},
               post.eModes[(diffResult.reserves[reserveKey].eModeCategory as any).to],
             ) as any,
+            pre,
+            post,
           );
         }
 
@@ -106,6 +108,8 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
               pre.eModes[diffResult.reserves[reserveKey].eModeCategory as any] || {},
               post.eModes[diffResult.reserves[reserveKey].eModeCategory as any],
             ) as any,
+            pre,
+            post,
           );
         }
 
@@ -131,6 +135,21 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
       content += `### ${reservesRemoved.length > 1 ? 'Reserve' : 'Reserves'} removed\n\n`;
       content += reservesRemoved.join('\n\n');
       content += '\n\n';
+    }
+  }
+
+  if (diffResult.eModes) {
+    content += '## Emodes changes\n\n';
+    for (const eMode of Object.keys(diffResult.eModes)) {
+      const hasChanges = hasDiff(diffResult.eModes?.[eMode]);
+      if (hasChanges) {
+        content += `### EMode ${pre.eModes[eMode].eModeCategory}:${pre.eModes[eMode].label}\n\n`;
+        content += renderEmodeDiff(
+          diff(pre.eModes[eMode] || {}, post.eModes[eMode] || {}) as any,
+          pre,
+          post,
+        );
+      }
     }
   }
 

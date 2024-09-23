@@ -4,6 +4,8 @@ import post from './mocks/postTestEngineArbV3.json';
 import pre from './mocks/preTestEngineArbV3.json';
 import pre31 from './mocks/pre3-1.json';
 import post31 from './mocks/post3-1.json';
+import pre32 from './mocks/pre3-2.json';
+import post32 from './mocks/post3-2.json';
 
 describe('diff', () => {
   it('should return same object if no changes were found', () => {
@@ -30,8 +32,13 @@ describe('diff', () => {
     expect(out).toMatchSnapshot();
   });
 
-  it('should find all the changes', () => {
+  it('should find all the changes in 3.1', () => {
     const out = diff(pre31, post31, true);
+    expect(out).toMatchSnapshot();
+  });
+
+  it('should find all the changes in 3.2', () => {
+    const out = diff(pre32, post32, true);
     expect(out).toMatchSnapshot();
   });
 });
