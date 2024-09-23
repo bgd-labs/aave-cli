@@ -2,9 +2,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type {Command} from '@commander-js/extra-typings';
 import bs58 from 'bs58';
-import Hash from 'ipfs-only-hash';
 import {validateAIPHeader} from '../ipfs/aipValidation';
 import {logError} from '../utils/logger';
+import {Hash} from '../ipfs/onlyHash';
 
 // https://ethereum.stackexchange.com/questions/44506/ipfs-hash-algorithm
 async function getHash(data: string): Promise<string> {

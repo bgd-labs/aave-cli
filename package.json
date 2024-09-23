@@ -1,6 +1,6 @@
 {
   "name": "@bgd-labs/aave-cli",
-  "version": "0.17.0",
+  "version": "1.0.0",
   "description": "A cli to perform various aave governance related tasks",
   "private": false,
   "sideEffects": false,
@@ -68,7 +68,7 @@
     "dotenv": "^16.4.1",
     "find-object-paths": "^1.1.0",
     "gray-matter": "^4.0.3",
-    "ipfs-only-hash": "^4.0.0",
+    "ipfs-unixfs-importer": "^15.3.1",
     "json-bigint": "^1.0.0",
     "object-hash": "^3.0.0",
     "viem": "^2.17.11",
