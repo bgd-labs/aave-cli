@@ -28,6 +28,7 @@ describe('eMode', () => {
 | eMode.ltv | 97 % | 2.5 % |
 | eMode.liquidationThreshold | 97.5 % | 5 % |
 | eMode.liquidationBonus | 1 % | -90 % |
+| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
 `);
   });
 });

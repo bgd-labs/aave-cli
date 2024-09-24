@@ -64,17 +64,21 @@ export function renderEmodeDiff(diff: EmodeDiff, pre: AaveV3Snapshot, post: Aave
 
   (Object.keys(diff) as (keyof AaveV3Emode)[])
     .filter((key) => !OMIT_KEYS.includes(key))
-    .filter((key) => typeof diff[key] === 'object' && diff[key].hasOwnProperty('from'))
     .sort(sortEmodeKeys)
     .map((key) => {
-      content += `| eMode.${key} | ${renderEModeValue(
-        key,
-        {
-          ...diff,
-          [key]: diff[key].from,
-        },
-        pre,
-      )} | ${renderEModeValue(key, {...diff, [key]: diff[key].to}, post)} |\n`;
+      if (typeof diff[key] === 'object' && diff[key].hasOwnProperty('from'))
+        content += `| eMode.${key} | ${renderEModeValue(
+          key,
+          {
+            ...diff,
+            [key]: diff[key].from,
+          },
+          pre,
+        )} | ${renderEModeValue(key, {...diff, [key]: diff[key].to}, post)} |\n`;
+      else {
+        const value = renderEModeValue(key, diff, pre);
+        content += `| eMode.${key} (unchanged) | ${value} | ${value} |\n`;
+      }
     });
 
   return content;

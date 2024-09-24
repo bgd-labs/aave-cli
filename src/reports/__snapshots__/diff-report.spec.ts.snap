@@ -459,7 +459,11 @@ exports[`report > should generate a well formatted report for 3.1 1`] = `
 
 ### EMode: ETH correlated(id: 1)
 
+| eMode.label (unchanged) | ETH correlated | ETH correlated |
+| eMode.ltv (unchanged) | 93 % | 93 % |
+| eMode.liquidationThreshold (unchanged) | 95 % | 95 % |
 | eMode.liquidationBonus | 1 % | 2 % |
+| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
 
 
 ## Raw diff
@@ -648,18 +652,33 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 
 | eMode.borrowableBitmap | - | DAI, USDC, USDT, EURS, jEUR, EURA, miMATIC, USDC |
 | eMode.collateralBitmap | - | DAI, USDC, USDT, EURS, jEUR, EURA, miMATIC, USDC |
+| eMode.label (unchanged) | Stablecoins | Stablecoins |
+| eMode.ltv (unchanged) | 93 % | 93 % |
+| eMode.liquidationThreshold (unchanged) | 95 % | 95 % |
+| eMode.liquidationBonus (unchanged) | 1 % | 1 % |
+| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
 
 
 ### EMode: MATIC correlated(id: 2)
 
 | eMode.borrowableBitmap | - | WMATIC, stMATIC, MaticX |
 | eMode.collateralBitmap | - | WMATIC, stMATIC, MaticX |
+| eMode.label (unchanged) | MATIC correlated | MATIC correlated |
+| eMode.ltv (unchanged) | 92.5 % | 92.5 % |
+| eMode.liquidationThreshold (unchanged) | 95 % | 95 % |
+| eMode.liquidationBonus (unchanged) | 1 % | 1 % |
+| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
 
 
 ### EMode: ETH correlated(id: 3)
 
 | eMode.borrowableBitmap | - | WETH, wstETH |
 | eMode.collateralBitmap | - | WETH, wstETH |
+| eMode.label (unchanged) | ETH correlated | ETH correlated |
+| eMode.ltv (unchanged) | 90 % | 90 % |
+| eMode.liquidationThreshold (unchanged) | 93 % | 93 % |
+| eMode.liquidationBonus (unchanged) | 1 % | 1 % |
+| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
 
 
 ## Raw diff
