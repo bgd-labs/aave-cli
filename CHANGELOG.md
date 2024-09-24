@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.1](https://github.com/bgd-labs/aave-cli/compare/v0.17.0...v1.0.1) (2024-09-24)
+
+
+### Bug Fixes
+
+* cleanup eMode rendering ([#157](https://github.com/bgd-labs/aave-cli/issues/157)) ([9093443](https://github.com/bgd-labs/aave-cli/commit/9093443a7473f263d1f04137991e785774620db0))
+
+
+### Miscellaneous Chores
+
+* release 1.0.1 ([48108c1](https://github.com/bgd-labs/aave-cli/commit/48108c1acd0c66a9f607ab40780b7e9032f93279))
+
 ## [0.17.0](https://github.com/bgd-labs/aave-cli/compare/v0.16.4...v0.17.0) (2024-09-23)
 
 
