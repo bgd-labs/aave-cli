@@ -63,6 +63,7 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
         const preIrHash = hash(pre.strategies[reserveKey]);
         const postIrHash = hash(post.strategies[reserveKey]);
         const hasChangedIr = preIrHash !== postIrHash;
+        if (!hasChangedReserveProperties && !hasChangedIr) return;
         // diff reserve
         let report = renderReserveDiff(diffResult.reserves[reserveKey] as any, chainId);
         // diff irs
