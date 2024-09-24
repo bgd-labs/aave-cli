@@ -445,7 +445,7 @@ exports[`report > should generate a well formatted report for 3.0 to 3.1 1`] = `
 exports[`report > should generate a well formatted report for 3.1 1`] = `
 "## Reserve changes
 
-### Reserve altered
+### Reserves altered
 
 #### GHO ([0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f](https://etherscan.io/address/0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f))
 
@@ -455,60 +455,17 @@ exports[`report > should generate a well formatted report for 3.1 1`] = `
 | baseVariableBorrowRate | 7 % | 6 % |
 | interestRate | ![before](/.assets/e03975867d1c729d1a52bbec364211baff2dab5a.svg) | ![after](/.assets/a1a7ab1f1b9fcdf6ffa41ac7a8b4daf2daf98328.svg) |
 
-#### wstETH ([0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](https://etherscan.io/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0))
-
-| description | value before | value after |
-| --- | --- | --- |
-| eMode.liquidationBonus | 1 % | 2 % |
-
-
-#### ETHx ([0xA35b1B31Ce002FBF2058D22F30f95D405200A15b](https://etherscan.io/address/0xA35b1B31Ce002FBF2058D22F30f95D405200A15b))
-
-| description | value before | value after |
-| --- | --- | --- |
-| eMode.liquidationBonus | 1 % | 2 % |
-
-
-#### cbETH ([0xBe9895146f7AF43049ca1c1AE358B0541Ea49704](https://etherscan.io/address/0xBe9895146f7AF43049ca1c1AE358B0541Ea49704))
-
-| description | value before | value after |
-| --- | --- | --- |
-| eMode.liquidationBonus | 1 % | 2 % |
-
-
-#### WETH ([0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2](https://etherscan.io/address/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2))
-
-| description | value before | value after |
-| --- | --- | --- |
-| eMode.liquidationBonus | 1 % | 2 % |
-
-
-#### weETH ([0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee](https://etherscan.io/address/0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee))
-
-| description | value before | value after |
-| --- | --- | --- |
-| eMode.liquidationBonus | 1 % | 2 % |
-
-
-#### rETH ([0xae78736Cd615f374D3085123A210448E74Fc6393](https://etherscan.io/address/0xae78736Cd615f374D3085123A210448E74Fc6393))
-
-| description | value before | value after |
-| --- | --- | --- |
-| eMode.liquidationBonus | 1 % | 2 % |
-
-
-#### osETH ([0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38](https://etherscan.io/address/0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38))
-
-| description | value before | value after |
-| --- | --- | --- |
-| eMode.liquidationBonus | 1 % | 2 % |
-
-
 ## Emodes changes
 
-### EMode 1:ETH correlated
+### EMode: ETH correlated(id: 1)
 
+| eMode.label (unchanged) | ETH correlated | ETH correlated |
+| eMode.ltv (unchanged) | 93 % | 93 % |
+| eMode.liquidationThreshold (unchanged) | 95 % | 95 % |
 | eMode.liquidationBonus | 1 % | 2 % |
+| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
+
+
 ## Raw diff
 
 \`\`\`json
@@ -691,18 +648,39 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 
 ## Emodes changes
 
-### EMode 1:Stablecoins
+### EMode: Stablecoins(id: 1)
 
-| eMode.borrowableBitmap | - | DAI,USDC,USDT,EURS,jEUR,EURA,miMATIC,USDC |
-| eMode.collateralBitmap | - | DAI,USDC,USDT,EURS,jEUR,EURA,miMATIC,USDC |
-### EMode 2:MATIC correlated
+| eMode.borrowableBitmap | - | DAI, USDC, USDT, EURS, jEUR, EURA, miMATIC, USDC |
+| eMode.collateralBitmap | - | DAI, USDC, USDT, EURS, jEUR, EURA, miMATIC, USDC |
+| eMode.label (unchanged) | Stablecoins | Stablecoins |
+| eMode.ltv (unchanged) | 93 % | 93 % |
+| eMode.liquidationThreshold (unchanged) | 95 % | 95 % |
+| eMode.liquidationBonus (unchanged) | 1 % | 1 % |
+| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
 
-| eMode.borrowableBitmap | - | WMATIC,stMATIC,MaticX |
-| eMode.collateralBitmap | - | WMATIC,stMATIC,MaticX |
-### EMode 3:ETH correlated
 
-| eMode.borrowableBitmap | - | WETH,wstETH |
-| eMode.collateralBitmap | - | WETH,wstETH |
+### EMode: MATIC correlated(id: 2)
+
+| eMode.borrowableBitmap | - | WMATIC, stMATIC, MaticX |
+| eMode.collateralBitmap | - | WMATIC, stMATIC, MaticX |
+| eMode.label (unchanged) | MATIC correlated | MATIC correlated |
+| eMode.ltv (unchanged) | 92.5 % | 92.5 % |
+| eMode.liquidationThreshold (unchanged) | 95 % | 95 % |
+| eMode.liquidationBonus (unchanged) | 1 % | 1 % |
+| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
+
+
+### EMode: ETH correlated(id: 3)
+
+| eMode.borrowableBitmap | - | WETH, wstETH |
+| eMode.collateralBitmap | - | WETH, wstETH |
+| eMode.label (unchanged) | ETH correlated | ETH correlated |
+| eMode.ltv (unchanged) | 90 % | 90 % |
+| eMode.liquidationThreshold (unchanged) | 93 % | 93 % |
+| eMode.liquidationBonus (unchanged) | 1 % | 1 % |
+| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
+
+
 ## Raw diff
 
 \`\`\`json
