@@ -14,12 +14,14 @@ export function renderEModeValue<T extends keyof AaveV3Emode>(
     return emode[key] === 0 ? '0 %' : `${((emode[key] as number) - 10000) / 100} %`;
   if (key === 'borrowableBitmap' || key === 'collateralBitmap') {
     const indexes = bitMapToIndexes(BigInt(emode[key]));
-    return indexes.map(
-      (i) =>
-        snapshot.reserves[
-          Object.keys(snapshot.reserves).find((key) => snapshot.reserves[key].id === i) as any
-        ].symbol,
-    );
+    return indexes
+      .map(
+        (i) =>
+          snapshot.reserves[
+            Object.keys(snapshot.reserves).find((key) => snapshot.reserves[key].id === i) as any
+          ].symbol,
+      )
+      .join(', ');
   }
   return emode[key];
 }
@@ -50,17 +52,6 @@ function sortEmodeKeys(a: keyof AaveV3Emode, b: keyof AaveV3Emode) {
 
 const OMIT_KEYS: (keyof AaveV3Emode)[] = ['eModeCategory'];
 
-export function renderEmode(eMode: AaveV3Emode) {
-  let content = '';
-  (Object.keys(eMode) as (keyof AaveV3Emode)[])
-    .filter((key) => !OMIT_KEYS.includes(key))
-    .sort(sortEmodeKeys)
-    .map((key) => {
-      content += `| eMode.${key} | ${renderEModeValue(key, eMode)} |\n`;
-    });
-  return content;
-}
-
 export type EmodeDiff<A extends AaveV3Emode = AaveV3Emode> = {
   [key in keyof AaveV3Emode]: A[key] & {
     from: A[key] | null;
@@ -73,7 +64,7 @@ export function renderEmodeDiff(diff: EmodeDiff, pre: AaveV3Snapshot, post: Aave
 
   (Object.keys(diff) as (keyof AaveV3Emode)[])
     .filter((key) => !OMIT_KEYS.includes(key))
-    .filter((key) => diff[key].hasOwnProperty('from'))
+    .filter((key) => typeof diff[key] === 'object' && diff[key].hasOwnProperty('from'))
     .sort(sortEmodeKeys)
     .map((key) => {
       content += `| eMode.${key} | ${renderEModeValue(
