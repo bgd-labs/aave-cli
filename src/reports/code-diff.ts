@@ -31,10 +31,10 @@ function flatten(path: string) {
 }
 
 export function diffCode(fromPath: string, toPath: string) {
-  const prettierCmd = `npx prettier ${fromPath} ${toPath} --write || true`;
-  execSync(prettierCmd);
   fromPath = flatten(fromPath);
   toPath = flatten(toPath);
+  const prettierCmd = `npx prettier ${fromPath} ${toPath} --write`;
+  execSync(prettierCmd);
   const diffCmd = `
   git diff --no-index --ignore-space-at-eol ${fromPath} ${toPath} | awk '
     BEGIN { in_diff_block = 0; skip_block = 0; buffer = "" }
