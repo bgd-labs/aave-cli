@@ -5,6 +5,7 @@ import type {Command} from '@commander-js/extra-typings';
 import {adiDiffReports} from '../reports/adi-diff-reports';
 import {diffReports} from '../reports/diff-reports';
 import {readJsonFile, readJsonString} from '../utils/json';
+import {diff} from '../reports/diff';
 
 export function addCommand(program: Command) {
   program
@@ -24,6 +25,7 @@ export function addCommand(program: Command) {
       } else {
         console.log(content);
       }
+      const diffResult = diff(from, post);
     });
 
   program

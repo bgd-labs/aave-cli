@@ -8,7 +8,6 @@ describe('capo report', () => {
     async () => {
       const snapshot = readJsonFile('/src/reports/mocks/capo.json');
       const content = await generateCapoReport(snapshot);
-      console.log(content);
       expect(content).toMatchSnapshot();
     },
     {timeout: 30000},

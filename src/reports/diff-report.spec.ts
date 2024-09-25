@@ -9,7 +9,6 @@ describe('report', () => {
       const from = readJsonFile('/src/reports/mocks/preTestEngineArbV3.json');
       const to = readJsonFile('/src/reports/mocks/postTestEngineArbV3.json');
       const content = await diffReports(from, to);
-      console.log(content);
       expect(content).toMatchSnapshot();
     },
     {timeout: 30000},
@@ -20,7 +19,6 @@ describe('report', () => {
       const from = readJsonFile('/src/reports/mocks/pre3-1.json');
       const to = readJsonFile('/src/reports/mocks/post3-1.json');
       const content = await diffReports(from, to);
-      console.log(content);
       expect(content).toMatchSnapshot();
     },
     {timeout: 30000},
@@ -31,7 +29,6 @@ describe('report', () => {
       const from = readJsonFile('/src/reports/mocks/pregho.json');
       const to = readJsonFile('/src/reports/mocks/postgho.json');
       const content = await diffReports(from, to);
-      console.log(content);
       expect(content).toMatchSnapshot();
     },
     {timeout: 30000},
@@ -42,7 +39,6 @@ describe('report', () => {
       const from = readJsonFile('/src/reports/mocks/pre3-2.json');
       const to = readJsonFile('/src/reports/mocks/post3-2.json');
       const content = await diffReports(from, to);
-      console.log(content);
       expect(content).toMatchSnapshot();
     },
     {timeout: 30000},

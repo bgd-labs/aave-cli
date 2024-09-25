@@ -312,6 +312,10 @@ exports[`diff > should find all the changes in 3.2 1`] = `
         "from": null,
         "to": "1171493",
       },
+      "priceSource": {
+        "from": "0x0000000000000000000000000000000000000000",
+        "to": null,
+      },
     },
     "2": {
       "borrowableBitmap": {
@@ -321,6 +325,10 @@ exports[`diff > should find all the changes in 3.2 1`] = `
       "collateralBitmap": {
         "from": null,
         "to": "393344",
+      },
+      "priceSource": {
+        "from": "0x0000000000000000000000000000000000000000",
+        "to": null,
       },
     },
     "3": {
@@ -332,147 +340,411 @@ exports[`diff > should find all the changes in 3.2 1`] = `
         "from": null,
         "to": "524304",
       },
+      "priceSource": {
+        "from": "0x0000000000000000000000000000000000000000",
+        "to": null,
+      },
     },
   },
   "poolConfig": {
     "poolConfiguratorImpl": {
       "from": "0x419226e0Ad27f3B2019123f7246a364622b018e5",
-      "to": "0xc6988946e3E490F3E21F8647Db2b81fD4D014acA",
+      "to": "0x4816b2C2895f97fB918f1aE7Da403750a0eE372e",
     },
     "poolImpl": {
       "from": "0xc4F7b5d4ca00eE04cF9887D5D811d3C5d6506477",
-      "to": "0xf877225774FBf56Db46DB017Ba9455CA64EF4e32",
+      "to": "0x1f69d4700B34A1D9F92E55235df414FcC02A8306",
     },
     "protocolDataProvider": {
       "from": "0x7deEB8aCE4220643D8edeC871a23807E4d006eE5",
-      "to": "0x21d35DBF31bdfFbe40996C78Acae2058682B0774",
+      "to": "0x7F23D86Ee20D869112572136221e173428DD740B",
     },
   },
   "reserves": {
     "0x03b54A6e9a984069379fae1a4fC4dBAE93B3bCCD": {
+      "aTokenUnderlyingBalance": {
+        "from": "8101759534608305377295",
+        "to": "9454205394618485775587",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "275714555697",
+        "to": "309184074687",
+      },
+      "supplyCap": {
+        "from": 8800,
+        "to": 10000,
+      },
+      "virtualBalance": {
+        "from": "8101759531874695303464",
+        "to": "9454205391884875701756",
       },
     },
     "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a": {
+      "aTokenUnderlyingBalance": {
+        "from": "42520530845445928987455",
+        "to": "39664430153949330899856",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "63030000",
+        "to": "70676670",
+      },
+      "virtualBalance": {
+        "from": "42515844451565520377251",
+        "to": "39659743760068922289652",
       },
     },
     "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": {
+      "aTokenUnderlyingBalance": {
+        "from": "26361838508007670126595913",
+        "to": "28346839813214403549573436",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "38275521",
+        "to": "40508231",
+      },
+      "virtualBalance": {
+        "from": "26361838508007670126595913",
+        "to": "28346839813214403549573436",
       },
     },
     "0x172370d5Cd63279eFa6d502DAB29171933a610AF": {
+      "aTokenUnderlyingBalance": {
+        "from": "139066233554732084539681",
+        "to": "138042491675976169905501",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "28585005",
+        "to": "30400000",
+      },
+      "virtualBalance": {
+        "from": "139065825970592715424381",
+        "to": "138042084091836800790201",
       },
     },
     "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6": {
+      "aTokenUnderlyingBalance": {
+        "from": "151808954094",
+        "to": "156577302154",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "5684700000000",
+        "to": "6377272000000",
+      },
+      "virtualBalance": {
+        "from": "151808914586",
+        "to": "156577262646",
       },
     },
     "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174": {
+      "aTokenUnderlyingBalance": {
+        "from": "10354631281135",
+        "to": "8517265272906",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "99996908",
+        "to": "99997000",
+      },
+      "reserveFactor": {
+        "from": 3500,
+        "to": 4000,
+      },
+      "virtualBalance": {
+        "from": "10354453057715",
+        "to": "8517087049486",
       },
     },
     "0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7": {
+      "aTokenUnderlyingBalance": {
+        "from": "1441475360943918095447310",
+        "to": "1419759421518171696300054",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "85983521",
+        "to": "108238197",
+      },
+      "virtualBalance": {
+        "from": "1441475360943918095447310",
+        "to": "1419759421518171696300054",
       },
     },
     "0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4": {
+      "aTokenUnderlyingBalance": {
+        "from": "36970088169406003656931192",
+        "to": "31676624440462043419249868",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "43398019",
+        "to": "46018130",
+      },
+      "virtualBalance": {
+        "from": "36970088169406003656931192",
+        "to": "31676624440462043419249868",
       },
     },
     "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359": {
+      "aTokenUnderlyingBalance": {
+        "from": "7174531005281",
+        "to": "5257676003782",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "99996908",
+        "to": "99997000",
+      },
+      "virtualBalance": {
+        "from": "7174530199115",
+        "to": "5257675187615",
       },
     },
     "0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c": {
+      "aTokenUnderlyingBalance": {
+        "from": "14550388108257269892998",
+        "to": "14644404734710069965133",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "110388000",
+        "to": "111872000",
+      },
+      "virtualBalance": {
+        "from": "14548308088826716789442",
+        "to": "14642324715279516861577",
       },
     },
     "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39": {
+      "aTokenUnderlyingBalance": {
+        "from": "592572277522192488289960",
+        "to": "620524425190670075544868",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "1056000000",
+        "to": "1213781953",
+      },
+      "virtualBalance": {
+        "from": "592572271000348839354841",
+        "to": "620524418668826426609749",
       },
     },
     "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": {
+      "aTokenUnderlyingBalance": {
+        "from": "17848309428294489115870",
+        "to": "16790735034683101039138",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "233986000000",
+        "to": "262059000000",
+      },
+      "virtualBalance": {
+        "from": "17848309428294489115870",
+        "to": "16790735034683101039138",
       },
     },
     "0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369": {
+      "aTokenUnderlyingBalance": {
+        "from": "172166387357101790042",
+        "to": "172153195029813507319",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "7326179532",
+        "to": "8255791485",
+      },
+      "virtualBalance": {
+        "from": "172166387357101790042",
+        "to": "172153195029813507319",
       },
     },
     "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063": {
+      "aTokenUnderlyingBalance": {
+        "from": "1042718081458666317019399",
+        "to": "909765127789122169407922",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "100008626",
+        "to": "99983091",
+      },
+      "virtualBalance": {
+        "from": "1042557185480875572302941",
+        "to": "909604231811331424691464",
       },
     },
     "0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3": {
+      "aTokenUnderlyingBalance": {
+        "from": "162168071071467936436629",
+        "to": "163486368383547413615759",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "177524000",
+        "to": "204870000",
+      },
+      "virtualBalance": {
+        "from": "162167437136960941172478",
+        "to": "163485734449040418351608",
       },
     },
     "0xD6DF932A45C0f255f85145f286eA0b292B21C90B": {
+      "aTokenUnderlyingBalance": {
+        "from": "67345555613379629047892",
+        "to": "68726675422133649596189",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "14110061156",
+        "to": "16914818302",
+      },
+      "virtualBalance": {
+        "from": "67345555613379629047892",
+        "to": "68726675422133649596189",
       },
     },
     "0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4": {
+      "aTokenUnderlyingBalance": {
+        "from": "28738643218907986870956",
+        "to": "28567750175435175481322",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "110388000",
+        "to": "111872000",
+      },
+      "virtualBalance": {
+        "from": "28735849248769471199953",
+        "to": "28564956205296659810319",
       },
     },
     "0xE111178A87A3BFf0c8d18DECBa5798827539Ae99": {
+      "aTokenUnderlyingBalance": {
+        "from": "131952541",
+        "to": "87689467",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "110388000",
+        "to": "111872000",
+      },
+      "virtualBalance": {
+        "from": "131950950",
+        "to": "87687876",
       },
     },
     "0xa3Fa99A148fA48D14Ed51d610c367C61876997F1": {
+      "aTokenUnderlyingBalance": {
+        "from": "10949721020418463492233",
+        "to": "10606465070807760361419",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "99995683",
+        "to": "99877099",
+      },
+      "virtualBalance": {
+        "from": "10949721020418463492233",
+        "to": "10606465070807760361419",
       },
     },
     "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": {
+      "aTokenUnderlyingBalance": {
+        "from": "11380448727936",
+        "to": "6397502431629",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
       },
+      "oracleLatestAnswer": {
+        "from": "100016083",
+        "to": "99995925",
+      },
+      "virtualBalance": {
+        "from": "11380392991360",
+        "to": "6397446695053",
+      },
     },
     "0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6": {
+      "aTokenUnderlyingBalance": {
+        "from": "59674820142739520120007032",
+        "to": "48949624578250520394225400",
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "oracleLatestAnswer": {
+        "from": "43148368",
+        "to": "45764134",
+      },
+      "virtualBalance": {
+        "from": "59674820142506423784946083",
+        "to": "48949624578017424059164451",
       },
     },
   },
@@ -530,11 +802,27 @@ exports[`diff > should find all the changes in 3.2 1`] = `
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
       },
+      "maxVariableBorrowRate": {
+        "from": "665000000000000000000000000",
+        "to": "655000000000000000000000000",
+      },
+      "variableRateSlope1": {
+        "from": "65000000000000000000000000",
+        "to": "55000000000000000000000000",
+      },
     },
     "0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c": {
       "address": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "maxVariableBorrowRate": {
+        "from": "665000000000000000000000000",
+        "to": "655000000000000000000000000",
+      },
+      "variableRateSlope1": {
+        "from": "65000000000000000000000000",
+        "to": "55000000000000000000000000",
       },
     },
     "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39": {
@@ -560,6 +848,14 @@ exports[`diff > should find all the changes in 3.2 1`] = `
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
       },
+      "maxVariableBorrowRate": {
+        "from": "815000000000000000000000000",
+        "to": "805000000000000000000000000",
+      },
+      "variableRateSlope1": {
+        "from": "65000000000000000000000000",
+        "to": "55000000000000000000000000",
+      },
     },
     "0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3": {
       "address": {
@@ -578,11 +874,27 @@ exports[`diff > should find all the changes in 3.2 1`] = `
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
       },
+      "maxVariableBorrowRate": {
+        "from": "815000000000000000000000000",
+        "to": "805000000000000000000000000",
+      },
+      "variableRateSlope1": {
+        "from": "65000000000000000000000000",
+        "to": "55000000000000000000000000",
+      },
     },
     "0xE111178A87A3BFf0c8d18DECBa5798827539Ae99": {
       "address": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "maxVariableBorrowRate": {
+        "from": "815000000000000000000000000",
+        "to": "805000000000000000000000000",
+      },
+      "variableRateSlope1": {
+        "from": "65000000000000000000000000",
+        "to": "55000000000000000000000000",
       },
     },
     "0xa3Fa99A148fA48D14Ed51d610c367C61876997F1": {
@@ -595,6 +907,14 @@ exports[`diff > should find all the changes in 3.2 1`] = `
       "address": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A",
+      },
+      "maxVariableBorrowRate": {
+        "from": "815000000000000000000000000",
+        "to": "805000000000000000000000000",
+      },
+      "variableRateSlope1": {
+        "from": "65000000000000000000000000",
+        "to": "55000000000000000000000000",
       },
     },
     "0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6": {

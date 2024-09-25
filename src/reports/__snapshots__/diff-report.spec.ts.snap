@@ -459,6 +459,8 @@ exports[`report > should generate a well formatted report for 3.1 1`] = `
 
 ### EMode: ETH correlated(id: 1)
 
+| description | value before | value after |
+| --- | --- | --- |
 | eMode.label (unchanged) | ETH correlated | ETH correlated |
 | eMode.ltv (unchanged) | 93 % | 93 % |
 | eMode.liquidationThreshold (unchanged) | 95 % | 95 % |
@@ -503,182 +505,265 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 
 | description | value before | value after |
 | --- | --- | --- |
+| supplyCap | 8,800 wstETH | 10,000 wstETH |
+| oracleLatestAnswer | 2757.14555697 | 3091.84074687 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 8,101.7595 wstETH [8101759534608305377295] | 9,454.2053 wstETH [9454205394618485775587] |
+| virtualBalance | 8,101.7595 wstETH [8101759531874695303464] | 9,454.2053 wstETH [9454205391884875701756] |
 | interestRate | ![before](/.assets/60c7e5557a1f8ff476d4d4d122c044f9c332e983.svg) | ![after](/.assets/b9c5e10663c1fa9da437ac87c85e2ea6b89ce177.svg) |
 
 #### SUSHI ([0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a](https://polygonscan.com/address/0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 0.6303 | 0.7067667 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 42,520.5308 SUSHI [42520530845445928987455] | 39,664.4301 SUSHI [39664430153949330899856] |
+| virtualBalance | 42,515.8444 SUSHI [42515844451565520377251] | 39,659.7437 SUSHI [39659743760068922289652] |
 | interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
 
 #### WMATIC ([0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270](https://polygonscan.com/address/0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 0.38275521 | 0.40508231 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 26,361,838.5080 WMATIC [26361838508007670126595913] | 28,346,839.8132 WMATIC [28346839813214403549573436] |
+| virtualBalance | 26,361,838.5080 WMATIC [26361838508007670126595913] | 28,346,839.8132 WMATIC [28346839813214403549573436] |
 | interestRate | ![before](/.assets/16332461172bd8fa96ccd1a6269e8b18fab75ffe.svg) | ![after](/.assets/bd1b5822b68ff2ca4e907a873d83c012196a789f.svg) |
 
 #### CRV ([0x172370d5Cd63279eFa6d502DAB29171933a610AF](https://polygonscan.com/address/0x172370d5Cd63279eFa6d502DAB29171933a610AF))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 0.28585005 | 0.304 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 139,066.2335 CRV [139066233554732084539681] | 138,042.4916 CRV [138042491675976169905501] |
+| virtualBalance | 139,065.8259 CRV [139065825970592715424381] | 138,042.0840 CRV [138042084091836800790201] |
 | interestRate | ![before](/.assets/22e63860fa8f03629242d7c499e8b53221ee130a.svg) | ![after](/.assets/57895ba97fac9a80ce6bcaaa987ca703be84d466.svg) |
 
 #### WBTC ([0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6](https://polygonscan.com/address/0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 56847 | 63772.72 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 1,518.0895 WBTC [151808954094] | 1,565.7730 WBTC [156577302154] |
+| virtualBalance | 1,518.0891 WBTC [151808914586] | 1,565.7726 WBTC [156577262646] |
 | interestRate | ![before](/.assets/d050234e3f8f72294825f3cc061531aee8b21665.svg) | ![after](/.assets/308ced77172bdba48f5b56af2f291400a4898f19.svg) |
 
 #### USDC ([0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174](https://polygonscan.com/address/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 0.99996908 | 0.99997 |
+| reserveFactor | 35 % [3500] | 40 % [4000] |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 10,354,631.2811 USDC [10354631281135] | 8,517,265.2729 USDC [8517265272906] |
+| virtualBalance | 10,354,453.0577 USDC [10354453057715] | 8,517,087.0494 USDC [8517087049486] |
 | interestRate | ![before](/.assets/1f91edaee6d983649ffc6efcc1c3cfc52fa90336.svg) | ![after](/.assets/456c9815579225e6854461d612aea909fad55ae2.svg) |
 
 #### GHST ([0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7](https://polygonscan.com/address/0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 0.85983521 | 1.08238197 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 1,441,475.3609 GHST [1441475360943918095447310] | 1,419,759.4215 GHST [1419759421518171696300054] |
+| virtualBalance | 1,441,475.3609 GHST [1441475360943918095447310] | 1,419,759.4215 GHST [1419759421518171696300054] |
 | interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
 
 #### stMATIC ([0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4](https://polygonscan.com/address/0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 0.43398019 | 0.4601813 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 36,970,088.1694 stMATIC [36970088169406003656931192] | 31,676,624.4404 stMATIC [31676624440462043419249868] |
+| virtualBalance | 36,970,088.1694 stMATIC [36970088169406003656931192] | 31,676,624.4404 stMATIC [31676624440462043419249868] |
 | interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
 
 #### USDC ([0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359](https://polygonscan.com/address/0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 0.99996908 | 0.99997 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
-| interestRate | ![before](/.assets/0b207451ec38eb4a7c392a3d9c43ab7e77836211.svg) | ![after](/.assets/a98f1ba4d3ed39788ba7bff5712f2588c446cec2.svg) |
+| aTokenUnderlyingBalance | 7,174,531.0052 USDC [7174531005281] | 5,257,676.0037 USDC [5257676003782] |
+| virtualBalance | 7,174,530.1991 USDC [7174530199115] | 5,257,675.1876 USDC [5257675187615] |
+| maxVariableBorrowRate | 66.5 % | 65.5 % |
+| variableRateSlope1 | 6.5 % | 5.5 % |
+| interestRate | ![before](/.assets/0b207451ec38eb4a7c392a3d9c43ab7e77836211.svg) | ![after](/.assets/6419eff49053193f86f5855be96369428edc27ed.svg) |
 
 #### jEUR ([0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c](https://polygonscan.com/address/0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 1.10388 | 1.11872 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
-| interestRate | ![before](/.assets/0b207451ec38eb4a7c392a3d9c43ab7e77836211.svg) | ![after](/.assets/a98f1ba4d3ed39788ba7bff5712f2588c446cec2.svg) |
+| aTokenUnderlyingBalance | 14,550.3881 jEUR [14550388108257269892998] | 14,644.4047 jEUR [14644404734710069965133] |
+| virtualBalance | 14,548.3080 jEUR [14548308088826716789442] | 14,642.3247 jEUR [14642324715279516861577] |
+| maxVariableBorrowRate | 66.5 % | 65.5 % |
+| variableRateSlope1 | 6.5 % | 5.5 % |
+| interestRate | ![before](/.assets/0b207451ec38eb4a7c392a3d9c43ab7e77836211.svg) | ![after](/.assets/6419eff49053193f86f5855be96369428edc27ed.svg) |
 
 #### LINK ([0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39](https://polygonscan.com/address/0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 10.56 | 12.13781953 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 592,572.2775 LINK [592572277522192488289960] | 620,524.4251 LINK [620524425190670075544868] |
+| virtualBalance | 592,572.2710 LINK [592572271000348839354841] | 620,524.4186 LINK [620524418668826426609749] |
 | interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
 
 #### WETH ([0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619](https://polygonscan.com/address/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 2339.86 | 2620.59 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 17,848.3094 WETH [17848309428294489115870] | 16,790.7350 WETH [16790735034683101039138] |
+| virtualBalance | 17,848.3094 WETH [17848309428294489115870] | 16,790.7350 WETH [16790735034683101039138] |
 | interestRate | ![before](/.assets/673e539abb0c988dd28cc3517ad407509df7b9de.svg) | ![after](/.assets/883b1083f9ea8d228fc17ddb2a1616f552acdc94.svg) |
 
 #### DPI ([0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369](https://polygonscan.com/address/0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 73.26179532 | 82.55791485 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 172.1663 DPI [172166387357101790042] | 172.1531 DPI [172153195029813507319] |
+| virtualBalance | 172.1663 DPI [172166387357101790042] | 172.1531 DPI [172153195029813507319] |
 | interestRate | ![before](/.assets/c61157ea61e7ec553892dfe2072a2d2d59dc8a16.svg) | ![after](/.assets/c31746d494fb67b801488bbfb2d33de52240670c.svg) |
 
 #### DAI ([0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063](https://polygonscan.com/address/0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 1.00008626 | 0.99983091 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
-| interestRate | ![before](/.assets/938dd0b29af2a7ddfe8cbd0de959c4c24b5ea9ef.svg) | ![after](/.assets/743498707750e9be25e212978ba7b2625e87db30.svg) |
+| aTokenUnderlyingBalance | 1,042,718.0814 DAI [1042718081458666317019399] | 909,765.1277 DAI [909765127789122169407922] |
+| virtualBalance | 1,042,557.1854 DAI [1042557185480875572302941] | 909,604.2318 DAI [909604231811331424691464] |
+| maxVariableBorrowRate | 81.5 % | 80.5 % |
+| variableRateSlope1 | 6.5 % | 5.5 % |
+| interestRate | ![before](/.assets/938dd0b29af2a7ddfe8cbd0de959c4c24b5ea9ef.svg) | ![after](/.assets/64fc7e98dc06095abe447eae92668c6dbeb0035d.svg) |
 
 #### BAL ([0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3](https://polygonscan.com/address/0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 1.77524 | 2.0487 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 162,168.0710 BAL [162168071071467936436629] | 163,486.3683 BAL [163486368383547413615759] |
+| virtualBalance | 162,167.4371 BAL [162167437136960941172478] | 163,485.7344 BAL [163485734449040418351608] |
 | interestRate | ![before](/.assets/a0e233eeee7bae70256ff5ae2354edc5339f8250.svg) | ![after](/.assets/03ab68b81ca42849abc08c33a4300287e74ac7cb.svg) |
 
 #### AAVE ([0xD6DF932A45C0f255f85145f286eA0b292B21C90B](https://polygonscan.com/address/0xD6DF932A45C0f255f85145f286eA0b292B21C90B))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 141.10061156 | 169.14818302 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 67,345.5556 AAVE [67345555613379629047892] | 68,726.6754 AAVE [68726675422133649596189] |
+| virtualBalance | 67,345.5556 AAVE [67345555613379629047892] | 68,726.6754 AAVE [68726675422133649596189] |
 | interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
 
 #### EURA ([0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4](https://polygonscan.com/address/0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 1.10388 | 1.11872 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
-| interestRate | ![before](/.assets/fa2d9144d6937d795a23d4864f7e30b8efbfa233.svg) | ![after](/.assets/b0183da2c2ceafb2cb6dedb62351d0e43197292b.svg) |
+| aTokenUnderlyingBalance | 28,738.6432 EURA [28738643218907986870956] | 28,567.7501 EURA [28567750175435175481322] |
+| virtualBalance | 28,735.8492 EURA [28735849248769471199953] | 28,564.9562 EURA [28564956205296659810319] |
+| maxVariableBorrowRate | 81.5 % | 80.5 % |
+| variableRateSlope1 | 6.5 % | 5.5 % |
+| interestRate | ![before](/.assets/fa2d9144d6937d795a23d4864f7e30b8efbfa233.svg) | ![after](/.assets/da5e15a77ca8963552baba6053c36c75dc1a0ab9.svg) |
 
 #### EURS ([0xE111178A87A3BFf0c8d18DECBa5798827539Ae99](https://polygonscan.com/address/0xE111178A87A3BFf0c8d18DECBa5798827539Ae99))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 1.10388 | 1.11872 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
-| interestRate | ![before](/.assets/fa2d9144d6937d795a23d4864f7e30b8efbfa233.svg) | ![after](/.assets/b0183da2c2ceafb2cb6dedb62351d0e43197292b.svg) |
+| aTokenUnderlyingBalance | 1,319,525.41 EURS [131952541] | 876,894.67 EURS [87689467] |
+| virtualBalance | 1,319,509.5 EURS [131950950] | 876,878.76 EURS [87687876] |
+| maxVariableBorrowRate | 81.5 % | 80.5 % |
+| variableRateSlope1 | 6.5 % | 5.5 % |
+| interestRate | ![before](/.assets/fa2d9144d6937d795a23d4864f7e30b8efbfa233.svg) | ![after](/.assets/da5e15a77ca8963552baba6053c36c75dc1a0ab9.svg) |
 
 #### miMATIC ([0xa3Fa99A148fA48D14Ed51d610c367C61876997F1](https://polygonscan.com/address/0xa3Fa99A148fA48D14Ed51d610c367C61876997F1))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 0.99995683 | 0.99877099 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 10,949.7210 miMATIC [10949721020418463492233] | 10,606.4650 miMATIC [10606465070807760361419] |
+| virtualBalance | 10,949.7210 miMATIC [10949721020418463492233] | 10,606.4650 miMATIC [10606465070807760361419] |
 | interestRate | ![before](/.assets/4d42765d036179693f01f07a11408b5faebbeb5d.svg) | ![after](/.assets/090b03795ed4152b89e4c11fb3177607a3dc6db4.svg) |
 
 #### USDT ([0xc2132D05D31c914a87C6611C10748AEb04B58e8F](https://polygonscan.com/address/0xc2132D05D31c914a87C6611C10748AEb04B58e8F))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 1.00016083 | 0.99995925 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
-| interestRate | ![before](/.assets/938dd0b29af2a7ddfe8cbd0de959c4c24b5ea9ef.svg) | ![after](/.assets/743498707750e9be25e212978ba7b2625e87db30.svg) |
+| aTokenUnderlyingBalance | 11,380,448.7279 USDT [11380448727936] | 6,397,502.4316 USDT [6397502431629] |
+| virtualBalance | 11,380,392.9913 USDT [11380392991360] | 6,397,446.6950 USDT [6397446695053] |
+| maxVariableBorrowRate | 81.5 % | 80.5 % |
+| variableRateSlope1 | 6.5 % | 5.5 % |
+| interestRate | ![before](/.assets/938dd0b29af2a7ddfe8cbd0de959c4c24b5ea9ef.svg) | ![after](/.assets/64fc7e98dc06095abe447eae92668c6dbeb0035d.svg) |
 
 #### MaticX ([0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6](https://polygonscan.com/address/0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6))
 
 | description | value before | value after |
 | --- | --- | --- |
+| oracleLatestAnswer | 0.43148368 | 0.45764134 |
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
+| aTokenUnderlyingBalance | 59,674,820.1427 MaticX [59674820142739520120007032] | 48,949,624.5782 MaticX [48949624578250520394225400] |
+| virtualBalance | 59,674,820.1425 MaticX [59674820142506423784946083] | 48,949,624.5780 MaticX [48949624578017424059164451] |
 | interestRate | ![before](/.assets/bb82eaef94e0b09bad831160b0da80f2328914fd.svg) | ![after](/.assets/78c0f3b7f769cca3cb57e2779e98f21b765db629.svg) |
 
 ## Emodes changes
 
 ### EMode: Stablecoins(id: 1)
 
+| description | value before | value after |
+| --- | --- | --- |
 | eMode.borrowableBitmap | - | DAI, USDC, USDT, EURS, jEUR, EURA, miMATIC, USDC |
 | eMode.collateralBitmap | - | DAI, USDC, USDT, EURS, jEUR, EURA, miMATIC, USDC |
 | eMode.label (unchanged) | Stablecoins | Stablecoins |
 | eMode.ltv (unchanged) | 93 % | 93 % |
 | eMode.liquidationThreshold (unchanged) | 95 % | 95 % |
 | eMode.liquidationBonus (unchanged) | 1 % | 1 % |
-| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
+| eMode.priceSource | 0x0000000000000000000000000000000000000000 | - |
 
 
 ### EMode: MATIC correlated(id: 2)
 
+| description | value before | value after |
+| --- | --- | --- |
 | eMode.borrowableBitmap | - | WMATIC, stMATIC, MaticX |
 | eMode.collateralBitmap | - | WMATIC, stMATIC, MaticX |
 | eMode.label (unchanged) | MATIC correlated | MATIC correlated |
 | eMode.ltv (unchanged) | 92.5 % | 92.5 % |
 | eMode.liquidationThreshold (unchanged) | 95 % | 95 % |
 | eMode.liquidationBonus (unchanged) | 1 % | 1 % |
-| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
+| eMode.priceSource | 0x0000000000000000000000000000000000000000 | - |
 
 
 ### EMode: ETH correlated(id: 3)
 
+| description | value before | value after |
+| --- | --- | --- |
 | eMode.borrowableBitmap | - | WETH, wstETH |
 | eMode.collateralBitmap | - | WETH, wstETH |
 | eMode.label (unchanged) | ETH correlated | ETH correlated |
 | eMode.ltv (unchanged) | 90 % | 90 % |
 | eMode.liquidationThreshold (unchanged) | 93 % | 93 % |
 | eMode.liquidationBonus (unchanged) | 1 % | 1 % |
-| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
+| eMode.priceSource | 0x0000000000000000000000000000000000000000 | - |
 
 
 ## Raw diff
@@ -687,6 +772,10 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 {
   "eModes": {
     "1": {
+      "priceSource": {
+        "from": "0x0000000000000000000000000000000000000000",
+        "to": null
+      },
       "borrowableBitmap": {
         "from": null,
         "to": "1171493"
@@ -697,6 +786,10 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
       }
     },
     "2": {
+      "priceSource": {
+        "from": "0x0000000000000000000000000000000000000000",
+        "to": null
+      },
       "borrowableBitmap": {
         "from": null,
         "to": "393344"
@@ -707,6 +800,10 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
       }
     },
     "3": {
+      "priceSource": {
+        "from": "0x0000000000000000000000000000000000000000",
+        "to": null
+      },
       "borrowableBitmap": {
         "from": null,
         "to": "524304"
@@ -720,142 +817,402 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
   "poolConfig": {
     "poolConfiguratorImpl": {
       "from": "0x419226e0Ad27f3B2019123f7246a364622b018e5",
-      "to": "0xc6988946e3E490F3E21F8647Db2b81fD4D014acA"
+      "to": "0x4816b2C2895f97fB918f1aE7Da403750a0eE372e"
     },
     "poolImpl": {
       "from": "0xc4F7b5d4ca00eE04cF9887D5D811d3C5d6506477",
-      "to": "0xf877225774FBf56Db46DB017Ba9455CA64EF4e32"
+      "to": "0x1f69d4700B34A1D9F92E55235df414FcC02A8306"
     },
     "protocolDataProvider": {
       "from": "0x7deEB8aCE4220643D8edeC871a23807E4d006eE5",
-      "to": "0x21d35DBF31bdfFbe40996C78Acae2058682B0774"
+      "to": "0x7F23D86Ee20D869112572136221e173428DD740B"
     }
   },
   "reserves": {
     "0x03b54A6e9a984069379fae1a4fC4dBAE93B3bCCD": {
+      "aTokenUnderlyingBalance": {
+        "from": "8101759534608305377295",
+        "to": "9454205394618485775587"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "275714555697",
+        "to": "309184074687"
+      },
+      "supplyCap": {
+        "from": 8800,
+        "to": 10000
+      },
+      "virtualBalance": {
+        "from": "8101759531874695303464",
+        "to": "9454205391884875701756"
       }
     },
     "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a": {
+      "aTokenUnderlyingBalance": {
+        "from": "42520530845445928987455",
+        "to": "39664430153949330899856"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "63030000",
+        "to": "70676670"
+      },
+      "virtualBalance": {
+        "from": "42515844451565520377251",
+        "to": "39659743760068922289652"
       }
     },
     "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": {
+      "aTokenUnderlyingBalance": {
+        "from": "26361838508007670126595913",
+        "to": "28346839813214403549573436"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "38275521",
+        "to": "40508231"
+      },
+      "virtualBalance": {
+        "from": "26361838508007670126595913",
+        "to": "28346839813214403549573436"
       }
     },
     "0x172370d5Cd63279eFa6d502DAB29171933a610AF": {
+      "aTokenUnderlyingBalance": {
+        "from": "139066233554732084539681",
+        "to": "138042491675976169905501"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "28585005",
+        "to": "30400000"
+      },
+      "virtualBalance": {
+        "from": "139065825970592715424381",
+        "to": "138042084091836800790201"
       }
     },
     "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6": {
+      "aTokenUnderlyingBalance": {
+        "from": "151808954094",
+        "to": "156577302154"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "5684700000000",
+        "to": "6377272000000"
+      },
+      "virtualBalance": {
+        "from": "151808914586",
+        "to": "156577262646"
       }
     },
     "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174": {
+      "aTokenUnderlyingBalance": {
+        "from": "10354631281135",
+        "to": "8517265272906"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "99996908",
+        "to": "99997000"
+      },
+      "reserveFactor": {
+        "from": 3500,
+        "to": 4000
+      },
+      "virtualBalance": {
+        "from": "10354453057715",
+        "to": "8517087049486"
       }
     },
     "0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7": {
+      "aTokenUnderlyingBalance": {
+        "from": "1441475360943918095447310",
+        "to": "1419759421518171696300054"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "85983521",
+        "to": "108238197"
+      },
+      "virtualBalance": {
+        "from": "1441475360943918095447310",
+        "to": "1419759421518171696300054"
       }
     },
     "0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4": {
+      "aTokenUnderlyingBalance": {
+        "from": "36970088169406003656931192",
+        "to": "31676624440462043419249868"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "43398019",
+        "to": "46018130"
+      },
+      "virtualBalance": {
+        "from": "36970088169406003656931192",
+        "to": "31676624440462043419249868"
       }
     },
     "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359": {
+      "aTokenUnderlyingBalance": {
+        "from": "7174531005281",
+        "to": "5257676003782"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "99996908",
+        "to": "99997000"
+      },
+      "virtualBalance": {
+        "from": "7174530199115",
+        "to": "5257675187615"
       }
     },
     "0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c": {
+      "aTokenUnderlyingBalance": {
+        "from": "14550388108257269892998",
+        "to": "14644404734710069965133"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "110388000",
+        "to": "111872000"
+      },
+      "virtualBalance": {
+        "from": "14548308088826716789442",
+        "to": "14642324715279516861577"
       }
     },
     "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39": {
+      "aTokenUnderlyingBalance": {
+        "from": "592572277522192488289960",
+        "to": "620524425190670075544868"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "1056000000",
+        "to": "1213781953"
+      },
+      "virtualBalance": {
+        "from": "592572271000348839354841",
+        "to": "620524418668826426609749"
       }
     },
     "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": {
+      "aTokenUnderlyingBalance": {
+        "from": "17848309428294489115870",
+        "to": "16790735034683101039138"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "233986000000",
+        "to": "262059000000"
+      },
+      "virtualBalance": {
+        "from": "17848309428294489115870",
+        "to": "16790735034683101039138"
       }
     },
     "0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369": {
+      "aTokenUnderlyingBalance": {
+        "from": "172166387357101790042",
+        "to": "172153195029813507319"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "7326179532",
+        "to": "8255791485"
+      },
+      "virtualBalance": {
+        "from": "172166387357101790042",
+        "to": "172153195029813507319"
       }
     },
     "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063": {
+      "aTokenUnderlyingBalance": {
+        "from": "1042718081458666317019399",
+        "to": "909765127789122169407922"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "100008626",
+        "to": "99983091"
+      },
+      "virtualBalance": {
+        "from": "1042557185480875572302941",
+        "to": "909604231811331424691464"
       }
     },
     "0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3": {
+      "aTokenUnderlyingBalance": {
+        "from": "162168071071467936436629",
+        "to": "163486368383547413615759"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "177524000",
+        "to": "204870000"
+      },
+      "virtualBalance": {
+        "from": "162167437136960941172478",
+        "to": "163485734449040418351608"
       }
     },
     "0xD6DF932A45C0f255f85145f286eA0b292B21C90B": {
+      "aTokenUnderlyingBalance": {
+        "from": "67345555613379629047892",
+        "to": "68726675422133649596189"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "14110061156",
+        "to": "16914818302"
+      },
+      "virtualBalance": {
+        "from": "67345555613379629047892",
+        "to": "68726675422133649596189"
       }
     },
     "0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4": {
+      "aTokenUnderlyingBalance": {
+        "from": "28738643218907986870956",
+        "to": "28567750175435175481322"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "110388000",
+        "to": "111872000"
+      },
+      "virtualBalance": {
+        "from": "28735849248769471199953",
+        "to": "28564956205296659810319"
       }
     },
     "0xE111178A87A3BFf0c8d18DECBa5798827539Ae99": {
+      "aTokenUnderlyingBalance": {
+        "from": "131952541",
+        "to": "87689467"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "110388000",
+        "to": "111872000"
+      },
+      "virtualBalance": {
+        "from": "131950950",
+        "to": "87687876"
       }
     },
     "0xa3Fa99A148fA48D14Ed51d610c367C61876997F1": {
+      "aTokenUnderlyingBalance": {
+        "from": "10949721020418463492233",
+        "to": "10606465070807760361419"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "99995683",
+        "to": "99877099"
+      },
+      "virtualBalance": {
+        "from": "10949721020418463492233",
+        "to": "10606465070807760361419"
       }
     },
     "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": {
+      "aTokenUnderlyingBalance": {
+        "from": "11380448727936",
+        "to": "6397502431629"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "100016083",
+        "to": "99995925"
+      },
+      "virtualBalance": {
+        "from": "11380392991360",
+        "to": "6397446695053"
       }
     },
     "0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6": {
+      "aTokenUnderlyingBalance": {
+        "from": "59674820142739520120007032",
+        "to": "48949624578250520394225400"
+      },
       "interestRateStrategy": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "oracleLatestAnswer": {
+        "from": "43148368",
+        "to": "45764134"
+      },
+      "virtualBalance": {
+        "from": "59674820142506423784946083",
+        "to": "48949624578017424059164451"
       }
     }
   },
@@ -912,12 +1269,28 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
       "address": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "maxVariableBorrowRate": {
+        "from": "665000000000000000000000000",
+        "to": "655000000000000000000000000"
+      },
+      "variableRateSlope1": {
+        "from": "65000000000000000000000000",
+        "to": "55000000000000000000000000"
       }
     },
     "0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c": {
       "address": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "maxVariableBorrowRate": {
+        "from": "665000000000000000000000000",
+        "to": "655000000000000000000000000"
+      },
+      "variableRateSlope1": {
+        "from": "65000000000000000000000000",
+        "to": "55000000000000000000000000"
       }
     },
     "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39": {
@@ -942,6 +1315,14 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
       "address": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "maxVariableBorrowRate": {
+        "from": "815000000000000000000000000",
+        "to": "805000000000000000000000000"
+      },
+      "variableRateSlope1": {
+        "from": "65000000000000000000000000",
+        "to": "55000000000000000000000000"
       }
     },
     "0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3": {
@@ -960,12 +1341,28 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
       "address": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "maxVariableBorrowRate": {
+        "from": "815000000000000000000000000",
+        "to": "805000000000000000000000000"
+      },
+      "variableRateSlope1": {
+        "from": "65000000000000000000000000",
+        "to": "55000000000000000000000000"
       }
     },
     "0xE111178A87A3BFf0c8d18DECBa5798827539Ae99": {
       "address": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "maxVariableBorrowRate": {
+        "from": "815000000000000000000000000",
+        "to": "805000000000000000000000000"
+      },
+      "variableRateSlope1": {
+        "from": "65000000000000000000000000",
+        "to": "55000000000000000000000000"
       }
     },
     "0xa3Fa99A148fA48D14Ed51d610c367C61876997F1": {
@@ -978,6 +1375,14 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
       "address": {
         "from": "0x21128C8f5AE37904c9082D932928FE0C2be1Ff73",
         "to": "0x56076f960980d453b5B749CB6A1c4D2E4e138B1A"
+      },
+      "maxVariableBorrowRate": {
+        "from": "815000000000000000000000000",
+        "to": "805000000000000000000000000"
+      },
+      "variableRateSlope1": {
+        "from": "65000000000000000000000000",
+        "to": "55000000000000000000000000"
       }
     },
     "0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6": {
