@@ -17,7 +17,12 @@ function flatten(path: string) {
           for file in $(find ${path} -type f)
           do
             original_file_name="\${file##*/}"
-            mv "\$file" "${path}_flat/\${counter}_\${original_file_name}"
+            if [ -e ${path}_flat/\${counter}_\${original_file_name} ]
+            then
+              mv "\$file" "${path}_flat/\${counter}_\${original_file_name}"
+            else
+              mv "\$file" "${path}_flat/\${original_file_name}"
+            fi
             ((counter++))
           done;
       `;

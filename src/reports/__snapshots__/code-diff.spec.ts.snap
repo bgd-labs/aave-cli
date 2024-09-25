@@ -1,229 +1,179 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`code diffs > should diff the contract 1`] = `
-"diff --git a/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/10_EModeConfiguration.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/10_EModeConfiguration.sol
-new file mode 100644
-index 0000000..3bb69ef
---- /dev/null
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/10_EModeConfiguration.sol
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: MIT
-+pragma solidity ^0.8.0;
-+
-+import {Errors} from '../helpers/Errors.sol';
-+import {DataTypes} from '../types/DataTypes.sol';
-+import {ReserveConfiguration} from './ReserveConfiguration.sol';
-+
-+/**
-+ * @title EModeConfiguration library
-+ * @author BGD Labs
-+ * @notice Implements the bitmap logic to handle the eMode configuration
-+ */
-+library EModeConfiguration {
-+  /**
-+   * @notice Sets a bit in a given bitmap that represents the reserve index range
-+   * @dev The supplied bitmap is supposed to be a uint128 in which each bit represents a reserve
-+   * @param bitmap The bitmap
-+   * @param reserveIndex The index of the reserve in the bitmap
-+   * @param enabled True if the reserveIndex should be enabled on the bitmap, false otherwise
-+   * @return The altered bitmap
-+   */
-+  function setReserveBitmapBit(
-+    uint128 bitmap,
-+    uint256 reserveIndex,
-+    bool enabled
-+  ) internal pure returns (uint128) {
-+    unchecked {
-+      require(reserveIndex < ReserveConfiguration.MAX_RESERVES_COUNT, Errors.INVALID_RESERVE_INDEX);
-+      uint128 bit = uint128(1 << reserveIndex);
-+      if (enabled) {
-+        return bitmap | bit;
-+      } else {
-+        return bitmap & ~bit;
-+      }
-+    }
-+  }
-+
-+  /**
-+   * @notice Validates if a reserveIndex is flagged as enabled on a given bitmap
-+   * @param bitmap The bitmap
-+   * @param reserveIndex The index of the reserve in the bitmap
-+   * @return True if the reserveindex is flagged true
-+   */
-+  function isReserveEnabledOnBitmap(
-+    uint128 bitmap,
-+    uint256 reserveIndex
-+  ) internal pure returns (bool) {
-+    unchecked {
-+      require(reserveIndex < ReserveConfiguration.MAX_RESERVES_COUNT, Errors.INVALID_RESERVE_INDEX);
-+      return (bitmap >> reserveIndex) & 1 != 0;
-+    }
-+  }
-+}
-diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/7_ReserveConfiguration.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/11_ReserveConfiguration.sol
-similarity index 89%
-rename from /tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/7_ReserveConfiguration.sol
-rename to /tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/11_ReserveConfiguration.sol
-index 0408f3c..43987f4 100644
---- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/7_ReserveConfiguration.sol
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/11_ReserveConfiguration.sol
-@@ -17,7 +17,6 @@ library ReserveConfiguration {
-   uint256 internal constant ACTIVE_MASK =                    0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFF; // prettier-ignore
-   uint256 internal constant FROZEN_MASK =                    0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFFFFFFFFFFFFFF; // prettier-ignore
-   uint256 internal constant BORROWING_MASK =                 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFFFFFFFFFFF; // prettier-ignore
--  uint256 internal constant STABLE_BORROWING_MASK =          0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFFFFFFFFF; // prettier-ignore
-   uint256 internal constant PAUSED_MASK =                    0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFF; // prettier-ignore
-   uint256 internal constant BORROWABLE_IN_ISOLATION_MASK =   0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFFFFFFFFFFFFFFF; // prettier-ignore
-   uint256 internal constant SILOED_BORROWING_MASK =          0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFFFFFFFFFFFF; // prettier-ignore
-@@ -26,7 +25,7 @@ library ReserveConfiguration {
-   uint256 internal constant BORROW_CAP_MASK =                0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000FFFFFFFFFFFFFFFFFFFF; // prettier-ignore
-   uint256 internal constant SUPPLY_CAP_MASK =                0xFFFFFFFFFFFFFFFFFFFFFFFFFF000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // prettier-ignore
-   uint256 internal constant LIQUIDATION_PROTOCOL_FEE_MASK =  0xFFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // prettier-ignore
--  uint256 internal constant EMODE_CATEGORY_MASK =            0xFFFFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // prettier-ignore
-+  //@notice there is an unoccupied hole of 8 bits from 168 to 176 left from pre 3.2 eModeCategory
-   uint256 internal constant UNBACKED_MINT_CAP_MASK =         0xFFFFFFFFFFF000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // prettier-ignore
-   uint256 internal constant DEBT_CEILING_MASK =              0xF0000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // prettier-ignore
-   uint256 internal constant VIRTUAL_ACC_ACTIVE_MASK =        0xEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // prettier-ignore
-@@ -38,7 +37,6 @@ library ReserveConfiguration {
-   uint256 internal constant IS_ACTIVE_START_BIT_POSITION = 56;
-   uint256 internal constant IS_FROZEN_START_BIT_POSITION = 57;
-   uint256 internal constant BORROWING_ENABLED_START_BIT_POSITION = 58;
--  uint256 internal constant STABLE_BORROWING_ENABLED_START_BIT_POSITION = 59;
-   uint256 internal constant IS_PAUSED_START_BIT_POSITION = 60;
-   uint256 internal constant BORROWABLE_IN_ISOLATION_START_BIT_POSITION = 61;
-   uint256 internal constant SILOED_BORROWING_START_BIT_POSITION = 62;
-@@ -47,7 +45,7 @@ library ReserveConfiguration {
-   uint256 internal constant BORROW_CAP_START_BIT_POSITION = 80;
-   uint256 internal constant SUPPLY_CAP_START_BIT_POSITION = 116;
-   uint256 internal constant LIQUIDATION_PROTOCOL_FEE_START_BIT_POSITION = 152;
--  uint256 internal constant EMODE_CATEGORY_START_BIT_POSITION = 168;
-+  //@notice there is an unoccupied hole of 8 bits from 168 to 176 left from pre 3.2 eModeCategory
-   uint256 internal constant UNBACKED_MINT_CAP_START_BIT_POSITION = 176;
-   uint256 internal constant DEBT_CEILING_START_BIT_POSITION = 212;
-   uint256 internal constant VIRTUAL_ACC_START_BIT_POSITION = 252;
-@@ -60,7 +58,6 @@ library ReserveConfiguration {
-   uint256 internal constant MAX_VALID_BORROW_CAP = 68719476735;
-   uint256 internal constant MAX_VALID_SUPPLY_CAP = 68719476735;
-   uint256 internal constant MAX_VALID_LIQUIDATION_PROTOCOL_FEE = 65535;
--  uint256 internal constant MAX_VALID_EMODE_CATEGORY = 255;
-   uint256 internal constant MAX_VALID_UNBACKED_MINT_CAP = 68719476735;
-   uint256 internal constant MAX_VALID_DEBT_CEILING = 1099511627775;
+"diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/BaseImmutableAdminUpgradeabilityProxy.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/BaseImmutableAdminUpgradeabilityProxy.sol
+index 06d2f82..252b4a4 100644
+--- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/BaseImmutableAdminUpgradeabilityProxy.sol
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/BaseImmutableAdminUpgradeabilityProxy.sol
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: MIT
+ pragma solidity ^0.8.10;
  
-@@ -311,31 +308,6 @@ library ReserveConfiguration {
-     return (self.data & ~BORROWING_MASK) != 0;
+-import {BaseUpgradeabilityProxy} from '../../../dependencies/openzeppelin/upgradeability/BaseUpgradeabilityProxy.sol';
++import {BaseUpgradeabilityProxy} from '../../dependencies/openzeppelin/upgradeability/BaseUpgradeabilityProxy.sol';
+ 
+ /**
+  * @title BaseImmutableAdminUpgradeabilityProxy
+diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/ConfiguratorInputTypes.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/ConfiguratorInputTypes.sol
+index 7a80594..7894871 100644
+--- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/ConfiguratorInputTypes.sol
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/ConfiguratorInputTypes.sol
+@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
+ library ConfiguratorInputTypes {
+   struct InitReserveInput {
+     address aTokenImpl;
+-    address stableDebtTokenImpl;
+     address variableDebtTokenImpl;
+     bool useVirtualBalance;
+     address interestRateStrategyAddress;
+@@ -15,8 +14,6 @@ library ConfiguratorInputTypes {
+     string aTokenSymbol;
+     string variableDebtTokenName;
+     string variableDebtTokenSymbol;
+-    string stableDebtTokenName;
+-    string stableDebtTokenSymbol;
+     bytes params;
+     bytes interestRateData;
+   }
+diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/ConfiguratorLogic.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/ConfiguratorLogic.sol
+index 01580d9..c6b08dc 100644
+--- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/ConfiguratorLogic.sol
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/ConfiguratorLogic.sol
+@@ -4,7 +4,7 @@ pragma solidity ^0.8.10;
+ import {IPool} from '../../../interfaces/IPool.sol';
+ import {IInitializableAToken} from '../../../interfaces/IInitializableAToken.sol';
+ import {IInitializableDebtToken} from '../../../interfaces/IInitializableDebtToken.sol';
+-import {InitializableImmutableAdminUpgradeabilityProxy} from '../aave-upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol';
++import {InitializableImmutableAdminUpgradeabilityProxy} from '../../../misc/aave-upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol';
+ import {IReserveInterestRateStrategy} from '../../../interfaces/IReserveInterestRateStrategy.sol';
+ import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
+ import {DataTypes} from '../types/DataTypes.sol';
+@@ -33,11 +33,6 @@ library ConfiguratorLogic {
+     address indexed proxy,
+     address indexed implementation
+   );
+-  event StableDebtTokenUpgraded(
+-    address indexed asset,
+-    address indexed proxy,
+-    address indexed implementation
+-  );
+   event VariableDebtTokenUpgraded(
+     address indexed asset,
+     address indexed proxy,
+@@ -45,7 +40,7 @@ library ConfiguratorLogic {
+   );
+ 
+   /**
+-   * @notice Initialize a reserve by creating and initializing aToken, stable debt token and variable debt token
++   * @notice Initialize a reserve by creating and initializing aToken and variable debt token
+    * @dev Emits the \`ReserveInitialized\` event
+    * @param pool The Pool in which the reserve will be initialized
+    * @param input The needed parameters for the initialization
+@@ -73,20 +68,6 @@ library ConfiguratorLogic {
+       )
+     );
+ 
+-    address stableDebtTokenProxyAddress = _initTokenWithProxy(
+-      input.stableDebtTokenImpl,
+-      abi.encodeWithSelector(
+-        IInitializableDebtToken.initialize.selector,
+-        pool,
+-        input.underlyingAsset,
+-        input.incentivesController,
+-        underlyingAssetDecimals,
+-        input.stableDebtTokenName,
+-        input.stableDebtTokenSymbol,
+-        input.params
+-      )
+-    );
+-
+     address variableDebtTokenProxyAddress = _initTokenWithProxy(
+       input.variableDebtTokenImpl,
+       abi.encodeWithSelector(
+@@ -104,7 +85,6 @@ library ConfiguratorLogic {
+     pool.initReserve(
+       input.underlyingAsset,
+       aTokenProxyAddress,
+-      stableDebtTokenProxyAddress,
+       variableDebtTokenProxyAddress,
+       input.interestRateStrategyAddress
+     );
+@@ -128,7 +108,7 @@ library ConfiguratorLogic {
+     emit ReserveInitialized(
+       input.underlyingAsset,
+       aTokenProxyAddress,
+-      stableDebtTokenProxyAddress,
++      address(0),
+       variableDebtTokenProxyAddress,
+       input.interestRateStrategyAddress
+     );
+@@ -146,7 +126,7 @@ library ConfiguratorLogic {
+   ) external {
+     DataTypes.ReserveDataLegacy memory reserveData = cachedPool.getReserveData(input.asset);
+ 
+-    (, , , uint256 decimals, , ) = cachedPool.getConfiguration(input.asset).getParams();
++    (, , , uint256 decimals, ) = cachedPool.getConfiguration(input.asset).getParams();
+ 
+     bytes memory encodedCall = abi.encodeWithSelector(
+       IInitializableAToken.initialize.selector,
+@@ -165,44 +145,6 @@ library ConfiguratorLogic {
+     emit ATokenUpgraded(input.asset, reserveData.aTokenAddress, input.implementation);
    }
  
 -  /**
--   * @notice Enables or disables stable rate borrowing on the reserve
--   * @param self The reserve configuration
--   * @param enabled True if the stable rate borrowing needs to be enabled, false otherwise
+-   * @notice Updates the stable debt token implementation and initializes it
+-   * @dev Emits the \`StableDebtTokenUpgraded\` event
+-   * @param cachedPool The Pool containing the reserve with the stable debt token
+-   * @param input The parameters needed for the initialize call
 -   */
--  function setStableRateBorrowingEnabled(
--    DataTypes.ReserveConfigurationMap memory self,
--    bool enabled
--  ) internal pure {
--    self.data =
--      (self.data & STABLE_BORROWING_MASK) |
--      (uint256(enabled ? 1 : 0) << STABLE_BORROWING_ENABLED_START_BIT_POSITION);
--  }
+-  function executeUpdateStableDebtToken(
+-    IPool cachedPool,
+-    ConfiguratorInputTypes.UpdateDebtTokenInput calldata input
+-  ) external {
+-    DataTypes.ReserveDataLegacy memory reserveData = cachedPool.getReserveData(input.asset);
 -
--  /**
--   * @notice Gets the stable rate borrowing state of the reserve
--   * @param self The reserve configuration
--   * @return The stable rate borrowing state
--   */
--  function getStableRateBorrowingEnabled(
--    DataTypes.ReserveConfigurationMap memory self
--  ) internal pure returns (bool) {
--    return (self.data & ~STABLE_BORROWING_MASK) != 0;
+-    (, , , uint256 decimals, , ) = cachedPool.getConfiguration(input.asset).getParams();
+-
+-    bytes memory encodedCall = abi.encodeWithSelector(
+-      IInitializableDebtToken.initialize.selector,
+-      cachedPool,
+-      input.asset,
+-      input.incentivesController,
+-      decimals,
+-      input.name,
+-      input.symbol,
+-      input.params
+-    );
+-
+-    _upgradeTokenImplementation(
+-      reserveData.stableDebtTokenAddress,
+-      input.implementation,
+-      encodedCall
+-    );
+-
+-    emit StableDebtTokenUpgraded(
+-      input.asset,
+-      reserveData.stableDebtTokenAddress,
+-      input.implementation
+-    );
 -  }
 -
    /**
-    * @notice Sets the reserve factor of the reserve
-    * @param self The reserve configuration
-@@ -496,31 +468,6 @@ library ReserveConfiguration {
-     return (self.data & ~UNBACKED_MINT_CAP_MASK) >> UNBACKED_MINT_CAP_START_BIT_POSITION;
-   }
+    * @notice Updates the variable debt token implementation and initializes it
+    * @dev Emits the \`VariableDebtTokenUpgraded\` event
+@@ -215,7 +157,7 @@ library ConfiguratorLogic {
+   ) external {
+     DataTypes.ReserveDataLegacy memory reserveData = cachedPool.getReserveData(input.asset);
  
--  /**
--   * @notice Sets the eMode asset category
--   * @param self The reserve configuration
--   * @param category The asset category when the user selects the eMode
--   */
--  function setEModeCategory(
--    DataTypes.ReserveConfigurationMap memory self,
--    uint256 category
--  ) internal pure {
--    require(category <= MAX_VALID_EMODE_CATEGORY, Errors.INVALID_EMODE_CATEGORY);
--
--    self.data = (self.data & EMODE_CATEGORY_MASK) | (category << EMODE_CATEGORY_START_BIT_POSITION);
--  }
--
--  /**
--   * @dev Gets the eMode asset category
--   * @param self The reserve configuration
--   * @return The eMode category for the asset
--   */
--  function getEModeCategory(
--    DataTypes.ReserveConfigurationMap memory self
--  ) internal pure returns (uint256) {
--    return (self.data & ~EMODE_CATEGORY_MASK) >> EMODE_CATEGORY_START_BIT_POSITION;
--  }
--
-   /**
-    * @notice Sets the flashloanable flag for the reserve
-    * @param self The reserve configuration
-@@ -579,19 +526,17 @@ library ReserveConfiguration {
-    * @return The state flag representing active
-    * @return The state flag representing frozen
-    * @return The state flag representing borrowing enabled
--   * @return The state flag representing stableRateBorrowing enabled
-    * @return The state flag representing paused
-    */
-   function getFlags(
-     DataTypes.ReserveConfigurationMap memory self
--  ) internal pure returns (bool, bool, bool, bool, bool) {
-+  ) internal pure returns (bool, bool, bool, bool) {
-     uint256 dataLocal = self.data;
+-    (, , , uint256 decimals, , ) = cachedPool.getConfiguration(input.asset).getParams();
++    (, , , uint256 decimals, ) = cachedPool.getConfiguration(input.asset).getParams();
  
-     return (
-       (dataLocal & ~ACTIVE_MASK) != 0,
-       (dataLocal & ~FROZEN_MASK) != 0,
-       (dataLocal & ~BORROWING_MASK) != 0,
--      (dataLocal & ~STABLE_BORROWING_MASK) != 0,
-       (dataLocal & ~PAUSED_MASK) != 0
-     );
-   }
-@@ -604,11 +549,10 @@ library ReserveConfiguration {
-    * @return The state param representing liquidation bonus
-    * @return The state param representing reserve decimals
-    * @return The state param representing reserve factor
--   * @return The state param representing eMode category
-    */
-   function getParams(
-     DataTypes.ReserveConfigurationMap memory self
--  ) internal pure returns (uint256, uint256, uint256, uint256, uint256, uint256) {
-+  ) internal pure returns (uint256, uint256, uint256, uint256, uint256) {
-     uint256 dataLocal = self.data;
- 
-     return (
-@@ -616,8 +560,7 @@ library ReserveConfiguration {
-       (dataLocal & ~LIQUIDATION_THRESHOLD_MASK) >> LIQUIDATION_THRESHOLD_START_BIT_POSITION,
-       (dataLocal & ~LIQUIDATION_BONUS_MASK) >> LIQUIDATION_BONUS_START_BIT_POSITION,
-       (dataLocal & ~DECIMALS_MASK) >> RESERVE_DECIMALS_START_BIT_POSITION,
--      (dataLocal & ~RESERVE_FACTOR_MASK) >> RESERVE_FACTOR_START_BIT_POSITION,
--      (dataLocal & ~EMODE_CATEGORY_MASK) >> EMODE_CATEGORY_START_BIT_POSITION
-+      (dataLocal & ~RESERVE_FACTOR_MASK) >> RESERVE_FACTOR_START_BIT_POSITION
-     );
-   }
- 
-diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/8_DataTypes.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/12_DataTypes.sol
-similarity index 89%
-rename from /tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/8_DataTypes.sol
-rename to /tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/12_DataTypes.sol
+     bytes memory encodedCall = abi.encodeWithSelector(
+       IInitializableDebtToken.initialize.selector,
+diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/DataTypes.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/DataTypes.sol
 index 64f3e89..13c12c9 100644
---- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/8_DataTypes.sol
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/12_DataTypes.sol
+--- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/DataTypes.sol
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/DataTypes.sol
 @@ -17,7 +17,7 @@ library DataTypes {
      uint128 variableBorrowIndex;
      //the current variable borrow rate. Expressed in ray
@@ -394,175 +344,69 @@ index 64f3e89..13c12c9 100644
      address variableDebtAddress;
      address interestRateStrategyAddress;
      uint16 reservesCount;
-diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/9_ConfiguratorInputTypes.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/13_ConfiguratorInputTypes.sol
-similarity index 89%
-rename from /tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/9_ConfiguratorInputTypes.sol
-rename to /tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/13_ConfiguratorInputTypes.sol
-index 7a80594..7894871 100644
---- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/9_ConfiguratorInputTypes.sol
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/13_ConfiguratorInputTypes.sol
-@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
- library ConfiguratorInputTypes {
-   struct InitReserveInput {
-     address aTokenImpl;
--    address stableDebtTokenImpl;
-     address variableDebtTokenImpl;
-     bool useVirtualBalance;
-     address interestRateStrategyAddress;
-@@ -15,8 +14,6 @@ library ConfiguratorInputTypes {
-     string aTokenSymbol;
-     string variableDebtTokenName;
-     string variableDebtTokenSymbol;
--    string stableDebtTokenName;
--    string stableDebtTokenSymbol;
-     bytes params;
-     bytes interestRateData;
-   }
-diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/10_ConfiguratorLogic.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/14_ConfiguratorLogic.sol
-similarity index 77%
-rename from /tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/10_ConfiguratorLogic.sol
-rename to /tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/14_ConfiguratorLogic.sol
-index 01580d9..c6b08dc 100644
---- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/10_ConfiguratorLogic.sol
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/14_ConfiguratorLogic.sol
-@@ -4,7 +4,7 @@ pragma solidity ^0.8.10;
- import {IPool} from '../../../interfaces/IPool.sol';
- import {IInitializableAToken} from '../../../interfaces/IInitializableAToken.sol';
- import {IInitializableDebtToken} from '../../../interfaces/IInitializableDebtToken.sol';
--import {InitializableImmutableAdminUpgradeabilityProxy} from '../aave-upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol';
-+import {InitializableImmutableAdminUpgradeabilityProxy} from '../../../misc/aave-upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol';
- import {IReserveInterestRateStrategy} from '../../../interfaces/IReserveInterestRateStrategy.sol';
- import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
- import {DataTypes} from '../types/DataTypes.sol';
-@@ -33,11 +33,6 @@ library ConfiguratorLogic {
-     address indexed proxy,
-     address indexed implementation
-   );
--  event StableDebtTokenUpgraded(
--    address indexed asset,
--    address indexed proxy,
--    address indexed implementation
--  );
-   event VariableDebtTokenUpgraded(
-     address indexed asset,
-     address indexed proxy,
-@@ -45,7 +40,7 @@ library ConfiguratorLogic {
-   );
- 
-   /**
--   * @notice Initialize a reserve by creating and initializing aToken, stable debt token and variable debt token
-+   * @notice Initialize a reserve by creating and initializing aToken and variable debt token
-    * @dev Emits the \`ReserveInitialized\` event
-    * @param pool The Pool in which the reserve will be initialized
-    * @param input The needed parameters for the initialization
-@@ -73,20 +68,6 @@ library ConfiguratorLogic {
-       )
-     );
- 
--    address stableDebtTokenProxyAddress = _initTokenWithProxy(
--      input.stableDebtTokenImpl,
--      abi.encodeWithSelector(
--        IInitializableDebtToken.initialize.selector,
--        pool,
--        input.underlyingAsset,
--        input.incentivesController,
--        underlyingAssetDecimals,
--        input.stableDebtTokenName,
--        input.stableDebtTokenSymbol,
--        input.params
--      )
--    );
--
-     address variableDebtTokenProxyAddress = _initTokenWithProxy(
-       input.variableDebtTokenImpl,
-       abi.encodeWithSelector(
-@@ -104,7 +85,6 @@ library ConfiguratorLogic {
-     pool.initReserve(
-       input.underlyingAsset,
-       aTokenProxyAddress,
--      stableDebtTokenProxyAddress,
-       variableDebtTokenProxyAddress,
-       input.interestRateStrategyAddress
-     );
-@@ -128,7 +108,7 @@ library ConfiguratorLogic {
-     emit ReserveInitialized(
-       input.underlyingAsset,
-       aTokenProxyAddress,
--      stableDebtTokenProxyAddress,
-+      address(0),
-       variableDebtTokenProxyAddress,
-       input.interestRateStrategyAddress
-     );
-@@ -146,7 +126,7 @@ library ConfiguratorLogic {
-   ) external {
-     DataTypes.ReserveDataLegacy memory reserveData = cachedPool.getReserveData(input.asset);
- 
--    (, , , uint256 decimals, , ) = cachedPool.getConfiguration(input.asset).getParams();
-+    (, , , uint256 decimals, ) = cachedPool.getConfiguration(input.asset).getParams();
- 
-     bytes memory encodedCall = abi.encodeWithSelector(
-       IInitializableAToken.initialize.selector,
-@@ -165,44 +145,6 @@ library ConfiguratorLogic {
-     emit ATokenUpgraded(input.asset, reserveData.aTokenAddress, input.implementation);
-   }
- 
--  /**
--   * @notice Updates the stable debt token implementation and initializes it
--   * @dev Emits the \`StableDebtTokenUpgraded\` event
--   * @param cachedPool The Pool containing the reserve with the stable debt token
--   * @param input The parameters needed for the initialize call
--   */
--  function executeUpdateStableDebtToken(
--    IPool cachedPool,
--    ConfiguratorInputTypes.UpdateDebtTokenInput calldata input
--  ) external {
--    DataTypes.ReserveDataLegacy memory reserveData = cachedPool.getReserveData(input.asset);
--
--    (, , , uint256 decimals, , ) = cachedPool.getConfiguration(input.asset).getParams();
--
--    bytes memory encodedCall = abi.encodeWithSelector(
--      IInitializableDebtToken.initialize.selector,
--      cachedPool,
--      input.asset,
--      input.incentivesController,
--      decimals,
--      input.name,
--      input.symbol,
--      input.params
--    );
--
--    _upgradeTokenImplementation(
--      reserveData.stableDebtTokenAddress,
--      input.implementation,
--      encodedCall
--    );
--
--    emit StableDebtTokenUpgraded(
--      input.asset,
--      reserveData.stableDebtTokenAddress,
--      input.implementation
--    );
--  }
--
-   /**
-    * @notice Updates the variable debt token implementation and initializes it
-    * @dev Emits the \`VariableDebtTokenUpgraded\` event
-@@ -215,7 +157,7 @@ library ConfiguratorLogic {
-   ) external {
-     DataTypes.ReserveDataLegacy memory reserveData = cachedPool.getReserveData(input.asset);
- 
--    (, , , uint256 decimals, , ) = cachedPool.getConfiguration(input.asset).getParams();
-+    (, , , uint256 decimals, ) = cachedPool.getConfiguration(input.asset).getParams();
- 
-     bytes memory encodedCall = abi.encodeWithSelector(
-       IInitializableDebtToken.initialize.selector,
-diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/15_Errors.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/16_Errors.sol
-similarity index 93%
-rename from /tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/15_Errors.sol
-rename to /tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/16_Errors.sol
+diff --git a/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/EModeConfiguration.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/EModeConfiguration.sol
+new file mode 100644
+index 0000000..3bb69ef
+--- /dev/null
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/EModeConfiguration.sol
+@@ -0,0 +1,53 @@
++// SPDX-License-Identifier: MIT
++pragma solidity ^0.8.0;
++
++import {Errors} from '../helpers/Errors.sol';
++import {DataTypes} from '../types/DataTypes.sol';
++import {ReserveConfiguration} from './ReserveConfiguration.sol';
++
++/**
++ * @title EModeConfiguration library
++ * @author BGD Labs
++ * @notice Implements the bitmap logic to handle the eMode configuration
++ */
++library EModeConfiguration {
++  /**
++   * @notice Sets a bit in a given bitmap that represents the reserve index range
++   * @dev The supplied bitmap is supposed to be a uint128 in which each bit represents a reserve
++   * @param bitmap The bitmap
++   * @param reserveIndex The index of the reserve in the bitmap
++   * @param enabled True if the reserveIndex should be enabled on the bitmap, false otherwise
++   * @return The altered bitmap
++   */
++  function setReserveBitmapBit(
++    uint128 bitmap,
++    uint256 reserveIndex,
++    bool enabled
++  ) internal pure returns (uint128) {
++    unchecked {
++      require(reserveIndex < ReserveConfiguration.MAX_RESERVES_COUNT, Errors.INVALID_RESERVE_INDEX);
++      uint128 bit = uint128(1 << reserveIndex);
++      if (enabled) {
++        return bitmap | bit;
++      } else {
++        return bitmap & ~bit;
++      }
++    }
++  }
++
++  /**
++   * @notice Validates if a reserveIndex is flagged as enabled on a given bitmap
++   * @param bitmap The bitmap
++   * @param reserveIndex The index of the reserve in the bitmap
++   * @return True if the reserveindex is flagged true
++   */
++  function isReserveEnabledOnBitmap(
++    uint128 bitmap,
++    uint256 reserveIndex
++  ) internal pure returns (bool) {
++    unchecked {
++      require(reserveIndex < ReserveConfiguration.MAX_RESERVES_COUNT, Errors.INVALID_RESERVE_INDEX);
++      return (bitmap >> reserveIndex) & 1 != 0;
++    }
++  }
++}
+diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/Errors.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/Errors.sol
 index 36b7530..d3f564c 100644
---- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/15_Errors.sol
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/16_Errors.sol
+--- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/Errors.sol
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/Errors.sol
 @@ -37,17 +37,14 @@ library Errors {
    string public constant RESERVE_FROZEN = '28'; // 'Action cannot be performed because the reserve is frozen'
    string public constant RESERVE_PAUSED = '29'; // 'Action cannot be performed because the reserve is paused'
@@ -607,424 +451,31 @@ index 36b7530..d3f564c 100644
    string public constant INVALID_FREEZE_STATE = '99'; // Reserve is already in the passed freeze state
 +  string public constant NOT_BORROWABLE_IN_EMODE = '100'; // Asset not borrowable in eMode
  }
-diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/16_PoolConfigurator.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/17_PoolConfigurator.sol
-similarity index 89%
-rename from /tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/16_PoolConfigurator.sol
-rename to /tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/17_PoolConfigurator.sol
-index 9a6ced2..778ee79 100644
---- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/16_PoolConfigurator.sol
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/17_PoolConfigurator.sol
-@@ -1,8 +1,9 @@
- // SPDX-License-Identifier: BUSL-1.1
- pragma solidity ^0.8.10;
- 
--import {VersionedInitializable} from '../libraries/aave-upgradeability/VersionedInitializable.sol';
-+import {VersionedInitializable} from '../../misc/aave-upgradeability/VersionedInitializable.sol';
- import {ReserveConfiguration} from '../libraries/configuration/ReserveConfiguration.sol';
-+import {EModeConfiguration} from '../libraries/configuration/EModeConfiguration.sol';
- import {IPoolAddressesProvider} from '../../interfaces/IPoolAddressesProvider.sol';
- import {IDefaultInterestRateStrategyV2} from '../../interfaces/IDefaultInterestRateStrategyV2.sol';
- import {Errors} from '../libraries/helpers/Errors.sol';
-@@ -104,13 +105,6 @@ abstract contract PoolConfigurator is VersionedInitializable, IPoolConfigurator
-     ConfiguratorLogic.executeUpdateAToken(_pool, input);
-   }
- 
--  /// @inheritdoc IPoolConfigurator
--  function updateStableDebtToken(
--    ConfiguratorInputTypes.UpdateDebtTokenInput calldata input
--  ) external override onlyPoolAdmin {
--    ConfiguratorLogic.executeUpdateStableDebtToken(_pool, input);
+diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/IDefaultInterestRateStrategyV2.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/IDefaultInterestRateStrategyV2.sol
+index 5b8b014..938e2d8 100644
+--- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/IDefaultInterestRateStrategyV2.sol
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/IDefaultInterestRateStrategyV2.sol
+@@ -10,16 +10,6 @@ import {IPoolAddressesProvider} from './IPoolAddressesProvider.sol';
+  * @notice Interface of the default interest rate strategy used by the Aave protocol
+  */
+ interface IDefaultInterestRateStrategyV2 is IReserveInterestRateStrategy {
+-  struct CalcInterestRatesLocalVars {
+-    uint256 availableLiquidity;
+-    uint256 totalDebt;
+-    uint256 currentVariableBorrowRate;
+-    uint256 currentLiquidityRate;
+-    uint256 borrowUsageRatio;
+-    uint256 supplyUsageRatio;
+-    uint256 availableLiquidityPlusDebt;
 -  }
 -
-   /// @inheritdoc IPoolConfigurator
-   function updateVariableDebtToken(
-     ConfiguratorInputTypes.UpdateDebtTokenInput calldata input
-@@ -121,9 +115,6 @@ abstract contract PoolConfigurator is VersionedInitializable, IPoolConfigurator
-   /// @inheritdoc IPoolConfigurator
-   function setReserveBorrowing(address asset, bool enabled) external override onlyRiskOrPoolAdmins {
-     DataTypes.ReserveConfigurationMap memory currentConfig = _pool.getConfiguration(asset);
--    if (!enabled) {
--      require(!currentConfig.getStableRateBorrowingEnabled(), Errors.STABLE_BORROWING_ENABLED);
--    }
-     currentConfig.setBorrowingEnabled(enabled);
-     _pool.setConfiguration(asset, currentConfig);
-     emit ReserveBorrowing(asset, enabled);
-@@ -181,20 +172,6 @@ abstract contract PoolConfigurator is VersionedInitializable, IPoolConfigurator
-     emit CollateralConfigurationChanged(asset, newLtv, liquidationThreshold, liquidationBonus);
-   }
- 
--  /// @inheritdoc IPoolConfigurator
--  function setReserveStableRateBorrowing(
--    address asset,
--    bool enabled
--  ) external override onlyRiskOrPoolAdmins {
--    DataTypes.ReserveConfigurationMap memory currentConfig = _pool.getConfiguration(asset);
--    if (enabled) {
--      require(currentConfig.getBorrowingEnabled(), Errors.BORROWING_NOT_ENABLED);
--    }
--    currentConfig.setStableRateBorrowingEnabled(enabled);
--    _pool.setConfiguration(asset, currentConfig);
--    emit ReserveStableRateBorrowing(asset, enabled);
--  }
--
-   /// @inheritdoc IPoolConfigurator
-   function setReserveFlashLoaning(
-     address asset,
-@@ -397,7 +374,6 @@ abstract contract PoolConfigurator is VersionedInitializable, IPoolConfigurator
-     uint16 ltv,
-     uint16 liquidationThreshold,
-     uint16 liquidationBonus,
--    address oracle,
-     string calldata label
-   ) external override onlyRiskOrPoolAdmins {
-     require(ltv != 0, Errors.INVALID_EMODE_CATEGORY_PARAMS);
-@@ -420,53 +396,57 @@ abstract contract PoolConfigurator is VersionedInitializable, IPoolConfigurator
-       Errors.INVALID_EMODE_CATEGORY_PARAMS
-     );
- 
--    address[] memory reserves = _pool.getReservesList();
--    for (uint256 i = 0; i < reserves.length; i++) {
--      DataTypes.ReserveConfigurationMap memory currentConfig = _pool.getConfiguration(reserves[i]);
--      if (categoryId == currentConfig.getEModeCategory()) {
--        uint256 currentLtv = currentConfig.getFrozen()
--          ? _pendingLtv[reserves[i]]
--          : currentConfig.getLtv();
--        require(ltv > currentLtv, Errors.INVALID_EMODE_CATEGORY_PARAMS);
--
--        require(
--          liquidationThreshold > currentConfig.getLiquidationThreshold(),
--          Errors.INVALID_EMODE_CATEGORY_PARAMS
--        );
--      }
--    }
-+    DataTypes.EModeCategoryBaseConfiguration memory categoryData;
-+    categoryData.ltv = ltv;
-+    categoryData.liquidationThreshold = liquidationThreshold;
-+    categoryData.liquidationBonus = liquidationBonus;
-+    categoryData.label = label;
- 
--    _pool.configureEModeCategory(
-+    _pool.configureEModeCategory(categoryId, categoryData);
-+    emit EModeCategoryAdded(
-       categoryId,
--      DataTypes.EModeCategory({
--        ltv: ltv,
--        liquidationThreshold: liquidationThreshold,
--        liquidationBonus: liquidationBonus,
--        priceSource: oracle,
--        label: label
--      })
-+      ltv,
-+      liquidationThreshold,
-+      liquidationBonus,
-+      address(0),
-+      label
-     );
--    emit EModeCategoryAdded(categoryId, ltv, liquidationThreshold, liquidationBonus, oracle, label);
-   }
- 
-   /// @inheritdoc IPoolConfigurator
--  function setAssetEModeCategory(
-+  function setAssetCollateralInEMode(
-     address asset,
--    uint8 newCategoryId
-+    uint8 categoryId,
-+    bool allowed
-   ) external override onlyRiskOrPoolAdmins {
--    DataTypes.ReserveConfigurationMap memory currentConfig = _pool.getConfiguration(asset);
-+    uint128 collateralBitmap = _pool.getEModeCategoryCollateralBitmap(categoryId);
-+    DataTypes.ReserveDataLegacy memory reserveData = _pool.getReserveData(asset);
-+    require(reserveData.id != 0 || _pool.getReservesList()[0] == asset, Errors.ASSET_NOT_LISTED);
-+    collateralBitmap = EModeConfiguration.setReserveBitmapBit(
-+      collateralBitmap,
-+      reserveData.id,
-+      allowed
-+    );
-+    _pool.configureEModeCategoryCollateralBitmap(categoryId, collateralBitmap);
-+    emit AssetCollateralInEModeChanged(asset, categoryId, allowed);
-+  }
- 
--    if (newCategoryId != 0) {
--      DataTypes.EModeCategory memory categoryData = _pool.getEModeCategoryData(newCategoryId);
--      require(
--        categoryData.liquidationThreshold > currentConfig.getLiquidationThreshold(),
--        Errors.INVALID_EMODE_CATEGORY_ASSIGNMENT
--      );
--    }
--    uint256 oldCategoryId = currentConfig.getEModeCategory();
--    currentConfig.setEModeCategory(newCategoryId);
--    _pool.setConfiguration(asset, currentConfig);
--    emit EModeAssetCategoryChanged(asset, uint8(oldCategoryId), newCategoryId);
-+  /// @inheritdoc IPoolConfigurator
-+  function setAssetBorrowableInEMode(
-+    address asset,
-+    uint8 categoryId,
-+    bool borrowable
-+  ) external override onlyRiskOrPoolAdmins {
-+    uint128 borrowableBitmap = _pool.getEModeCategoryBorrowableBitmap(categoryId);
-+    DataTypes.ReserveDataLegacy memory reserveData = _pool.getReserveData(asset);
-+    require(reserveData.id != 0 || _pool.getReservesList()[0] == asset, Errors.ASSET_NOT_LISTED);
-+    borrowableBitmap = EModeConfiguration.setReserveBitmapBit(
-+      borrowableBitmap,
-+      reserveData.id,
-+      borrowable
-+    );
-+    _pool.configureEModeCategoryBorrowableBitmap(categoryId, borrowableBitmap);
-+    emit AssetBorrowableInEModeChanged(asset, categoryId, borrowable);
-   }
- 
-   /// @inheritdoc IPoolConfigurator
-diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/27_PoolConfiguratorInstance.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/18_PoolConfiguratorInstance.sol
-similarity index 79%
-rename from /tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/27_PoolConfiguratorInstance.sol
-rename to /tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/18_PoolConfiguratorInstance.sol
-index 03ae610..7f7294f 100644
---- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/27_PoolConfiguratorInstance.sol
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/18_PoolConfiguratorInstance.sol
-@@ -1,10 +1,10 @@
- // SPDX-License-Identifier: MIT
- pragma solidity ^0.8.0;
- 
--import {PoolConfigurator, IPoolAddressesProvider, IPool, VersionedInitializable} from 'aave-v3-core/contracts/protocol/pool/PoolConfigurator.sol';
-+import {PoolConfigurator, IPoolAddressesProvider, IPool, VersionedInitializable} from '../protocol/pool/PoolConfigurator.sol';
- 
- contract PoolConfiguratorInstance is PoolConfigurator {
--  uint256 public constant CONFIGURATOR_REVISION = 3;
-+  uint256 public constant CONFIGURATOR_REVISION = 4;
- 
-   /// @inheritdoc VersionedInitializable
-   function getRevision() internal pure virtual override returns (uint256) {
-diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/12_InitializableImmutableAdminUpgradeabilityProxy.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/1_InitializableImmutableAdminUpgradeabilityProxy.sol
-similarity index 79%
-rename from /tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/12_InitializableImmutableAdminUpgradeabilityProxy.sol
-rename to /tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/1_InitializableImmutableAdminUpgradeabilityProxy.sol
-index 0deceb5..6913a19 100644
---- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/12_InitializableImmutableAdminUpgradeabilityProxy.sol
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/1_InitializableImmutableAdminUpgradeabilityProxy.sol
-@@ -1,8 +1,8 @@
- // SPDX-License-Identifier: MIT
- pragma solidity ^0.8.10;
- 
--import {InitializableUpgradeabilityProxy} from '../../../dependencies/openzeppelin/upgradeability/InitializableUpgradeabilityProxy.sol';
--import {Proxy} from '../../../dependencies/openzeppelin/upgradeability/Proxy.sol';
-+import {InitializableUpgradeabilityProxy} from '../../dependencies/openzeppelin/upgradeability/InitializableUpgradeabilityProxy.sol';
-+import {Proxy} from '../../dependencies/openzeppelin/upgradeability/Proxy.sol';
- import {BaseImmutableAdminUpgradeabilityProxy} from './BaseImmutableAdminUpgradeabilityProxy.sol';
- 
- /**
-diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/19_IPoolConfigurator.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/21_IPoolConfigurator.sol
-similarity index 88%
-rename from /tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/19_IPoolConfigurator.sol
-rename to /tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/21_IPoolConfigurator.sol
-index 4c39d44..977d316 100644
---- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/19_IPoolConfigurator.sol
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/21_IPoolConfigurator.sol
-@@ -14,7 +14,7 @@ interface IPoolConfigurator {
-    * @dev Emitted when a reserve is initialized.
-    * @param asset The address of the underlying asset of the reserve
-    * @param aToken The address of the associated aToken contract
--   * @param stableDebtToken The address of the associated stable rate debt token
-+   * @param stableDebtToken, DEPRECATED in v3.2.0
-    * @param variableDebtToken The address of the associated variable rate debt token
-    * @param interestRateStrategyAddress The address of the interest rate strategy for the reserve
-    */
-@@ -61,13 +61,6 @@ interface IPoolConfigurator {
-     uint256 liquidationBonus
-   );
- 
--  /**
--   * @dev Emitted when stable rate borrowing is enabled or disabled on a reserve
--   * @param asset The address of the underlying asset of the reserve
--   * @param enabled True if stable rate borrowing is enabled, false otherwise
--   */
--  event ReserveStableRateBorrowing(address indexed asset, bool enabled);
--
    /**
-    * @dev Emitted when a reserve is activated or deactivated
-    * @param asset The address of the underlying asset of the reserve
-@@ -157,20 +150,28 @@ interface IPoolConfigurator {
-   );
- 
-   /**
--   * @dev Emitted when the category of an asset in eMode is changed.
-+   * @dev Emitted when an collateral configuration of an asset in an eMode is changed.
-+   * @param asset The address of the underlying asset of the reserve
-+   * @param categoryId The eMode category
-+   * @param collateral True if the asset is enabled as collateral in the eMode, false otherwise.
-+   */
-+  event AssetCollateralInEModeChanged(address indexed asset, uint8 categoryId, bool collateral);
-+
-+  /**
-+   * @dev Emitted when the borrowable configuration of an asset in an eMode changed.
-    * @param asset The address of the underlying asset of the reserve
--   * @param oldCategoryId The old eMode asset category
--   * @param newCategoryId The new eMode asset category
-+   * @param categoryId The eMode category
-+   * @param borrowable True if the asset is enabled as borrowable in the eMode, false otherwise.
-    */
--  event EModeAssetCategoryChanged(address indexed asset, uint8 oldCategoryId, uint8 newCategoryId);
-+  event AssetBorrowableInEModeChanged(address indexed asset, uint8 categoryId, bool borrowable);
- 
-   /**
--   * @dev Emitted when a new eMode category is added.
-+   * @dev Emitted when a new eMode category is added or an existing category is altered.
-    * @param categoryId The new eMode category id
-    * @param ltv The ltv for the asset category in eMode
-    * @param liquidationThreshold The liquidationThreshold for the asset category in eMode
-    * @param liquidationBonus The liquidationBonus for the asset category in eMode
--   * @param oracle The optional address of the price oracle specific for this category
-+   * @param oracle DEPRECATED in v3.2.0
-    * @param label A human readable identifier for the category
-    */
-   event EModeCategoryAdded(
-@@ -213,18 +214,6 @@ interface IPoolConfigurator {
-     address indexed implementation
-   );
- 
--  /**
--   * @dev Emitted when the implementation of a stable debt token is upgraded.
--   * @param asset The address of the underlying asset of the reserve
--   * @param proxy The stable debt token proxy address
--   * @param implementation The new aToken implementation
--   */
--  event StableDebtTokenUpgraded(
--    address indexed asset,
--    address indexed proxy,
--    address indexed implementation
--  );
--
-   /**
-    * @dev Emitted when the implementation of a variable debt token is upgraded.
-    * @param asset The address of the underlying asset of the reserve
-@@ -301,14 +290,6 @@ interface IPoolConfigurator {
-    */
-   function updateAToken(ConfiguratorInputTypes.UpdateATokenInput calldata input) external;
- 
--  /**
--   * @notice Updates the stable debt token implementation for the reserve.
--   * @param input The stableDebtToken update parameters
--   */
--  function updateStableDebtToken(
--    ConfiguratorInputTypes.UpdateDebtTokenInput calldata input
--  ) external;
--
-   /**
-    * @notice Updates the variable debt token implementation for the asset.
-    * @param input The variableDebtToken update parameters
-@@ -319,7 +300,6 @@ interface IPoolConfigurator {
- 
-   /**
-    * @notice Configures borrowing on a reserve.
--   * @dev Can only be disabled (set to false) if stable borrowing is disabled
-    * @param asset The address of the underlying asset of the reserve
-    * @param enabled True if borrowing needs to be enabled, false otherwise
-    */
-@@ -341,14 +321,6 @@ interface IPoolConfigurator {
-     uint256 liquidationBonus
-   ) external;
- 
--  /**
--   * @notice Enable or disable stable rate borrowing on a reserve.
--   * @dev Can only be enabled (set to true) if borrowing is enabled
--   * @param asset The address of the underlying asset of the reserve
--   * @param enabled True if stable rate borrowing needs to be enabled, false otherwise
--   */
--  function setReserveStableRateBorrowing(address asset, bool enabled) external;
--
-   /**
-    * @notice Enable or disable flashloans on a reserve
-    * @param asset The address of the underlying asset of the reserve
-@@ -486,23 +458,28 @@ interface IPoolConfigurator {
-   function setUnbackedMintCap(address asset, uint256 newUnbackedMintCap) external;
- 
-   /**
--   * @notice Assign an efficiency mode (eMode) category to asset.
-+   * @notice Enables/disables an asset to be borrowable in a selected eMode.
-+   * - eMode.borrowable always has less priority then reserve.borrowable
-    * @param asset The address of the underlying asset of the reserve
--   * @param newCategoryId The new category id of the asset
-+   * @param categoryId The eMode categoryId
-+   * @param borrowable True if the asset should be borrowable in the given eMode category, false otherwise.
-    */
--  function setAssetEModeCategory(address asset, uint8 newCategoryId) external;
-+  function setAssetBorrowableInEMode(address asset, uint8 categoryId, bool borrowable) external;
- 
-   /**
--   * @notice Adds a new efficiency mode (eMode) category.
--   * @dev If zero is provided as oracle address, the default asset oracles will be used to compute the overall debt and
--   * overcollateralization of the users using this category.
--   * @dev The new ltv and liquidation threshold must be greater than the base
--   * ltvs and liquidation thresholds of all assets within the eMode category
-+   * @notice Enables/disables an asset to be collateral in a selected eMode.
-+   * @param asset The address of the underlying asset of the reserve
-+   * @param categoryId The eMode categoryId
-+   * @param collateral True if the asset should be collateral in the given eMode category, false otherwise.
-+   */
-+  function setAssetCollateralInEMode(address asset, uint8 categoryId, bool collateral) external;
-+
-+  /**
-+   * @notice Adds a new efficiency mode (eMode) category or alters a existing one.
-    * @param categoryId The id of the category to be configured
-    * @param ltv The ltv associated with the category
-    * @param liquidationThreshold The liquidation threshold associated with the category
-    * @param liquidationBonus The liquidation bonus associated with the category
--   * @param oracle The oracle associated with the category
-    * @param label A label identifying the category
-    */
-   function setEModeCategory(
-@@ -510,7 +487,6 @@ interface IPoolConfigurator {
-     uint16 ltv,
-     uint16 liquidationThreshold,
-     uint16 liquidationBonus,
--    address oracle,
-     string calldata label
-   ) external;
- 
-@@ -561,15 +537,15 @@ interface IPoolConfigurator {
-    * @notice Gets pending ltv value
-    * @param asset The new siloed borrowing state
-    */
--  function getPendingLtv(address asset) external returns (uint256);
-+  function getPendingLtv(address asset) external view returns (uint256);
- 
-   /**
-    * @notice Gets the address of the external ConfiguratorLogic
-    */
--  function getConfiguratorLogic() external returns (address);
-+  function getConfiguratorLogic() external view returns (address);
- 
-   /**
-    * @notice Gets the maximum liquidations grace period allowed, in seconds
-    */
--  function MAX_GRACE_PERIOD() external returns (uint40);
-+  function MAX_GRACE_PERIOD() external view returns (uint40);
- }
-diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/22_IReserveInterestRateStrategy.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/24_IReserveInterestRateStrategy.sol
-similarity index 89%
-rename from /tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/22_IReserveInterestRateStrategy.sol
-rename to /tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/24_IReserveInterestRateStrategy.sol
-index cdd8156..e953cce 100644
---- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/22_IReserveInterestRateStrategy.sol
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/24_IReserveInterestRateStrategy.sol
-@@ -21,10 +21,9 @@ interface IReserveInterestRateStrategy {
-    * @notice Calculates the interest rates depending on the reserve's state and configurations
-    * @param params The parameters needed to calculate interest rates
-    * @return liquidityRate The liquidity rate expressed in ray
--   * @return stableBorrowRate The stable borrow rate expressed in ray
-    * @return variableBorrowRate The variable borrow rate expressed in ray
-    */
-   function calculateInterestRates(
-     DataTypes.CalculateInterestRatesParams memory params
--  ) external view returns (uint256, uint256, uint256);
-+  ) external view returns (uint256, uint256);
- }
-diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/24_IPool.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/26_IPool.sol
-similarity index 88%
-rename from /tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/24_IPool.sol
-rename to /tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/26_IPool.sol
+    * @notice Holds the interest rate data for a given reserve
+    *
+diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/IPool.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/IPool.sol
 index 4e49aa4..01e1bca 100644
---- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/24_IPool.sol
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/26_IPool.sol
+--- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/IPool.sol
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/IPool.sol
 @@ -67,7 +67,7 @@ interface IPool {
     * initiator of the transaction on flashLoan()
     * @param onBehalfOf The address that will be getting the debt
@@ -1339,37 +790,194 @@ index 4e49aa4..01e1bca 100644
 -  function getSupplyLogic() external returns (address);
 +  function getSupplyLogic() external view returns (address);
  }
-diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/25_IDefaultInterestRateStrategyV2.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/27_IDefaultInterestRateStrategyV2.sol
-similarity index 95%
-rename from /tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/25_IDefaultInterestRateStrategyV2.sol
-rename to /tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/27_IDefaultInterestRateStrategyV2.sol
-index 5b8b014..938e2d8 100644
---- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/25_IDefaultInterestRateStrategyV2.sol
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/27_IDefaultInterestRateStrategyV2.sol
-@@ -10,16 +10,6 @@ import {IPoolAddressesProvider} from './IPoolAddressesProvider.sol';
-  * @notice Interface of the default interest rate strategy used by the Aave protocol
-  */
- interface IDefaultInterestRateStrategyV2 is IReserveInterestRateStrategy {
--  struct CalcInterestRatesLocalVars {
--    uint256 availableLiquidity;
--    uint256 totalDebt;
--    uint256 currentVariableBorrowRate;
--    uint256 currentLiquidityRate;
--    uint256 borrowUsageRatio;
--    uint256 supplyUsageRatio;
--    uint256 availableLiquidityPlusDebt;
--  }
+diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/IPoolConfigurator.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/IPoolConfigurator.sol
+index 4c39d44..977d316 100644
+--- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/IPoolConfigurator.sol
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/IPoolConfigurator.sol
+@@ -14,7 +14,7 @@ interface IPoolConfigurator {
+    * @dev Emitted when a reserve is initialized.
+    * @param asset The address of the underlying asset of the reserve
+    * @param aToken The address of the associated aToken contract
+-   * @param stableDebtToken The address of the associated stable rate debt token
++   * @param stableDebtToken, DEPRECATED in v3.2.0
+    * @param variableDebtToken The address of the associated variable rate debt token
+    * @param interestRateStrategyAddress The address of the interest rate strategy for the reserve
+    */
+@@ -61,13 +61,6 @@ interface IPoolConfigurator {
+     uint256 liquidationBonus
+   );
+ 
+-  /**
+-   * @dev Emitted when stable rate borrowing is enabled or disabled on a reserve
+-   * @param asset The address of the underlying asset of the reserve
+-   * @param enabled True if stable rate borrowing is enabled, false otherwise
+-   */
+-  event ReserveStableRateBorrowing(address indexed asset, bool enabled);
 -
    /**
-    * @notice Holds the interest rate data for a given reserve
-    *
-diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/26_IPoolDataProvider.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/28_IPoolDataProvider.sol
-similarity index 96%
-rename from /tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/26_IPoolDataProvider.sol
-rename to /tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/28_IPoolDataProvider.sol
+    * @dev Emitted when a reserve is activated or deactivated
+    * @param asset The address of the underlying asset of the reserve
+@@ -157,20 +150,28 @@ interface IPoolConfigurator {
+   );
+ 
+   /**
+-   * @dev Emitted when the category of an asset in eMode is changed.
++   * @dev Emitted when an collateral configuration of an asset in an eMode is changed.
++   * @param asset The address of the underlying asset of the reserve
++   * @param categoryId The eMode category
++   * @param collateral True if the asset is enabled as collateral in the eMode, false otherwise.
++   */
++  event AssetCollateralInEModeChanged(address indexed asset, uint8 categoryId, bool collateral);
++
++  /**
++   * @dev Emitted when the borrowable configuration of an asset in an eMode changed.
+    * @param asset The address of the underlying asset of the reserve
+-   * @param oldCategoryId The old eMode asset category
+-   * @param newCategoryId The new eMode asset category
++   * @param categoryId The eMode category
++   * @param borrowable True if the asset is enabled as borrowable in the eMode, false otherwise.
+    */
+-  event EModeAssetCategoryChanged(address indexed asset, uint8 oldCategoryId, uint8 newCategoryId);
++  event AssetBorrowableInEModeChanged(address indexed asset, uint8 categoryId, bool borrowable);
+ 
+   /**
+-   * @dev Emitted when a new eMode category is added.
++   * @dev Emitted when a new eMode category is added or an existing category is altered.
+    * @param categoryId The new eMode category id
+    * @param ltv The ltv for the asset category in eMode
+    * @param liquidationThreshold The liquidationThreshold for the asset category in eMode
+    * @param liquidationBonus The liquidationBonus for the asset category in eMode
+-   * @param oracle The optional address of the price oracle specific for this category
++   * @param oracle DEPRECATED in v3.2.0
+    * @param label A human readable identifier for the category
+    */
+   event EModeCategoryAdded(
+@@ -213,18 +214,6 @@ interface IPoolConfigurator {
+     address indexed implementation
+   );
+ 
+-  /**
+-   * @dev Emitted when the implementation of a stable debt token is upgraded.
+-   * @param asset The address of the underlying asset of the reserve
+-   * @param proxy The stable debt token proxy address
+-   * @param implementation The new aToken implementation
+-   */
+-  event StableDebtTokenUpgraded(
+-    address indexed asset,
+-    address indexed proxy,
+-    address indexed implementation
+-  );
+-
+   /**
+    * @dev Emitted when the implementation of a variable debt token is upgraded.
+    * @param asset The address of the underlying asset of the reserve
+@@ -301,14 +290,6 @@ interface IPoolConfigurator {
+    */
+   function updateAToken(ConfiguratorInputTypes.UpdateATokenInput calldata input) external;
+ 
+-  /**
+-   * @notice Updates the stable debt token implementation for the reserve.
+-   * @param input The stableDebtToken update parameters
+-   */
+-  function updateStableDebtToken(
+-    ConfiguratorInputTypes.UpdateDebtTokenInput calldata input
+-  ) external;
+-
+   /**
+    * @notice Updates the variable debt token implementation for the asset.
+    * @param input The variableDebtToken update parameters
+@@ -319,7 +300,6 @@ interface IPoolConfigurator {
+ 
+   /**
+    * @notice Configures borrowing on a reserve.
+-   * @dev Can only be disabled (set to false) if stable borrowing is disabled
+    * @param asset The address of the underlying asset of the reserve
+    * @param enabled True if borrowing needs to be enabled, false otherwise
+    */
+@@ -341,14 +321,6 @@ interface IPoolConfigurator {
+     uint256 liquidationBonus
+   ) external;
+ 
+-  /**
+-   * @notice Enable or disable stable rate borrowing on a reserve.
+-   * @dev Can only be enabled (set to true) if borrowing is enabled
+-   * @param asset The address of the underlying asset of the reserve
+-   * @param enabled True if stable rate borrowing needs to be enabled, false otherwise
+-   */
+-  function setReserveStableRateBorrowing(address asset, bool enabled) external;
+-
+   /**
+    * @notice Enable or disable flashloans on a reserve
+    * @param asset The address of the underlying asset of the reserve
+@@ -486,23 +458,28 @@ interface IPoolConfigurator {
+   function setUnbackedMintCap(address asset, uint256 newUnbackedMintCap) external;
+ 
+   /**
+-   * @notice Assign an efficiency mode (eMode) category to asset.
++   * @notice Enables/disables an asset to be borrowable in a selected eMode.
++   * - eMode.borrowable always has less priority then reserve.borrowable
+    * @param asset The address of the underlying asset of the reserve
+-   * @param newCategoryId The new category id of the asset
++   * @param categoryId The eMode categoryId
++   * @param borrowable True if the asset should be borrowable in the given eMode category, false otherwise.
+    */
+-  function setAssetEModeCategory(address asset, uint8 newCategoryId) external;
++  function setAssetBorrowableInEMode(address asset, uint8 categoryId, bool borrowable) external;
+ 
+   /**
+-   * @notice Adds a new efficiency mode (eMode) category.
+-   * @dev If zero is provided as oracle address, the default asset oracles will be used to compute the overall debt and
+-   * overcollateralization of the users using this category.
+-   * @dev The new ltv and liquidation threshold must be greater than the base
+-   * ltvs and liquidation thresholds of all assets within the eMode category
++   * @notice Enables/disables an asset to be collateral in a selected eMode.
++   * @param asset The address of the underlying asset of the reserve
++   * @param categoryId The eMode categoryId
++   * @param collateral True if the asset should be collateral in the given eMode category, false otherwise.
++   */
++  function setAssetCollateralInEMode(address asset, uint8 categoryId, bool collateral) external;
++
++  /**
++   * @notice Adds a new efficiency mode (eMode) category or alters a existing one.
+    * @param categoryId The id of the category to be configured
+    * @param ltv The ltv associated with the category
+    * @param liquidationThreshold The liquidation threshold associated with the category
+    * @param liquidationBonus The liquidation bonus associated with the category
+-   * @param oracle The oracle associated with the category
+    * @param label A label identifying the category
+    */
+   function setEModeCategory(
+@@ -510,7 +487,6 @@ interface IPoolConfigurator {
+     uint16 ltv,
+     uint16 liquidationThreshold,
+     uint16 liquidationBonus,
+-    address oracle,
+     string calldata label
+   ) external;
+ 
+@@ -561,15 +537,15 @@ interface IPoolConfigurator {
+    * @notice Gets pending ltv value
+    * @param asset The new siloed borrowing state
+    */
+-  function getPendingLtv(address asset) external returns (uint256);
++  function getPendingLtv(address asset) external view returns (uint256);
+ 
+   /**
+    * @notice Gets the address of the external ConfiguratorLogic
+    */
+-  function getConfiguratorLogic() external returns (address);
++  function getConfiguratorLogic() external view returns (address);
+ 
+   /**
+    * @notice Gets the maximum liquidations grace period allowed, in seconds
+    */
+-  function MAX_GRACE_PERIOD() external returns (uint40);
++  function MAX_GRACE_PERIOD() external view returns (uint40);
+ }
+diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/IPoolDataProvider.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/IPoolDataProvider.sol
 index 2ec458b..a9df890 100644
---- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/26_IPoolDataProvider.sol
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/28_IPoolDataProvider.sol
+--- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/IPoolDataProvider.sol
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/IPoolDataProvider.sol
 @@ -66,13 +66,6 @@ interface IPoolDataProvider {
        bool isFrozen
      );
@@ -1393,21 +1001,371 @@ index 2ec458b..a9df890 100644
     * @return variableDebtTokenAddress The VariableDebtToken address of the reserve
     */
    function getReserveTokensAddresses(
-diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/13_BaseImmutableAdminUpgradeabilityProxy.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/2_BaseImmutableAdminUpgradeabilityProxy.sol
-similarity index 95%
-rename from /tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/13_BaseImmutableAdminUpgradeabilityProxy.sol
-rename to /tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/2_BaseImmutableAdminUpgradeabilityProxy.sol
-index 06d2f82..252b4a4 100644
---- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/13_BaseImmutableAdminUpgradeabilityProxy.sol
-+++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/2_BaseImmutableAdminUpgradeabilityProxy.sol
-@@ -1,7 +1,7 @@
+diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/IReserveInterestRateStrategy.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/IReserveInterestRateStrategy.sol
+index cdd8156..e953cce 100644
+--- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/IReserveInterestRateStrategy.sol
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/IReserveInterestRateStrategy.sol
+@@ -21,10 +21,9 @@ interface IReserveInterestRateStrategy {
+    * @notice Calculates the interest rates depending on the reserve's state and configurations
+    * @param params The parameters needed to calculate interest rates
+    * @return liquidityRate The liquidity rate expressed in ray
+-   * @return stableBorrowRate The stable borrow rate expressed in ray
+    * @return variableBorrowRate The variable borrow rate expressed in ray
+    */
+   function calculateInterestRates(
+     DataTypes.CalculateInterestRatesParams memory params
+-  ) external view returns (uint256, uint256, uint256);
++  ) external view returns (uint256, uint256);
+ }
+diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/InitializableImmutableAdminUpgradeabilityProxy.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/InitializableImmutableAdminUpgradeabilityProxy.sol
+index 0deceb5..6913a19 100644
+--- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/InitializableImmutableAdminUpgradeabilityProxy.sol
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/InitializableImmutableAdminUpgradeabilityProxy.sol
+@@ -1,8 +1,8 @@
  // SPDX-License-Identifier: MIT
  pragma solidity ^0.8.10;
  
--import {BaseUpgradeabilityProxy} from '../../../dependencies/openzeppelin/upgradeability/BaseUpgradeabilityProxy.sol';
-+import {BaseUpgradeabilityProxy} from '../../dependencies/openzeppelin/upgradeability/BaseUpgradeabilityProxy.sol';
+-import {InitializableUpgradeabilityProxy} from '../../../dependencies/openzeppelin/upgradeability/InitializableUpgradeabilityProxy.sol';
+-import {Proxy} from '../../../dependencies/openzeppelin/upgradeability/Proxy.sol';
++import {InitializableUpgradeabilityProxy} from '../../dependencies/openzeppelin/upgradeability/InitializableUpgradeabilityProxy.sol';
++import {Proxy} from '../../dependencies/openzeppelin/upgradeability/Proxy.sol';
+ import {BaseImmutableAdminUpgradeabilityProxy} from './BaseImmutableAdminUpgradeabilityProxy.sol';
  
  /**
-  * @title BaseImmutableAdminUpgradeabilityProxy
+diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/PoolConfigurator.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/PoolConfigurator.sol
+index 9a6ced2..778ee79 100644
+--- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/PoolConfigurator.sol
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/PoolConfigurator.sol
+@@ -1,8 +1,9 @@
+ // SPDX-License-Identifier: BUSL-1.1
+ pragma solidity ^0.8.10;
+ 
+-import {VersionedInitializable} from '../libraries/aave-upgradeability/VersionedInitializable.sol';
++import {VersionedInitializable} from '../../misc/aave-upgradeability/VersionedInitializable.sol';
+ import {ReserveConfiguration} from '../libraries/configuration/ReserveConfiguration.sol';
++import {EModeConfiguration} from '../libraries/configuration/EModeConfiguration.sol';
+ import {IPoolAddressesProvider} from '../../interfaces/IPoolAddressesProvider.sol';
+ import {IDefaultInterestRateStrategyV2} from '../../interfaces/IDefaultInterestRateStrategyV2.sol';
+ import {Errors} from '../libraries/helpers/Errors.sol';
+@@ -104,13 +105,6 @@ abstract contract PoolConfigurator is VersionedInitializable, IPoolConfigurator
+     ConfiguratorLogic.executeUpdateAToken(_pool, input);
+   }
+ 
+-  /// @inheritdoc IPoolConfigurator
+-  function updateStableDebtToken(
+-    ConfiguratorInputTypes.UpdateDebtTokenInput calldata input
+-  ) external override onlyPoolAdmin {
+-    ConfiguratorLogic.executeUpdateStableDebtToken(_pool, input);
+-  }
+-
+   /// @inheritdoc IPoolConfigurator
+   function updateVariableDebtToken(
+     ConfiguratorInputTypes.UpdateDebtTokenInput calldata input
+@@ -121,9 +115,6 @@ abstract contract PoolConfigurator is VersionedInitializable, IPoolConfigurator
+   /// @inheritdoc IPoolConfigurator
+   function setReserveBorrowing(address asset, bool enabled) external override onlyRiskOrPoolAdmins {
+     DataTypes.ReserveConfigurationMap memory currentConfig = _pool.getConfiguration(asset);
+-    if (!enabled) {
+-      require(!currentConfig.getStableRateBorrowingEnabled(), Errors.STABLE_BORROWING_ENABLED);
+-    }
+     currentConfig.setBorrowingEnabled(enabled);
+     _pool.setConfiguration(asset, currentConfig);
+     emit ReserveBorrowing(asset, enabled);
+@@ -181,20 +172,6 @@ abstract contract PoolConfigurator is VersionedInitializable, IPoolConfigurator
+     emit CollateralConfigurationChanged(asset, newLtv, liquidationThreshold, liquidationBonus);
+   }
+ 
+-  /// @inheritdoc IPoolConfigurator
+-  function setReserveStableRateBorrowing(
+-    address asset,
+-    bool enabled
+-  ) external override onlyRiskOrPoolAdmins {
+-    DataTypes.ReserveConfigurationMap memory currentConfig = _pool.getConfiguration(asset);
+-    if (enabled) {
+-      require(currentConfig.getBorrowingEnabled(), Errors.BORROWING_NOT_ENABLED);
+-    }
+-    currentConfig.setStableRateBorrowingEnabled(enabled);
+-    _pool.setConfiguration(asset, currentConfig);
+-    emit ReserveStableRateBorrowing(asset, enabled);
+-  }
+-
+   /// @inheritdoc IPoolConfigurator
+   function setReserveFlashLoaning(
+     address asset,
+@@ -397,7 +374,6 @@ abstract contract PoolConfigurator is VersionedInitializable, IPoolConfigurator
+     uint16 ltv,
+     uint16 liquidationThreshold,
+     uint16 liquidationBonus,
+-    address oracle,
+     string calldata label
+   ) external override onlyRiskOrPoolAdmins {
+     require(ltv != 0, Errors.INVALID_EMODE_CATEGORY_PARAMS);
+@@ -420,53 +396,57 @@ abstract contract PoolConfigurator is VersionedInitializable, IPoolConfigurator
+       Errors.INVALID_EMODE_CATEGORY_PARAMS
+     );
+ 
+-    address[] memory reserves = _pool.getReservesList();
+-    for (uint256 i = 0; i < reserves.length; i++) {
+-      DataTypes.ReserveConfigurationMap memory currentConfig = _pool.getConfiguration(reserves[i]);
+-      if (categoryId == currentConfig.getEModeCategory()) {
+-        uint256 currentLtv = currentConfig.getFrozen()
+-          ? _pendingLtv[reserves[i]]
+-          : currentConfig.getLtv();
+-        require(ltv > currentLtv, Errors.INVALID_EMODE_CATEGORY_PARAMS);
+-
+-        require(
+-          liquidationThreshold > currentConfig.getLiquidationThreshold(),
+-          Errors.INVALID_EMODE_CATEGORY_PARAMS
+-        );
+-      }
+-    }
++    DataTypes.EModeCategoryBaseConfiguration memory categoryData;
++    categoryData.ltv = ltv;
++    categoryData.liquidationThreshold = liquidationThreshold;
++    categoryData.liquidationBonus = liquidationBonus;
++    categoryData.label = label;
+ 
+-    _pool.configureEModeCategory(
++    _pool.configureEModeCategory(categoryId, categoryData);
++    emit EModeCategoryAdded(
+       categoryId,
+-      DataTypes.EModeCategory({
+-        ltv: ltv,
+-        liquidationThreshold: liquidationThreshold,
+-        liquidationBonus: liquidationBonus,
+-        priceSource: oracle,
+-        label: label
+-      })
++      ltv,
++      liquidationThreshold,
++      liquidationBonus,
++      address(0),
++      label
+     );
+-    emit EModeCategoryAdded(categoryId, ltv, liquidationThreshold, liquidationBonus, oracle, label);
+   }
+ 
+   /// @inheritdoc IPoolConfigurator
+-  function setAssetEModeCategory(
++  function setAssetCollateralInEMode(
+     address asset,
+-    uint8 newCategoryId
++    uint8 categoryId,
++    bool allowed
+   ) external override onlyRiskOrPoolAdmins {
+-    DataTypes.ReserveConfigurationMap memory currentConfig = _pool.getConfiguration(asset);
++    uint128 collateralBitmap = _pool.getEModeCategoryCollateralBitmap(categoryId);
++    DataTypes.ReserveDataLegacy memory reserveData = _pool.getReserveData(asset);
++    require(reserveData.id != 0 || _pool.getReservesList()[0] == asset, Errors.ASSET_NOT_LISTED);
++    collateralBitmap = EModeConfiguration.setReserveBitmapBit(
++      collateralBitmap,
++      reserveData.id,
++      allowed
++    );
++    _pool.configureEModeCategoryCollateralBitmap(categoryId, collateralBitmap);
++    emit AssetCollateralInEModeChanged(asset, categoryId, allowed);
++  }
+ 
+-    if (newCategoryId != 0) {
+-      DataTypes.EModeCategory memory categoryData = _pool.getEModeCategoryData(newCategoryId);
+-      require(
+-        categoryData.liquidationThreshold > currentConfig.getLiquidationThreshold(),
+-        Errors.INVALID_EMODE_CATEGORY_ASSIGNMENT
+-      );
+-    }
+-    uint256 oldCategoryId = currentConfig.getEModeCategory();
+-    currentConfig.setEModeCategory(newCategoryId);
+-    _pool.setConfiguration(asset, currentConfig);
+-    emit EModeAssetCategoryChanged(asset, uint8(oldCategoryId), newCategoryId);
++  /// @inheritdoc IPoolConfigurator
++  function setAssetBorrowableInEMode(
++    address asset,
++    uint8 categoryId,
++    bool borrowable
++  ) external override onlyRiskOrPoolAdmins {
++    uint128 borrowableBitmap = _pool.getEModeCategoryBorrowableBitmap(categoryId);
++    DataTypes.ReserveDataLegacy memory reserveData = _pool.getReserveData(asset);
++    require(reserveData.id != 0 || _pool.getReservesList()[0] == asset, Errors.ASSET_NOT_LISTED);
++    borrowableBitmap = EModeConfiguration.setReserveBitmapBit(
++      borrowableBitmap,
++      reserveData.id,
++      borrowable
++    );
++    _pool.configureEModeCategoryBorrowableBitmap(categoryId, borrowableBitmap);
++    emit AssetBorrowableInEModeChanged(asset, categoryId, borrowable);
+   }
+ 
+   /// @inheritdoc IPoolConfigurator
+diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/PoolConfiguratorInstance.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/PoolConfiguratorInstance.sol
+index 03ae610..7f7294f 100644
+--- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/PoolConfiguratorInstance.sol
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/PoolConfiguratorInstance.sol
+@@ -1,10 +1,10 @@
+ // SPDX-License-Identifier: MIT
+ pragma solidity ^0.8.0;
+ 
+-import {PoolConfigurator, IPoolAddressesProvider, IPool, VersionedInitializable} from 'aave-v3-core/contracts/protocol/pool/PoolConfigurator.sol';
++import {PoolConfigurator, IPoolAddressesProvider, IPool, VersionedInitializable} from '../protocol/pool/PoolConfigurator.sol';
+ 
+ contract PoolConfiguratorInstance is PoolConfigurator {
+-  uint256 public constant CONFIGURATOR_REVISION = 3;
++  uint256 public constant CONFIGURATOR_REVISION = 4;
+ 
+   /// @inheritdoc VersionedInitializable
+   function getRevision() internal pure virtual override returns (uint256) {
+diff --git a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/ReserveConfiguration.sol b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/ReserveConfiguration.sol
+index 0408f3c..43987f4 100644
+--- a/tmp/137_0x419226e0Ad27f3B2019123f7246a364622b018e5_flat/ReserveConfiguration.sol
++++ b/tmp/137_0x4816b2C2895f97fB918f1aE7Da403750a0eE372e_flat/ReserveConfiguration.sol
+@@ -17,7 +17,6 @@ library ReserveConfiguration {
+   uint256 internal constant ACTIVE_MASK =                    0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFF; // prettier-ignore
+   uint256 internal constant FROZEN_MASK =                    0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFFFFFFFFFFFFFF; // prettier-ignore
+   uint256 internal constant BORROWING_MASK =                 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFFFFFFFFFFF; // prettier-ignore
+-  uint256 internal constant STABLE_BORROWING_MASK =          0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFFFFFFFFF; // prettier-ignore
+   uint256 internal constant PAUSED_MASK =                    0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFF; // prettier-ignore
+   uint256 internal constant BORROWABLE_IN_ISOLATION_MASK =   0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFFFFFFFFFFFFFFF; // prettier-ignore
+   uint256 internal constant SILOED_BORROWING_MASK =          0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFFFFFFFFFFFF; // prettier-ignore
+@@ -26,7 +25,7 @@ library ReserveConfiguration {
+   uint256 internal constant BORROW_CAP_MASK =                0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000FFFFFFFFFFFFFFFFFFFF; // prettier-ignore
+   uint256 internal constant SUPPLY_CAP_MASK =                0xFFFFFFFFFFFFFFFFFFFFFFFFFF000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // prettier-ignore
+   uint256 internal constant LIQUIDATION_PROTOCOL_FEE_MASK =  0xFFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // prettier-ignore
+-  uint256 internal constant EMODE_CATEGORY_MASK =            0xFFFFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // prettier-ignore
++  //@notice there is an unoccupied hole of 8 bits from 168 to 176 left from pre 3.2 eModeCategory
+   uint256 internal constant UNBACKED_MINT_CAP_MASK =         0xFFFFFFFFFFF000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // prettier-ignore
+   uint256 internal constant DEBT_CEILING_MASK =              0xF0000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // prettier-ignore
+   uint256 internal constant VIRTUAL_ACC_ACTIVE_MASK =        0xEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // prettier-ignore
+@@ -38,7 +37,6 @@ library ReserveConfiguration {
+   uint256 internal constant IS_ACTIVE_START_BIT_POSITION = 56;
+   uint256 internal constant IS_FROZEN_START_BIT_POSITION = 57;
+   uint256 internal constant BORROWING_ENABLED_START_BIT_POSITION = 58;
+-  uint256 internal constant STABLE_BORROWING_ENABLED_START_BIT_POSITION = 59;
+   uint256 internal constant IS_PAUSED_START_BIT_POSITION = 60;
+   uint256 internal constant BORROWABLE_IN_ISOLATION_START_BIT_POSITION = 61;
+   uint256 internal constant SILOED_BORROWING_START_BIT_POSITION = 62;
+@@ -47,7 +45,7 @@ library ReserveConfiguration {
+   uint256 internal constant BORROW_CAP_START_BIT_POSITION = 80;
+   uint256 internal constant SUPPLY_CAP_START_BIT_POSITION = 116;
+   uint256 internal constant LIQUIDATION_PROTOCOL_FEE_START_BIT_POSITION = 152;
+-  uint256 internal constant EMODE_CATEGORY_START_BIT_POSITION = 168;
++  //@notice there is an unoccupied hole of 8 bits from 168 to 176 left from pre 3.2 eModeCategory
+   uint256 internal constant UNBACKED_MINT_CAP_START_BIT_POSITION = 176;
+   uint256 internal constant DEBT_CEILING_START_BIT_POSITION = 212;
+   uint256 internal constant VIRTUAL_ACC_START_BIT_POSITION = 252;
+@@ -60,7 +58,6 @@ library ReserveConfiguration {
+   uint256 internal constant MAX_VALID_BORROW_CAP = 68719476735;
+   uint256 internal constant MAX_VALID_SUPPLY_CAP = 68719476735;
+   uint256 internal constant MAX_VALID_LIQUIDATION_PROTOCOL_FEE = 65535;
+-  uint256 internal constant MAX_VALID_EMODE_CATEGORY = 255;
+   uint256 internal constant MAX_VALID_UNBACKED_MINT_CAP = 68719476735;
+   uint256 internal constant MAX_VALID_DEBT_CEILING = 1099511627775;
+ 
+@@ -311,31 +308,6 @@ library ReserveConfiguration {
+     return (self.data & ~BORROWING_MASK) != 0;
+   }
+ 
+-  /**
+-   * @notice Enables or disables stable rate borrowing on the reserve
+-   * @param self The reserve configuration
+-   * @param enabled True if the stable rate borrowing needs to be enabled, false otherwise
+-   */
+-  function setStableRateBorrowingEnabled(
+-    DataTypes.ReserveConfigurationMap memory self,
+-    bool enabled
+-  ) internal pure {
+-    self.data =
+-      (self.data & STABLE_BORROWING_MASK) |
+-      (uint256(enabled ? 1 : 0) << STABLE_BORROWING_ENABLED_START_BIT_POSITION);
+-  }
+-
+-  /**
+-   * @notice Gets the stable rate borrowing state of the reserve
+-   * @param self The reserve configuration
+-   * @return The stable rate borrowing state
+-   */
+-  function getStableRateBorrowingEnabled(
+-    DataTypes.ReserveConfigurationMap memory self
+-  ) internal pure returns (bool) {
+-    return (self.data & ~STABLE_BORROWING_MASK) != 0;
+-  }
+-
+   /**
+    * @notice Sets the reserve factor of the reserve
+    * @param self The reserve configuration
+@@ -496,31 +468,6 @@ library ReserveConfiguration {
+     return (self.data & ~UNBACKED_MINT_CAP_MASK) >> UNBACKED_MINT_CAP_START_BIT_POSITION;
+   }
+ 
+-  /**
+-   * @notice Sets the eMode asset category
+-   * @param self The reserve configuration
+-   * @param category The asset category when the user selects the eMode
+-   */
+-  function setEModeCategory(
+-    DataTypes.ReserveConfigurationMap memory self,
+-    uint256 category
+-  ) internal pure {
+-    require(category <= MAX_VALID_EMODE_CATEGORY, Errors.INVALID_EMODE_CATEGORY);
+-
+-    self.data = (self.data & EMODE_CATEGORY_MASK) | (category << EMODE_CATEGORY_START_BIT_POSITION);
+-  }
+-
+-  /**
+-   * @dev Gets the eMode asset category
+-   * @param self The reserve configuration
+-   * @return The eMode category for the asset
+-   */
+-  function getEModeCategory(
+-    DataTypes.ReserveConfigurationMap memory self
+-  ) internal pure returns (uint256) {
+-    return (self.data & ~EMODE_CATEGORY_MASK) >> EMODE_CATEGORY_START_BIT_POSITION;
+-  }
+-
+   /**
+    * @notice Sets the flashloanable flag for the reserve
+    * @param self The reserve configuration
+@@ -579,19 +526,17 @@ library ReserveConfiguration {
+    * @return The state flag representing active
+    * @return The state flag representing frozen
+    * @return The state flag representing borrowing enabled
+-   * @return The state flag representing stableRateBorrowing enabled
+    * @return The state flag representing paused
+    */
+   function getFlags(
+     DataTypes.ReserveConfigurationMap memory self
+-  ) internal pure returns (bool, bool, bool, bool, bool) {
++  ) internal pure returns (bool, bool, bool, bool) {
+     uint256 dataLocal = self.data;
+ 
+     return (
+       (dataLocal & ~ACTIVE_MASK) != 0,
+       (dataLocal & ~FROZEN_MASK) != 0,
+       (dataLocal & ~BORROWING_MASK) != 0,
+-      (dataLocal & ~STABLE_BORROWING_MASK) != 0,
+       (dataLocal & ~PAUSED_MASK) != 0
+     );
+   }
+@@ -604,11 +549,10 @@ library ReserveConfiguration {
+    * @return The state param representing liquidation bonus
+    * @return The state param representing reserve decimals
+    * @return The state param representing reserve factor
+-   * @return The state param representing eMode category
+    */
+   function getParams(
+     DataTypes.ReserveConfigurationMap memory self
+-  ) internal pure returns (uint256, uint256, uint256, uint256, uint256, uint256) {
++  ) internal pure returns (uint256, uint256, uint256, uint256, uint256) {
+     uint256 dataLocal = self.data;
+ 
+     return (
+@@ -616,8 +560,7 @@ library ReserveConfiguration {
+       (dataLocal & ~LIQUIDATION_THRESHOLD_MASK) >> LIQUIDATION_THRESHOLD_START_BIT_POSITION,
+       (dataLocal & ~LIQUIDATION_BONUS_MASK) >> LIQUIDATION_BONUS_START_BIT_POSITION,
+       (dataLocal & ~DECIMALS_MASK) >> RESERVE_DECIMALS_START_BIT_POSITION,
+-      (dataLocal & ~RESERVE_FACTOR_MASK) >> RESERVE_FACTOR_START_BIT_POSITION,
+-      (dataLocal & ~EMODE_CATEGORY_MASK) >> EMODE_CATEGORY_START_BIT_POSITION
++      (dataLocal & ~RESERVE_FACTOR_MASK) >> RESERVE_FACTOR_START_BIT_POSITION
+     );
+   }
+ 
 "
 `;
