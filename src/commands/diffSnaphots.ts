@@ -25,7 +25,6 @@ export function addCommand(program: Command) {
       } else {
         console.log(content);
       }
-      const diffResult = diff(from, post);
     });
 
   program
