@@ -10,9 +10,26 @@ export function downloadContract(chainId: number, address: string) {
   return outPath;
 }
 
+function flatten(path: string) {
+  const flattenCmd = `
+        find ${path} -type f -exec bash -c '
+          counter=1
+          for file; do
+            original_file_name="\${file##*/}"
+            new_file_name="prefix_\${counter}_\${original_file_name}"
+            mv "\$file" "${path}/\$new_file_name"
+            ((counter++))
+          done
+        ' _ '{}' \\;
+      `;
+  execSync(flattenCmd);
+}
+
 export function diffCode(fromPath: string, toPath: string) {
   const prettierCmd = `npx prettier ${fromPath} ${toPath} --write`;
   execSync(prettierCmd);
+  flatten(fromPath);
+  flatten(toPath);
   const diffCmd = `
   git diff --no-index ${fromPath} ${toPath} | awk '
     BEGIN { in_diff_block = 0; skip_block = 0; buffer = "" }

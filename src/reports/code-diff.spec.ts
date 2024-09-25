@@ -3,7 +3,7 @@ import pre32 from './mocks/pre3-2.json';
 import post32 from './mocks/post3-2.json';
 import {diffCode, downloadContract} from './code-diff';
 
-describe.skip('code diffs', () => {
+describe('code diffs', () => {
   it(
     'should download contract',
     () => {
@@ -18,6 +18,8 @@ describe.skip('code diffs', () => {
       const from = downloadContract(pre32.chainId, pre32.poolConfig.poolConfiguratorImpl);
       const to = downloadContract(post32.chainId, post32.poolConfig.poolConfiguratorImpl);
       const result = diffCode(from, to);
+
+      expect(result).toMatchSnapshot();
     },
     {timeout: 30000},
   );
