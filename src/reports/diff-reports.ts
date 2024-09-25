@@ -129,7 +129,7 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
           const from = downloadContract(pre.chainId, fromAddress);
           const to = downloadContract(pre.chainId, toAddress);
           const result = diffCode(from, to);
-          writeFileSync(`./diffs/${pre.chainId}_${key}_${fromAddress}_${toAddress}`, result);
+          writeFileSync(`./diffs/${pre.chainId}_${key}_${fromAddress}_${toAddress}.diff`, result);
         }
       }
     }
