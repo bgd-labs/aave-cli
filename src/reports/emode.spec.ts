@@ -24,7 +24,9 @@ describe('eMode', () => {
   it('should properly render strategy diff', () => {
     const result = diff(EMODE_1, EMODE_2);
     expect(renderEmodeDiff(result as any, {} as any, {} as any))
-      .eq(`| eMode.label | Stablecoins | Stablecoins (altered) |
+      .eq(`| description | value before | value after |
+| --- | --- | --- |
+| eMode.label | Stablecoins | Stablecoins (altered) |
 | eMode.ltv | 97 % | 2.5 % |
 | eMode.liquidationThreshold | 97.5 % | 5 % |
 | eMode.liquidationBonus | 1 % | -90 % |
