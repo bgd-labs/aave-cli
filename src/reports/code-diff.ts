@@ -12,26 +12,26 @@ export function downloadContract(chainId: number, address: string) {
 
 function flatten(path: string) {
   const flattenCmd = `
-        find ${path} -type f -exec bash -c '
+          mkdir -p ${path}_flat
           counter=1
-          for file; do
+          for file in $(find ${path} -type f)
+          do
             original_file_name="\${file##*/}"
-            new_file_name="prefix_\${counter}_\${original_file_name}"
-            mv "\$file" "${path}/\$new_file_name"
+            mv "\$file" "${path}_flat/\${counter}_\${original_file_name}"
             ((counter++))
-          done
-        ' _ '{}' \\;
+          done;
       `;
   execSync(flattenCmd);
+  return `${path}_flat`;
 }
 
 export function diffCode(fromPath: string, toPath: string) {
-  const prettierCmd = `npx prettier ${fromPath} ${toPath} --write`;
+  const prettierCmd = `npx prettier ${fromPath} ${toPath} --write || true`;
   execSync(prettierCmd);
-  flatten(fromPath);
-  flatten(toPath);
+  fromPath = flatten(fromPath);
+  toPath = flatten(toPath);
   const diffCmd = `
-  git diff --no-index ${fromPath} ${toPath} | awk '
+  git diff --no-index --ignore-space-at-eol ${fromPath} ${toPath} | awk '
     BEGIN { in_diff_block = 0; skip_block = 0; buffer = "" }
     /^diff --git/ {
       if (in_diff_block && skip_block == 0) { printf "%s", buffer }
