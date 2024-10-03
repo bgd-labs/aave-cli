@@ -60,8 +60,7 @@ export type EmodeDiff<A extends AaveV3Emode = AaveV3Emode> = {
 };
 
 export function renderEmodeDiff(diff: EmodeDiff, pre: AaveV3Snapshot, post: AaveV3Snapshot) {
-  let content = '';
-
+  let content = '| description | value before | value after |\n| --- | --- | --- |\n';
   (Object.keys(diff) as (keyof AaveV3Emode)[])
     .filter((key) => !OMIT_KEYS.includes(key))
     .sort(sortEmodeKeys)

@@ -28,6 +28,7 @@
   "devDependencies": {
     "@types/object-hash": "^3.0.6",
     "prettier": "^3.2.5",
+    "prettier-plugin-solidity": "^1.4.1",
     "tsup": "^8.0.2",
     "tsx": "^4.7.2",
     "typescript": "^5.4.5",

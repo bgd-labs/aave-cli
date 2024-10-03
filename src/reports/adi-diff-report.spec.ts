@@ -9,7 +9,6 @@ describe('adi report', () => {
       const from = readJsonFile('/src/reports/mocks/preTestADI.json');
       const to = readJsonFile('/src/reports/mocks/postTestADI.json');
       const content = await adiDiffReports(from, to);
-      console.log(content);
       expect(content).toMatchSnapshot();
     },
     {timeout: 30000},
