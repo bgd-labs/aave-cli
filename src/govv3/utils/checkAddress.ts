@@ -70,23 +70,24 @@ export async function findAsset(client: Client, address: Hex) {
   return assetsCache[chainId][address];
 }
 
-let cachedReservesList: readonly Hex[] = [];
+const cachedReservesList: Record<number, readonly Hex[]> = {};
 
 export async function assetIndexesToAsset(
   client: Client,
   poolAddress: Hex,
   indexes: number[],
 ): Promise<string[]> {
-  if (!cachedReservesList.length)
-    cachedReservesList = await getContract({
+  if (!cachedReservesList[client.chain!.id])
+    cachedReservesList[client.chain!.id] = await getContract({
       client,
       abi: IPool_ABI,
       address: poolAddress,
     }).read.getReservesList();
+  const reservesList = cachedReservesList[client.chain!.id];
   return await Promise.all(
     indexes.map(async (index) => {
-      if (index < cachedReservesList.length) {
-        const reserve = cachedReservesList[index];
+      if (index < reservesList.length) {
+        const reserve = reservesList[index];
         return `${(await findAsset(client, reserve)).symbol}(id: ${index})`;
       }
       return `unknown(id: ${index})`;
