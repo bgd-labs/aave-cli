@@ -1,12 +1,13 @@
 // Based on https://github.com/Uniswap/governance-seatbelt/blob/main/checks/check-state-changes.ts
 // adjusted for viem & aave governance v3
-import {type Client, type Hex, getAddress, Address, getContract} from 'viem';
+import {type Client, type Hex, getAddress, Address} from 'viem';
 import type {StateDiff, TenderlySimulationResponse} from '../../utils/tenderlyClient';
-import {findAsset} from '../utils/checkAddress';
+import {assetIndexesToAsset, findAsset} from '../utils/checkAddress';
 import {addAssetPrice, addAssetSymbol, prettifyNumber, wrapInQuotes} from '../utils/markdownUtils';
 import {getDecodedReserveData} from '../utils/reserveConfigurationInterpreter';
 import {getContractName} from '../utils/solidityUtils';
 import type {ProposalCheck} from './types';
+import {bitMapToIndexes} from '../../utils/storageSlots';
 
 type ValueType = string | Record<string, string>;
 
@@ -133,6 +134,25 @@ export async function deepDiff({
   if (type === '_reserves' && (before.configuration?.data || after.configuration?.data)) {
     before.configuration.data_decoded = getDecodedReserveData(address, before.configuration.data);
     after.configuration.data_decoded = getDecodedReserveData(address, after.configuration.data);
+  }
+
+  if (type === '_eModeCategories') {
+    if (before.collateralBitmap !== undefined) {
+      before.collateralBitmap_decoded = (
+        await assetIndexesToAsset(client, address, bitMapToIndexes(BigInt(before.collateralBitmap)))
+      ).toString();
+      after.collateralBitmap_decoded = (
+        await assetIndexesToAsset(client, address, bitMapToIndexes(BigInt(after.collateralBitmap)))
+      ).toString();
+    }
+    if (before.borrowableBitmap !== undefined) {
+      before.borrowableBitmap_decoded = (
+        await assetIndexesToAsset(client, address, bitMapToIndexes(BigInt(before.borrowableBitmap)))
+      ).toString();
+      after.borrowableBitmap_decoded = (
+        await assetIndexesToAsset(client, address, bitMapToIndexes(BigInt(after.borrowableBitmap)))
+      ).toString();
+    }
   }
 
   if (type === '_streams') {
