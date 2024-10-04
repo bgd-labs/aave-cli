@@ -1,8 +1,11 @@
 import {CHAIN_ID_CLIENT_MAP} from '@bgd-labs/js-utils';
+import {writeFileSync} from 'fs';
 import {describe, expect, it} from 'vitest';
 import {generateReport} from './generatePayloadReport';
 import {MOCK_PAYLOAD} from './mocks/payload';
 import {STREAM_PAYLOAD} from './mocks/streamPayload';
+import {EMODES_SIMULATION} from './mocks/eModes';
+
 import {findPayloadsController} from './utils/checkAddress';
 import {getPayloadsController} from './payloadsController';
 import {Address} from 'viem';
@@ -34,23 +37,30 @@ describe('generatePayloadReport', () => {
   /**
    * Can be used to generate a new snapshot
    */
-  it.skip('should generate snapshot', async () => {
-    const payloadId = 1;
-    const chainId = 1;
-    const client = CHAIN_ID_CLIENT_MAP[chainId];
-    const payloadsControllerAddress = findPayloadsController(Number(chainId));
-    const payloadsController = getPayloadsController(payloadsControllerAddress as Address, client);
-    const cache = await localCacheAdapter.getPayload({
-      chainId,
-      payloadId,
-      payloadsController: payloadsControllerAddress!,
-    });
-    const result = await payloadsController.simulatePayloadExecutionOnTenderly(
-      Number(payloadId),
-      cache.logs,
-    );
-    cleanupMock({simulation: result, payloadInfo: cache});
-  });
+  it.skip(
+    'should generate snapshot',
+    async () => {
+      const payloadId = 33;
+      const chainId = 100;
+      const client = CHAIN_ID_CLIENT_MAP[chainId];
+      const payloadsControllerAddress = findPayloadsController(Number(chainId));
+      const payloadsController = getPayloadsController(
+        payloadsControllerAddress as Address,
+        client,
+      );
+      const cache = await localCacheAdapter.getPayload({
+        chainId,
+        payloadId,
+        payloadsController: payloadsControllerAddress!,
+      });
+      const result = await payloadsController.simulatePayloadExecutionOnTenderly(
+        Number(payloadId),
+        cache.logs,
+      );
+      writeFileSync('eModes.json', cleanupMock({simulation: result, payloadInfo: cache}));
+    },
+    {timeout: 30000},
+  );
 
   it(
     'should match snapshot listing',
@@ -70,6 +80,18 @@ describe('generatePayloadReport', () => {
       const report = await generateReport({
         ...(STREAM_PAYLOAD as any),
         client: CHAIN_ID_CLIENT_MAP[Number(MOCK_PAYLOAD.simulation.transaction.network_id)],
+      });
+      expect(report).toMatchSnapshot();
+    },
+    {timeout: 30000},
+  );
+
+  it(
+    'should match eModes change',
+    async () => {
+      const report = await generateReport({
+        ...(EMODES_SIMULATION as any),
+        client: CHAIN_ID_CLIENT_MAP[Number(EMODES_SIMULATION.simulation.transaction.network_id)],
       });
       expect(report).toMatchSnapshot();
     },
