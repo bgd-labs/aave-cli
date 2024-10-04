@@ -1,6 +1,7 @@
 import * as addresses from '@bgd-labs/aave-address-book';
+import {IPool_ABI} from '@bgd-labs/aave-address-book';
 import {findObjectPaths} from 'find-object-paths';
-import {type Address, type Client, type Hex, getAddress, getContract} from 'viem';
+import {type Address, type Client, HDKey, type Hex, getAddress, getContract} from 'viem';
 
 /**
  * Checks if address is listed on address-book
@@ -67,4 +68,28 @@ export async function findAsset(client: Client, address: Hex) {
     decimals,
   };
   return assetsCache[chainId][address];
+}
+
+let cachedReservesList: readonly Hex[] = [];
+
+export async function assetIndexesToAsset(
+  client: Client,
+  poolAddress: Hex,
+  indexes: number[],
+): Promise<string[]> {
+  if (!cachedReservesList.length)
+    cachedReservesList = await getContract({
+      client,
+      abi: IPool_ABI,
+      address: poolAddress,
+    }).read.getReservesList();
+  return await Promise.all(
+    indexes.map(async (index) => {
+      if (index < cachedReservesList.length) {
+        const reserve = cachedReservesList[index];
+        return `${(await findAsset(client, reserve)).symbol}(id: ${index})`;
+      }
+      return `unknown(id: ${index})`;
+    }),
+  );
 }
