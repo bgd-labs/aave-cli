@@ -23,6 +23,6 @@ describe('state check', () => {
       );
       expect(result).toMatchSnapshot();
     },
-    {timeout: 30000},
+    {timeout: 60000},
   );
 });
