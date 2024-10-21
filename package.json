@@ -58,8 +58,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@bgd-labs/aave-address-book": "^3.0.0",
-    "@bgd-labs/aave-v3-governance-cache": "^1.0.6",
+    "@bgd-labs/aave-address-book": "^4.2.0",
+    "@bgd-labs/aave-v3-governance-cache": "^1.0.8",
     "@bgd-labs/js-utils": "^1.4.2",
     "@commander-js/extra-typings": "^11.1.0",
     "@inquirer/prompts": "^3.3.2",
@@ -72,7 +72,7 @@
     "ipfs-unixfs-importer": "^15.3.1",
     "json-bigint": "^1.0.0",
     "object-hash": "^3.0.0",
-    "viem": "^2.17.11",
+    "viem": "^2.21.32",
     "zod": "^3.23.8"
   }
 }

@@ -13,6 +13,7 @@ function hasDiff(input: Record<string, any>): boolean {
   return !!Object.keys(input).find(
     (key) =>
       typeof input[key as keyof typeof input] === 'object' &&
+      input[key as keyof typeof input] !== null &&
       (input[key as keyof typeof input].hasOwnProperty('from') ||
         input[key as keyof typeof input].hasOwnProperty('to')),
   );
@@ -102,18 +103,25 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
   }
 
   if (diffResult.eModes) {
-    content += '## Emodes changes\n\n';
+    content += '## Emodes changed\n\n';
     for (const eMode of Object.keys(diffResult.eModes)) {
       const hasChanges = hasDiff(diffResult.eModes?.[eMode]);
+      content += `### EMode: ${post.eModes[eMode].label}(id: ${post.eModes[eMode].eModeCategory})\n\n`;
       if (hasChanges) {
-        content += `### EMode: ${pre.eModes[eMode].label}(id: ${pre.eModes[eMode].eModeCategory})\n\n`;
         content += renderEmodeDiff(
           diff(pre.eModes[eMode] || {}, post.eModes[eMode] || {}) as any,
           pre,
           post,
         );
-        content += '\n\n';
+        // when it doesn't have changes it means the eMode is new
+      } else {
+        content += renderEmodeDiff(
+          diff(pre.eModes[eMode] || {}, post.eModes[eMode] || {}) as any,
+          pre,
+          post,
+        );
       }
+      content += '\n\n';
     }
   }
 

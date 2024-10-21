@@ -2,7 +2,7 @@ import {
   IDataWarehouse_ABI,
   IVotingMachineWithProofs_ABI,
   IVotingPortal_ABI,
-} from '@bgd-labs/aave-address-book';
+} from '@bgd-labs/aave-address-book/abis';
 import {CHAIN_ID_CLIENT_MAP} from '@bgd-labs/js-utils';
 import type {Command} from '@commander-js/extra-typings';
 import {confirm, input, select} from '@inquirer/prompts';
@@ -14,7 +14,6 @@ import {getAccountRPL, getBlockRLP} from '../govv3/proofs';
 import {simulateProposal} from '../govv3/simulate';
 import {findPayloadsController} from '../govv3/utils/checkAddress';
 import {toAddressLink, toTxLink} from '../govv3/utils/markdownUtils';
-import {getCachedIpfs} from '../ipfs/getCachedProposalMetaData';
 import {DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT, FORMAT} from '../utils/constants';
 import {logError, logInfo, logSuccess} from '../utils/logger';
 import {getBlock} from 'viem/actions';

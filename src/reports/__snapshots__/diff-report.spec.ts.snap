@@ -90,7 +90,29 @@ exports[`report > should generate a well formatted report 1`] = `
 | maxExcessUsageRatio | 10 % | 20 % |
 | interestRate | ![before](/.assets/1baf85e415bd720bc42ec928d822cffbd4236d90.svg) | ![after](/.assets/8a10dd458958b063af4177af8f709f1971c58974.svg) |
 
-## Emodes changes
+## Emodes changed
+
+### EMode: Stablecoins(id: 1)
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.label (unchanged) | Stablecoins | Stablecoins |
+| eMode.ltv (unchanged) | 97 % | 97 % |
+| eMode.liquidationThreshold (unchanged) | 97.5 % | 97.5 % |
+| eMode.liquidationBonus (unchanged) | 1 % | 1 % |
+| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
+
+
+### EMode: MATIC correlated(id: 2)
+
+| description | value before | value after |
+| --- | --- | --- |
+| eMode.label (unchanged) | MATIC correlated | MATIC correlated |
+| eMode.ltv (unchanged) | 92.5 % | 92.5 % |
+| eMode.liquidationThreshold (unchanged) | 95 % | 95 % |
+| eMode.liquidationBonus (unchanged) | 1 % | 1 % |
+| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
+
 
 ## Raw diff
 
@@ -455,7 +477,7 @@ exports[`report > should generate a well formatted report for 3.1 1`] = `
 | baseVariableBorrowRate | 7 % | 6 % |
 | interestRate | ![before](/.assets/e03975867d1c729d1a52bbec364211baff2dab5a.svg) | ![after](/.assets/a1a7ab1f1b9fcdf6ffa41ac7a8b4daf2daf98328.svg) |
 
-## Emodes changes
+## Emodes changed
 
 ### EMode: ETH correlated(id: 1)
 
@@ -725,7 +747,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | virtualBalance | 59,674,820.1425 MaticX [59674820142506423784946083] | 48,949,624.5780 MaticX [48949624578017424059164451] |
 | interestRate | ![before](/.assets/bb82eaef94e0b09bad831160b0da80f2328914fd.svg) | ![after](/.assets/78c0f3b7f769cca3cb57e2779e98f21b765db629.svg) |
 
-## Emodes changes
+## Emodes changed
 
 ### EMode: Stablecoins(id: 1)
 
@@ -757,13 +779,12 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 
 | description | value before | value after |
 | --- | --- | --- |
+| eMode.label | - | ETH correlated |
+| eMode.ltv | - | 90 % |
+| eMode.liquidationThreshold | - | 93 % |
+| eMode.liquidationBonus | - | 1 % |
 | eMode.borrowableBitmap | - | WETH, wstETH |
 | eMode.collateralBitmap | - | WETH, wstETH |
-| eMode.label (unchanged) | ETH correlated | ETH correlated |
-| eMode.ltv (unchanged) | 90 % | 90 % |
-| eMode.liquidationThreshold (unchanged) | 93 % | 93 % |
-| eMode.liquidationBonus (unchanged) | 1 % | 1 % |
-| eMode.priceSource | 0x0000000000000000000000000000000000000000 | - |
 
 
 ## Raw diff
@@ -800,17 +821,15 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
       }
     },
     "3": {
-      "priceSource": {
-        "from": "0x0000000000000000000000000000000000000000",
-        "to": null
-      },
-      "borrowableBitmap": {
-        "from": null,
-        "to": "524304"
-      },
-      "collateralBitmap": {
-        "from": null,
-        "to": "524304"
+      "from": null,
+      "to": {
+        "borrowableBitmap": "524304",
+        "collateralBitmap": "524304",
+        "eModeCategory": 3,
+        "label": "ETH correlated",
+        "liquidationBonus": 10100,
+        "liquidationThreshold": 9300,
+        "ltv": 9000
       }
     }
   },

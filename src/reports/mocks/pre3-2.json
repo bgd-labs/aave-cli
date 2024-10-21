@@ -16,14 +16,6 @@
       "liquidationThreshold": 9500,
       "ltv": 9250,
       "priceSource": "0x0000000000000000000000000000000000000000"
-    },
-    "3": {
-      "eModeCategory": 3,
-      "label": "ETH correlated",
-      "liquidationBonus": 10100,
-      "liquidationThreshold": 9300,
-      "ltv": 9000,
-      "priceSource": "0x0000000000000000000000000000000000000000"
     }
   },
   "poolConfig": {

@@ -1,9 +1,5 @@
-import {
-  AaveSafetyModule,
-  AaveV3Ethereum,
-  GovernanceV3Ethereum,
-  IGovernanceCore_ABI,
-} from '@bgd-labs/aave-address-book';
+import {AaveSafetyModule, AaveV3Ethereum, GovernanceV3Ethereum} from '@bgd-labs/aave-address-book';
+import {IGovernanceCore_ABI} from '@bgd-labs/aave-address-book/abis';
 import merge from 'deepmerge';
 import {
   type Client,
