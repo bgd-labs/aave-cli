@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.3](https://github.com/bgd-labs/aave-cli/compare/v1.1.2...v1.1.3) (2024-10-21)
+
+
+### Bug Fixes
+
+* upgrade to address book v4 ([4a89fb7](https://github.com/bgd-labs/aave-cli/commit/4a89fb7a6d1992a9f9f6786bc0f950d2f039c07f))
+
 ## [1.1.2](https://github.com/bgd-labs/aave-cli/compare/v1.1.1...v1.1.2) (2024-10-04)
 
 
