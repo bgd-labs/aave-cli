@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.5](https://github.com/bgd-labs/aave-cli/compare/v1.1.4...v1.1.5) (2024-10-22)
+
+
+### Bug Fixes
+
+* replace yarn with bun ([#167](https://github.com/bgd-labs/aave-cli/issues/167)) ([b0fb2ae](https://github.com/bgd-labs/aave-cli/commit/b0fb2ae0503a172406b5e3402394305945b505a9))
+
 ## [1.1.4](https://github.com/bgd-labs/aave-cli/compare/v1.1.3...v1.1.4) (2024-10-21)
 
 
