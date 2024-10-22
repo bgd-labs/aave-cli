@@ -139,18 +139,34 @@ export async function deepDiff({
   if (type === '_eModeCategories') {
     if (before.collateralBitmap !== undefined) {
       before.collateralBitmap_decoded = (
-        await assetIndexesToAsset(client, address, bitMapToIndexes(BigInt(before.collateralBitmap)))
+        await assetIndexesToAsset(
+          client,
+          address,
+          bitMapToIndexes(BigInt(before.collateralBitmap || 0)),
+        )
       ).toString();
       after.collateralBitmap_decoded = (
-        await assetIndexesToAsset(client, address, bitMapToIndexes(BigInt(after.collateralBitmap)))
+        await assetIndexesToAsset(
+          client,
+          address,
+          bitMapToIndexes(BigInt(after.collateralBitmap || 0)),
+        )
       ).toString();
     }
     if (before.borrowableBitmap !== undefined) {
       before.borrowableBitmap_decoded = (
-        await assetIndexesToAsset(client, address, bitMapToIndexes(BigInt(before.borrowableBitmap)))
+        await assetIndexesToAsset(
+          client,
+          address,
+          bitMapToIndexes(BigInt(before.borrowableBitmap || 0)),
+        )
       ).toString();
       after.borrowableBitmap_decoded = (
-        await assetIndexesToAsset(client, address, bitMapToIndexes(BigInt(after.borrowableBitmap)))
+        await assetIndexesToAsset(
+          client,
+          address,
+          bitMapToIndexes(BigInt(after.borrowableBitmap || 0)),
+        )
       ).toString();
     }
   }
