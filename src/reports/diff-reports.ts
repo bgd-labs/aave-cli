@@ -1,8 +1,7 @@
 import {writeFileSync} from 'fs';
-import hash from 'object-hash';
 import {diff} from './diff';
 import {renderEmodeDiff} from './emode';
-import {fetchRateStrategyImage} from './fetch-IR-strategy';
+import {getStrategyImageUrl} from './fetch-IR-strategy';
 import {renderReserve, renderReserveDiff} from './reserve';
 import {AaveV3Reserve, type AaveV3Snapshot} from './snapshot-types';
 import {renderStrategy, renderStrategyDiff} from './strategy';
@@ -25,14 +24,6 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
 ) {
   const chainId = pre.chainId;
   const diffResult = diff(pre, post);
-  // download interest rate strategies
-  // only downloads if it doesn't exist yet
-  for (const ir in pre.strategies) {
-    await fetchRateStrategyImage(pre.strategies[ir]);
-  }
-  for (const ir in post.strategies) {
-    await fetchRateStrategyImage(post.strategies[ir]);
-  }
 
   // create report
   let content = '';
@@ -41,10 +32,8 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
       // to being present on reserve level % trueish means reserve was added
       if ((diffResult.reserves[reserveKey] as any).to) {
         let report = renderReserve((diffResult.reserves[reserveKey] as any).to, chainId);
-        const imageHash = hash(post.strategies[reserveKey]);
         report += renderStrategy(post.strategies[reserveKey]);
-
-        report += `| interestRate | ![ir](/.assets/${imageHash}.svg) |\n`;
+        report += `| interestRate | ![ir](${getStrategyImageUrl(post.strategies[reserveKey])}) |\n`;
 
         return report;
       }
@@ -63,9 +52,9 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
       // "from" being present on reserses key means reserve was removed
       if (!(diffResult.reserves[reserveKey] as any).hasOwnProperty('from')) {
         const hasChangedReserveProperties = hasDiff(diffResult.reserves[reserveKey]);
-        const preIrHash = hash(pre.strategies[reserveKey]);
-        const postIrHash = hash(post.strategies[reserveKey]);
-        const hasChangedIr = preIrHash !== postIrHash;
+        const preIr = getStrategyImageUrl(pre.strategies[reserveKey]);
+        const postIr = getStrategyImageUrl(post.strategies[reserveKey]);
+        const hasChangedIr = preIr !== postIr;
         if (!hasChangedReserveProperties && !hasChangedIr) return;
         // diff reserve
         let report = renderReserveDiff(diffResult.reserves[reserveKey] as any, chainId);
@@ -74,7 +63,7 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
           report += renderStrategyDiff(
             diff(pre.strategies[reserveKey], post.strategies[reserveKey]) as any,
           );
-          report += `| interestRate | ![before](/.assets/${preIrHash}.svg) | ![after](/.assets/${postIrHash}.svg) |`;
+          report += `| interestRate | ![before](${preIr}) | ![after](${postIr}) |`;
         }
 
         return report;

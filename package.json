@@ -71,7 +71,6 @@
     "gray-matter": "^4.0.3",
     "ipfs-unixfs-importer": "^15.3.1",
     "json-bigint": "^1.0.0",
-    "object-hash": "^3.0.0",
     "viem": "^2.21.32",
     "zod": "^3.23.8"
   }

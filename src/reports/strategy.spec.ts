@@ -1,6 +1,5 @@
 import {describe, expect, it} from 'vitest';
 import {diff} from './diff';
-import {fetchRateStrategyImage} from './fetch-IR-strategy';
 import type {AaveV3Strategy} from './snapshot-types';
 import {renderStrategy, renderStrategyDiff} from './strategy';
 
@@ -49,9 +48,5 @@ describe('strategy', () => {
 | baseVariableBorrowRate | 1 % | 0 % |
 | variableRateSlope2 | 75 % | 60 % |
 `);
-  });
-
-  it('should correctly render v2 strategies', async () => {
-    await fetchRateStrategyImage(STRATEGY_V2);
   });
 });
