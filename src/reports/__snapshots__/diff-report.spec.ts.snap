@@ -36,7 +36,7 @@ exports[`report > should generate a well formatted report 1`] = `
 | variableRateSlope2 | 300 % | 80 % |
 | baseStableBorrowRate | 9 % | 6.8 % |
 | stableRateSlope2 | 0 % | 80 % |
-| interestRate | ![before](/.assets/4ab0dbcff3f330539d66319942d38435e45137bf.svg) | ![after](/.assets/e7c3905f5d41473b5148fbd1df41bdc06ae104fb.svg) |
+| interestRate | ![before](https://dash.onaave.com/api/static?variableRateSlope1=70000000000000000000000000&variableRateSlope2=3000000000000000000000000000&optimalUsageRatio=450000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=undefined) | ![after](https://dash.onaave.com/api/static?variableRateSlope1=38000000000000000000000000&variableRateSlope2=800000000000000000000000000&optimalUsageRatio=800000000000000000000000000&baseVariableBorrowRate=10000000000000000000000000&maxVariableBorrowRate=undefined) |
 
 #### DPI ([0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369](https://polygonscan.com/address/0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369))
 
@@ -54,7 +54,7 @@ exports[`report > should generate a well formatted report 1`] = `
 | stableRateSlope2 | 60 % | 75 % |
 | optimalUsageRatio | 90 % | 80 % |
 | maxExcessUsageRatio | 10 % | 20 % |
-| interestRate | ![before](/.assets/1baf85e415bd720bc42ec928d822cffbd4236d90.svg) | ![after](/.assets/8a10dd458958b063af4177af8f709f1971c58974.svg) |
+| interestRate | ![before](https://dash.onaave.com/api/static?variableRateSlope1=40000000000000000000000000&variableRateSlope2=600000000000000000000000000&optimalUsageRatio=900000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=undefined) | ![after](https://dash.onaave.com/api/static?variableRateSlope1=40000000000000000000000000&variableRateSlope2=750000000000000000000000000&optimalUsageRatio=800000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=undefined) |
 
 #### EURS ([0xE111178A87A3BFf0c8d18DECBa5798827539Ae99](https://polygonscan.com/address/0xE111178A87A3BFf0c8d18DECBa5798827539Ae99))
 
@@ -65,7 +65,7 @@ exports[`report > should generate a well formatted report 1`] = `
 | stableRateSlope2 | 60 % | 75 % |
 | optimalUsageRatio | 90 % | 80 % |
 | maxExcessUsageRatio | 10 % | 20 % |
-| interestRate | ![before](/.assets/1baf85e415bd720bc42ec928d822cffbd4236d90.svg) | ![after](/.assets/8a10dd458958b063af4177af8f709f1971c58974.svg) |
+| interestRate | ![before](https://dash.onaave.com/api/static?variableRateSlope1=40000000000000000000000000&variableRateSlope2=600000000000000000000000000&optimalUsageRatio=900000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=undefined) | ![after](https://dash.onaave.com/api/static?variableRateSlope1=40000000000000000000000000&variableRateSlope2=750000000000000000000000000&optimalUsageRatio=800000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=undefined) |
 
 #### miMATIC ([0xa3Fa99A148fA48D14Ed51d610c367C61876997F1](https://polygonscan.com/address/0xa3Fa99A148fA48D14Ed51d610c367C61876997F1))
 
@@ -77,7 +77,7 @@ exports[`report > should generate a well formatted report 1`] = `
 | stableRateSlope2 | 60 % | 75 % |
 | optimalUsageRatio | 90 % | 80 % |
 | maxExcessUsageRatio | 10 % | 20 % |
-| interestRate | ![before](/.assets/1baf85e415bd720bc42ec928d822cffbd4236d90.svg) | ![after](/.assets/8a10dd458958b063af4177af8f709f1971c58974.svg) |
+| interestRate | ![before](https://dash.onaave.com/api/static?variableRateSlope1=40000000000000000000000000&variableRateSlope2=600000000000000000000000000&optimalUsageRatio=900000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=undefined) | ![after](https://dash.onaave.com/api/static?variableRateSlope1=40000000000000000000000000&variableRateSlope2=750000000000000000000000000&optimalUsageRatio=800000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=undefined) |
 
 #### USDT ([0xc2132D05D31c914a87C6611C10748AEb04B58e8F](https://polygonscan.com/address/0xc2132D05D31c914a87C6611C10748AEb04B58e8F))
 
@@ -88,7 +88,7 @@ exports[`report > should generate a well formatted report 1`] = `
 | stableRateSlope2 | 60 % | 75 % |
 | optimalUsageRatio | 90 % | 80 % |
 | maxExcessUsageRatio | 10 % | 20 % |
-| interestRate | ![before](/.assets/1baf85e415bd720bc42ec928d822cffbd4236d90.svg) | ![after](/.assets/8a10dd458958b063af4177af8f709f1971c58974.svg) |
+| interestRate | ![before](https://dash.onaave.com/api/static?variableRateSlope1=40000000000000000000000000&variableRateSlope2=600000000000000000000000000&optimalUsageRatio=900000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=undefined) | ![after](https://dash.onaave.com/api/static?variableRateSlope1=40000000000000000000000000&variableRateSlope2=750000000000000000000000000&optimalUsageRatio=800000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=undefined) |
 
 ## Emodes changed
 
@@ -475,7 +475,7 @@ exports[`report > should generate a well formatted report for 3.1 1`] = `
 | --- | --- | --- |
 | maxVariableBorrowRate | 7 % | 6 % |
 | baseVariableBorrowRate | 7 % | 6 % |
-| interestRate | ![before](/.assets/e03975867d1c729d1a52bbec364211baff2dab5a.svg) | ![after](/.assets/a1a7ab1f1b9fcdf6ffa41ac7a8b4daf2daf98328.svg) |
+| interestRate | ![before](https://dash.onaave.com/api/static?variableRateSlope1=0&variableRateSlope2=0&optimalUsageRatio=990000000000000000000000000&baseVariableBorrowRate=70000000000000000000000000&maxVariableBorrowRate=70000000000000000000000000) | ![after](https://dash.onaave.com/api/static?variableRateSlope1=0&variableRateSlope2=0&optimalUsageRatio=990000000000000000000000000&baseVariableBorrowRate=60000000000000000000000000&maxVariableBorrowRate=60000000000000000000000000) |
 
 ## Emodes changed
 
@@ -532,7 +532,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 8,101.7595 wstETH [8101759534608305377295] | 9,454.2053 wstETH [9454205394618485775587] |
 | virtualBalance | 8,101.7595 wstETH [8101759531874695303464] | 9,454.2053 wstETH [9454205391884875701756] |
-| interestRate | ![before](/.assets/60c7e5557a1f8ff476d4d4d122c044f9c332e983.svg) | ![after](/.assets/b9c5e10663c1fa9da437ac87c85e2ea6b89ce177.svg) |
+
 
 #### SUSHI ([0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a](https://polygonscan.com/address/0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a))
 
@@ -542,7 +542,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 42,520.5308 SUSHI [42520530845445928987455] | 39,664.4301 SUSHI [39664430153949330899856] |
 | virtualBalance | 42,515.8444 SUSHI [42515844451565520377251] | 39,659.7437 SUSHI [39659743760068922289652] |
-| interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
+
 
 #### WMATIC ([0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270](https://polygonscan.com/address/0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270))
 
@@ -552,7 +552,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 26,361,838.5080 WMATIC [26361838508007670126595913] | 28,346,839.8132 WMATIC [28346839813214403549573436] |
 | virtualBalance | 26,361,838.5080 WMATIC [26361838508007670126595913] | 28,346,839.8132 WMATIC [28346839813214403549573436] |
-| interestRate | ![before](/.assets/16332461172bd8fa96ccd1a6269e8b18fab75ffe.svg) | ![after](/.assets/bd1b5822b68ff2ca4e907a873d83c012196a789f.svg) |
+
 
 #### CRV ([0x172370d5Cd63279eFa6d502DAB29171933a610AF](https://polygonscan.com/address/0x172370d5Cd63279eFa6d502DAB29171933a610AF))
 
@@ -562,7 +562,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 139,066.2335 CRV [139066233554732084539681] | 138,042.4916 CRV [138042491675976169905501] |
 | virtualBalance | 139,065.8259 CRV [139065825970592715424381] | 138,042.0840 CRV [138042084091836800790201] |
-| interestRate | ![before](/.assets/22e63860fa8f03629242d7c499e8b53221ee130a.svg) | ![after](/.assets/57895ba97fac9a80ce6bcaaa987ca703be84d466.svg) |
+
 
 #### WBTC ([0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6](https://polygonscan.com/address/0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6))
 
@@ -572,7 +572,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 1,518.0895 WBTC [151808954094] | 1,565.7730 WBTC [156577302154] |
 | virtualBalance | 1,518.0891 WBTC [151808914586] | 1,565.7726 WBTC [156577262646] |
-| interestRate | ![before](/.assets/d050234e3f8f72294825f3cc061531aee8b21665.svg) | ![after](/.assets/308ced77172bdba48f5b56af2f291400a4898f19.svg) |
+
 
 #### USDC ([0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174](https://polygonscan.com/address/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174))
 
@@ -583,7 +583,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 10,354,631.2811 USDC [10354631281135] | 8,517,265.2729 USDC [8517265272906] |
 | virtualBalance | 10,354,453.0577 USDC [10354453057715] | 8,517,087.0494 USDC [8517087049486] |
-| interestRate | ![before](/.assets/1f91edaee6d983649ffc6efcc1c3cfc52fa90336.svg) | ![after](/.assets/456c9815579225e6854461d612aea909fad55ae2.svg) |
+
 
 #### GHST ([0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7](https://polygonscan.com/address/0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7))
 
@@ -593,7 +593,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 1,441,475.3609 GHST [1441475360943918095447310] | 1,419,759.4215 GHST [1419759421518171696300054] |
 | virtualBalance | 1,441,475.3609 GHST [1441475360943918095447310] | 1,419,759.4215 GHST [1419759421518171696300054] |
-| interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
+
 
 #### stMATIC ([0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4](https://polygonscan.com/address/0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4))
 
@@ -603,7 +603,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 36,970,088.1694 stMATIC [36970088169406003656931192] | 31,676,624.4404 stMATIC [31676624440462043419249868] |
 | virtualBalance | 36,970,088.1694 stMATIC [36970088169406003656931192] | 31,676,624.4404 stMATIC [31676624440462043419249868] |
-| interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
+
 
 #### USDC ([0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359](https://polygonscan.com/address/0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359))
 
@@ -615,7 +615,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | virtualBalance | 7,174,530.1991 USDC [7174530199115] | 5,257,675.1876 USDC [5257675187615] |
 | maxVariableBorrowRate | 66.5 % | 65.5 % |
 | variableRateSlope1 | 6.5 % | 5.5 % |
-| interestRate | ![before](/.assets/0b207451ec38eb4a7c392a3d9c43ab7e77836211.svg) | ![after](/.assets/6419eff49053193f86f5855be96369428edc27ed.svg) |
+| interestRate | ![before](https://dash.onaave.com/api/static?variableRateSlope1=65000000000000000000000000&variableRateSlope2=600000000000000000000000000&optimalUsageRatio=900000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=665000000000000000000000000) | ![after](https://dash.onaave.com/api/static?variableRateSlope1=55000000000000000000000000&variableRateSlope2=600000000000000000000000000&optimalUsageRatio=900000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=655000000000000000000000000) |
 
 #### jEUR ([0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c](https://polygonscan.com/address/0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c))
 
@@ -627,7 +627,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | virtualBalance | 14,548.3080 jEUR [14548308088826716789442] | 14,642.3247 jEUR [14642324715279516861577] |
 | maxVariableBorrowRate | 66.5 % | 65.5 % |
 | variableRateSlope1 | 6.5 % | 5.5 % |
-| interestRate | ![before](/.assets/0b207451ec38eb4a7c392a3d9c43ab7e77836211.svg) | ![after](/.assets/6419eff49053193f86f5855be96369428edc27ed.svg) |
+| interestRate | ![before](https://dash.onaave.com/api/static?variableRateSlope1=65000000000000000000000000&variableRateSlope2=600000000000000000000000000&optimalUsageRatio=900000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=665000000000000000000000000) | ![after](https://dash.onaave.com/api/static?variableRateSlope1=55000000000000000000000000&variableRateSlope2=600000000000000000000000000&optimalUsageRatio=900000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=655000000000000000000000000) |
 
 #### LINK ([0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39](https://polygonscan.com/address/0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39))
 
@@ -637,7 +637,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 592,572.2775 LINK [592572277522192488289960] | 620,524.4251 LINK [620524425190670075544868] |
 | virtualBalance | 592,572.2710 LINK [592572271000348839354841] | 620,524.4186 LINK [620524418668826426609749] |
-| interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
+
 
 #### WETH ([0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619](https://polygonscan.com/address/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619))
 
@@ -647,7 +647,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 17,848.3094 WETH [17848309428294489115870] | 16,790.7350 WETH [16790735034683101039138] |
 | virtualBalance | 17,848.3094 WETH [17848309428294489115870] | 16,790.7350 WETH [16790735034683101039138] |
-| interestRate | ![before](/.assets/673e539abb0c988dd28cc3517ad407509df7b9de.svg) | ![after](/.assets/883b1083f9ea8d228fc17ddb2a1616f552acdc94.svg) |
+
 
 #### DPI ([0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369](https://polygonscan.com/address/0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369))
 
@@ -657,7 +657,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 172.1663 DPI [172166387357101790042] | 172.1531 DPI [172153195029813507319] |
 | virtualBalance | 172.1663 DPI [172166387357101790042] | 172.1531 DPI [172153195029813507319] |
-| interestRate | ![before](/.assets/c61157ea61e7ec553892dfe2072a2d2d59dc8a16.svg) | ![after](/.assets/c31746d494fb67b801488bbfb2d33de52240670c.svg) |
+
 
 #### DAI ([0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063](https://polygonscan.com/address/0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063))
 
@@ -669,7 +669,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | virtualBalance | 1,042,557.1854 DAI [1042557185480875572302941] | 909,604.2318 DAI [909604231811331424691464] |
 | maxVariableBorrowRate | 81.5 % | 80.5 % |
 | variableRateSlope1 | 6.5 % | 5.5 % |
-| interestRate | ![before](/.assets/938dd0b29af2a7ddfe8cbd0de959c4c24b5ea9ef.svg) | ![after](/.assets/64fc7e98dc06095abe447eae92668c6dbeb0035d.svg) |
+| interestRate | ![before](https://dash.onaave.com/api/static?variableRateSlope1=65000000000000000000000000&variableRateSlope2=750000000000000000000000000&optimalUsageRatio=900000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=815000000000000000000000000) | ![after](https://dash.onaave.com/api/static?variableRateSlope1=55000000000000000000000000&variableRateSlope2=750000000000000000000000000&optimalUsageRatio=900000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=805000000000000000000000000) |
 
 #### BAL ([0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3](https://polygonscan.com/address/0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3))
 
@@ -679,7 +679,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 162,168.0710 BAL [162168071071467936436629] | 163,486.3683 BAL [163486368383547413615759] |
 | virtualBalance | 162,167.4371 BAL [162167437136960941172478] | 163,485.7344 BAL [163485734449040418351608] |
-| interestRate | ![before](/.assets/a0e233eeee7bae70256ff5ae2354edc5339f8250.svg) | ![after](/.assets/03ab68b81ca42849abc08c33a4300287e74ac7cb.svg) |
+
 
 #### AAVE ([0xD6DF932A45C0f255f85145f286eA0b292B21C90B](https://polygonscan.com/address/0xD6DF932A45C0f255f85145f286eA0b292B21C90B))
 
@@ -689,7 +689,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 67,345.5556 AAVE [67345555613379629047892] | 68,726.6754 AAVE [68726675422133649596189] |
 | virtualBalance | 67,345.5556 AAVE [67345555613379629047892] | 68,726.6754 AAVE [68726675422133649596189] |
-| interestRate | ![before](/.assets/7e44ab61c91f5186d639c9f38544daac282df499.svg) | ![after](/.assets/3c6c8ffc5e0252820fc67caf74d412d2655a94f4.svg) |
+
 
 #### EURA ([0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4](https://polygonscan.com/address/0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4))
 
@@ -701,7 +701,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | virtualBalance | 28,735.8492 EURA [28735849248769471199953] | 28,564.9562 EURA [28564956205296659810319] |
 | maxVariableBorrowRate | 81.5 % | 80.5 % |
 | variableRateSlope1 | 6.5 % | 5.5 % |
-| interestRate | ![before](/.assets/fa2d9144d6937d795a23d4864f7e30b8efbfa233.svg) | ![after](/.assets/da5e15a77ca8963552baba6053c36c75dc1a0ab9.svg) |
+| interestRate | ![before](https://dash.onaave.com/api/static?variableRateSlope1=65000000000000000000000000&variableRateSlope2=750000000000000000000000000&optimalUsageRatio=800000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=815000000000000000000000000) | ![after](https://dash.onaave.com/api/static?variableRateSlope1=55000000000000000000000000&variableRateSlope2=750000000000000000000000000&optimalUsageRatio=800000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=805000000000000000000000000) |
 
 #### EURS ([0xE111178A87A3BFf0c8d18DECBa5798827539Ae99](https://polygonscan.com/address/0xE111178A87A3BFf0c8d18DECBa5798827539Ae99))
 
@@ -713,7 +713,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | virtualBalance | 1,319,509.5 EURS [131950950] | 876,878.76 EURS [87687876] |
 | maxVariableBorrowRate | 81.5 % | 80.5 % |
 | variableRateSlope1 | 6.5 % | 5.5 % |
-| interestRate | ![before](/.assets/fa2d9144d6937d795a23d4864f7e30b8efbfa233.svg) | ![after](/.assets/da5e15a77ca8963552baba6053c36c75dc1a0ab9.svg) |
+| interestRate | ![before](https://dash.onaave.com/api/static?variableRateSlope1=65000000000000000000000000&variableRateSlope2=750000000000000000000000000&optimalUsageRatio=800000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=815000000000000000000000000) | ![after](https://dash.onaave.com/api/static?variableRateSlope1=55000000000000000000000000&variableRateSlope2=750000000000000000000000000&optimalUsageRatio=800000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=805000000000000000000000000) |
 
 #### miMATIC ([0xa3Fa99A148fA48D14Ed51d610c367C61876997F1](https://polygonscan.com/address/0xa3Fa99A148fA48D14Ed51d610c367C61876997F1))
 
@@ -723,7 +723,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 10,949.7210 miMATIC [10949721020418463492233] | 10,606.4650 miMATIC [10606465070807760361419] |
 | virtualBalance | 10,949.7210 miMATIC [10949721020418463492233] | 10,606.4650 miMATIC [10606465070807760361419] |
-| interestRate | ![before](/.assets/4d42765d036179693f01f07a11408b5faebbeb5d.svg) | ![after](/.assets/090b03795ed4152b89e4c11fb3177607a3dc6db4.svg) |
+
 
 #### USDT ([0xc2132D05D31c914a87C6611C10748AEb04B58e8F](https://polygonscan.com/address/0xc2132D05D31c914a87C6611C10748AEb04B58e8F))
 
@@ -735,7 +735,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | virtualBalance | 11,380,392.9913 USDT [11380392991360] | 6,397,446.6950 USDT [6397446695053] |
 | maxVariableBorrowRate | 81.5 % | 80.5 % |
 | variableRateSlope1 | 6.5 % | 5.5 % |
-| interestRate | ![before](/.assets/938dd0b29af2a7ddfe8cbd0de959c4c24b5ea9ef.svg) | ![after](/.assets/64fc7e98dc06095abe447eae92668c6dbeb0035d.svg) |
+| interestRate | ![before](https://dash.onaave.com/api/static?variableRateSlope1=65000000000000000000000000&variableRateSlope2=750000000000000000000000000&optimalUsageRatio=900000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=815000000000000000000000000) | ![after](https://dash.onaave.com/api/static?variableRateSlope1=55000000000000000000000000&variableRateSlope2=750000000000000000000000000&optimalUsageRatio=900000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=805000000000000000000000000) |
 
 #### MaticX ([0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6](https://polygonscan.com/address/0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6))
 
@@ -745,7 +745,7 @@ exports[`report > should generate a well formatted report for 3.2 1`] = `
 | interestRateStrategy | [0x21128C8f5AE37904c9082D932928FE0C2be1Ff73](https://polygonscan.com/address/0x21128C8f5AE37904c9082D932928FE0C2be1Ff73) | [0x56076f960980d453b5B749CB6A1c4D2E4e138B1A](https://polygonscan.com/address/0x56076f960980d453b5B749CB6A1c4D2E4e138B1A) |
 | aTokenUnderlyingBalance | 59,674,820.1427 MaticX [59674820142739520120007032] | 48,949,624.5782 MaticX [48949624578250520394225400] |
 | virtualBalance | 59,674,820.1425 MaticX [59674820142506423784946083] | 48,949,624.5780 MaticX [48949624578017424059164451] |
-| interestRate | ![before](/.assets/bb82eaef94e0b09bad831160b0da80f2328914fd.svg) | ![after](/.assets/78c0f3b7f769cca3cb57e2779e98f21b765db629.svg) |
+
 
 ## Emodes changed
 
