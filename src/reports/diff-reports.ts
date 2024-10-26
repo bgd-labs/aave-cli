@@ -102,8 +102,7 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
           pre,
           post,
         );
-        // when it doesn't have changes it means the eMode is new
-      } else {
+      } else if (!pre.eModes[eMode] || !post.eModes[eMode]) {
         content += renderEmodeDiff(
           diff(pre.eModes[eMode] || {}, post.eModes[eMode] || {}) as any,
           pre,
