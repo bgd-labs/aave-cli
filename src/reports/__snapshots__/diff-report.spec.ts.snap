@@ -94,24 +94,10 @@ exports[`report > should generate a well formatted report 1`] = `
 
 ### EMode: Stablecoins(id: 1)
 
-| description | value before | value after |
-| --- | --- | --- |
-| eMode.label (unchanged) | Stablecoins | Stablecoins |
-| eMode.ltv (unchanged) | 97 % | 97 % |
-| eMode.liquidationThreshold (unchanged) | 97.5 % | 97.5 % |
-| eMode.liquidationBonus (unchanged) | 1 % | 1 % |
-| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
 
 
 ### EMode: MATIC correlated(id: 2)
 
-| description | value before | value after |
-| --- | --- | --- |
-| eMode.label (unchanged) | MATIC correlated | MATIC correlated |
-| eMode.ltv (unchanged) | 92.5 % | 92.5 % |
-| eMode.liquidationThreshold (unchanged) | 95 % | 95 % |
-| eMode.liquidationBonus (unchanged) | 1 % | 1 % |
-| eMode.priceSource (unchanged) | 0x0000000000000000000000000000000000000000 | 0x0000000000000000000000000000000000000000 |
 
 
 ## Raw diff
