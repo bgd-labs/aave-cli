@@ -75,15 +75,19 @@ export function prettifyNumber({
   prefix,
   suffix,
   showDecimals,
+  patchedValue,
 }: {
   value: string | number | bigint;
   decimals: number;
   prefix?: string;
   suffix?: string;
   showDecimals?: boolean;
+  // allow overwriting the value when formatting
+  // this is useful for e.g. 1e4 % numbers, when the 100% should be removed in the formatting
+  patchedValue?: string | number | bigint;
 }) {
   const formattedNumber = limitDecimalsWithoutRounding(
-    formatNumberString(formatUnits(BigInt(value), decimals)),
+    formatNumberString(formatUnits(BigInt(patchedValue || value), decimals)),
     4,
   );
   return `${prefix ? `${prefix} ` : ''}${formattedNumber}${
