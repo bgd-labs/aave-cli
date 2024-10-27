@@ -256,11 +256,11 @@ InitializableImmutableAdminUpgradeabilityProxy at \`0xb50201558B00496A145fE76f74
 - "0x000000000000000000000000e07e26f316248a2aa14115439a0bd9ea49328dc7"
 + "0x0000000000000000000000008a48ef9287c402c119c14a5f6897f6dfdc12cb45"
 @@ \`_eModeCategories\` key \`1.collateralBitmap\` @@
-- 0
-+ 3
+- 0b0
++ 0b11
 @@ \`_eModeCategories\` key \`1.borrowableBitmap\` @@
-- 0
-+ 3
+- 0b0
++ 0b11
 @@ \`_eModeCategories\` key \`1.collateralBitmap_decoded\` @@
 - 
 + WETH(id: 0),wstETH(id: 1)

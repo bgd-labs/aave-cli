@@ -145,6 +145,7 @@ export async function deepDiff({
           bitMapToIndexes(BigInt(before.collateralBitmap || 0)),
         )
       ).toString();
+      before.collateralBitmap = toBinaryString(BigInt(before.collateralBitmap || 0));
       after.collateralBitmap_decoded = (
         await assetIndexesToAsset(
           client,
@@ -152,6 +153,7 @@ export async function deepDiff({
           bitMapToIndexes(BigInt(after.collateralBitmap || 0)),
         )
       ).toString();
+      after.collateralBitmap = toBinaryString(BigInt(after.collateralBitmap || 0));
     }
     if (before.borrowableBitmap !== undefined) {
       before.borrowableBitmap_decoded = (
@@ -161,6 +163,7 @@ export async function deepDiff({
           bitMapToIndexes(BigInt(before.borrowableBitmap || 0)),
         )
       ).toString();
+      before.borrowableBitmap = toBinaryString(BigInt(before.borrowableBitmap || 0));
       after.borrowableBitmap_decoded = (
         await assetIndexesToAsset(
           client,
@@ -168,6 +171,7 @@ export async function deepDiff({
           bitMapToIndexes(BigInt(after.borrowableBitmap || 0)),
         )
       ).toString();
+      after.borrowableBitmap = toBinaryString(BigInt(after.borrowableBitmap || 0));
     }
   }
 
@@ -262,7 +266,7 @@ async function enhanceValue({
     if (key && ['_reserves', '_eModeCategories'].includes(type)) {
       if (['liquidityIndex', 'variableBorrowIndex'].includes(key))
         return prettifyNumber({decimals: 27, value, showDecimals: true});
-      if (['liquidationThreshold', 'reserveFactor', 'liquidationProtocolFee'].includes(key))
+      if (['liquidationThreshold', 'reserveFactor', 'liquidationProtocolFee', 'ltv'].includes(key))
         return prettifyNumber({decimals: 2, value, suffix: '%', showDecimals: true});
       if (
         ['currentLiquidityRate', 'currentVariableBorrowRate', 'currentStableBorrowRate'].includes(
@@ -276,7 +280,7 @@ async function enhanceValue({
           value,
           suffix: '%',
           showDecimals: true,
-          patchedValue: BigInt(value) - BigInt(1e4),
+          patchedValue: BigInt(value) == 0n ? 0n : BigInt(value) - BigInt(1e4),
         });
     }
   }
@@ -324,3 +328,7 @@ export const checkStateChanges: ProposalCheck<any> = {
     return {info, warnings, errors};
   },
 };
+
+function toBinaryString(value: bigint) {
+  return `0b` + value.toString(2);
+}
