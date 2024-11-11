@@ -13,7 +13,7 @@
     "test": "vitest",
     "lint:fix": "bunx prettier . --write",
     "lint": "bunx prettier . --check",
-    "ci:publish": "npm run build && npm publish --access=public"
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
