@@ -12,7 +12,10 @@ export const Hash = {
     }
 
     let lastCid;
-    for await (const {cid} of importer([{content}], new MemoryBlockstore(), options)) {
+    for await (const {cid} of importer([{content}], new MemoryBlockstore(), {
+      cidVersion: 0,
+      rawLeaves: false,
+    })) {
       lastCid = cid;
     }
 

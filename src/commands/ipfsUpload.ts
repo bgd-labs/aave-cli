@@ -64,6 +64,7 @@ export function addCommand(program: Command) {
       validateAIPHeader(content);
 
       const hash = await getHash(content);
+      console.log(hash);
       const bs58Hash = `0x${Buffer.from(bs58.decode(hash)).slice(2).toString('hex')}`;
 
       if (upload) {
