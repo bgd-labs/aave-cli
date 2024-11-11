@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.9](https://github.com/bgd-labs/aave-cli/compare/v1.1.8...v1.1.9) (2024-11-11)
+
+
+### Bug Fixes
+
+* ipfs hash ([#175](https://github.com/bgd-labs/aave-cli/issues/175)) ([53805ce](https://github.com/bgd-labs/aave-cli/commit/53805ce3e1dbe95a4912e88c3217a858b832422e))
+* release script ([5bcf572](https://github.com/bgd-labs/aave-cli/commit/5bcf572b25cbc5f58ea0dcba6012927a2f32b40e))
+
 ## [1.1.8](https://github.com/bgd-labs/aave-cli/compare/v1.1.7...v1.1.8) (2024-10-27)
 
 
