@@ -63,6 +63,7 @@
     "@bgd-labs/js-utils": "^1.4.2",
     "@commander-js/extra-typings": "^11.1.0",
     "@inquirer/prompts": "^3.3.2",
+    "blockstore-core": "^5.0.2",
     "chalk": "^4.1.2",
     "commander": "^12.1.0",
     "deepmerge": "^4.3.1",
