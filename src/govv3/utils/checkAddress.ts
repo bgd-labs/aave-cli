@@ -14,7 +14,11 @@ export function isKnownAddress(value: Address, chainId: number): string[] | void
   // therefore we recreate the object via spread & remove addresses unrelated to the chain we are checking
   const transformedAddresses = Object.keys(addresses).reduce(
     (acc, key) => {
-      if ((addresses as any)[key].CHAIN_ID === chainId) acc[key] = {...(addresses as any)[key]};
+      if ((addresses as any)[key].CHAIN_ID === chainId) {
+        const chainAddresses = {...(addresses as any)[key]};
+        if (chainAddresses.E_MODES) delete chainAddresses.E_MODES;
+        acc[key] = chainAddresses;
+      }
       return acc;
     },
     {} as {[key: string]: any},
