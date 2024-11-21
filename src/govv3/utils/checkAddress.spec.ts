@@ -1,5 +1,5 @@
 import {GovernanceV3Ethereum} from '@bgd-labs/aave-address-book';
-import {ChainId} from '@bgd-labs/js-utils';
+import {ChainId} from '@bgd-labs/rpc-env';
 import {describe, expect, it} from 'vitest';
 import {isKnownAddress} from './checkAddress';
 

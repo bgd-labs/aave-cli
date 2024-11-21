@@ -90,16 +90,6 @@ exports[`report > should generate a well formatted report 1`] = `
 | maxExcessUsageRatio | 10 % | 20 % |
 | interestRate | ![before](https://dash.onaave.com/api/static?variableRateSlope1=40000000000000000000000000&variableRateSlope2=600000000000000000000000000&optimalUsageRatio=900000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=undefined) | ![after](https://dash.onaave.com/api/static?variableRateSlope1=40000000000000000000000000&variableRateSlope2=750000000000000000000000000&optimalUsageRatio=800000000000000000000000000&baseVariableBorrowRate=0&maxVariableBorrowRate=undefined) |
 
-## Emodes changed
-
-### EMode: Stablecoins(id: 1)
-
-
-
-### EMode: MATIC correlated(id: 2)
-
-
-
 ## Raw diff
 
 \`\`\`json

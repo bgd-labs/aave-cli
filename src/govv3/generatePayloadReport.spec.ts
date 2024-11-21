@@ -1,4 +1,3 @@
-import {CHAIN_ID_CLIENT_MAP} from '@bgd-labs/js-utils';
 import {writeFileSync} from 'fs';
 import {describe, expect, it} from 'vitest';
 import {generateReport} from './generatePayloadReport';
@@ -11,6 +10,7 @@ import {getPayloadsController} from './payloadsController';
 import {Address} from 'viem';
 import {customStorageProvider} from '@bgd-labs/aave-v3-governance-cache/customStorageProvider';
 import {fileSystemStorageAdapter} from '@bgd-labs/aave-v3-governance-cache/fileSystemStorageAdapter';
+import {getClient} from '../utils/getClient';
 
 const localCacheAdapter = customStorageProvider(fileSystemStorageAdapter);
 /**
@@ -42,7 +42,7 @@ describe('generatePayloadReport', () => {
     async () => {
       const payloadId = 33;
       const chainId = 100;
-      const client = CHAIN_ID_CLIENT_MAP[chainId];
+      const client = getClient(chainId);
       const payloadsControllerAddress = findPayloadsController(Number(chainId));
       const payloadsController = getPayloadsController(
         payloadsControllerAddress as Address,
@@ -67,7 +67,7 @@ describe('generatePayloadReport', () => {
     async () => {
       const report = await generateReport({
         ...(MOCK_PAYLOAD as any),
-        client: CHAIN_ID_CLIENT_MAP[Number(MOCK_PAYLOAD.simulation.transaction.network_id)],
+        client: getClient(Number(MOCK_PAYLOAD.simulation.transaction.network_id)),
       });
       expect(report).toMatchSnapshot();
     },
@@ -79,19 +79,20 @@ describe('generatePayloadReport', () => {
     async () => {
       const report = await generateReport({
         ...(STREAM_PAYLOAD as any),
-        client: CHAIN_ID_CLIENT_MAP[Number(MOCK_PAYLOAD.simulation.transaction.network_id)],
+        client: getClient(Number(MOCK_PAYLOAD.simulation.transaction.network_id)),
       });
       expect(report).toMatchSnapshot();
     },
     {timeout: 30000},
   );
 
-  it(
+  it.only(
     'should match eModes change',
     async () => {
+      console.log(getClient(Number(EMODES_SIMULATION.simulation.transaction.network_id)));
       const report = await generateReport({
         ...(EMODES_SIMULATION as any),
-        client: CHAIN_ID_CLIENT_MAP[Number(EMODES_SIMULATION.simulation.transaction.network_id)],
+        client: getClient(Number(EMODES_SIMULATION.simulation.transaction.network_id)),
       });
       expect(report).toMatchSnapshot();
     },

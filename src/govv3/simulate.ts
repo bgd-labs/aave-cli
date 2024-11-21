@@ -1,4 +1,3 @@
-import {CHAIN_ID_CLIENT_MAP} from '@bgd-labs/js-utils';
 import type {Client, Hex} from 'viem';
 import {logInfo} from '../utils/logger';
 import type {TenderlySimulationResponse} from '../utils/tenderlyClient';
@@ -10,6 +9,7 @@ import {refreshCache} from '@bgd-labs/aave-v3-governance-cache/refreshCache';
 import {GetPayloadReturnType} from '@bgd-labs/aave-v3-governance-cache';
 import {customStorageProvider} from '@bgd-labs/aave-v3-governance-cache/customStorageProvider';
 import {fileSystemStorageAdapter} from '@bgd-labs/aave-v3-governance-cache/fileSystemStorageAdapter';
+import {getClient} from '../utils/getClient';
 
 const localCacheAdapter = customStorageProvider(fileSystemStorageAdapter);
 /**
@@ -42,7 +42,7 @@ export async function simulateProposal(governanceAddress: Hex, client: Client, p
     simulation: TenderlySimulationResponse;
   }[] = [];
   for (const payload of proposal.proposal.payloads) {
-    const client = CHAIN_ID_CLIENT_MAP[Number(payload.chain)];
+    const client = getClient(Number(payload.chain));
     const controllerContract = getPayloadsController(payload.payloadsController, client);
     const cache = await localCacheAdapter.getPayload({
       payloadId: payload.payloadId,
@@ -59,7 +59,7 @@ export async function simulateProposal(governanceAddress: Hex, client: Client, p
           simulation: result,
           payloadId: payload.payloadId,
           payloadInfo: cache,
-          client: CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP],
+          client: getClient(Number(payload.chain)),
         }),
       );
       payloads.push({payload: cache, simulation: result});

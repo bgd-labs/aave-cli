@@ -3,7 +3,6 @@ import {
   IVotingMachineWithProofs_ABI,
   IVotingPortal_ABI,
 } from '@bgd-labs/aave-address-book/abis';
-import {CHAIN_ID_CLIENT_MAP} from '@bgd-labs/js-utils';
 import type {Command} from '@commander-js/extra-typings';
 import {confirm, input, select} from '@inquirer/prompts';
 import {type Hex, encodeAbiParameters, encodeFunctionData, getContract} from 'viem';
@@ -23,6 +22,7 @@ import {fileSystemStorageAdapter} from '@bgd-labs/aave-v3-governance-cache/fileS
 const localCacheAdapter = customStorageProvider(fileSystemStorageAdapter);
 
 import {refreshCache} from '@bgd-labs/aave-v3-governance-cache/refreshCache';
+import {getClient} from '../utils/getClient';
 
 enum DialogOptions {
   DETAILS = 0,
@@ -53,7 +53,7 @@ export function addCommand(program: Command) {
     .action(async ({payloadId: _payloadId, chainId}, options) => {
       await refreshCache(localCacheAdapter);
       const payloadId = Number(_payloadId);
-      const client = CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP];
+      const client = getClient(Number(chainId));
       const payloadsControllerAddress = findPayloadsController(Number(chainId));
       const payloadsController = getPayloadsController(payloadsControllerAddress as Hex, client);
       const cache = await localCacheAdapter.getPayload({
@@ -162,7 +162,7 @@ export function addCommand(program: Command) {
           );
           if (cache.logs.votingActivatedLog)
             logInfo(
-              'VotingActicated',
+              'VotingActivated',
               toTxLink(
                 cache.logs.votingActivatedLog.transactionHash,
                 false,
@@ -189,11 +189,7 @@ export function addCommand(program: Command) {
           logInfo('VotingPortal', cache.proposal.votingPortal);
           cache.proposal.payloads.map((payload, ix) => {
             logInfo(`Payload.${ix}.accessLevel`, payload.accessLevel);
-            logInfo(
-              `Payload.${ix}.chain`,
-              CHAIN_ID_CLIENT_MAP[Number(payload.chain) as keyof typeof CHAIN_ID_CLIENT_MAP].chain!
-                .name,
-            );
+            logInfo(`Payload.${ix}.chain`, getClient(Number(payload.chain)).chain!.name);
             logInfo(`Payload.${ix}.payloadId`, payload.payloadId);
             logInfo(`Payload.${ix}.payloadsController`, payload.payloadsController);
           });
@@ -218,14 +214,7 @@ export function addCommand(program: Command) {
           const proofs = await governance.getVotingProofs(selectedProposalId, address, chainId);
           if (proofs.length === 0) logError('Voting Error', 'You need voting power to vote');
           else {
-            logSuccess(
-              'VotingMachine',
-              toAddressLink(
-                machine,
-                false,
-                CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP],
-              ),
-            );
+            logSuccess('VotingMachine', toAddressLink(machine, false, getClient(Number(chainId))));
             if (FORMAT === 'raw') {
               logSuccess('Method', 'submitVote');
               logSuccess('parameter proposalId', selectedProposalId);
@@ -260,17 +249,13 @@ export function addCommand(program: Command) {
           const machineContract = getContract({
             address: machine,
             abi: IVotingMachineWithProofs_ABI,
-            client: CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP],
+            client: getClient(Number(chainId)),
           });
           const dataWarehouse = await machineContract.read.DATA_WAREHOUSE();
           const roots = await governance.getStorageRoots(selectedProposalId);
           logSuccess(
             'DataWarehouse',
-            toAddressLink(
-              dataWarehouse,
-              false,
-              CHAIN_ID_CLIENT_MAP[Number(chainId) as keyof typeof CHAIN_ID_CLIENT_MAP],
-            ),
+            toAddressLink(dataWarehouse, false, getClient(Number(chainId))),
           );
           const block = await getBlock(DEFAULT_GOVERNANCE_CLIENT, {
             blockHash: cache.proposal.snapshotBlockHash,
