@@ -42,7 +42,7 @@ export async function simulateProposal(governanceAddress: Hex, client: Client, p
     simulation: TenderlySimulationResponse;
   }[] = [];
   for (const payload of proposal.proposal.payloads) {
-    const client = getClient(Number(payload.chain));
+    const client = getClient(Number(payload.chain))!;
     const controllerContract = getPayloadsController(payload.payloadsController, client);
     const cache = await localCacheAdapter.getPayload({
       payloadId: payload.payloadId,
@@ -59,7 +59,7 @@ export async function simulateProposal(governanceAddress: Hex, client: Client, p
           simulation: result,
           payloadId: payload.payloadId,
           payloadInfo: cache,
-          client: getClient(Number(payload.chain)),
+          client: getClient(Number(payload.chain))!,
         }),
       );
       payloads.push({payload: cache, simulation: result});
