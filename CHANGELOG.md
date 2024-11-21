@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.12](https://github.com/bgd-labs/aave-cli/compare/v1.1.11...v1.1.12) (2024-11-21)
+
+
+### Bug Fixes
+
+* remove unchanged eModes from report ([#181](https://github.com/bgd-labs/aave-cli/issues/181)) ([8fc773f](https://github.com/bgd-labs/aave-cli/commit/8fc773f1eed87d0bbf5c21c20c2d8d01f84bb3c5))
+
 ## [1.1.11](https://github.com/bgd-labs/aave-cli/compare/v1.1.10...v1.1.11) (2024-11-19)
 
 
