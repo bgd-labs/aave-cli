@@ -86,10 +86,9 @@ describe('generatePayloadReport', () => {
     {timeout: 30000},
   );
 
-  it.only(
+  it(
     'should match eModes change',
     async () => {
-      console.log(getClient(Number(EMODES_SIMULATION.simulation.transaction.network_id)));
       const report = await generateReport({
         ...(EMODES_SIMULATION as any),
         client: getClient(Number(EMODES_SIMULATION.simulation.transaction.network_id)),

@@ -7,7 +7,7 @@ export function getClient(chainId: number) {
   if (!chain) return undefined;
   return createClient({
     transport: http(
-      getRPCUrl(ChainId.mainnet, {
+      getRPCUrl(chainId as any, {
         alchemyKey: process.env.ALCHEMY_API_KEY,
       })!,
     ),

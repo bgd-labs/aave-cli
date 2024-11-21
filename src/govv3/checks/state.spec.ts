@@ -9,7 +9,7 @@ describe('state check', {timeout: 60000}, () => {
     const result = await checkStateChanges.checkProposal(
       null as any,
       MOCK_PAYLOAD.simulation,
-      getClient(1),
+      getClient(Number(MOCK_PAYLOAD.simulation.transaction.network_id)),
     );
     expect(result).toMatchSnapshot();
   });
@@ -17,7 +17,7 @@ describe('state check', {timeout: 60000}, () => {
     const result = await checkStateChanges.checkProposal(
       null as any,
       CONFIG_CHANGE_PAYLOAD.simulation,
-      getClient(1),
+      getClient(Number(MOCK_PAYLOAD.simulation.transaction.network_id)),
     );
     expect(result).toMatchSnapshot();
   });
