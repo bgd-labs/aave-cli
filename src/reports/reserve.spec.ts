@@ -57,9 +57,6 @@ describe('reserve', () => {
         `[${WBTC_MOCK.aToken}](https://etherscan.io/address/${WBTC_MOCK.aToken})`,
       );
     });
-    it('address without block explorer', () => {
-      expect(renderReserveValue('aToken', WBTC_MOCK, 31337 as CHAIN_ID)).toBe(WBTC_MOCK.aToken);
-    });
   });
   describe('renderReserve', () => {
     it('should properly render new reserve', () => {

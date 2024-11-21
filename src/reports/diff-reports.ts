@@ -24,6 +24,7 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
 ) {
   const chainId = pre.chainId;
   const diffResult = diff(pre, post);
+  const diffResultWithoutUnchanged = diff(pre, post, true);
 
   // create report
   let content = '';
@@ -91,7 +92,7 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
     }
   }
 
-  if (diffResult.eModes) {
+  if (diffResultWithoutUnchanged.eModes) {
     content += '## Emodes changed\n\n';
     for (const eMode of Object.keys(diffResult.eModes)) {
       const hasChanges = hasDiff(diffResult.eModes?.[eMode]);
@@ -114,7 +115,7 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
   }
 
   try {
-    if (hasDiff(diffResult.poolConfig)) {
+    if (diffResultWithoutUnchanged.poolConfig) {
       for (const key of Object.keys(diffResult.poolConfig)) {
         if (
           typeof (diffResult as any).poolConfig[key] === 'object' &&
@@ -131,6 +132,6 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
     }
   } catch (e) {}
 
-  content += `## Raw diff\n\n\`\`\`json\n${JSON.stringify(diff(pre, post, true), null, 2)}\n\`\`\``;
+  content += `## Raw diff\n\n\`\`\`json\n${JSON.stringify(diffResultWithoutUnchanged, null, 2)}\n\`\`\``;
   return content;
 }

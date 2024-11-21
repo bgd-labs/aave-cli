@@ -1,5 +1,4 @@
 import path from 'node:path';
-import {CHAIN_ID_CLIENT_MAP} from '@bgd-labs/js-utils';
 import type {Command} from '@commander-js/extra-typings';
 import {http, type Hex, createWalletClient} from 'viem';
 import {getGovernance} from '../govv3/governance';
@@ -7,6 +6,7 @@ import {getPayloadsController} from '../govv3/payloadsController';
 import {findPayloadsController} from '../govv3/utils/checkAddress';
 import {DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT, EOA} from '../utils/constants';
 import {tenderly} from '../utils/tenderlyClient';
+import {getClient} from '../utils/getClient';
 
 export function addCommand(program: Command) {
   program
@@ -97,7 +97,7 @@ export function addCommand(program: Command) {
       if (payloadId) {
         const payloadsController = getPayloadsController(
           payloadsControllerAddress as Hex,
-          CHAIN_ID_CLIENT_MAP[Number(chainId)],
+          getClient(Number(chainId)),
         );
         const payload = await payloadsController.getSimulationPayloadForExecution(
           Number(payloadId),
