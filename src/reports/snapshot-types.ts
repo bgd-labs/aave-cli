@@ -144,3 +144,22 @@ export const capoSnapshotSchema = z.object({
 });
 
 export type CapoSnapshot = z.infer<typeof capoSnapshotSchema>;
+
+export const liquidityMiningSnapshotSchema = z.record(
+  z.string(),
+  z.object({
+    asset: z.string(),
+    reward: z.string(),
+    newDistributionEnd: z.number().optional(),
+    oldDistributionEnd: z.number().optional(),
+    newEmission: z.number().optional(),
+    oldEmission: z.number().optional(),
+    newRewardOracle: z.string().optional(),
+    newTransferStrategy: z.string().optional(),
+    index: z.string().optional(),
+    type: z.string().optional(),
+    chainId: z.number(),
+  })
+);
+
+export type LiquidityMiningSnapshot = z.infer<typeof liquidityMiningSnapshotSchema>;

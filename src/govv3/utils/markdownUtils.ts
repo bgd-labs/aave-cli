@@ -147,3 +147,16 @@ export async function addAssetPrice(client: Client, address: Address) {
     decimals ? prettifyNumber({value: latestAnswer, decimals, showDecimals: true}) : latestAnswer
   }, description: ${description})`;
 }
+
+export function formatTimestamp(timestampInSec: number) {
+  // Create a new Date object from the timestamp in seconds
+  const date = new Date(timestampInSec * 1000);
+
+  // Use the Intl.DateTimeFormat API to format the date
+  return new Intl.DateTimeFormat('en-GB', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    timeZone: 'GMT',
+  }).format(date);
+}
