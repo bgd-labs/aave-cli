@@ -1,6 +1,6 @@
-// Bun Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`liquidity mining report should generate a well formatted liquidity mining report 1`] = `
+exports[`liquidity mining report > should generate a well formatted liquidity mining report 1`] = `
 "# Liquidity Mining Report
 
 <br/>
@@ -19,7 +19,7 @@ _Reward Oracle changed to: [0xB0A72A5e454890e9715e059e8df8582a6B383DE3](https://
 
 |  | prev value | newValue |
 | - | - | - |
-| emissionPerSecond | 1695570156 (24 Sep 2023) | 1739992061 (19 Feb 2025) |
+| emissionPerSecond | 1695570156 (24 Sept 2023) | 1739992061 (19 Feb 2025) |
 <br/>
 
 ---"
