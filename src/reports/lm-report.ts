@@ -1,7 +1,6 @@
-import {type Hex} from 'viem';
-import {toAddressLink} from '../govv3/utils/markdownUtils';
+import {Client, type Hex} from 'viem';
 import {getClient} from '../utils/getClient';
-import {formatTimestamp} from '../govv3/utils/markdownUtils';
+import {formatTimestamp, toAddressLink, addAssetSymbol} from '../govv3/utils/markdownUtils';
 import {LiquidityMiningSnapshot} from './snapshot-types';
 
 export async function generateLiquidityMiningReport(snapshot: LiquidityMiningSnapshot) {
@@ -12,8 +11,8 @@ export async function generateLiquidityMiningReport(snapshot: LiquidityMiningSna
   for (const key in snapshot) {
     const object = snapshot[key];
 
-    content += `Asset: ${toAddressLink(object.asset as Hex, true, getClient(object.chainId))}\n\n`;
-    content += `Reward: ${toAddressLink(object.reward as Hex, true, getClient(object.chainId))}\n\n`;
+    content += `Asset: ${await addAssetSymbol(getClient(object.chainId) as Client, object.asset as Hex)}\n\n`;
+    content += `Reward: ${await addAssetSymbol(getClient(object.chainId) as Client, object.reward as Hex)}\n\n`;
     content += `Type: ${object.type}\n\n`;
     if (object.index) content += `Index: ${object.index}\n\n`;
 
@@ -28,7 +27,7 @@ export async function generateLiquidityMiningReport(snapshot: LiquidityMiningSna
     }
 
     content += '<br/>\n\n';
-    content += '---';
+    content += '---\n';
   }
 
   return content;

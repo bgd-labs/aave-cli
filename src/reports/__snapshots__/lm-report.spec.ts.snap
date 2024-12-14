@@ -5,9 +5,9 @@ exports[`liquidity mining report > should generate a well formatted liquidity mi
 
 <br/>
 
-Asset: [0x4a1c3aD6Ed28a636ee1751C69071f6be75DEb8B8](https://polygonscan.com/address/0x4a1c3aD6Ed28a636ee1751C69071f6be75DEb8B8)
+Asset: 0x4a1c3aD6Ed28a636ee1751C69071f6be75DEb8B8 (symbol: variableDebtPolWMATIC)
 
-Reward: [0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6](https://polygonscan.com/address/0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6)
+Reward: 0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6 (symbol: MaticX)
 
 Type: LM_UPDATE
 
@@ -22,5 +22,6 @@ _Reward Oracle changed to: [0xB0A72A5e454890e9715e059e8df8582a6B383DE3](https://
 | emissionPerSecond | 1695570156 (24 Sept 2023) | 1739992061 (19 Feb 2025) |
 <br/>
 
----"
+---
+"
 `;
