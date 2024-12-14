@@ -105,6 +105,11 @@ export async function addAssetSymbol(client: Client, value: Address) {
   return `${value} (symbol: ${asset.symbol})`;
 }
 
+export async function addAssetSymbolWithLink(client: Client, value: Address) {
+  const asset = await findAsset(client, value);
+  return `[${asset.symbol}](${toAddressLink(value, false, client)})`;
+}
+
 const CL_PROXY_ABI = [
   {
     inputs: [],
