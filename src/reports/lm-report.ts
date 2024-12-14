@@ -14,7 +14,7 @@ export async function generateLiquidityMiningReport(snapshot: LiquidityMiningSna
 
     content += `Asset: ${await addAssetSymbolWithLink(getClient(object.chainId) as Client, object.asset as Hex)}\n`;
     content += `Reward: ${await addAssetSymbolWithLink(getClient(object.chainId) as Client, object.reward as Hex)}\n`;
-    content += `Type: ${object.type}\n\n`;
+    content += `Type: ${object.type}\n`;
     if (object.index) content += `Index: ${object.index}\n`;
 
     if (object.newTransferStrategy) content += `_Transfer Strategy changed to: ${toAddressLink(object.newTransferStrategy as Hex, true, getClient(object.chainId))}_\n`;
