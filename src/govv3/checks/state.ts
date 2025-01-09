@@ -267,7 +267,7 @@ async function enhanceValue({
       if (asset) return prettifyNumber({decimals: asset.decimals, value, showDecimals: true});
     }
     // values to be rendered with ray decimals
-    if (key && ['_reserves', '_eModeCategories'].includes(type)) {
+    if (key && ['_reserves', '_eModeCategories', '_interestRateData'].includes(type)) {
       if (['liquidityIndex', 'variableBorrowIndex'].includes(key))
         return prettifyNumber({decimals: 27, value, showDecimals: true});
       if (
