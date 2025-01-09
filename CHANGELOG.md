@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.13](https://github.com/bgd-labs/aave-cli/compare/v1.1.12...v1.1.13) (2025-01-09)
+
+
+### Bug Fixes
+
+* do not spam console if impls are not available yet ([#184](https://github.com/bgd-labs/aave-cli/issues/184)) ([f481827](https://github.com/bgd-labs/aave-cli/commit/f481827fc8d9ff24f915ce3fb041bbfbcbd75bf3))
+* format interestRates ([#186](https://github.com/bgd-labs/aave-cli/issues/186)) ([894a76c](https://github.com/bgd-labs/aave-cli/commit/894a76c734260cfdf3e582ce71f94a860945a0a9))
+
 ## [1.1.12](https://github.com/bgd-labs/aave-cli/compare/v1.1.11...v1.1.12) (2024-11-21)
 
 
