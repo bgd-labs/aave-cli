@@ -117,16 +117,23 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
   try {
     if (diffResultWithoutUnchanged.poolConfig) {
       for (const key of Object.keys(diffResult.poolConfig)) {
-        if (
-          typeof (diffResult as any).poolConfig[key] === 'object' &&
-          (diffResult as any).poolConfig[key].hasOwnProperty('from')
-        ) {
-          const fromAddress = (diffResult as any).poolConfig[key].from;
-          const toAddress = (diffResult as any).poolConfig[key].to;
-          const from = downloadContract(pre.chainId, fromAddress);
-          const to = downloadContract(pre.chainId, toAddress);
-          const result = diffCode(from, to);
-          writeFileSync(`./diffs/${pre.chainId}_${key}_${fromAddress}_${toAddress}.diff`, result);
+        try {
+          if (
+            typeof (diffResult as any).poolConfig[key] === 'object' &&
+            (diffResult as any).poolConfig[key].hasOwnProperty('from')
+          ) {
+            const fromAddress = (diffResult as any).poolConfig[key].from;
+            const toAddress = (diffResult as any).poolConfig[key].to;
+            const from = downloadContract(pre.chainId, fromAddress);
+            const to = downloadContract(pre.chainId, toAddress);
+            const result = diffCode(from, to);
+            writeFileSync(`./diffs/${pre.chainId}_${key}_${fromAddress}_${toAddress}.diff`, result);
+          }
+        } catch (e) {
+          console.info('error diffing the code');
+          console.info(
+            'this can happen if etherscan is not available, the code is not verified or not deployed yet',
+          );
         }
       }
     }
