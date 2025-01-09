@@ -109,7 +109,11 @@ export async function deepDiff({
   accessChain: string[];
   type?: string;
 }): Promise<string> {
-  if (type && accessChain.length === 1 && ['_reserves', 'assets', 'assetsSources'].includes(type)) {
+  if (
+    type &&
+    accessChain.length === 1 &&
+    ['_reserves', 'assets', 'assetsSources', '_interestRateData'].includes(type)
+  ) {
     accessChain[0] = await addAssetSymbol(client, accessChain[0] as Address);
   }
   if (typeof before !== 'object' || typeof after !== 'object') {
@@ -266,7 +270,17 @@ async function enhanceValue({
     if (key && ['_reserves', '_eModeCategories'].includes(type)) {
       if (['liquidityIndex', 'variableBorrowIndex'].includes(key))
         return prettifyNumber({decimals: 27, value, showDecimals: true});
-      if (['liquidationThreshold', 'reserveFactor', 'liquidationProtocolFee', 'ltv'].includes(key))
+      if (
+        [
+          'liquidationThreshold',
+          'reserveFactor',
+          'liquidationProtocolFee',
+          'ltv',
+          'optimalUsageRatio',
+          'variableRateSlope1',
+          'variableRateSlope2',
+        ].includes(key)
+      )
         return prettifyNumber({decimals: 2, value, suffix: '%', showDecimals: true});
       if (
         ['currentLiquidityRate', 'currentVariableBorrowRate', 'currentStableBorrowRate'].includes(
