@@ -47,11 +47,14 @@ function getContractChanges(diffs: StateDiff[]) {
       // This is a complex type like a mapping, which may have multiple changes. The diff.original
       // and diff.dirty fields can be strings or objects, and for complex types they are objects,
       // so we cast them as such
-      const keys = Object.keys(diff.original);
-      const original = diff.original as Record<string, any>;
-      const dirty = diff.dirty as Record<string, any>;
+      const keys = Array.from(
+        new Set([...Object.keys(diff.original || {}), ...Object.keys(diff.dirty || {})]),
+      );
+      const original = (diff.original || {}) as Record<string, any>;
+      const dirty = (diff.dirty || {}) as Record<string, any>;
       for (const k of keys as Hex[]) {
-        changes.push({before: original[k], after: dirty[k], name: k, type: diff.soltype?.name});
+        if (original[k] || dirty[k])
+          changes.push({before: original[k], after: dirty[k], name: k, type: diff.soltype?.name});
       }
     } else {
       // TODO arrays and nested mapping are currently not well supported -- find a transaction
