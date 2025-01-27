@@ -1,4 +1,5 @@
 import {formatUnits} from 'viem';
+import {formatTimestamp} from '../govv3/utils/markdownUtils';
 import {CapoSnapshot} from './snapshot-types';
 
 type Price = {
@@ -70,17 +71,4 @@ export async function generateCapoReport(snapshot: CapoSnapshot) {
   content += `* Max day-to-day yearly % indicates the maximum growth between two emissions as an annualized percentage. \n`;
 
   return content;
-}
-
-function formatTimestamp(timestampInSec: number) {
-  // Create a new Date object from the timestamp in seconds
-  const date = new Date(timestampInSec * 1000);
-
-  // Use the Intl.DateTimeFormat API to format the date
-  return new Intl.DateTimeFormat('en-GB', {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-    timeZone: 'GMT',
-  }).format(date);
 }

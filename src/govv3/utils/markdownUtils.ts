@@ -105,6 +105,11 @@ export async function addAssetSymbol(client: Client, value: Address) {
   return `${value} (symbol: ${asset.symbol})`;
 }
 
+export async function addAssetSymbolWithLink(client: Client, value: Address) {
+  const asset = await findAsset(client, value);
+  return `[${asset.symbol}](${toAddressLink(value, false, client)})`;
+}
+
 const CL_PROXY_ABI = [
   {
     inputs: [],
@@ -146,4 +151,17 @@ export async function addAssetPrice(client: Client, address: Address) {
   return `${address} (latestAnswer: ${
     decimals ? prettifyNumber({value: latestAnswer, decimals, showDecimals: true}) : latestAnswer
   }, description: ${description})`;
+}
+
+export function formatTimestamp(timestampInSec: number) {
+  // Create a new Date object from the timestamp in seconds
+  const date = new Date(timestampInSec * 1000);
+
+  // Use the Intl.DateTimeFormat API to format the date
+  return new Intl.DateTimeFormat('en-GB', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    timeZone: 'GMT',
+  }).format(date);
 }

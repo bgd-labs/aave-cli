@@ -1,0 +1,13 @@
+{
+  "0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6_0x4a1c3aD6Ed28a636ee1751C69071f6be75DEb8B8": {
+    "asset": "0x4a1c3aD6Ed28a636ee1751C69071f6be75DEb8B8",
+    "chainId": 137,
+    "index": 2109876369033151,
+    "newDistributionEnd": 1739992061,
+    "newRewardOracle": "0xB0A72A5e454890e9715e059e8df8582a6B383DE3",
+    "newTransferStrategy": "0x53F57eAAD604307889D87b747Fc67ea9DE430B01",
+    "oldDistributionEnd": 1695570156,
+    "reward": "0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6",
+    "type": "LM_UPDATE"
+  }
+}
