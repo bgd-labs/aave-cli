@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.15](https://github.com/bgd-labs/aave-cli/compare/v1.1.14...v1.1.15) (2025-02-04)
+
+
+### Bug Fixes
+
+* in foundry stable the command was renamed given it supports other explorers as well ([#189](https://github.com/bgd-labs/aave-cli/issues/189)) ([166faee](https://github.com/bgd-labs/aave-cli/commit/166faee15e6c3ab6195b1e2a46c0c9ac8eca1d4d))
+
 ## [1.1.14](https://github.com/bgd-labs/aave-cli/compare/v1.1.13...v1.1.14) (2025-01-21)
 
 
