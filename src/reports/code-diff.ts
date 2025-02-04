@@ -19,7 +19,7 @@ const CHAIN_ID_TO_ETHERSCAN = {
 export function downloadContract(chainId: number, address: string) {
   const outPath = `/tmp/${chainId}_${address}`;
   if (existsSync(outPath)) console.log('skipped download');
-  const command = `cast source --chain ${chainId} -d ${outPath} ${address} --etherscan-api-key ${CHAIN_ID_TO_ETHERSCAN[chainId as keyof typeof CHAIN_ID_TO_ETHERSCAN]}`;
+  const command = `cast source --chain ${chainId} -d ${outPath} ${address} --etherscan-api-key ${CHAIN_ID_TO_ETHERSCAN[chainId as keyof typeof CHAIN_ID_TO_ETHERSCAN]} && forge fmt ${outPath}`;
   execSync(command);
   return outPath;
 }
