@@ -5,7 +5,7 @@ import {AaveV3Snapshot, AaveV3Config} from './snapshot-types';
 export function downloadContract(chainId: number, address: string) {
   const outPath = `/tmp/${chainId}_${address}`;
   if (existsSync(outPath)) console.log('skipped download');
-  const command = `cast etherscan-source --chain ${chainId} -d ${outPath} ${address}`;
+  const command = `cast source --chain ${chainId} -d ${outPath} ${address}`;
   execSync(command);
   return outPath;
 }
