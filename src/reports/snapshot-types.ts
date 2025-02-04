@@ -1,4 +1,5 @@
-import {zkSync} from 'viem/chains';
+import {Address} from 'viem';
+import {zksync} from 'viem/chains';
 import {z} from 'zod';
 
 export const aaveV3ConfigSchema = z.object({
@@ -95,7 +96,7 @@ export const CHAIN_ID = {
   BNB: 56,
   GNOSIS: 100,
   CELO: 42220,
-  ZKSYNC: zkSync.id,
+  ZKSYNC: zksync.id,
 } as const;
 
 const zodChainId = z.nativeEnum(CHAIN_ID);
@@ -108,6 +109,19 @@ export const aaveV3SnapshotSchema = z.object({
   eModes: z.record(aaveV3EmodeSchema),
   poolConfig: aaveV3ConfigSchema,
   chainId: zodChainId,
+  raw: z
+    .record(
+      z.string(),
+      z.object({
+        label: z.string().nullable(),
+        balanceDiff: z.string().nullable(),
+        stateDiff: z.record(
+          z.string(),
+          z.object({previousValue: z.string(), newValue: z.string()}),
+        ),
+      }),
+    )
+    .optional(),
 });
 
 export const aDIReceiverConfigSchema = z.object({

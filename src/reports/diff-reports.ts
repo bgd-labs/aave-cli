@@ -6,6 +6,7 @@ import {renderReserve, renderReserveDiff} from './reserve';
 import {AaveV3Reserve, type AaveV3Snapshot} from './snapshot-types';
 import {renderStrategy, renderStrategyDiff} from './strategy';
 import {diffCode, downloadContract} from './code-diff';
+import {bytes32ToAddress} from '../utils/storageSlots';
 
 function hasDiff(input: Record<string, any>): boolean {
   if (!input) return false;
@@ -23,72 +24,83 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
   post: B,
 ) {
   const chainId = pre.chainId;
+  // if raw is present, it already is a diff, so no need to diff it
+  let raw;
+  if (post.raw) {
+    raw = {...post.raw};
+    delete post.raw;
+  }
   const diffResult = diff(pre, post);
   const diffResultWithoutUnchanged = diff(pre, post, true);
+  if (raw) {
+    diffResultWithoutUnchanged.raw = raw as any;
+  }
 
   // create report
   let content = '';
-  const reservesAdded = Object.keys(diffResult.reserves)
-    .map((reserveKey) => {
-      // to being present on reserve level % trueish means reserve was added
-      if ((diffResult.reserves[reserveKey] as any).to) {
-        let report = renderReserve((diffResult.reserves[reserveKey] as any).to, chainId);
-        report += renderStrategy(post.strategies[reserveKey]);
-        report += `| interestRate | ![ir](${getStrategyImageUrl(post.strategies[reserveKey])}) |\n`;
+  if (diffResult.reserves) {
+    const reservesAdded = Object.keys(diffResult.reserves)
+      .map((reserveKey) => {
+        // to being present on reserve level % trueish means reserve was added
+        if ((diffResult.reserves[reserveKey] as any).to) {
+          let report = renderReserve((diffResult.reserves[reserveKey] as any).to, chainId);
+          report += renderStrategy(post.strategies[reserveKey]);
+          report += `| interestRate | ![ir](${getStrategyImageUrl(post.strategies[reserveKey])}) |\n`;
 
-        return report;
-      }
-    })
-    .filter((i) => i);
-  const reservesRemoved = Object.keys(diffResult.reserves)
-    .map((reserveKey) => {
-      // from being present on reserve level % trueish means reserve was removed
-      if ((diffResult.reserves[reserveKey] as any).from) {
-        return renderReserve((diffResult.reserves[reserveKey] as any).from, chainId);
-      }
-    })
-    .filter((i) => i);
-  const reservesAltered = Object.keys(diffResult.reserves)
-    .map((reserveKey) => {
-      // "from" being present on reserses key means reserve was removed
-      if (!(diffResult.reserves[reserveKey] as any).hasOwnProperty('from')) {
-        const hasChangedReserveProperties = hasDiff(diffResult.reserves[reserveKey]);
-        const preIr = getStrategyImageUrl(pre.strategies[reserveKey]);
-        const postIr = getStrategyImageUrl(post.strategies[reserveKey]);
-        const hasChangedIr = preIr !== postIr;
-        if (!hasChangedReserveProperties && !hasChangedIr) return;
-        // diff reserve
-        let report = renderReserveDiff(diffResult.reserves[reserveKey] as any, chainId);
-        // diff irs
-        if (hasChangedIr) {
-          report += renderStrategyDiff(
-            diff(pre.strategies[reserveKey], post.strategies[reserveKey]) as any,
-          );
-          report += `| interestRate | ![before](${preIr}) | ![after](${postIr}) |`;
+          return report;
         }
+      })
+      .filter((i) => i);
+    const reservesRemoved = Object.keys(diffResult.reserves)
+      .map((reserveKey) => {
+        // from being present on reserve level % trueish means reserve was removed
+        if ((diffResult.reserves[reserveKey] as any).from) {
+          return renderReserve((diffResult.reserves[reserveKey] as any).from, chainId);
+        }
+      })
+      .filter((i) => i);
+    const reservesAltered = Object.keys(diffResult.reserves)
+      .map((reserveKey) => {
+        // "from" being present on reserses key means reserve was removed
+        if (!(diffResult.reserves[reserveKey] as any).hasOwnProperty('from')) {
+          const hasChangedReserveProperties = hasDiff(diffResult.reserves[reserveKey]);
+          const preIr = getStrategyImageUrl(pre.strategies[reserveKey]);
+          const postIr = getStrategyImageUrl(post.strategies[reserveKey]);
+          const hasChangedIr = preIr !== postIr;
+          if (!hasChangedReserveProperties && !hasChangedIr) return;
+          // diff reserve
+          let report = renderReserveDiff(diffResult.reserves[reserveKey] as any, chainId);
+          // diff irs
+          if (hasChangedIr) {
+            report += renderStrategyDiff(
+              diff(pre.strategies[reserveKey], post.strategies[reserveKey]) as any,
+            );
+            report += `| interestRate | ![before](${preIr}) | ![after](${postIr}) |`;
+          }
 
-        return report;
+          return report;
+        }
+      })
+      .filter((i) => i);
+    if (reservesAdded.length || reservesRemoved.length || reservesAltered.length) {
+      content += '## Reserve changes\n\n';
+      if (reservesAdded.length) {
+        content += `### ${reservesAdded.length > 1 ? 'Reserve' : 'Reserves'} added\n\n`;
+        content += reservesAdded.join('\n\n');
+        content += '\n\n';
       }
-    })
-    .filter((i) => i);
-  if (reservesAdded.length || reservesRemoved.length || reservesAltered.length) {
-    content += '## Reserve changes\n\n';
-    if (reservesAdded.length) {
-      content += `### ${reservesAdded.length > 1 ? 'Reserve' : 'Reserves'} added\n\n`;
-      content += reservesAdded.join('\n\n');
-      content += '\n\n';
-    }
 
-    if (reservesAltered.length) {
-      content += `### ${reservesAltered.length > 1 ? 'Reserve' : 'Reserves'} altered\n\n`;
-      content += reservesAltered.join('\n\n');
-      content += '\n\n';
-    }
+      if (reservesAltered.length) {
+        content += `### ${reservesAltered.length > 1 ? 'Reserve' : 'Reserves'} altered\n\n`;
+        content += reservesAltered.join('\n\n');
+        content += '\n\n';
+      }
 
-    if (reservesRemoved.length) {
-      content += `### ${reservesRemoved.length > 1 ? 'Reserve' : 'Reserves'} removed\n\n`;
-      content += reservesRemoved.join('\n\n');
-      content += '\n\n';
+      if (reservesRemoved.length) {
+        content += `### ${reservesRemoved.length > 1 ? 'Reserve' : 'Reserves'} removed\n\n`;
+        content += reservesRemoved.join('\n\n');
+        content += '\n\n';
+      }
     }
   }
 
@@ -112,6 +124,24 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
       }
       content += '\n\n';
     }
+  }
+
+  if (raw) {
+    // ERC1967 slot https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/ERC1967/ERC1967Utils.sol#L21C53-L21C119
+    const erc1967Slot = '0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc';
+    Object.keys(raw).map((contract) => {
+      if (raw[contract].stateDiff[erc1967Slot]) {
+        const fromAddress = bytes32ToAddress(raw[contract].stateDiff[erc1967Slot].previousValue);
+        const toAddress = bytes32ToAddress(raw[contract].stateDiff[erc1967Slot].newValue);
+        const from = downloadContract(pre.chainId, fromAddress);
+        const to = downloadContract(pre.chainId, toAddress);
+        const result = diffCode(from, to);
+        writeFileSync(
+          `./diffs/${pre.chainId}_${contract}_${fromAddress}_${toAddress}.diff`,
+          result,
+        );
+      }
+    });
   }
 
   try {
