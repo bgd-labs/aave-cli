@@ -3,9 +3,11 @@ import {
   concat,
   encodeAbiParameters,
   fromHex,
+  getAddress,
   keccak256,
   pad,
   parseAbiParameters,
+  slice,
   toBytes,
   toHex,
   trim,
@@ -132,4 +134,8 @@ export function bitMapToIndexes(bitmap: bigint) {
     bitmap = bitmap >> 1n;
   }
   return reserveIndexes;
+}
+
+export function bytes32ToAddress(bytes32: Hex) {
+  return getAddress(slice(bytes32, 12, 32));
 }
