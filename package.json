@@ -1,6 +1,6 @@
 {
   "name": "@bgd-labs/aave-cli",
-  "version": "1.1.17",
+  "version": "1.1.18",
   "description": "A cli to perform various aave governance related tasks",
   "private": false,
   "sideEffects": false,
