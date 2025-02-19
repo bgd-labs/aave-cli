@@ -14,6 +14,9 @@ const CHAIN_ID_TO_ETHERSCAN = {
   [ChainId.zksync]: process.env.ETHERSCAN_API_KEY_ZKSYNC,
   [ChainId.scroll]: process.env.ETHERSCAN_API_KEY_SCROLL,
   [ChainId.linea]: process.env.ETHERSCAN_API_KEY_LINEA,
+  [ChainId.celo]: process.env.ETHERSCAN_API_KEY_CELO,
+  [ChainId.mantle]: process.env.ETHERSCAN_API_KEY_MANTLE,
+  [ChainId.sonic]: process.env.ETHERSCAN_API_KEY_SONIC,
 };
 
 export function downloadContract(chainId: number, address: string) {
