@@ -22,10 +22,10 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
         raw[contract].stateDiff[erc1967ImplSlot].label = 'Implementation slot';
         // pure new deployments cannot be diffed, we just download the code in that case
         if (raw[contract].stateDiff[erc1967ImplSlot].previousValue == zeroHash) {
-          const toAddress = bytes32ToAddress(raw[contract].stateDiff[erc1967ImplSlot].newValue);
-          const to = downloadContract(chainId, toAddress);
-          mkdirSync('./diffs', {recursive: true});
-          writeFileSync(`./diffs/${chainId}_${contract}_${toAddress}.diff`, readFileSync(to), {});
+          // const toAddress = bytes32ToAddress(raw[contract].stateDiff[erc1967ImplSlot].newValue);
+          // const to = downloadContract(chainId, toAddress);
+          // mkdirSync('./diffs', {recursive: true});
+          // writeFileSync(`./diffs/${chainId}_${contract}_${toAddress}.diff`, readFileSync(to), {});
         } else {
           const fromAddress = bytes32ToAddress(
             raw[contract].stateDiff[erc1967ImplSlot].previousValue,
