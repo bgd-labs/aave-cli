@@ -1,8 +1,9 @@
-import {writeFileSync, mkdirSync} from 'fs';
+import {writeFileSync, mkdirSync, readFileSync} from 'fs';
 import {bytes32ToAddress} from '../utils/storageSlots';
 import {diffCode, downloadContract} from './code-diff';
 import {RawStorage} from './snapshot-types';
 import {isKnownAddress} from '../govv3/utils/checkAddress';
+import {zeroHash} from 'viem';
 
 export async function diffRawStorage(chainId: number, raw: RawStorage) {
   // ERC1967 slot https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/ERC1967/ERC1967Utils.sol#L21C53-L21C119
@@ -16,13 +17,25 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
 
     // create contract diff if storage changed
     if (raw[contract] && raw[contract].stateDiff[erc1967Slot]) {
-      const fromAddress = bytes32ToAddress(raw[contract].stateDiff[erc1967Slot].previousValue);
-      const toAddress = bytes32ToAddress(raw[contract].stateDiff[erc1967Slot].newValue);
-      const from = downloadContract(chainId, fromAddress);
-      const to = downloadContract(chainId, toAddress);
-      const result = diffCode(from, to);
-      mkdirSync('./diffs', {recursive: true});
-      writeFileSync(`./diffs/${chainId}_${contract}_${fromAddress}_${toAddress}.diff`, result, {});
+      // pure new deployments cannot be diffed, we just download the code in that case
+      if (raw[contract].stateDiff[erc1967Slot].previousValue == zeroHash) {
+        const toAddress = bytes32ToAddress(raw[contract].stateDiff[erc1967Slot].newValue);
+        const to = downloadContract(chainId, toAddress);
+        mkdirSync('./diffs', {recursive: true});
+        writeFileSync(`./diffs/${chainId}_${contract}_${toAddress}.diff`, readFileSync(to), {});
+      } else {
+        const fromAddress = bytes32ToAddress(raw[contract].stateDiff[erc1967Slot].previousValue);
+        const toAddress = bytes32ToAddress(raw[contract].stateDiff[erc1967Slot].newValue);
+        const from = downloadContract(chainId, fromAddress);
+        const to = downloadContract(chainId, toAddress);
+        const result = diffCode(from, to);
+        mkdirSync('./diffs', {recursive: true});
+        writeFileSync(
+          `./diffs/${chainId}_${contract}_${fromAddress}_${toAddress}.diff`,
+          result,
+          {},
+        );
+      }
     }
   });
 }
