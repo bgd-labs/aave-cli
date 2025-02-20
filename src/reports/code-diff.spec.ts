@@ -3,7 +3,7 @@ import pre32 from './mocks/pre3-2.json';
 import post32 from './mocks/post3-2.json';
 import {diffCode, downloadContract} from './code-diff';
 
-describe.skip('code diffs', () => {
+describe('code diffs', () => {
   it(
     'should download contract',
     () => {
