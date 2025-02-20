@@ -1,4 +1,4 @@
-import {Address} from 'viem';
+import {Address, Hex} from 'viem';
 import {zksync} from 'viem/chains';
 import {z} from 'zod';
 
@@ -103,25 +103,30 @@ const zodChainId = z.nativeEnum(CHAIN_ID);
 
 export type CHAIN_ID = z.infer<typeof zodChainId>;
 
+export const rawStorageSchema = z.record(
+  z.string() as z.ZodType<Address>,
+  z.object({
+    label: z.string().nullable(),
+    balanceDiff: z.string().nullable(),
+    stateDiff: z.record(
+      z.string(),
+      z.object({
+        previousValue: z.string() as z.ZodType<Hex>,
+        newValue: z.string() as z.ZodType<Hex>,
+      }),
+    ),
+  }),
+);
+
+export type RawStorage = z.infer<typeof rawStorageSchema>;
+
 export const aaveV3SnapshotSchema = z.object({
   reserves: z.record(aaveV3ReserveSchema),
   strategies: z.record(aaveV3StrategySchema),
   eModes: z.record(aaveV3EmodeSchema),
   poolConfig: aaveV3ConfigSchema,
   chainId: zodChainId,
-  raw: z
-    .record(
-      z.string(),
-      z.object({
-        label: z.string().nullable(),
-        balanceDiff: z.string().nullable(),
-        stateDiff: z.record(
-          z.string(),
-          z.object({previousValue: z.string(), newValue: z.string()}),
-        ),
-      }),
-    )
-    .optional(),
+  raw: rawStorageSchema.optional(),
 });
 
 export const aDIReceiverConfigSchema = z.object({
