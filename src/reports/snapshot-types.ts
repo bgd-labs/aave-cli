@@ -113,6 +113,7 @@ export const rawStorageSchema = z.record(
       z.object({
         previousValue: z.string() as z.ZodType<Hex>,
         newValue: z.string() as z.ZodType<Hex>,
+        label: z.string().optional(), // does not initially exist, but we might want to inject information here
       }),
     ),
   }),
