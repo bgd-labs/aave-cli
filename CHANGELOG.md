@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.2](https://github.com/bgd-labs/aave-cli/compare/v1.2.1...v1.2.2) (2025-02-21)
+
+
+### Bug Fixes
+
+* disable cast tests as its not available on ci ([9b486f8](https://github.com/bgd-labs/aave-cli/commit/9b486f8c119c007ddd82cd5bb6523bb4aae8a3e0))
+
 ## [1.2.1](https://github.com/bgd-labs/aave-cli/compare/v1.2.0...v1.2.1) (2025-02-21)
 
 
