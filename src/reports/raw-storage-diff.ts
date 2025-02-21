@@ -63,7 +63,7 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
             const newPool = getContract({
               client: getClient(chainId, {}),
               abi: IPool_ABI,
-              address: bytes32ToAddress(raw[contract].stateDiff[erc1967ImplSlot].previousValue),
+              address: bytes32ToAddress(raw[contract].stateDiff[erc1967ImplSlot].newValue),
             });
             const addresses = await Promise.all([
               oldPool.read.getSupplyLogic(),
