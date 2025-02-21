@@ -1,4 +1,4 @@
-import {Address} from 'viem';
+import {Address, Hex} from 'viem';
 import {zksync} from 'viem/chains';
 import {z} from 'zod';
 
@@ -103,25 +103,32 @@ const zodChainId = z.nativeEnum(CHAIN_ID);
 
 export type CHAIN_ID = z.infer<typeof zodChainId>;
 
+export const slotDiff = z.object({
+  previousValue: z.string() as z.ZodType<Hex>,
+  newValue: z.string() as z.ZodType<Hex>,
+  label: z.string().optional(), // does not initially exist, but we might want to inject information here
+});
+
+export const rawStorageSchema = z.record(
+  z.string() as z.ZodType<Address>,
+  z.object({
+    label: z.string().nullable(),
+    balanceDiff: z.string().nullable(),
+    stateDiff: z.record(z.string(), slotDiff),
+  }),
+);
+
+export type RawStorage = z.infer<typeof rawStorageSchema>;
+
+export type SlotDiff = z.infer<typeof slotDiff>;
+
 export const aaveV3SnapshotSchema = z.object({
   reserves: z.record(aaveV3ReserveSchema),
   strategies: z.record(aaveV3StrategySchema),
   eModes: z.record(aaveV3EmodeSchema),
   poolConfig: aaveV3ConfigSchema,
   chainId: zodChainId,
-  raw: z
-    .record(
-      z.string(),
-      z.object({
-        label: z.string().nullable(),
-        balanceDiff: z.string().nullable(),
-        stateDiff: z.record(
-          z.string(),
-          z.object({previousValue: z.string(), newValue: z.string()}),
-        ),
-      }),
-    )
-    .optional(),
+  raw: rawStorageSchema.optional(),
 });
 
 export const aDIReceiverConfigSchema = z.object({

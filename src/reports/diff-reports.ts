@@ -6,7 +6,7 @@ import {renderReserve, renderReserveDiff} from './reserve';
 import {AaveV3Reserve, type AaveV3Snapshot} from './snapshot-types';
 import {renderStrategy, renderStrategyDiff} from './strategy';
 import {diffCode, downloadContract} from './code-diff';
-import {bytes32ToAddress} from '../utils/storageSlots';
+import {diffRawStorage} from './raw-storage-diff';
 
 function hasDiff(input: Record<string, any>): boolean {
   if (!input) return false;
@@ -127,21 +127,7 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
   }
 
   if (raw) {
-    // ERC1967 slot https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/ERC1967/ERC1967Utils.sol#L21C53-L21C119
-    const erc1967Slot = '0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc';
-    Object.keys(raw).map((contract) => {
-      if (raw[contract].stateDiff[erc1967Slot] && raw[contract].stateDiff[erc1967Slot].previousValue != '0x0000000000000000000000000000000000000000000000000000000000000000') {
-        const fromAddress = bytes32ToAddress(raw[contract].stateDiff[erc1967Slot].previousValue);
-        const toAddress = bytes32ToAddress(raw[contract].stateDiff[erc1967Slot].newValue);
-        const from = downloadContract(pre.chainId, fromAddress);
-        const to = downloadContract(pre.chainId, toAddress);
-        const result = diffCode(from, to);
-        writeFileSync(
-          `./diffs/${pre.chainId}_${contract}_${fromAddress}_${toAddress}.diff`,
-          result,
-        );
-      }
-    });
+    diffRawStorage(pre.chainId, raw);
   }
 
   try {
