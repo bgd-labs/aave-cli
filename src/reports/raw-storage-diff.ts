@@ -3,20 +3,21 @@ import {bytes32ToAddress} from '../utils/storageSlots';
 import {diffCode, downloadContract} from './code-diff';
 import {RawStorage, SlotDiff} from './snapshot-types';
 import {isKnownAddress} from '../govv3/utils/checkAddress';
-import {Address, getContract, zeroHash} from 'viem';
+import {Address, getContract, isAddress, toBytes, zeroHash} from 'viem';
 import {getClient} from '@bgd-labs/rpc-env';
 import {IPool_ABI} from '@bgd-labs/aave-address-book/abis';
 
 export function diffSlot(chainId: number, address: Address, slot: SlotDiff) {
+  const fromAddress = isAddress(slot.previousValue)
+    ? slot.previousValue
+    : bytes32ToAddress(slot.previousValue);
+  const toAddress = isAddress(slot.newValue) ? slot.newValue : bytes32ToAddress(slot.newValue);
   // pure new deployments cannot be diffed, we just download the code in that case
   if (slot.previousValue == zeroHash) {
-    const toAddress = bytes32ToAddress(slot.newValue);
     const to = downloadContract(chainId, toAddress);
     mkdirSync('./diffs', {recursive: true});
     writeFileSync(`./diffs/${chainId}_${address}_${toAddress}.diff`, readFileSync(to), {});
   } else {
-    const fromAddress = bytes32ToAddress(slot.previousValue);
-    const toAddress = bytes32ToAddress(slot.newValue);
     const from = downloadContract(chainId, fromAddress);
     const to = downloadContract(chainId, toAddress);
     const result = diffCode(from, to);
@@ -50,34 +51,41 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
           // ... we might want to fetch the owner in that case
         }
 
-        // Diff code logic libraries
-        if (contractName && contractName[contractName.length - 1] === 'POOL') {
-          const oldPool = getContract({
-            client: getClient(chainId, {}),
-            abi: IPool_ABI,
-            address: bytes32ToAddress(raw[contract].stateDiff[erc1967ImplSlot].previousValue),
-          });
-          const newPool = getContract({
-            client: getClient(chainId, {}),
-            abi: IPool_ABI,
-            address: bytes32ToAddress(raw[contract].stateDiff[erc1967ImplSlot].previousValue),
-          });
-          const addresses = await Promise.all([
-            oldPool.read.getSupplyLogic(),
-            newPool.read.getSupplyLogic(),
-            oldPool.read.getBorrowLogic(),
-            newPool.read.getBorrowLogic(),
-            oldPool.read.getLiquidationLogic(),
-            newPool.read.getLiquidationLogic(),
-            oldPool.read.getPoolLogic(),
-            newPool.read.getPoolLogic(),
-            oldPool.read.getFlashLoanLogic(),
-            newPool.read.getFlashLoanLogic(),
-            oldPool.read.getEModeLogic(),
-            newPool.read.getEModeLogic(),
-          ]);
-          for (let i = 0; i < addresses.length; i = i + 2) {
-            diffSlot(chainId, contract, {previousValue: addresses[i], newValue: addresses[i + 1]});
+        if (contractName) {
+          const path = contractName[0].split('.');
+          // Diff code logic libraries
+          if (path[path.length - 1] === 'POOL') {
+            const oldPool = getContract({
+              client: getClient(chainId, {}),
+              abi: IPool_ABI,
+              address: bytes32ToAddress(raw[contract].stateDiff[erc1967ImplSlot].previousValue),
+            });
+            const newPool = getContract({
+              client: getClient(chainId, {}),
+              abi: IPool_ABI,
+              address: bytes32ToAddress(raw[contract].stateDiff[erc1967ImplSlot].previousValue),
+            });
+            const addresses = await Promise.all([
+              oldPool.read.getSupplyLogic(),
+              newPool.read.getSupplyLogic(),
+              oldPool.read.getBorrowLogic(),
+              newPool.read.getBorrowLogic(),
+              oldPool.read.getLiquidationLogic(),
+              newPool.read.getLiquidationLogic(),
+              oldPool.read.getPoolLogic(),
+              newPool.read.getPoolLogic(),
+              oldPool.read.getFlashLoanLogic(),
+              newPool.read.getFlashLoanLogic(),
+              oldPool.read.getEModeLogic(),
+              newPool.read.getEModeLogic(),
+            ]);
+            console.log('addr', addresses);
+            for (let i = 0; i < addresses.length; i = i + 2) {
+              diffSlot(chainId, contract, {
+                previousValue: addresses[i],
+                newValue: addresses[i + 1],
+              });
+            }
           }
         }
       }
