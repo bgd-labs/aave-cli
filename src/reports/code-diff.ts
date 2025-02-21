@@ -1,5 +1,4 @@
-import {existsSync, readdirSync, rmdirSync, renameSync} from 'fs';
-import path from 'path';
+import {existsSync} from 'fs';
 import {execSync} from 'child_process';
 import {ChainId} from '@bgd-labs/rpc-env';
 
@@ -28,33 +27,31 @@ export function downloadContract(chainId: number, address: string) {
   return outPath;
 }
 
-function moveFilesToRoot(folderPath: string) {
-  readdirSync(folderPath, {withFileTypes: true}).forEach((entry) => {
-    const fullPath = path.join(folderPath, entry.name);
-
-    if (entry.isDirectory()) {
-      moveFilesToRoot(fullPath);
-    } else {
-      const newPath = path.join(folderPath, entry.name);
-      let uniquePath = newPath;
-      let count = 1;
-
-      // Ensure unique filename
-      while (existsSync(uniquePath)) {
-        const ext = path.extname(entry.name);
-        const name = path.basename(entry.name, ext);
-        uniquePath = path.join(folderPath, `${name}_${count}${ext}`);
-        count++;
-      }
-
-      renameSync(fullPath, uniquePath);
-    }
-  });
+function flatten(path: string) {
+  const flattenCmd = `
+          mkdir -p ${path}_flat
+          counter=1
+          for file in $(find ${path} -type f)
+          do
+            original_file_name="\${file##*/}"
+            if [ -e ${path}_flat/\${counter}_\${original_file_name} ]
+            then
+              mv "\$file" "${path}_flat/\${counter}_\${original_file_name}"
+            else
+              mv "\$file" "${path}_flat/\${original_file_name}"
+            fi
+            ((counter++))
+          done;
+      `;
+  execSync(flattenCmd);
+  return `${path}_flat`;
 }
 
 export function diffCode(fromPath: string, toPath: string) {
-  moveFilesToRoot(fromPath);
-  moveFilesToRoot(toPath);
+  fromPath = flatten(fromPath);
+  toPath = flatten(toPath);
+  const prettierCmd = `npx prettier ${fromPath} ${toPath} --write`;
+  execSync(prettierCmd);
   const diffCmd = `
   git diff --no-index --ignore-space-at-eol ${fromPath} ${toPath} | awk '
     BEGIN { in_diff_block = 0; skip_block = 0; buffer = "" }
