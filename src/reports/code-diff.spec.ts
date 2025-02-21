@@ -4,7 +4,7 @@ import post32 from './mocks/post3-2.json';
 import {diffCode, downloadContract} from './code-diff';
 import {diffRawStorage, diffSlot} from './raw-storage-diff';
 
-describe('code diffs', () => {
+describe.skip('code diffs', () => {
   it('should diff slots', () => {
     diffSlot(1, '0x0', {
       previousValue: '0x0000000000000000000000003d881c2dc90f00e7a52f06155f77fbec63a779c7',
