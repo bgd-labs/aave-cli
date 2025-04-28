@@ -51,10 +51,10 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
           // ... we might want to fetch the owner in that case
         }
 
-        if (contractName) {
+        if (raw[contract].stateDiff[erc1967ImplSlot] && contractName) {
           const path = contractName[0].split('.');
           // Diff code logic libraries
-          if (path[path.length - 1] === 'POOL' && raw[contract].stateDiff[erc1967ImplSlot]) {
+          if (path[path.length - 1] === 'POOL') {
             const oldPool = getContract({
               client: getClient(chainId, {}),
               abi: IPool_ABI,
