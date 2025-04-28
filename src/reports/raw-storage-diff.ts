@@ -51,7 +51,7 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
           // ... we might want to fetch the owner in that case
         }
 
-        if (contractName) {
+        if (raw[contract].stateDiff[erc1967ImplSlot] && contractName) {
           const path = contractName[0].split('.');
           // Diff code logic libraries
           if (path[path.length - 1] === 'POOL') {
@@ -79,7 +79,6 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
               oldPool.read.getEModeLogic(),
               newPool.read.getEModeLogic(),
             ]);
-            console.log('addr', addresses);
             for (let i = 0; i < addresses.length; i = i + 2) {
               diffSlot(chainId, contract, {
                 previousValue: addresses[i],
