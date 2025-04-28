@@ -54,7 +54,7 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
         if (contractName) {
           const path = contractName[0].split('.');
           // Diff code logic libraries
-          if (path[path.length - 1] === 'POOL') {
+          if (path[path.length - 1] === 'POOL' && isAddress(raw[contract].stateDiff[erc1967ImplSlot].previousValue)) {
             const oldPool = getContract({
               client: getClient(chainId, {}),
               abi: IPool_ABI,
