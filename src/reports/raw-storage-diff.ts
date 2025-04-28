@@ -79,7 +79,6 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
               oldPool.read.getEModeLogic(),
               newPool.read.getEModeLogic(),
             ]);
-            console.log('addr', addresses);
             for (let i = 0; i < addresses.length; i = i + 2) {
               diffSlot(chainId, contract, {
                 previousValue: addresses[i],
