@@ -7,6 +7,7 @@ import {addCommand as addFork} from './commands/fork';
 import {addCommand as addGovernance} from './commands/governance';
 import {addCommand as addIpfsCommand} from './commands/ipfsUpload';
 import {addCommand as addCapoCommand} from './commands/capo';
+import {addCommand as addCapoSvrCommand} from './commands/capoSvr';
 
 const program = new Command();
 
@@ -32,5 +33,6 @@ addDiffSnapshots(program);
 addFork(program);
 addIpfsCommand(program);
 addCapoCommand(program);
+addCapoSvrCommand(program);
 
 program.parse();
