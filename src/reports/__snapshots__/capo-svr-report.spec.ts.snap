@@ -1,6 +1,6 @@
-// Bun Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`capo svr report should generate a well formatted capo svr report 1`] = `
+exports[`capo svr report > should generate a well formatted capo svr report 1`] = `
 "# Capo Comparative Report
 
 # Capped wstETH / stETH(ETH) / USD 
