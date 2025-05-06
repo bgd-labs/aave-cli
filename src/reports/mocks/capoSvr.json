@@ -1,0 +1,162 @@
+{
+  "comparative": {
+    "22199900": {
+      "regularAdapterPrice": 217666375221,
+      "svrAdapterPrice": 217554419401,
+      "timestamp": 1743822131
+    },
+    "22207200": {
+      "regularAdapterPrice": 216795440985,
+      "svrAdapterPrice": 216644202291,
+      "timestamp": 1743910247
+    },
+    "22214500": {
+      "regularAdapterPrice": 184904466888,
+      "svrAdapterPrice": 184331232930,
+      "timestamp": 1743998399
+    },
+    "22221800": {
+      "regularAdapterPrice": 191382628592,
+      "svrAdapterPrice": 190799419233,
+      "timestamp": 1744086611
+    },
+    "22229100": {
+      "regularAdapterPrice": 172703894879,
+      "svrAdapterPrice": 172730277631,
+      "timestamp": 1744174619
+    },
+    "22236400": {
+      "regularAdapterPrice": 194477533416,
+      "svrAdapterPrice": 194601135762,
+      "timestamp": 1744262495
+    },
+    "22243700": {
+      "regularAdapterPrice": 185570748959,
+      "svrAdapterPrice": 185112817156,
+      "timestamp": 1744350443
+    },
+    "22251000": {
+      "regularAdapterPrice": 188016617657,
+      "svrAdapterPrice": 188010970140,
+      "timestamp": 1744438283
+    },
+    "22258300": {
+      "regularAdapterPrice": 193484763392,
+      "svrAdapterPrice": 194099317901,
+      "timestamp": 1744526231
+    },
+    "22265600": {
+      "regularAdapterPrice": 194899310701,
+      "svrAdapterPrice": 195125160577,
+      "timestamp": 1744614059
+    },
+    "22272900": {
+      "regularAdapterPrice": 196856171868,
+      "svrAdapterPrice": 196885656094,
+      "timestamp": 1744702151
+    },
+    "22280200": {
+      "regularAdapterPrice": 188088400462,
+      "svrAdapterPrice": 188044218254,
+      "timestamp": 1744790159
+    },
+    "22287500": {
+      "regularAdapterPrice": 192196651940,
+      "svrAdapterPrice": 192714919798,
+      "timestamp": 1744878263
+    },
+    "22294800": {
+      "regularAdapterPrice": 190124372975,
+      "svrAdapterPrice": 190198709042,
+      "timestamp": 1744966187
+    },
+    "22302100": {
+      "regularAdapterPrice": 192294047495,
+      "svrAdapterPrice": 192266605311,
+      "timestamp": 1745054243
+    },
+    "22309400": {
+      "regularAdapterPrice": 190622505555,
+      "svrAdapterPrice": 190833882018,
+      "timestamp": 1745142263
+    },
+    "22316700": {
+      "regularAdapterPrice": 197015250316,
+      "svrAdapterPrice": 197333083291,
+      "timestamp": 1745230343
+    },
+    "22324000": {
+      "regularAdapterPrice": 194937422474,
+      "svrAdapterPrice": 194843062491,
+      "timestamp": 1745318339
+    },
+    "22331300": {
+      "regularAdapterPrice": 217182424304,
+      "svrAdapterPrice": 216035296377,
+      "timestamp": 1745406467
+    },
+    "22338600": {
+      "regularAdapterPrice": 209391812992,
+      "svrAdapterPrice": 209383167086,
+      "timestamp": 1745494463
+    },
+    "22345900": {
+      "regularAdapterPrice": 214633325394,
+      "svrAdapterPrice": 214842289872,
+      "timestamp": 1745582423
+    },
+    "22353200": {
+      "regularAdapterPrice": 214664704136,
+      "svrAdapterPrice": 214693062115,
+      "timestamp": 1745670383
+    },
+    "22360500": {
+      "regularAdapterPrice": 216198612144,
+      "svrAdapterPrice": 216739047482,
+      "timestamp": 1745758211
+    },
+    "22367800": {
+      "regularAdapterPrice": 217050143613,
+      "svrAdapterPrice": 216922825978,
+      "timestamp": 1745846207
+    },
+    "22375100": {
+      "regularAdapterPrice": 218395464045,
+      "svrAdapterPrice": 218331686871,
+      "timestamp": 1745934335
+    },
+    "22382400": {
+      "regularAdapterPrice": 210066019434,
+      "svrAdapterPrice": 210614087107,
+      "timestamp": 1746022607
+    },
+    "22389700": {
+      "regularAdapterPrice": 221395366061,
+      "svrAdapterPrice": 220963154340,
+      "timestamp": 1746110987
+    },
+    "22397000": {
+      "regularAdapterPrice": 221696923478,
+      "svrAdapterPrice": 221533523206,
+      "timestamp": 1746199583
+    },
+    "22404300": {
+      "regularAdapterPrice": 220784340840,
+      "svrAdapterPrice": 220745309063,
+      "timestamp": 1746287867
+    },
+    "22411600": {
+      "regularAdapterPrice": 219694841401,
+      "svrAdapterPrice": 219618873716,
+      "timestamp": 1746376319
+    },
+    "22418900": {
+      "regularAdapterPrice": 217372491546,
+      "svrAdapterPrice": 217376096755,
+      "timestamp": 1746464591
+    }
+  },
+  "decimals": 8,
+  "minSnapshotDelay": 7,
+  "sourceName": "Capped wstETH / stETH(ETH) / USD"
+}

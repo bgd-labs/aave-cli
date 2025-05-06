@@ -165,3 +165,18 @@ export const capoSnapshotSchema = z.object({
 });
 
 export type CapoSnapshot = z.infer<typeof capoSnapshotSchema>;
+
+export const capoSvrPriceSchema = z.object({
+  regularAdapterPrice: z.number(),
+  svrAdapterPrice: z.number(),
+  timestamp: z.number(),
+});
+
+export const capoSvrSnapshotSchema = z.object({
+  sourceName: z.string(),
+  decimals: z.number(),
+  minSnapshotDelay: z.number(),
+  comparative: z.record(capoSvrPriceSchema),
+});
+
+export type CapoSvrSnapshot = z.infer<typeof capoSvrSnapshotSchema>;
