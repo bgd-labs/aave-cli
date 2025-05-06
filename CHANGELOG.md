@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/bgd-labs/aave-cli/compare/v1.2.4...v1.3.0) (2025-05-06)
+
+
+### Features
+
+* svr &lt;&gt; regular adapters comparative report ([#207](https://github.com/bgd-labs/aave-cli/issues/207)) ([8ee82a8](https://github.com/bgd-labs/aave-cli/commit/8ee82a825c10fa3adc184dea5b4fc04b7657c6bd))
+
 ## [1.2.4](https://github.com/bgd-labs/aave-cli/compare/v1.2.3...v1.2.4) (2025-04-28)
 
 
