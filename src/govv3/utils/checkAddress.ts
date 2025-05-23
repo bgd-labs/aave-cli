@@ -56,6 +56,7 @@ const assetsCache = (Object.keys(addresses) as (keyof typeof addresses)[]).reduc
 
 export async function findAsset(client: Client, address: Hex) {
   const chainId = client.chain!.id;
+  if (!assetsCache[chainId]) assetsCache[chainId] = {};
   const asset = assetsCache[chainId][address];
   if (asset) return asset;
   const erc20Contract = getContract({client, address: address, abi: IERC20Detailed_ABI});
