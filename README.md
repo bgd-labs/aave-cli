@@ -29,13 +29,7 @@ npm i -g @bgd-labs/aave-cli
 
 Once installed you should be able to run commands via the `@bgd-labs/aave-cli` or the `aave-cli` binary.
 
-Alteratively you can use `npx @bgd-labs/aave-cli` to run the cli via npx.
-
-## Fork
-
-`aave-cli fork --chainId <id>` can ge used to generate tenderly forks.
-The cli allows executing certain proposal/actionset IDs, an address or even local payload via aave governance.
-For a full overview of commands please run `aave-cli fork --help`
+Alternatively you can use `npx @bgd-labs/aave-cli` to run the cli via npx.
 
 ## Ipfs
 
@@ -47,10 +41,6 @@ For a full overview of commands please run `aave-cli fork --help`
 
 ## Governance
 
-### Simulation
-
-`aave-cli governance simulate [proposalId]` can be used to simulate a certain proposal on tenderly (e2e across all networks). This feature is intended to be used by systems like seatbelt.
-
 ### View
 
 `aave-cli governance view` will start a command line ui for the aave governance.
@@ -58,7 +48,7 @@ The command line ui, explains how to vote and generates the proofs needed for vo
 
 ### GetStorageRoots
 
-`aave-cli governance getStorageRoots --proposalId <id>` is a utilitiy that generates the storage roots for the data warehouse.
+`aave-cli governance getStorageRoots --proposalId <id>` is a utility that generates the storage roots for the data warehouse.
 
 ### GetVotingProofs
 
