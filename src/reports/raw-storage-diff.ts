@@ -64,7 +64,11 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
         // create contract diff if storage changed
         if (raw[contract].stateDiff[erc1967ImplSlot]) {
           raw[contract].stateDiff[erc1967ImplSlot].label = 'Implementation slot';
-          diffSlot(chainId, contract, raw[contract].stateDiff[erc1967ImplSlot]);
+          try {
+            await diffSlot(chainId, contract, raw[contract].stateDiff[erc1967ImplSlot]);
+          } catch (e) {
+            console.log('error diffing erc1967ImplSlot');
+          }
         }
 
         // admin slot
@@ -102,10 +106,14 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
               newPool.read.getEModeLogic(),
             ]);
             for (let i = 0; i < addresses.length; i = i + 2) {
-              diffSlot(chainId, contract, {
-                previousValue: addresses[i],
-                newValue: addresses[i + 1],
-              });
+              try {
+                diffSlot(chainId, contract, {
+                  previousValue: addresses[i],
+                  newValue: addresses[i + 1],
+                });
+              } catch (e) {
+                console.log('error diffing logic library');
+              }
             }
           }
         }
