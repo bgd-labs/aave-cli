@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.4](https://github.com/bgd-labs/aave-cli/compare/v1.3.3...v1.3.4) (2025-06-02)
+
+
+### Bug Fixes
+
+* update etherscan api key usage ([#212](https://github.com/bgd-labs/aave-cli/issues/212)) ([95bb486](https://github.com/bgd-labs/aave-cli/commit/95bb48699fca160f247a5afdc0a04ec8669ebfad))
+
+## [1.3.3](https://github.com/bgd-labs/aave-cli/compare/v1.3.2...v1.3.3) (2025-05-27)
+
+
+### Bug Fixes
+
+* update prettier ([4740a60](https://github.com/bgd-labs/aave-cli/commit/4740a604597f3b55456238e8d3abae0681c0efc3))
+
 ## [1.3.2](https://github.com/bgd-labs/aave-cli/compare/v1.3.1...v1.3.2) (2025-05-23)
 
 
