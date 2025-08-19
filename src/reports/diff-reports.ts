@@ -5,8 +5,15 @@ import {getStrategyImageUrl} from './fetch-IR-strategy';
 import {renderReserve, renderReserveDiff} from './reserve';
 import {AaveV3Reserve, type AaveV3Snapshot} from './snapshot-types';
 import {renderStrategy, renderStrategyDiff} from './strategy';
-import {diffCode, downloadContract} from './code-diff';
 import {diffRawStorage} from './raw-storage-diff';
+import {
+  BlockscoutStyleSourceCode,
+  getSourceCode,
+  parseBlockscoutStyleSourceCode,
+  parseEtherscanStyleSourceCode,
+  StandardJsonInput,
+  diffCode,
+} from '@bgd-labs/toolbox';
 
 function hasDiff(input: Record<string, any>): boolean {
   if (!input) return false;
@@ -140,10 +147,32 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
           ) {
             const fromAddress = (diffResult as any).poolConfig[key].from;
             const toAddress = (diffResult as any).poolConfig[key].to;
-            const from = downloadContract(pre.chainId, fromAddress);
-            const to = downloadContract(pre.chainId, toAddress);
-            const result = diffCode(from, to);
-            writeFileSync(`./diffs/${pre.chainId}_${key}_${fromAddress}_${toAddress}.diff`, result);
+            const sources = await Promise.all([
+              getSourceCode({
+                chainId: Number(pre.chainId),
+                address: fromAddress,
+                apiKey: process.env.ETHERSCAN_API_KEY,
+              }),
+              getSourceCode({
+                chainId: Number(pre.chainId),
+                address: toAddress,
+                apiKey: process.env.ETHERSCAN_API_KEY,
+              }),
+            ]);
+            const source1: StandardJsonInput = (sources[0] as BlockscoutStyleSourceCode)
+              .AdditionalSources
+              ? parseBlockscoutStyleSourceCode(sources[0] as BlockscoutStyleSourceCode)
+              : parseEtherscanStyleSourceCode(sources[0].SourceCode);
+            const source2: StandardJsonInput = (sources[0] as BlockscoutStyleSourceCode)
+              .AdditionalSources
+              ? parseBlockscoutStyleSourceCode(sources[1] as BlockscoutStyleSourceCode)
+              : parseEtherscanStyleSourceCode(sources[1].SourceCode);
+            const diff = await diffCode(source1, source2);
+            const flat = Object.keys(diff).reduce((acc, key) => {
+              acc += diff[key];
+              return acc;
+            }, '');
+            writeFileSync(`./diffs/${pre.chainId}_${key}_${fromAddress}_${toAddress}.diff`, flat);
           }
         } catch (e) {
           console.info('error diffing the code');

@@ -61,6 +61,7 @@
     "@bgd-labs/aave-v3-governance-cache": "^1.0.11",
     "@bgd-labs/js-utils": "^1.4.8",
     "@bgd-labs/rpc-env": "^2.3.2",
+    "@bgd-labs/toolbox": "^0.0.40",
     "@commander-js/extra-typings": "^12.1.0",
     "@inquirer/prompts": "^7.1.0",
     "blockstore-core": "^5.0.2",

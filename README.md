@@ -8,6 +8,7 @@ For a full overview of features you can run `aave-cli --help`
 ## Installation
 
 Make sure to setup your .env as most utilities rely on tenderly and will fail otherwise.
+
 ```
 TENDERLY_ACCESS_TOKEN=
 TENDERLY_PROJECT_SLUG=
@@ -15,11 +16,13 @@ TENDERLY_ACCOUNT=
 ```
 
 Local installation
+
 ```
 npm i @bgd-labs/aave-cli
 ```
 
 Global installation
+
 ```
 npm i -g @bgd-labs/aave-cli
 ```
