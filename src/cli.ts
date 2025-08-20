@@ -3,7 +3,6 @@ import {Command, Option} from '@commander-js/extra-typings';
 import 'dotenv/config';
 import packageJson from '../package.json';
 import {addCommand as addDiffSnapshots} from './commands/diffSnaphots';
-import {addCommand as addFork} from './commands/fork';
 import {addCommand as addGovernance} from './commands/governance';
 import {addCommand as addIpfsCommand} from './commands/ipfsUpload';
 import {addCommand as addCapoCommand} from './commands/capo';
@@ -30,7 +29,6 @@ program
   .showHelpAfterError();
 addGovernance(program);
 addDiffSnapshots(program);
-addFork(program);
 addIpfsCommand(program);
 addCapoCommand(program);
 addCapoSvrCommand(program);

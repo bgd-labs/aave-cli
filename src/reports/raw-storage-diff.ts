@@ -1,28 +1,50 @@
-import {writeFileSync, mkdirSync, readFileSync} from 'fs';
+import {writeFileSync, mkdirSync} from 'fs';
 import {bytes32ToAddress} from '../utils/storageSlots';
-import {diffCode, downloadContract} from './code-diff';
 import {RawStorage, SlotDiff} from './snapshot-types';
 import {isKnownAddress} from '../govv3/utils/checkAddress';
-import {Address, getContract, isAddress, toBytes, zeroHash} from 'viem';
+import {Address, getContract, isAddress, zeroHash} from 'viem';
 import {getClient} from '@bgd-labs/rpc-env';
 import {IPool_ABI} from '@bgd-labs/aave-address-book/abis';
+import {
+  BlockscoutStyleSourceCode,
+  diffCode,
+  getSourceCode,
+  parseBlockscoutStyleSourceCode,
+  parseEtherscanStyleSourceCode,
+  StandardJsonInput,
+} from '@bgd-labs/toolbox';
 
-export function diffSlot(chainId: number, address: Address, slot: SlotDiff) {
+export async function diffSlot(chainId: number, address: Address, slot: SlotDiff) {
   const fromAddress = isAddress(slot.previousValue)
     ? slot.previousValue
     : bytes32ToAddress(slot.previousValue);
   const toAddress = isAddress(slot.newValue) ? slot.newValue : bytes32ToAddress(slot.newValue);
-  // pure new deployments cannot be diffed, we just download the code in that case
-  if (slot.previousValue == zeroHash) {
-    const to = downloadContract(chainId, toAddress);
+  if (slot.previousValue != zeroHash) {
+    const sources = await Promise.all([
+      getSourceCode({
+        chainId: Number(chainId),
+        address: fromAddress,
+        apiKey: process.env.ETHERSCAN_API_KEY,
+      }),
+      getSourceCode({
+        chainId: Number(chainId),
+        address: toAddress,
+        apiKey: process.env.ETHERSCAN_API_KEY,
+      }),
+    ]);
+    const source1: StandardJsonInput = (sources[0] as BlockscoutStyleSourceCode).AdditionalSources
+      ? parseBlockscoutStyleSourceCode(sources[0] as BlockscoutStyleSourceCode)
+      : parseEtherscanStyleSourceCode(sources[0].SourceCode);
+    const source2: StandardJsonInput = (sources[0] as BlockscoutStyleSourceCode).AdditionalSources
+      ? parseBlockscoutStyleSourceCode(sources[1] as BlockscoutStyleSourceCode)
+      : parseEtherscanStyleSourceCode(sources[1].SourceCode);
+    const diff = await diffCode(source1, source2);
+    const flat = Object.keys(diff).reduce((acc, key) => {
+      acc += diff[key];
+      return acc;
+    }, '');
     mkdirSync('./diffs', {recursive: true});
-    writeFileSync(`./diffs/${chainId}_${address}_${toAddress}.diff`, readFileSync(to), {});
-  } else {
-    const from = downloadContract(chainId, fromAddress);
-    const to = downloadContract(chainId, toAddress);
-    const result = diffCode(from, to);
-    mkdirSync('./diffs', {recursive: true});
-    writeFileSync(`./diffs/${chainId}_${address}_${fromAddress}_${toAddress}.diff`, result, {});
+    writeFileSync(`./diffs/${chainId}_${address}_${fromAddress}_${toAddress}.diff`, flat, {});
   }
 }
 
@@ -42,7 +64,11 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
         // create contract diff if storage changed
         if (raw[contract].stateDiff[erc1967ImplSlot]) {
           raw[contract].stateDiff[erc1967ImplSlot].label = 'Implementation slot';
-          diffSlot(chainId, contract, raw[contract].stateDiff[erc1967ImplSlot]);
+          try {
+            await diffSlot(chainId, contract, raw[contract].stateDiff[erc1967ImplSlot]);
+          } catch (e) {
+            console.log('error diffing erc1967ImplSlot');
+          }
         }
 
         // admin slot
@@ -80,10 +106,14 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
               newPool.read.getEModeLogic(),
             ]);
             for (let i = 0; i < addresses.length; i = i + 2) {
-              diffSlot(chainId, contract, {
-                previousValue: addresses[i],
-                newValue: addresses[i + 1],
-              });
+              try {
+                diffSlot(chainId, contract, {
+                  previousValue: addresses[i],
+                  newValue: addresses[i + 1],
+                });
+              } catch (e) {
+                console.log('error diffing logic library');
+              }
             }
           }
         }

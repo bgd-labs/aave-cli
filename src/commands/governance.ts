@@ -6,11 +6,9 @@ import {
 import type {Command} from '@commander-js/extra-typings';
 import {confirm, input, select} from '@inquirer/prompts';
 import {type Hex, encodeAbiParameters, encodeFunctionData, getContract} from 'viem';
-import {generateReport} from '../govv3/generatePayloadReport';
 import {HUMAN_READABLE_STATE, getGovernance} from '../govv3/governance';
 import {getPayloadsController} from '../govv3/payloadsController';
 import {getAccountRPL, getBlockRLP} from '../govv3/proofs';
-import {simulateProposal} from '../govv3/simulate';
 import {findPayloadsController} from '../govv3/utils/checkAddress';
 import {toAddressLink, toTxLink} from '../govv3/utils/markdownUtils';
 import {DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT, FORMAT} from '../utils/constants';
@@ -35,45 +33,6 @@ enum DialogOptions {
 
 export function addCommand(program: Command) {
   const govV3 = program.command('governance').description('interact with governance v3 contracts');
-
-  govV3
-    .command('simulate')
-    .description('simulates a proposal on tenderly')
-    .requiredOption('--proposalId <number>', 'proposalId to simulate via tenderly')
-    .action(async (name, options) => {
-      const proposalId = BigInt(options.getOptionValue('proposalId'));
-      await simulateProposal(DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT, proposalId);
-    });
-
-  govV3
-    .command('simulate-payload')
-    .description('simulates a payloadId on tenderly')
-    .requiredOption('--chainId <number>', 'the chainId to fork of')
-    .requiredOption('--payloadId <number>', 'payloadId to simulate via tenderly')
-    .action(async ({payloadId: _payloadId, chainId}, options) => {
-      await refreshCache(localCacheAdapter);
-      const payloadId = Number(_payloadId);
-      const client = getClient(Number(chainId));
-      const payloadsControllerAddress = findPayloadsController(Number(chainId));
-      const payloadsController = getPayloadsController(payloadsControllerAddress as Hex, client);
-      const cache = await localCacheAdapter.getPayload({
-        chainId: Number(chainId),
-        payloadsController: payloadsControllerAddress as Hex,
-        payloadId: Number(payloadId),
-      });
-      const result = await payloadsController.simulatePayloadExecutionOnTenderly(
-        Number(payloadId),
-        cache.logs,
-      );
-      console.log(
-        await generateReport({
-          simulation: result,
-          payloadId: payloadId,
-          payloadInfo: cache,
-          client,
-        }),
-      );
-    });
 
   govV3
     .command('view')
