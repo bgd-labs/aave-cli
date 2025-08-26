@@ -1,5 +1,6 @@
 import {GovernanceV3Ethereum} from '@bgd-labs/aave-address-book';
-import {getClient} from './getClient';
+import {getClient} from '@bgd-labs/toolbox';
+import {PublicClient} from 'viem';
 
 // arbitrary from EOA for proposal executions
 export const EOA = '0xD73a92Be73EfbFcF3854433A5FcbAbF9c1316073' as const;
@@ -12,4 +13,6 @@ export const VERBOSE = process.env.VERBOSE;
 export const FORMAT = (process.env.FORMAT || 'raw') as 'raw' | 'encoded';
 
 export const DEFAULT_GOVERNANCE = GovernanceV3Ethereum.GOVERNANCE;
-export const DEFAULT_GOVERNANCE_CLIENT = getClient(1);
+export const DEFAULT_GOVERNANCE_CLIENT = getClient(1, {
+  providerConfig: {alchemyKey: process.env.ALCHEMY_API_KEY},
+}) as PublicClient;

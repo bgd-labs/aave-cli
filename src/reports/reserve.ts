@@ -1,7 +1,7 @@
 import {type Hex, formatUnits} from 'viem';
 import {prettifyNumber, toAddressLink} from '../govv3/utils/markdownUtils';
 import type {AaveV3Reserve, CHAIN_ID} from './snapshot-types';
-import {getClient} from '../utils/getClient';
+import {getClient} from '@bgd-labs/toolbox';
 
 export function renderReserveValue<T extends keyof AaveV3Reserve>(
   key: T,
@@ -27,17 +27,25 @@ export function renderReserveValue<T extends keyof AaveV3Reserve>(
   if (key === 'liquidationBonus')
     return reserve[key] === 0 ? '0 %' : `${((reserve[key] as number) - 10000) / 100} %`;
   if (key === 'interestRateStrategy')
-    return toAddressLink(reserve[key] as Hex, true, getClient(chainId));
+    return toAddressLink(
+      reserve[key] as Hex,
+      true,
+      getClient(chainId, {providerConfig: {alchemyKey: process.env.ALCHEMY_API_KEY}}),
+    );
   if (key === 'oracleLatestAnswer' && reserve.oracleDecimals)
     return formatUnits(BigInt(reserve[key]), reserve.oracleDecimals);
   if (typeof reserve[key] === 'number') return reserve[key].toLocaleString('en-US');
   if (typeof reserve[key] === 'string' && /0x.+/.test(reserve[key] as string))
-    return toAddressLink(reserve[key] as Hex, true, getClient(chainId));
+    return toAddressLink(
+      reserve[key] as Hex,
+      true,
+      getClient(chainId, {providerConfig: {alchemyKey: process.env.ALCHEMY_API_KEY}}),
+    );
   return reserve[key];
 }
 
 function renderReserveHeadline(reserve: AaveV3Reserve, chainId: CHAIN_ID) {
-  return `#### ${reserve.symbol} (${toAddressLink(reserve.underlying as Hex, true, getClient(chainId))})\n\n`;
+  return `#### ${reserve.symbol} (${toAddressLink(reserve.underlying as Hex, true, getClient(chainId, {providerConfig: {alchemyKey: process.env.ALCHEMY_API_KEY}}))})\n\n`;
 }
 
 const ORDER: (keyof AaveV3Reserve)[] = [

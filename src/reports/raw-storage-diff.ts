@@ -3,9 +3,9 @@ import {bytes32ToAddress} from '../utils/storageSlots';
 import {RawStorage, SlotDiff} from './snapshot-types';
 import {isKnownAddress} from '../govv3/utils/checkAddress';
 import {Address, getContract, isAddress, zeroHash} from 'viem';
-import {getClient} from '@bgd-labs/rpc-env';
 import {IPool_ABI} from '@bgd-labs/aave-address-book/abis';
 import {
+  getClient,
   BlockscoutStyleSourceCode,
   diffCode,
   getSourceCode,
@@ -82,7 +82,9 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
           // Diff code logic libraries
           if (path[path.length - 1] === 'POOL') {
             const oldPool = getContract({
-              client: getClient(chainId, {}),
+              client: getClient(chainId, {
+                providerConfig: {alchemyKey: process.env.ALCHEMY_API_KEY},
+              }) as any,
               abi: IPool_ABI,
               address: bytes32ToAddress(raw[contract].stateDiff[erc1967ImplSlot].previousValue),
             });

@@ -1,7 +1,7 @@
 import {GovernanceV3Ethereum} from '@bgd-labs/aave-address-book';
-import {ChainId} from '@bgd-labs/rpc-env';
 import {describe, expect, it} from 'vitest';
 import {isKnownAddress} from './checkAddress';
+import {ChainId} from '@bgd-labs/toolbox';
 
 describe('isKnownAddress', () => {
   it('should return path on correct network', () => {
