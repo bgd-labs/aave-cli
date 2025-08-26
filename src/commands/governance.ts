@@ -7,9 +7,7 @@ import type {Command} from '@commander-js/extra-typings';
 import {confirm, input, select} from '@inquirer/prompts';
 import {type Hex, encodeAbiParameters, encodeFunctionData, getContract} from 'viem';
 import {HUMAN_READABLE_STATE, getGovernance} from '../govv3/governance';
-import {getPayloadsController} from '../govv3/payloadsController';
 import {getAccountRPL, getBlockRLP} from '../govv3/proofs';
-import {findPayloadsController} from '../govv3/utils/checkAddress';
 import {toAddressLink, toTxLink} from '../govv3/utils/markdownUtils';
 import {DEFAULT_GOVERNANCE, DEFAULT_GOVERNANCE_CLIENT, FORMAT} from '../utils/constants';
 import {logError, logInfo, logSuccess} from '../utils/logger';
@@ -20,7 +18,7 @@ import {fileSystemStorageAdapter} from '@bgd-labs/aave-v3-governance-cache/fileS
 const localCacheAdapter = customStorageProvider(fileSystemStorageAdapter);
 
 import {refreshCache} from '@bgd-labs/aave-v3-governance-cache/refreshCache';
-import {getClient} from '../utils/getClient';
+import {ChainList} from '@bgd-labs/toolbox';
 
 enum DialogOptions {
   DETAILS = 0,
@@ -148,7 +146,7 @@ export function addCommand(program: Command) {
           logInfo('VotingPortal', cache.proposal.votingPortal);
           cache.proposal.payloads.map((payload, ix) => {
             logInfo(`Payload.${ix}.accessLevel`, payload.accessLevel);
-            logInfo(`Payload.${ix}.chain`, getClient(Number(payload.chain)).chain!.name);
+            logInfo(`Payload.${ix}.chain`, ChainList[payload.chain as keyof typeof ChainList].name);
             logInfo(`Payload.${ix}.payloadId`, payload.payloadId);
             logInfo(`Payload.${ix}.payloadsController`, payload.payloadsController);
           });
