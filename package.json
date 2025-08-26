@@ -63,6 +63,7 @@
     "@commander-js/extra-typings": "^12.1.0",
     "@inquirer/prompts": "^7.1.0",
     "blockstore-core": "^5.0.4",
+    "bs58": "^6.0.0",
     "chalk": "^4.1.2",
     "commander": "^12.1.0",
     "deepmerge": "^4.3.1",
