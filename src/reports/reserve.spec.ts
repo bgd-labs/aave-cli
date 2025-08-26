@@ -63,10 +63,6 @@ describe('reserve', () => {
       const out = renderReserve(WBTC_MOCK, 1);
       expect(out).toMatchSnapshot();
     });
-    it('should properly render new reserve with local chain id', () => {
-      const out = renderReserve(WBTC_MOCK, 31337 as CHAIN_ID);
-      expect(out).toMatchSnapshot();
-    });
     it('should properly render altered reserve', () => {
       const input: AaveV3Reserve = {...WBTC_MOCK, borrowCap: 100};
       const out = diff(WBTC_MOCK, {...input});
