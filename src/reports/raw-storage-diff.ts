@@ -104,8 +104,6 @@ export async function diffRawStorage(chainId: number, raw: RawStorage) {
               newPool.read.getPoolLogic(),
               oldPool.read.getFlashLoanLogic(),
               newPool.read.getFlashLoanLogic(),
-              oldPool.read.getEModeLogic(),
-              newPool.read.getEModeLogic(),
             ]);
             for (let i = 0; i < addresses.length; i = i + 2) {
               try {
