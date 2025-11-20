@@ -25,11 +25,13 @@ export async function diffSlot(chainId: number, address: Address, slot: SlotDiff
         chainId: Number(chainId),
         address: fromAddress,
         apiKey: process.env.ETHERSCAN_API_KEY,
+        apiUrl: process.env.EXPLORER_PROXY,
       }),
       getSourceCode({
         chainId: Number(chainId),
         address: toAddress,
         apiKey: process.env.ETHERSCAN_API_KEY,
+        apiUrl: process.env.EXPLORER_PROXY,
       }),
     ]);
     const source1: StandardJsonInput = (sources[0] as BlockscoutStyleSourceCode).AdditionalSources

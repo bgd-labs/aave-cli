@@ -152,11 +152,13 @@ export async function diffReports<A extends AaveV3Snapshot, B extends AaveV3Snap
                 chainId: Number(pre.chainId),
                 address: fromAddress,
                 apiKey: process.env.ETHERSCAN_API_KEY,
+                apiUrl: process.env.EXPLORER_PROXY,
               }),
               getSourceCode({
                 chainId: Number(pre.chainId),
                 address: toAddress,
                 apiKey: process.env.ETHERSCAN_API_KEY,
+                apiUrl: process.env.EXPLORER_PROXY,
               }),
             ]);
             const source1: StandardJsonInput = (sources[0] as BlockscoutStyleSourceCode)
