@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.6](https://github.com/bgd-labs/aave-cli/compare/v1.4.5...v1.4.6) (2026-01-28)
+
+
+### Bug Fixes
+
+* new chains / bump packages ([#222](https://github.com/bgd-labs/aave-cli/issues/222)) ([c9202ec](https://github.com/bgd-labs/aave-cli/commit/c9202ecaa52ed6e405bdd8832b7501cbf6999c4a))
+
 ## [1.4.5](https://github.com/bgd-labs/aave-cli/compare/v1.4.4...v1.4.5) (2025-11-20)
 
 
