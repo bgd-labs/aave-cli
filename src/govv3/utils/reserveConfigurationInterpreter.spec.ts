@@ -2,9 +2,7 @@ import {describe, expect, it} from 'vitest';
 import {decodeReserveDataV3} from './reserveConfigurationInterpreter';
 
 describe('reserveConfigurationInterpreter', () => {
-  it(
-    'should detect a change in virtualBalanceActivated',
-    () => {
+  it('should detect a change in virtualBalanceActivated', {timeout: 30000}, () => {
       const decodedDataBefore = decodeReserveDataV3(
         BigInt('2961908203178170875878950237596494035300546083027602574194771387707299396'),
       );
@@ -15,7 +13,5 @@ describe('reserveConfigurationInterpreter', () => {
       );
       expect(decodedDataAfter.virtualAccountingEnabled).toBe(true);
       expect({...decodedDataBefore, virtualAccountingEnabled: true}).toEqual(decodedDataAfter);
-    },
-    {timeout: 30000},
-  );
+  });
 });
