@@ -1,5 +1,5 @@
 import {AaveSafetyModule, AaveV3Ethereum, GovernanceV3Ethereum} from '@bgd-labs/aave-address-book';
-import {IGovernanceCore_ABI} from '@bgd-labs/aave-address-book/abis';
+import {IGovernance_ABI} from '@bgd-labs/toolbox';
 import merge from 'deepmerge';
 import {
   type Client,
@@ -29,7 +29,7 @@ import {VOTING_SLOTS, WAREHOUSE_SLOTS, getAccountRPL, getProof} from './proofs';
 import {ProposalState, type ProposalExecutedEvent} from '@bgd-labs/aave-v3-governance-cache';
 
 export interface Governance {
-  governanceContract: GetContractReturnType<typeof IGovernanceCore_ABI, Client>;
+  governanceContract: GetContractReturnType<typeof IGovernance_ABI, Client>;
   /**
    * Thin caching wrapper on top of getProposal.
    * If the proposal state is final, the proposal will be stored in json and fetched from there.
@@ -78,7 +78,7 @@ interface GetGovernanceParams {
 
 export const getGovernance = ({address, client}: GetGovernanceParams): Governance => {
   const governanceContract = getContract({
-    abi: IGovernanceCore_ABI,
+    abi: IGovernance_ABI,
     address,
     client,
   });
@@ -110,7 +110,7 @@ export const getGovernance = ({address, client}: GetGovernanceParams): Governanc
       from: EOA,
       to: governanceContract.address,
       input: encodeFunctionData({
-        abi: IGovernanceCore_ABI,
+        abi: IGovernance_ABI,
         functionName: 'executeProposal',
         args: [proposalId],
       }),

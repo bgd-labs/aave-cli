@@ -1,8 +1,3 @@
-import {
-  IDataWarehouse_ABI,
-  IVotingMachineWithProofs_ABI,
-  IVotingPortal_ABI,
-} from '@bgd-labs/aave-address-book/abis';
 import type {Command} from '@commander-js/extra-typings';
 import {confirm, input, select} from '@inquirer/prompts';
 import {type Hex, encodeAbiParameters, encodeFunctionData, getContract} from 'viem';
@@ -19,6 +14,68 @@ const localCacheAdapter = customStorageProvider(fileSystemStorageAdapter);
 
 import {refreshCache} from '@bgd-labs/aave-v3-governance-cache/refreshCache';
 import {ChainList} from '@bgd-labs/toolbox';
+
+const VOTING_PORTAL_ABI = [
+  {
+    type: 'function',
+    name: 'VOTING_MACHINE',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{name: '', type: 'address', internalType: 'address'}],
+  },
+  {
+    type: 'function',
+    name: 'VOTING_MACHINE_CHAIN_ID',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{name: '', type: 'uint256', internalType: 'uint256'}],
+  },
+] as const;
+
+const VOTING_MACHINE_WITH_PROOFS_ABI = [
+  {
+    type: 'function',
+    name: 'DATA_WAREHOUSE',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{name: '', type: 'address', internalType: 'address'}],
+  },
+  {
+    type: 'function',
+    name: 'submitVote',
+    stateMutability: 'nonpayable',
+    inputs: [
+      {name: 'proposalId', type: 'uint256', internalType: 'uint256'},
+      {name: 'support', type: 'bool', internalType: 'bool'},
+      {
+        name: 'votingBalanceProofs',
+        type: 'tuple[]',
+        internalType: 'struct VotingBalanceProof[]',
+        components: [
+          {name: 'underlyingAsset', type: 'address', internalType: 'address'},
+          {name: 'slot', type: 'uint128', internalType: 'uint128'},
+          {name: 'proof', type: 'bytes', internalType: 'bytes'},
+        ],
+      },
+    ],
+    outputs: [],
+  },
+] as const;
+
+const DATA_WAREHOUSE_ABI = [
+  {
+    type: 'function',
+    name: 'processStorageRoot',
+    stateMutability: 'nonpayable',
+    inputs: [
+      {name: 'account', type: 'address', internalType: 'address'},
+      {name: 'blockHash', type: 'bytes32', internalType: 'bytes32'},
+      {name: 'blockHeaderRLP', type: 'bytes', internalType: 'bytes'},
+      {name: 'accountStateProofRLP', type: 'bytes', internalType: 'bytes'},
+    ],
+    outputs: [],
+  },
+] as const;
 
 enum DialogOptions {
   DETAILS = 0,
@@ -161,7 +218,7 @@ export function addCommand(program: Command) {
           });
           const portal = getContract({
             address: cache.proposal.votingPortal,
-            abi: IVotingPortal_ABI,
+            abi: VOTING_PORTAL_ABI,
             client: DEFAULT_GOVERNANCE_CLIENT,
           });
           const [machine, chainId] = await Promise.all([
@@ -184,7 +241,7 @@ export function addCommand(program: Command) {
               logSuccess(
                 'encoded calldata',
                 encodeFunctionData({
-                  abi: IVotingMachineWithProofs_ABI,
+                  abi: VOTING_MACHINE_WITH_PROOFS_ABI,
                   functionName: 'submitVote',
                   args: [selectedProposalId, support, proofs],
                 }),
@@ -196,7 +253,7 @@ export function addCommand(program: Command) {
         if (moreInfo === DialogOptions.HOW_TO_REGISTER_STORAGE_ROOTS) {
           const portalContract = getContract({
             address: cache.proposal.votingPortal,
-            abi: IVotingPortal_ABI,
+            abi: VOTING_PORTAL_ABI,
             client: DEFAULT_GOVERNANCE_CLIENT,
           });
           const [machine, chainId] = await Promise.all([
@@ -205,7 +262,7 @@ export function addCommand(program: Command) {
           ]);
           const machineContract = getContract({
             address: machine,
-            abi: IVotingMachineWithProofs_ABI,
+            abi: VOTING_MACHINE_WITH_PROOFS_ABI,
             client: getClient(Number(chainId)),
           });
           const dataWarehouse = await machineContract.read.DATA_WAREHOUSE();
@@ -234,7 +291,7 @@ export function addCommand(program: Command) {
               logSuccess(
                 'Encoded callData',
                 encodeFunctionData({
-                  abi: IDataWarehouse_ABI,
+                  abi: DATA_WAREHOUSE_ABI,
                   functionName: 'processStorageRoot',
                   args: [root.address, cache.proposal.snapshotBlockHash, blockRPL, accountRPL],
                 }),
@@ -314,7 +371,7 @@ export function addCommand(program: Command) {
 
       const portal = getContract({
         address: proposal.votingPortal,
-        abi: IVotingPortal_ABI,
+        abi: VOTING_PORTAL_ABI,
         client: DEFAULT_GOVERNANCE_CLIENT,
       });
       const chainId = await portal.read.VOTING_MACHINE_CHAIN_ID();
