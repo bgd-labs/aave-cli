@@ -1,4 +1,4 @@
-import {IPayloadsControllerCore_ABI} from '@bgd-labs/aave-address-book/abis';
+import {IPayloadsController_ABI} from '@bgd-labs/toolbox';
 import {
   type Client,
   type GetContractReturnType,
@@ -27,7 +27,7 @@ export const HUMAN_READABLE_PAYLOAD_STATE = {
 };
 
 export interface PayloadsController {
-  controllerContract: GetContractReturnType<typeof IPayloadsControllerCore_ABI, Client>;
+  controllerContract: GetContractReturnType<typeof IPayloadsController_ABI, Client>;
   getSimulationPayloadForExecution: (id: number) => Promise<TenderlyRequest>;
   simulatePayloadExecutionOnTenderly: (
     id: number,
@@ -41,7 +41,7 @@ const SLOTS = {
 
 export const getPayloadsController = (address: Hex, client: Client): PayloadsController => {
   const controllerContract = getContract({
-    abi: IPayloadsControllerCore_ABI,
+    abi: IPayloadsController_ABI,
     address,
     client,
   });
@@ -54,7 +54,7 @@ export const getPayloadsController = (address: Hex, client: Client): PayloadsCon
       from: EOA,
       to: controllerContract.address,
       input: encodeFunctionData({
-        abi: IPayloadsControllerCore_ABI,
+        abi: IPayloadsController_ABI,
         functionName: 'executePayload',
         args: [id],
       }),

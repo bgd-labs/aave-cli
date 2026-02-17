@@ -3,12 +3,12 @@ import {bytes32ToAddress} from '../utils/storageSlots';
 import {RawStorage, SlotDiff} from './snapshot-types';
 import {isKnownAddress} from '../govv3/utils/checkAddress';
 import {Address, getContract, isAddress, zeroHash} from 'viem';
-import {IPool_ABI} from '@bgd-labs/aave-address-book/abis';
 import {
   getClient,
   BlockscoutStyleSourceCode,
   diffCode,
   getSourceCode,
+  IPool_ABI,
   parseBlockscoutStyleSourceCode,
   parseEtherscanStyleSourceCode,
   StandardJsonInput,
