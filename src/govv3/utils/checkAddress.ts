@@ -1,5 +1,5 @@
 import * as addresses from '@bgd-labs/aave-address-book';
-import {IPool_ABI, IERC20Detailed_ABI} from '@bgd-labs/aave-address-book/abis';
+import {IPool_ABI, IERC20Metadata_ABI} from '@bgd-labs/toolbox';
 import {findObjectPaths} from 'find-object-paths';
 import {type Address, type Client, HDKey, type Hex, getAddress, getContract} from 'viem';
 
@@ -59,7 +59,7 @@ export async function findAsset(client: Client, address: Hex) {
   if (!assetsCache[chainId]) assetsCache[chainId] = {};
   const asset = assetsCache[chainId][address];
   if (asset) return asset;
-  const erc20Contract = getContract({client, address: address, abi: IERC20Detailed_ABI});
+  const erc20Contract = getContract({client, address: address, abi: IERC20Metadata_ABI});
   let symbol = 'unknown';
   let decimals = 0;
   try {
